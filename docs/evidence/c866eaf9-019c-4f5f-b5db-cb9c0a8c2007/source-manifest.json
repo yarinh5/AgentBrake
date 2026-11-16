@@ -1,0 +1,317 @@
+{
+  "sourceHash": "8acfcc4d0763d00350b314edc20b848b91f493527e1a25baf92e6bcccc3c44fa",
+  "files": [
+    {
+      "path": ".dockerignore",
+      "sha256": "8f009f888ed3e03cf5b359d3f9108dd601acf6446c23f9c8c6ba2594d775e3c8"
+    },
+    {
+      "path": "docs/specification/AgentBrake_Codex_Master_Build_Prompt_2026-11-16.md",
+      "sha256": "c16a30cb646996be03fa1171bc8a58b812ba6d41a24622086c99ff56e81c492a"
+    },
+    {
+      "path": "docs/specification/AgentBrake_Product_Security_PRD_2026-11-16.md",
+      "sha256": "8388a64bb0be942ee3e86b99e284f5fbfd852604232b5847270c4fc6021d7e73"
+    },
+    {
+      "path": "infra/local/compose.yaml",
+      "sha256": "30aa317465241cdcdd027e7a57105dccee1af71820d6a0ca6d688ab3479a5be2"
+    },
+    {
+      "path": "infra/local/control-db/001-control.sql",
+      "sha256": "6e6b63dae36cbb4a7fdab6ff5793e157d37a30eb5ae2f5f3f5c3943f8cd53557"
+    },
+    {
+      "path": "infra/local/control-db/010-control-fixture.sh",
+      "sha256": "7cc391772b19569b10272bb7b79ea7bec87660825e756896e1cc52980363b406"
+    },
+    {
+      "path": "infra/local/Dockerfile",
+      "sha256": "18b9eba3b4cf4c3445dd390fc15f463b3868108c0b5682cccfe16bb2fcb1447f"
+    },
+    {
+      "path": "infra/local/images.lock.json",
+      "sha256": "20366e2ec12bffff52a1913e2a7513fa1aa808c475c2400b3cd649be70929667"
+    },
+    {
+      "path": "infra/local/mock-target.ts",
+      "sha256": "eb53cb4e80e7872058600681c6c4aa7ec6cede91faa07ab06bc1402c9d3de9b3"
+    },
+    {
+      "path": "infra/local/target-db/001-fixture.sql",
+      "sha256": "c7ca1904d43456f1e0730e9fd28e944b0296acdf649c773db0d946e2ec2cc46d"
+    },
+    {
+      "path": "infra/local/target-db/010-target-fixture.sh",
+      "sha256": "bd6b68d15417e684c5dea6bad8f9ae94581eef892ae23c6a83f0ce84955a9a30"
+    },
+    {
+      "path": "package-lock.json",
+      "sha256": "94e071ad7b8112a1acdde1d3482751a37fe6a8b0c3face6121cef2eb5859e8ca"
+    },
+    {
+      "path": "package.json",
+      "sha256": "98b1137c3677b904bed02ba2670b0dac6ac19f0334204c712b1dae8ad206d360"
+    },
+    {
+      "path": "playwright.config.ts",
+      "sha256": "de7831b3e0ab62c68aadeb56fc90dd4b3847c3b69311ae6f39ccdbe7870ae880"
+    },
+    {
+      "path": "scripts/finish-docker-repair.ps1",
+      "sha256": "10cd8e055be57e0c7ebda59ee347cb157a5b6d9d06179669ba7132720bed57f1"
+    },
+    {
+      "path": "scripts/install-opa.mjs",
+      "sha256": "8730cabe041fe9861e940f999813dcce27255332c5de663d230579e2e650e734"
+    },
+    {
+      "path": "scripts/local.mjs",
+      "sha256": "0dfad4b3bd39993770ac2528aa5ebfe50ebe7e026f26bdbf6078c198e83a51f3"
+    },
+    {
+      "path": "scripts/opa-runtime.mjs",
+      "sha256": "5f41c3580234389a6724a09196a2c70ca9aa364ff823050d04bc79795b7648aa"
+    },
+    {
+      "path": "scripts/postgres.sql",
+      "sha256": "d47992e92f7eec4fc41be0c445ed16a202815d2ab824a4905b2fe606b21bbf1f"
+    },
+    {
+      "path": "scripts/repair-docker-wsl.ps1",
+      "sha256": "12b79f53862fdb78c47417a2286e3c733b92e06d12b63ec4a966b7c7d53c640c"
+    },
+    {
+      "path": "scripts/resolve-images.mjs",
+      "sha256": "fd4bd7f4c83ab0b85102ad5d5ab6f0873d8f599a810f6999a98872556a5431a5"
+    },
+    {
+      "path": "scripts/resume-docker-repair.ps1",
+      "sha256": "23bb07c76ac351fbeee59734498d0a4366c88b85f3414adf4fcd1ec3bc0e1901"
+    },
+    {
+      "path": "scripts/setup.mjs",
+      "sha256": "917506aa5994a2a7ff18111f718c4277a7768dec83f491422b6d87fcaf21e312"
+    },
+    {
+      "path": "scripts/source-manifest.mjs",
+      "sha256": "bfcedba2f676bc861c15190a8459bb35d6ea51c072fafff929e73f52b702ef50"
+    },
+    {
+      "path": "scripts/test.mjs",
+      "sha256": "2c25ef8c49256f0f8b36687e4c9ab4d693eee1f03dddd1099f314396662dae07"
+    },
+    {
+      "path": "scripts/upgrade-docker.ps1",
+      "sha256": "6e045402c8d3a4ba02dc28e72034c9c87295c2fb4c30f663aeb9013564d1b2fb"
+    },
+    {
+      "path": "scripts/verify-all.mjs",
+      "sha256": "ec7c6707596c35100b393ce0e1418e4fa081fb0ec0c0771a01d0df991d9636a8"
+    },
+    {
+      "path": "scripts/verify-isolation.mjs",
+      "sha256": "d18302322299af5877d237b5a879825e4d78c39aa4970023709c43e62663e7ad"
+    },
+    {
+      "path": "scripts/verify-stage1.mjs",
+      "sha256": "744793ec7ea2789ec56dc0ae0999f82da326753ebc2fa9837c1749115361121a"
+    },
+    {
+      "path": "scripts/with-opa.mjs",
+      "sha256": "0c2a8e37399f2c2f8ec8ee9804542080ded9b0b425d088e2c26f234e8d2a2158"
+    },
+    {
+      "path": "server/adapters/fixture-http.ts",
+      "sha256": "24b16613b1dfb77220f79d7862c7a1fe67fc59d30dfda9f91493da75e2fb81e8"
+    },
+    {
+      "path": "server/adapters/git-fixture.ts",
+      "sha256": "2a473de1f9d0fae8a4b21bfc410f71c755bf2c008b703fc6d032a112c2a04fa0"
+    },
+    {
+      "path": "server/adapters/postgres-fixture.ts",
+      "sha256": "fbd6c09eb43c64657719cc8049efebe939cdcb025cb9bc68ec3de925a070d9eb"
+    },
+    {
+      "path": "server/app.ts",
+      "sha256": "d1f7aeec8f1687555811b4e3192acd878b12ad213dca9c6785c4482a40d181d0"
+    },
+    {
+      "path": "server/connectors.ts",
+      "sha256": "02b693a19ba669e9ec6b335364db0048580003b5c834538f56d28ae43af6cc4a"
+    },
+    {
+      "path": "server/contracts.ts",
+      "sha256": "565ca02c00d7bd5570ee3cb98792e7b1315176e59382f74fadba735acc2a6595"
+    },
+    {
+      "path": "server/control-store.ts",
+      "sha256": "f177c8dc58a2dbffdc0f7c2b9ba7993253448beb18da4b2fcf9b7dbae4252e25"
+    },
+    {
+      "path": "server/fixture-target.ts",
+      "sha256": "4ad21d00f95c7a5871c1ef217cdcf9cc96051a38a50fbf226b11db7fdd3c0498"
+    },
+    {
+      "path": "server/gateway.ts",
+      "sha256": "9616eaebc248d1892afbac30629f95ab28f64e3e44872347bc33820bbadbe17b"
+    },
+    {
+      "path": "server/index.ts",
+      "sha256": "6e491d82bb1de53e4733bef1b3709e1342e821dfdf3ccfa953dc6ac11a7c3568"
+    },
+    {
+      "path": "server/isolated.ts",
+      "sha256": "adcf632847e47678b37f8250880820f0b72e86bacf8dd9233587da550f900867"
+    },
+    {
+      "path": "server/mcp-http.ts",
+      "sha256": "882b5f0b95c06039b079d98214f0e20bc1b1f7005a9d6bacdec24d1b6f257258"
+    },
+    {
+      "path": "server/mcp.ts",
+      "sha256": "f9ac317edfab6638c533e64689db0147a367f6a039230c017e5a16bdbfab4061"
+    },
+    {
+      "path": "server/policy/contracts.ts",
+      "sha256": "430e523ba1180886cf8d50c1cbeb18a5b50439394e8ae9ddafd2cc44edc82a1f"
+    },
+    {
+      "path": "server/policy/opa-client.ts",
+      "sha256": "93fc746b9179328d585afdc75d01111d2b9e2cee94f9e9057d1a2fbd02eb1d08"
+    },
+    {
+      "path": "server/postgres-store.ts",
+      "sha256": "75e82e0f4ff42d0255642b48e56896de2e40299472144b2a4566bb55ff57827d"
+    },
+    {
+      "path": "server/security/limits.ts",
+      "sha256": "0ca595ceb86b6a36acb26ffcac68d1ed3a18c7fe834611e0bcd92f6210c1036c"
+    },
+    {
+      "path": "server/stage1.ts",
+      "sha256": "8dc7731796a890c2293438469da6d556e6a978409bac6a5c1e00d4477971f045"
+    },
+    {
+      "path": "server/store.ts",
+      "sha256": "7bd470919c0211a37fc1c4d44fdf371f6efee5ba6d98b0b063b72af055937fad"
+    },
+    {
+      "path": "services/policy/agentbrake_test.rego",
+      "sha256": "e4d3acc02ccf8e112590ef13da89fe155b44c1f35aa36b3afe8b492554c3a482"
+    },
+    {
+      "path": "services/policy/agentbrake.rego",
+      "sha256": "4a7f10825879bdb43b93756f4b57f68db7d2fefd754a0564128fc32bead000e6"
+    },
+    {
+      "path": "services/policy/authz.rego",
+      "sha256": "6336aacaaf3b9e5875ca599345cbf256e7944354062ba0e061aa952c777ddaed"
+    },
+    {
+      "path": "services/policy/toolchain.json",
+      "sha256": "3f1c573cd5c53edb849e9d0e665dfe1c37feb3e8224af82a7c1bc164d849dba8"
+    },
+    {
+      "path": "src/App.tsx",
+      "sha256": "2428286ae6254d0b1cd036be0e0512acd6e5232da218c1aa40b07e33ab329544"
+    },
+    {
+      "path": "src/main.tsx",
+      "sha256": "7dd0ec7c005211dc0191dbe92115cb395ec8f04c2591d2259039a5d7b42fb3c0"
+    },
+    {
+      "path": "src/styles.css",
+      "sha256": "25ea0f662a8f6186e30d60d1d552e364f75d6f0a673e35ddea1cf127d2184677"
+    },
+    {
+      "path": "src/types.ts",
+      "sha256": "7fd122bebd6d1d6dd2ab24f4baca6aa1c712f12d628573591dc279d61e2029b5"
+    },
+    {
+      "path": "tests/browser/workspace.spec.ts",
+      "sha256": "254c32d8bed1b59dd7e95d75bc46a1ff97fd27aa08fbd73ac68134dd004beab6"
+    },
+    {
+      "path": "tests/enforcement/core.test.ts",
+      "sha256": "b4cbe72498b3d65d40757494833515d6b53b10c3889a8359816b33904db8a22e"
+    },
+    {
+      "path": "tests/enforcement/mcp-protocol.test.ts",
+      "sha256": "2546e5358f2b04c5e934078880afbc32b4b013a5e09509b300c275d01147faba"
+    },
+    {
+      "path": "tests/enforcement/remote-fixture.test.ts",
+      "sha256": "9dbb103b76f71e43f409d37e1616ab6ae6127d82310aad973227d8f5b7e99a19"
+    },
+    {
+      "path": "tests/enforcement/rest-audit.test.ts",
+      "sha256": "c586ba3aa2a7e20efdd787f801e57b032f17ba5f5a9d762e95e20897148d564f"
+    },
+    {
+      "path": "tests/enforcement/review-regressions.test.ts",
+      "sha256": "5c5caadaa485037e9667f5e14a056c7b97d7c9410f3f8be52f61fff89d83cbc2"
+    },
+    {
+      "path": "tests/enforcement/stage2-races.test.ts",
+      "sha256": "b4a9b139c018938a63d8587965f83b5001aa2fd4123b67d2293081a84093ce13"
+    },
+    {
+      "path": "tests/enforcement/task-grants.test.ts",
+      "sha256": "a100b2e152c6af070d05f6612f36c554175e716023781193ef711fe19bf85282"
+    },
+    {
+      "path": "tests/evidence-scenarios.ts",
+      "sha256": "1b0c4d16a34c2442ac9df2740ba48eadc9011d5a902352fe318e50f9d2a1c790"
+    },
+    {
+      "path": "tests/failure-cases.test.ts",
+      "sha256": "6e62da57c93f9af8688902fdf6d03d46601a24040b6d4ed2f6afc0bc034e8d03"
+    },
+    {
+      "path": "tests/gateway.test.ts",
+      "sha256": "dc128efc35248c825a4e003b59ada19a18d1aa832918bfe358fcda07178bbafd"
+    },
+    {
+      "path": "tests/isolation/agent.mjs",
+      "sha256": "178498fd33bd4ef3b6a15cd723b52e639cdf044b4c6e0066219762cc0bb466d6"
+    },
+    {
+      "path": "tests/mcp.test.ts",
+      "sha256": "eb12ff9e90bf232780a064ae3e84f8fe776b444ca40105998b3a1bac4646bd95"
+    },
+    {
+      "path": "tests/policy/pdp.test.ts",
+      "sha256": "899cb76606ae252b64ecb6a998319a0c36558e093abf1c73354ffae8535bee64"
+    },
+    {
+      "path": "tests/stage2/git-fixture.test.ts",
+      "sha256": "cc64dd69c23a27c9b634c47d6468a5bb44b0711592b75abbaf1b7bb38d941747"
+    },
+    {
+      "path": "tests/stage2/postgres-control.test.ts",
+      "sha256": "09ffb5fe5089ee6b248697c2b613a3b77cc4590a50dab0f1561837f36a3d6bdd"
+    },
+    {
+      "path": "tests/stage2/postgres-target.test.ts",
+      "sha256": "08547fe8f7d161f97c649f4aeab840783626dbfbf8db5fbcb65053022e1af804"
+    },
+    {
+      "path": "tests/stage2/workflow.mjs",
+      "sha256": "27798312b6df90fbfbe745636a76e3596b7691cc8fa57c188e3d63f6a9af13ad"
+    },
+    {
+      "path": "tests/ui-server.ts",
+      "sha256": "3fa57573c0fd3dfd942ce7f49663f11b8d87c9a41042674a74f49b012ace5ed9"
+    },
+    {
+      "path": "tsconfig.json",
+      "sha256": "7b222790ac9f914ad2e9da8cff51f89b17e84c0b5e58edee875dcba904757615"
+    },
+    {
+      "path": "vite.config.ts",
+      "sha256": "99fbb8ce7e92c85f103f41fad1ab7a8a8f0fd70393e47a162064c7d4adf002da"
+    }
+  ]
+}

@@ -1,0 +1,93 @@
+{
+  "result": "PASS_BOUNDED",
+  "stage": "Milestone B",
+  "startedAt": "2026-11-16T19:38:29.782Z",
+  "finishedAt": "2026-11-16T19:45:23.242Z",
+  "sourceHash": "993f7cbf1a3a56dcb421f88368efa67dbbcf37809d0d45b9cdf54e0ab80287c7",
+  "gitCommit": null,
+  "nativeRun": "86b5c520-e5b3-4499-a521-bd7578847131",
+  "isolationRun": "532d21d4-8a32-428d-be7a-f5fabfe11224",
+  "nativeTests": {
+    "tests": 175,
+    "pass": 171,
+    "fail": 0,
+    "skipped": 4
+  },
+  "postgresTests": {
+    "tests": 22,
+    "pass": 22,
+    "fail": 0,
+    "skipped": 0
+  },
+  "workflowCases": 14,
+  "gitContainerTests": {
+    "tests": 16,
+    "pass": 16,
+    "fail": 0,
+    "skipped": 0
+  },
+  "benchmark": {
+    "total": 26,
+    "baselineSucceeded": 26,
+    "completed": 24,
+    "falseBlocks": 2,
+    "nonPolicyFailures": 0,
+    "completionVsBaseline": 0.9230769230769231,
+    "falseBlockRate": 0.07692307692307693,
+    "approvalRequired": 12,
+    "authorizationP50Ms": 4.75,
+    "authorizationP95Ms": 6.26,
+    "corpusHash": "6d5c6529807d270e0cb3eb0e0e8c6ce16ca854d8d1d98f5e6dec0bd76ad77289"
+  },
+  "codex": {
+    "version": "codex-cli 0.169.0",
+    "binarySha256": "b452ca20f838a8855a88a41050ee4a694033fff4ea3ecdad5633e6e0e8d13f2b",
+    "model": [
+      {
+        "name": "qwen3:4b-instruct",
+        "model": "qwen3:4b-instruct",
+        "modified_at": "2026-11-16T11:18:30.6952146Z",
+        "size": 2497293803,
+        "digest": "0edcdef34593eac1aa2be9c7d06c432dcf81945adca5eca2f27662c18f168ba0",
+        "details": {
+          "parent_model": "",
+          "format": "gguf",
+          "family": "qwen3",
+          "families": [
+            "qwen3"
+          ],
+          "parameter_size": "4.0B",
+          "quantization_level": "Q4_K_M",
+          "context_length": 262144,
+          "embedding_length": 2560,
+          "runner": "ggml"
+        },
+        "capabilities": [
+          "tools",
+          "thinking",
+          "completion"
+        ]
+      }
+    ],
+    "actualActions": 2,
+    "replayedReads": 2,
+    "forbiddenReplayRule": "task-scope"
+  },
+  "environmentHash": "45c7d08080ab3f2fc99c9db333bed2711bf7abf791caaf97344d16a19a6509e3",
+  "cleanup": {
+    "result": "PASS",
+    "remaining": {
+      "containers": 0,
+      "networks": 0,
+      "volumes": 0
+    }
+  },
+  "credentialScan": {
+    "result": "PASS",
+    "files": 49,
+    "knownSyntheticSecrets": 12,
+    "contaminated": [],
+    "scope": "Exact known fixture credentials; operator separately scans issued credentials. Not a universal DLP scan."
+  },
+  "scope": "Local official Codex CLI with actual Qwen inference, gateway/MCP/OPA, synthetic PostgreSQL/Git mock PR, injection replay and curated test-client benchmark. No hosted OpenAI model or live GitHub; not production or statistical model reliability."
+}

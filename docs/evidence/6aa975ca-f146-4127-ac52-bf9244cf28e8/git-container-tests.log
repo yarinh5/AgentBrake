@@ -1,0 +1,108 @@
+ Container agentbrake-a-6aa975ca-verifier-run-dca48066b0e4 Creating 
+ Container agentbrake-a-6aa975ca-verifier-run-dca48066b0e4 Created 
+TAP version 13
+# Subtest: persistent fixture reopens exact branch/PR state and refuses another installation or unmarked repository
+ok 1 - persistent fixture reopens exact branch/PR state and refuses another installation or unmarked repository
+  ---
+  duration_ms: 322.71457
+  type: 'test'
+  ...
+# Subtest: human PR review computes the canonical diff from a full PR request without mutating Git
+ok 2 - human PR review computes the canonical diff from a full PR request without mutating Git
+  ---
+  duration_ms: 86.430218
+  type: 'test'
+  ...
+# Subtest: creates a new real Git fixture with trusted identity, protected main and bounded reads
+ok 3 - creates a new real Git fixture with trusted identity, protected main and bounded reads
+  ---
+  duration_ms: 99.331022
+  type: 'test'
+  ...
+# Subtest: refuses existing directories and repositories without changing their contents
+ok 4 - refuses existing directories and repositories without changing their contents
+  ---
+  duration_ms: 67.345214
+  type: 'test'
+  ...
+# Subtest: canonical proposals return an exact diff and fingerprint without writing Git objects
+ok 5 - canonical proposals return an exact diff and fingerprint without writing Git objects
+  ---
+  duration_ms: 142.37153
+  type: 'test'
+  ...
+# Subtest: proposal diff applies exactly, including empty files and missing terminal newlines
+ok 6 - proposal diff applies exactly, including empty files and missing terminal newlines
+  ---
+  duration_ms: 191.227842
+  type: 'test'
+  ...
+# Subtest: queued requests cannot swap validated branch or content before execution
+ok 7 - queued requests cannot swap validated branch or content before execution
+  ---
+  duration_ms: 149.627932
+  type: 'test'
+  ...
+# Subtest: approved feature branch and mock PR produce one real commit while main remains unchanged
+ok 8 - approved feature branch and mock PR produce one real commit while main remains unchanged
+  ---
+  duration_ms: 211.243646
+  type: 'test'
+  ...
+# Subtest: rejects protected branches, external repos, extra arguments and forbidden tools with no effects
+ok 9 - rejects protected branches, external repos, extra arguments and forbidden tools with no effects
+  ---
+  duration_ms: 53.494311
+  type: 'test'
+  ...
+# Subtest: rejects workflow, secret, traversal and ambiguous paths before reading or writing
+ok 10 - rejects workflow, secret, traversal and ambiguous paths before reading or writing
+  ---
+  duration_ms: 66.598315
+  type: 'test'
+  ...
+# Subtest: enforces file count, UTF-8 bytes, total bytes, duplicate paths and exact nested schemas
+ok 11 - enforces file count, UTF-8 bytes, total bytes, duplicate paths and exact nested schemas
+  ---
+  duration_ms: 81.627618
+  type: 'test'
+  ...
+# Subtest: stale main, stale feature, missing feature and no-op proposals fail before mutation
+ok 12 - stale main, stale feature, missing feature and no-op proposals fail before mutation
+  ---
+  duration_ms: 218.314547
+  type: 'test'
+  ...
+# Subtest: concurrent branch and PR requests produce at most one effect each
+ok 13 - concurrent branch and PR requests produce at most one effect each
+  ---
+  duration_ms: 301.999965
+  type: 'test'
+  ...
+# Subtest: Git tree symlinks are never resolved or overwritten through an allowed path
+ok 14 - Git tree symlinks are never resolved or overwritten through an allowed path
+  ---
+  duration_ms: 163.084735
+  type: 'test'
+  ...
+# Subtest: closing preserves evidence and rejects subsequent execution
+ok 15 - closing preserves evidence and rejects subsequent execution
+  ---
+  duration_ms: 40.888409
+  type: 'test'
+  ...
+# Subtest: fast Git read commands do not fail after an unused stdin pipe closes
+ok 16 - fast Git read commands do not fail after an unused stdin pipe closes
+  ---
+  duration_ms: 444.189096
+  type: 'test'
+  ...
+1..16
+# tests 16
+# suites 0
+# pass 16
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 3109.068072

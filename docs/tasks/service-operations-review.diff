@@ -1,0 +1,1757 @@
+Operations task delta from a37811a74bc93ace334a58bb51577a195dd9985fcd16aca66b1e4d669d058bdd
+
+FILE infra/local/compose.yaml
+diff --git "a/.agentbrake-local\\service-base\\infra\\local\\compose.yaml" b/infra/local/compose.yaml
+index ce3a9db..7dcb8d7 100644
+--- "a/.agentbrake-local\\service-base\\infra\\local\\compose.yaml"
++++ b/infra/local/compose.yaml
+@@ -124,16 +124,17 @@ services:
+       POSTGRES_PASSWORD_FILE: /run/secrets/bootstrap-password
+       PGDATA: /var/lib/postgresql/data/pgdata
+     networks: [protected]
+     volumes:
+       - ${RUN_DIR}/control-owner-password:/run/secrets/bootstrap-password:ro
+       - ${RUN_DIR}/control-password:/run/secrets/control-password:ro
+       - ./control-db/010-control-fixture.sh:/docker-entrypoint-initdb.d/010-control-fixture.sh:ro
+       - ./control-db/001-control.sql:/opt/agentbrake-control/001-control.sql:ro
++      - ./control-db/002-accounts.sql:/opt/agentbrake-control/002-accounts.sql:ro
+     tmpfs:
+       - /var/lib/postgresql/data:size=256m,uid=70,gid=70,mode=0700
+       - /var/run/postgresql:uid=70,gid=70,mode=0770
+       - /tmp:size=32m,mode=1777
+     healthcheck:
+       test: [CMD, pg_isready, -U, control_owner, -d, agentbrake_control_fixture]
+       interval: 2s
+       timeout: 2s
+
+FILE infra/product/compose.yaml
+diff --git "a/.agentbrake-local\\service-base\\infra\\product\\compose.yaml" b/infra/product/compose.yaml
+index c1c33ff..dc69a94 100644
+--- "a/.agentbrake-local\\service-base\\infra\\product\\compose.yaml"
++++ b/infra/product/compose.yaml
+@@ -193,16 +193,17 @@ services:
+       }
+     networks: [control]
+     volumes:
+       - control-data:/var/lib/postgresql/data
+       - ${INSTALL_DIR}/control-owner-password:/run/secrets/bootstrap-password:ro
+       - ${INSTALL_DIR}/control-password:/run/secrets/control-password:ro
+       - ../local/control-db/010-control-fixture.sh:/docker-entrypoint-initdb.d/010-control-fixture.sh:ro
+       - ../local/control-db/001-control.sql:/opt/agentbrake-control/001-control.sql:ro
++      - ../local/control-db/002-accounts.sql:/opt/agentbrake-control/002-accounts.sql:ro
+     tmpfs:
+       ["/var/run/postgresql:uid=70,gid=70,mode=0770", "/tmp:size=32m,mode=1777"]
+     depends_on: { volume-init: { condition: service_completed_successfully } }
+     healthcheck:
+       test: [CMD, pg_isready, -U, control_owner, -d, agentbrake_control_fixture]
+       interval: 3s
+       timeout: 2s
+       retries: 40
+
+FILE infra/product/recovery.ts
+NEW
+import { readFile } from "node:fs/promises";
+import { PostgresStore } from "../../server/postgres-store.js";
+if (
+  process.env.AGENTBRAKE_PRODUCT !== "1" ||
+  process.env.AGENTBRAKE_ROLE !== "control"
+)
+  throw Error("Recovery requires the installation maintenance control process");
+let input = "";
+for await (const chunk of process.stdin) {
+  input += chunk;
+  if (input.length > 200) throw Error("Invalid recovery envelope");
+}
+const { backupId } = JSON.parse(input);
+if (typeof backupId !== "string" || !/^[a-f0-9-]{36}$/.test(backupId))
+  throw Error("Invalid backup identifier");
+const password = (
+  await readFile("/run/secrets/control-password", "utf8")
+).trim();
+const store = await PostgresStore.open(
+  "postgresql://control_runtime:" +
+    password +
+    "@control-db:5432/agentbrake_control_fixture",
+  { reconcile: true },
+);
+try {
+  await store.setPaused(true);
+  const identity = await store.changeIdentity((state) => {
+    const invalidatedInvitations = state.invitations.length;
+    const invalidatedRecoveries = state.recoveries.length;
+    state.invitations = [];
+    state.recoveries = [];
+    for (const account of state.accounts) account.revision++;
+    return {
+      result: { invalidatedInvitations, invalidatedRecoveries },
+      audit: {
+        type: "recovery.identity-authority-invalidated",
+        details: {
+          backupId,
+          invalidatedInvitations,
+          invalidatedRecoveries,
+          source: "local-maintenance",
+        },
+      },
+    };
+  });
+  const agents = await store.agents();
+  for (const agent of agents)
+    await store.changeAgent(
+      agent.id,
+      {
+        status: "paused",
+        ...(agent.grant ? { grant: { ...agent.grant, revoked: true } } : {}),
+      },
+      "recovery.grant-revoked",
+    );
+  let blocked = 0;
+  for (const action of await store.actions())
+    if (action.status === "pending") {
+      await store.blockPending({
+        ...action,
+        rule: "recovery-suspension",
+        reason: "Restored review requires a new task and independent review.",
+      });
+      blocked++;
+    }
+  await store.audit("recovery.completed", {
+    backupId,
+    agentsRevoked: agents.length,
+    pendingBlocked: blocked,
+    paused: true,
+    ...identity,
+  });
+  if (!(await store.verifyAudit()))
+    throw Error("Recovered audit chain is invalid");
+  console.log(
+    JSON.stringify({
+      paused: true,
+      agentsRevoked: agents.length,
+      pendingBlocked: blocked,
+      auditValid: true,
+    }),
+  );
+} finally {
+  await store.close();
+}
+
+FILE infra/product/volume-archive.mjs
+NEW
+// Cold local-volume snapshots only. Never follow symlinks or restore over data.
+import {
+  readdir,
+  lstat,
+  readFile,
+  mkdir,
+  writeFile,
+  chmod,
+  realpath,
+} from "node:fs/promises";
+import { join, relative, resolve, sep } from "node:path";
+import { gzipSync, gunzipSync } from "node:zlib";
+import { pathToFileURL } from "node:url";
+const LIMIT = 256 * 1024 * 1024,
+  MAX_ENTRIES = 10000;
+const safePath = (path) =>
+  typeof path === "string" &&
+  path.length <= 1000 &&
+  path
+    .split("/")
+    .every((p) => p && p !== "." && p !== ".." && !/[\\:\x00-\x1f]/.test(p));
+export function validateSnapshot(encoded) {
+  if (
+    typeof encoded !== "string" ||
+    encoded.length > 48 * 1024 * 1024 ||
+    !/^[A-Za-z0-9+/]*={0,2}$/.test(encoded)
+  )
+    throw Error("Invalid volume snapshot");
+  let entries;
+  try {
+    entries = JSON.parse(
+      gunzipSync(Buffer.from(encoded, "base64"), {
+        maxOutputLength: 384 * 1024 * 1024,
+      }).toString("utf8"),
+    );
+  } catch {
+    throw Error("Invalid volume snapshot");
+  }
+  if (!Array.isArray(entries) || entries.length > MAX_ENTRIES)
+    throw Error("Invalid volume entries");
+  const paths = new Set(),
+    dirs = new Set();
+  let size = 0;
+  for (const item of entries) {
+    if (
+      !item ||
+      !safePath(item.path) ||
+      paths.has(item.path) ||
+      !["file", "directory"].includes(item.type) ||
+      !Number.isInteger(item.mode) ||
+      item.mode < 0 ||
+      item.mode > 0o777
+    )
+      throw Error("Unsafe volume entry");
+    const parent = item.path.split("/").slice(0, -1).join("/");
+    if (parent && !dirs.has(parent))
+      throw Error("Volume parent must precede child");
+    if (item.type === "directory") {
+      if (item.data !== undefined) throw Error("Invalid directory data");
+      dirs.add(item.path);
+    } else {
+      if (
+        typeof item.data !== "string" ||
+        /[^A-Za-z0-9+/=]/.test(item.data) ||
+        Buffer.from(item.data, "base64").toString("base64") !== item.data
+      )
+        throw Error("Invalid volume data");
+      size += Buffer.byteLength(item.data, "base64");
+      if (size > LIMIT) throw Error("Volume size limit exceeded");
+    }
+    paths.add(item.path);
+  }
+  return entries;
+}
+export async function snapshotVolume(directory) {
+  if ((await lstat(directory)).isSymbolicLink())
+    throw Error("Volume root must not be a symbolic link");
+  const root = await realpath(directory),
+    entries = [];
+  let size = 0;
+  async function walk(dir) {
+    for (const name of (await readdir(dir)).sort()) {
+      const path = join(dir, name),
+        info = await lstat(path),
+        key = relative(root, path).split(sep).join("/");
+      if (
+        !safePath(key) ||
+        info.isSymbolicLink() ||
+        (!info.isFile() && !info.isDirectory())
+      )
+        throw Error("Unsupported volume entry");
+      if (entries.length >= MAX_ENTRIES)
+        throw Error("Volume entry limit exceeded");
+      if (info.isDirectory()) {
+        entries.push({ path: key, type: "directory", mode: info.mode & 0o777 });
+        await walk(path);
+      } else {
+        size += info.size;
+        if (size > LIMIT) throw Error("Volume size limit exceeded");
+        entries.push({
+          path: key,
+          type: "file",
+          mode: info.mode & 0o777,
+          data: (await readFile(path)).toString("base64"),
+        });
+      }
+    }
+  }
+  await walk(root);
+  return gzipSync(JSON.stringify(entries)).toString("base64");
+}
+export async function restoreVolume(directory, encoded) {
+  const entries = validateSnapshot(encoded);
+  if (
+    (await lstat(directory)).isSymbolicLink() ||
+    (await readdir(directory)).length
+  )
+    throw Error("Restore requires an empty real volume");
+  const root = await realpath(directory);
+  for (const item of entries) {
+    const path = join(root, ...item.path.split("/"));
+    if (!path.startsWith(root + sep))
+      throw Error("Volume path escapes destination");
+    if (item.type === "directory") await mkdir(path, { mode: item.mode });
+    else
+      await writeFile(path, Buffer.from(item.data, "base64"), {
+        flag: "wx",
+        mode: item.mode,
+      });
+    await chmod(path, item.mode);
+  }
+  return { restored: entries.length };
+}
+if (
+  process.argv[1] &&
+  import.meta.url === pathToFileURL(resolve(process.argv[1])).href
+) {
+  try {
+    const [operation, directory] = process.argv.slice(2);
+    if (operation === "snapshot")
+      process.stdout.write(await snapshotVolume(directory));
+    else if (operation === "restore") {
+      let input = "";
+      for await (const chunk of process.stdin) {
+        input += chunk;
+        if (input.length > 48 * 1024 * 1024)
+          throw Error("Snapshot input limit exceeded");
+      }
+      process.stdout.write(
+        JSON.stringify(await restoreVolume(directory, input)),
+      );
+    } else throw Error("Unknown volume operation");
+  } catch (error) {
+    console.error(error.message);
+    process.exitCode = 1;
+  }
+}
+
+FILE package-lock.json
+diff --git "a/.agentbrake-local\\service-base\\package-lock.json" b/package-lock.json
+index 49d5444..c4b43b3 100644
+--- "a/.agentbrake-local\\service-base\\package-lock.json"
++++ b/package-lock.json
+@@ -1,17 +1,17 @@
+ {
+   "name": "agentbrake",
+-  "version": "0.1.0",
++  "version": "0.2.0",
+   "lockfileVersion": 3,
+   "requires": true,
+   "packages": {
+     "": {
+       "name": "agentbrake",
+-      "version": "0.1.0",
++      "version": "0.2.0",
+       "dependencies": {
+         "@modelcontextprotocol/node": "2.1.2",
+         "@modelcontextprotocol/server": "2.4.0",
+         "@opentelemetry/api": "1.9.0",
+         "@opentelemetry/sdk-trace": "2.12.0",
+         "dotenv": "17.4.2",
+         "express": "5.3.0",
+         "lucide-react": "0.468.0",
+
+FILE package.json
+diff --git "a/.agentbrake-local\\service-base\\package.json" b/package.json
+index 058157a..2a4f1eb 100644
+--- "a/.agentbrake-local\\service-base\\package.json"
++++ b/package.json
+@@ -1,11 +1,11 @@
+ {
+   "name": "agentbrake",
+-  "version": "0.1.0",
++  "version": "0.2.0",
+   "private": true,
+   "type": "module",
+   "engines": {
+     "node": ">=22.13"
+   },
+   "scripts": {
+     "dev": "node scripts/local.mjs",
+     "setup": "node scripts/install-opa.mjs",
+@@ -22,17 +22,21 @@
+     "setup:codex-local": "node scripts/setup-codex-local.mjs",
+     "verify:milestone-b": "node scripts/verify-all.mjs --milestone-b",
+     "product:init": "node scripts/product.mjs init",
+     "product:start": "node scripts/product.mjs start",
+     "product:stop": "node scripts/product.mjs stop",
+     "verify:product": "node scripts/verify-product.mjs",
+     "build:dashboard": "node scripts/build-dashboard.mjs",
+     "verify:release": "node scripts/verify-release.mjs",
+-    "verify:security": "node scripts/verify-security.mjs"
++    "verify:security": "node scripts/verify-security.mjs",
++    "verify:service": "node scripts/verify-service.mjs",
++    "product:doctor": "node scripts/product.mjs doctor",
++    "product:backup": "node scripts/product.mjs backup",
++    "package:release": "node scripts/package-release.mjs"
+   },
+   "dependencies": {
+     "@modelcontextprotocol/node": "2.1.2",
+     "@modelcontextprotocol/server": "2.4.0",
+     "@opentelemetry/api": "1.9.0",
+     "@opentelemetry/sdk-trace": "2.12.0",
+     "dotenv": "17.4.2",
+     "express": "5.3.0",
+
+FILE scripts/backup-format.mjs
+NEW
+import { createCipheriv, createDecipheriv, randomBytes } from "node:crypto";
+const MAGIC = Buffer.from("AGENTBRAKE-BACKUP-1\n");
+const LIMIT = 64 * 1024 * 1024;
+const checkKey = (key) => {
+  if (!Buffer.isBuffer(key) || key.length !== 32)
+    throw Error("Recovery key must be 32 bytes");
+};
+export function encryptBackup(value, key) {
+  checkKey(key);
+  const plaintext = Buffer.from(JSON.stringify(value));
+  if (plaintext.length > LIMIT - 128) throw Error("Backup size limit exceeded");
+  const nonce = randomBytes(12),
+    cipher = createCipheriv("aes-256-gcm", key, nonce);
+  cipher.setAAD(MAGIC);
+  const encrypted = Buffer.concat([cipher.update(plaintext), cipher.final()]);
+  plaintext.fill(0);
+  return Buffer.concat([MAGIC, nonce, cipher.getAuthTag(), encrypted]);
+}
+export function decryptBackup(bytes, key) {
+  checkKey(key);
+  if (bytes.length > LIMIT) throw Error("Backup size limit exceeded");
+  if (
+    bytes.length < MAGIC.length + 30 ||
+    !bytes.subarray(0, MAGIC.length).equals(MAGIC)
+  )
+    throw Error("Invalid backup envelope");
+  let plaintext;
+  try {
+    const offset = MAGIC.length;
+    const cipher = createDecipheriv(
+      "aes-256-gcm",
+      key,
+      bytes.subarray(offset, offset + 12),
+    );
+    cipher.setAAD(MAGIC);
+    cipher.setAuthTag(bytes.subarray(offset + 12, offset + 28));
+    plaintext = Buffer.concat([
+      cipher.update(bytes.subarray(offset + 28)),
+      cipher.final(),
+    ]);
+    return JSON.parse(plaintext.toString("utf8"));
+  } catch {
+    throw Error("Backup authentication failed");
+  } finally {
+    plaintext?.fill(0);
+  }
+}
+
+FILE scripts/package-release.mjs
+NEW
+import assert from "node:assert/strict";
+import { mkdir, readFile, writeFile, copyFile } from "node:fs/promises";
+import { join, dirname, resolve } from "node:path";
+import { createHash, randomUUID } from "node:crypto";
+import { spawnSync } from "node:child_process";
+import { sourceManifest } from "./source-manifest.mjs";
+const source = await sourceManifest();
+const release = JSON.parse(
+  await readFile("docs/evidence/local-release.json", "utf8"),
+);
+assert.equal(
+  release.sourceHash,
+  source.sourceHash,
+  "Package requires the verified current source",
+);
+assert.equal(release.result, "LOCAL_MVP_VERIFIED_EXTERNAL_GATES_OPEN");
+assert.equal(
+  release.service?.result,
+  "PASS_LOCAL_SERVICE",
+  "Package requires the service lifecycle acceptance gate",
+);
+const version = JSON.parse(await readFile("package.json", "utf8")).version;
+const output = resolve(".agentbrake-local/releases");
+await mkdir(output, { recursive: true, mode: 0o700 });
+const stage = join(output, "stage-" + randomUUID());
+await mkdir(stage, { mode: 0o700 });
+const files = [
+  ...source.files.map((f) => f.path),
+  "README.md",
+  "docs/LOCAL_PRODUCT_OPERATIONS.md",
+  "docs/SERVICE_OPERATIONS.md",
+  "docs/SERVICE_DESIGN.md",
+  "docs/KNOWN_LIMITATIONS.md",
+  "docs/TEST_MATRIX.md",
+  "docs/SECURITY_EVIDENCE.md",
+  "docs/evidence/local-release.json",
+];
+const manifest = [];
+for (const file of files) {
+  const destination = join(stage, file);
+  await mkdir(dirname(destination), { recursive: true });
+  await copyFile(file, destination, 1);
+  const bytes = await readFile(destination);
+  manifest.push({
+    path: file,
+    bytes: bytes.length,
+    sha256: createHash("sha256").update(bytes).digest("hex"),
+  });
+}
+await writeFile(
+  join(stage, "RELEASE.json"),
+  JSON.stringify(
+    {
+      version,
+      sourceHash: source.sourceHash,
+      createdAt: new Date().toISOString(),
+      files: manifest,
+      scope:
+        "Private local installation; dependency images/packages fetched separately. No runtime credentials, data, models or node_modules included. External acceptance gates remain documented.",
+    },
+    null,
+    2,
+  ),
+);
+const archive = join(
+  output,
+  `agentbrake-${version}-${source.sourceHash.slice(0, 12)}-${randomUUID().slice(0, 8)}.tar.gz`,
+);
+const packed = spawnSync("tar", ["-czf", archive, "-C", stage, "."], {
+  encoding: "utf8",
+  windowsHide: true,
+  timeout: 120000,
+});
+if (packed.status !== 0)
+  throw Error("Source packaging failed: " + packed.stderr);
+const bytes = await readFile(archive),
+  sha256 = createHash("sha256").update(bytes).digest("hex");
+await writeFile(
+  archive + ".sha256",
+  sha256 + "  " + archive.split(/[\\/]/).at(-1) + "\n",
+  { flag: "wx" },
+);
+const result = {
+  archive,
+  sha256,
+  bytes: bytes.length,
+  version,
+  sourceHash: source.sourceHash,
+  files: manifest.length,
+};
+await writeFile(
+  "docs/evidence/release-package.json",
+  JSON.stringify(result, null, 2),
+);
+console.log(JSON.stringify(result, null, 2));
+
+FILE scripts/product-maintenance.mjs
+NEW
+import {
+  open,
+  readFile,
+  writeFile,
+  mkdir,
+  rm,
+  stat,
+  realpath,
+} from "node:fs/promises";
+import { resolve, dirname, join, sep } from "node:path";
+import { randomBytes, randomUUID, createHash } from "node:crypto";
+import { root } from "./opa-runtime.mjs";
+import {
+  productConfig,
+  composeProduct,
+  dockerProduct,
+  prepareProduct,
+} from "./product.mjs";
+import { sourceManifest } from "./source-manifest.mjs";
+import { encryptBackup, decryptBackup } from "./backup-format.mjs";
+import { validateSnapshot } from "../infra/product/volume-archive.mjs";
+
+const requiredFiles = [
+  "session-key",
+  "binding-key",
+  "bridge-key",
+  "opa-token",
+  "target-token",
+  "observer-token",
+  "control-password",
+  "control-owner-password",
+  "postgres-bootstrap",
+  "target-read-password",
+  "target-write-password",
+  "operators.json",
+];
+const volumeNames = ["control-data", "target-data", "git-data"];
+const parseRows = (raw) =>
+  !raw.trim()
+    ? []
+    : raw.trim().startsWith("[")
+      ? JSON.parse(raw)
+      : raw
+          .trim()
+          .split("\n")
+          .map((s) => JSON.parse(s));
+export async function installationStatus(config) {
+  return parseRows(
+    await composeProduct(
+      config,
+      ["--profile", "agent", "ps", "--all", "--format", "json"],
+      { capture: true },
+    ),
+  );
+}
+export async function withMaintenance(config, work) {
+  const path = join(config.dir, "maintenance.lock");
+  let lock;
+  try {
+    lock = await open(path, "wx", 0o600);
+  } catch (e) {
+    if (e.code === "EEXIST")
+      throw Error(
+        "Installation maintenance is already active. Inspect maintenance.lock before manual recovery.",
+      );
+    throw e;
+  }
+  try {
+    await lock.writeFile(
+      JSON.stringify({ pid: process.pid, at: new Date().toISOString() }),
+    );
+    return await work();
+  } finally {
+    await lock.close();
+    await rm(path);
+  }
+}
+async function safeLocalFile(path, mustExist = true) {
+  const boundary = await realpath(join(root, ".agentbrake-local")),
+    absolute = resolve(path);
+  const actual = mustExist
+    ? await realpath(absolute)
+    : join(
+        await realpath(dirname(absolute)),
+        absolute.slice(dirname(absolute).length + 1),
+      );
+  if (!actual.startsWith(boundary + sep))
+    throw Error(
+      "Operation file must stay inside this workspace .agentbrake-local directory",
+    );
+  return actual;
+}
+async function volumeInfo(config, name) {
+  const volume = config.project + "_" + name;
+  const [info] = JSON.parse(
+    await dockerProduct(config, ["volume", "inspect", volume], {
+      capture: true,
+    }),
+  );
+  if (
+    info.Name !== volume ||
+    info.Labels?.["com.agentbrake.product"] !== config.id ||
+    info.Labels?.["com.docker.compose.project"] !== config.project
+  )
+    throw Error("Volume ownership mismatch");
+  return volume;
+}
+async function volumeTransfer(config, name, operation, input) {
+  const volume = await volumeInfo(config, name);
+  const helper = join(root, "infra/product/volume-archive.mjs").replaceAll(
+    "\\",
+    "/",
+  );
+  return dockerProduct(
+    config,
+    [
+      "run",
+      "--rm",
+      "--network",
+      "none",
+      "--read-only",
+      "--cap-drop",
+      "ALL",
+      "--security-opt",
+      "no-new-privileges:true",
+      "--pids-limit",
+      "32",
+      "--memory",
+      "768m",
+      "--user",
+      name === "git-data" ? "1000:1000" : "70:70",
+      "--mount",
+      `type=volume,source=${volume},target=/volume${operation === "snapshot" ? ",readonly" : ""}`,
+      "--mount",
+      `type=bind,source=${helper},target=/tool/volume-archive.mjs,readonly`,
+      "--entrypoint",
+      "node",
+      ...(input === undefined ? [] : ["-i"]),
+      config.env.NODE_IMAGE,
+      "/tool/volume-archive.mjs",
+      operation,
+      "/volume",
+    ],
+    {
+      capture: true,
+      input,
+      maxOutputBytes: 64 * 1024 * 1024,
+      timeoutMs: 180000,
+    },
+  );
+}
+export async function migrateProduct(config) {
+  await composeProduct(
+    config,
+    ["up", "-d", "--wait", "--wait-timeout", "120", "control-db", "target-db"],
+    { capture: true },
+  );
+  const sql = await readFile(
+    join(root, "infra/local/control-db/002-accounts.sql"),
+    "utf8",
+  );
+  const checksum = createHash("sha256").update(sql).digest("hex");
+  // The owner applies one idempotent forward migration under an advisory lock.
+  // A changed previously recorded migration is an explicit release error.
+  const body = sql
+    .replace(/^\\set ON_ERROR_STOP on\s*/, "")
+    .replace(/^BEGIN;\s*/, "")
+    .replace(/COMMIT;\s*$/, "");
+  const migration = `\\set ON_ERROR_STOP on\nBEGIN;\nSELECT pg_advisory_xact_lock(1478629042);\nCREATE TABLE IF NOT EXISTS schema_migrations (name text PRIMARY KEY, sha256 text NOT NULL, applied_at timestamptz NOT NULL DEFAULT now());\nREVOKE ALL ON schema_migrations FROM PUBLIC;\nDO $guard$ BEGIN IF EXISTS (SELECT 1 FROM schema_migrations WHERE name='002-accounts' AND sha256<>'${checksum}') THEN RAISE EXCEPTION 'Applied account migration checksum changed'; END IF; END $guard$;\n${body}\nINSERT INTO schema_migrations(name,sha256) VALUES ('002-accounts','${checksum}') ON CONFLICT(name) DO NOTHING;\nCOMMIT;\n`;
+  await composeProduct(
+    config,
+    [
+      "exec",
+      "-T",
+      "control-db",
+      "psql",
+      "--no-psqlrc",
+      "--set",
+      "ON_ERROR_STOP=1",
+      "-U",
+      "control_owner",
+      "-d",
+      "agentbrake_control_fixture",
+    ],
+    { capture: true, input: migration },
+  );
+}
+export async function startProduct(config, { build = true } = {}) {
+  await prepareProduct(config);
+  if (build) await composeProduct(config, ["build"]);
+  await migrateProduct(config);
+  await composeProduct(config, [
+    "--profile",
+    "agent",
+    "up",
+    "-d",
+    "--wait",
+    "--wait-timeout",
+    "180",
+  ]);
+}
+export async function backupProduct(config) {
+  return withMaintenance(config, async () => {
+    const status = await installationStatus(config),
+      running = status
+        .filter((s) => s.State === "running")
+        .map((s) => s.Service);
+    if (
+      !status.some((s) => s.Service === "control-db") ||
+      !status.some((s) => s.Service === "target-db")
+    )
+      throw Error("Initialize/start the installation before backup");
+    for (const name of volumeNames) await volumeInfo(config, name);
+    const keyFile = join(config.dir, "recovery-key");
+    let key;
+    try {
+      key = await readFile(keyFile);
+    } catch (e) {
+      if (e.code !== "ENOENT") throw e;
+      key = randomBytes(32);
+      await writeFile(keyFile, key, { mode: 0o600, flag: "wx" });
+    }
+    if (key.length !== 32) throw Error("Recovery key has invalid size");
+    const files = {};
+    for (const file of requiredFiles)
+      files[file] = (await readFile(join(config.dir, file))).toString("base64");
+    const installation = JSON.parse(
+      await readFile(join(config.dir, "installation.json"), "utf8"),
+    );
+    let artifact;
+    try {
+      await composeProduct(
+        config,
+        ["--profile", "agent", "stop", "--timeout", "30"],
+        { capture: true },
+      );
+      if ((await installationStatus(config)).some((s) => s.State === "running"))
+        throw Error(
+          "Backup requires every installation writer and database stopped",
+        );
+      const volumes = {};
+      for (const name of volumeNames)
+        volumes[name] = await volumeTransfer(config, name, "snapshot");
+      const source = await sourceManifest();
+      const packageData = {
+        format: "agentbrake-cold-backup",
+        schema: 1,
+        id: randomUUID(),
+        createdAt: new Date().toISOString(),
+        sourceHash: source.sourceHash,
+        postgresImage: config.env.POSTGRES_IMAGE,
+        installation,
+        files,
+        volumes,
+      };
+      const outputDir = join(root, ".agentbrake-local/backups");
+      await mkdir(outputDir, { recursive: true, mode: 0o700 });
+      artifact = await safeLocalFile(
+        join(outputDir, config.name + "-" + packageData.id + ".abk"),
+        false,
+      );
+      await writeFile(artifact, encryptBackup(packageData, key), {
+        mode: 0o600,
+        flag: "wx",
+      });
+    } finally {
+      key.fill(0);
+      if (running.length)
+        await composeProduct(
+          config,
+          [
+            "--profile",
+            "agent",
+            "start",
+            "--wait",
+            "--wait-timeout",
+            "180",
+            ...running,
+          ],
+          { capture: true },
+        );
+    }
+    return {
+      file: artifact,
+      keyFile,
+      maintenance: "completed",
+      sourceServicesResumed: running,
+    };
+  });
+}
+export async function inspectBackup(file, keyFile) {
+  const path = await safeLocalFile(file),
+    keyPath = await safeLocalFile(keyFile);
+  if (
+    (await stat(path)).size > 64 * 1024 * 1024 ||
+    (await stat(keyPath)).size !== 32
+  )
+    throw Error("Invalid backup or key size");
+  const key = await readFile(keyPath);
+  let value;
+  try {
+    value = decryptBackup(await readFile(path), key);
+  } finally {
+    key.fill(0);
+  }
+  if (
+    value?.format !== "agentbrake-cold-backup" ||
+    value.schema !== 1 ||
+    !/^[a-f0-9-]{36}$/.test(value.id) ||
+    !/^[a-f0-9-]{36}$/.test(value.installation?.id) ||
+    typeof value.postgresImage !== "string" ||
+    !value.files ||
+    !value.volumes
+  )
+    throw Error("Unsupported backup package");
+  if (
+    Object.keys(value.files).sort().join() !==
+      [...requiredFiles].sort().join() ||
+    Object.keys(value.volumes).sort().join() !== [...volumeNames].sort().join()
+  )
+    throw Error("Incomplete backup package");
+  for (const file of requiredFiles)
+    if (
+      typeof value.files[file] !== "string" ||
+      value.files[file].length > 100000
+    )
+      throw Error("Invalid backup configuration");
+  for (const name of volumeNames) validateSnapshot(value.volumes[name]);
+  return value;
+}
+export async function restoreProduct(file, keyFile, name, port) {
+  if (
+    !/^[a-z][a-z0-9-]{0,31}$/.test(name) ||
+    !Number.isInteger(port) ||
+    port < 1024 ||
+    port > 65535
+  )
+    throw Error("Invalid restore installation name or port");
+  // Authenticate and validate every archive entry before creating any destination.
+  const data = await inspectBackup(file, keyFile);
+  const images = JSON.parse(
+    await readFile(join(root, "infra/local/images.lock.json"), "utf8"),
+  ).images;
+  if (images.postgres.image !== data.postgresImage)
+    throw Error(
+      "Restore requires the exact PostgreSQL image recorded by backup",
+    );
+  const project = "agentbrake-product-" + name,
+    probe = { env: { ...process.env } };
+  const collisions = await dockerProduct(
+    probe,
+    [
+      "ps",
+      "-a",
+      "-q",
+      "--filter",
+      "label=com.docker.compose.project=" + project,
+    ],
+    { capture: true },
+  );
+  const volumes = await dockerProduct(
+    probe,
+    [
+      "volume",
+      "ls",
+      "-q",
+      "--filter",
+      "label=com.docker.compose.project=" + project,
+    ],
+    { capture: true },
+  );
+  const networks = await dockerProduct(
+    probe,
+    [
+      "network",
+      "ls",
+      "-q",
+      "--filter",
+      "label=com.docker.compose.project=" + project,
+    ],
+    { capture: true },
+  );
+  if (collisions.trim() || volumes.trim() || networks.trim())
+    throw Error(
+      "Restore requires a new project with no containers, volumes or networks",
+    );
+  const dir = join(root, ".agentbrake-local/product-" + name);
+  // A new directory is the overwrite guard. Never delete it automatically after failure.
+  await mkdir(dir, { mode: 0o700 });
+  for (const file of requiredFiles)
+    await writeFile(join(dir, file), Buffer.from(data.files[file], "base64"), {
+      mode: 0o600,
+      flag: "wx",
+    });
+  await writeFile(
+    join(dir, "installation.json"),
+    JSON.stringify({
+      ...data.installation,
+      name,
+      port,
+      restoredFrom: data.id,
+      restoredAt: new Date().toISOString(),
+    }),
+    { mode: 0o600, flag: "wx" },
+  );
+  const config = await productConfig(name);
+  return withMaintenance(config, async () => {
+    try {
+      await prepareProduct(config);
+      await composeProduct(
+        config,
+        [
+          "up",
+          "--no-deps",
+          "--abort-on-container-exit",
+          "--exit-code-from",
+          "volume-init",
+          "volume-init",
+        ],
+        { capture: true },
+      );
+      for (const volume of volumeNames)
+        await volumeTransfer(config, volume, "restore", data.volumes[volume]);
+      await migrateProduct(config);
+      await composeProduct(config, ["build", "control-api"], { capture: true });
+      await composeProduct(
+        config,
+        [
+          "run",
+          "--rm",
+          "--no-deps",
+          "-T",
+          "control-api",
+          "node",
+          "--import",
+          "tsx",
+          "infra/product/recovery.ts",
+        ],
+        { capture: true, input: JSON.stringify({ backupId: data.id }) },
+      );
+      await writeFile(
+        join(dir, "mcp-client.example.json"),
+        JSON.stringify(
+          {
+            mcpServers: {
+              agentbrake: {
+                url: "http://gateway:4313/mcp",
+                bearer_token_env_var: "AGENTBRAKE_TOKEN",
+              },
+            },
+          },
+          null,
+          2,
+        ),
+        { mode: 0o600, flag: "wx" },
+      );
+      await startProduct(config);
+      return {
+        name,
+        url: "http://127.0.0.1:" + port,
+        restoredFrom: data.id,
+        authority:
+          "paused; all restored agent grants revoked; pending reviews blocked",
+      };
+    } catch (error) {
+      await composeProduct(config, ["--profile", "agent", "stop"], {
+        capture: true,
+      }).catch(() => {});
+      throw Error(
+        "Restore did not complete; destination retained stopped for diagnosis. " +
+          error.message,
+      );
+    }
+  });
+}
+export async function doctorProduct(config) {
+  const source = await sourceManifest(),
+    rows = await installationStatus(config);
+  const services = rows.map((r) => ({
+    name: r.Service,
+    state: r.State,
+    health: r.Health || "not-configured",
+  }));
+  let http = "unavailable";
+  try {
+    const r = await fetch("http://127.0.0.1:" + config.port + "/api/health", {
+      signal: AbortSignal.timeout(5000),
+      redirect: "error",
+    });
+    http = String(r.status);
+  } catch {}
+  return {
+    schema: 1,
+    at: new Date().toISOString(),
+    installation: config.name,
+    url: "http://127.0.0.1:" + config.port,
+    sourceHash: source.sourceHash,
+    services,
+    http,
+    scope:
+      "Local private team installation; no target credentials or request contents included",
+    nextSteps:
+      http === "200"
+        ? []
+        : [
+            "Run product.mjs start " + config.name,
+            "Inspect this installation with product.mjs status " + config.name,
+          ],
+  };
+}
+
+FILE scripts/product.mjs
+diff --git "a/.agentbrake-local\\service-base\\scripts\\product.mjs" b/scripts/product.mjs
+index c3f2f2c..075090c 100644
+--- "a/.agentbrake-local\\service-base\\scripts\\product.mjs"
++++ b/scripts/product.mjs
+@@ -140,18 +140,24 @@ export async function prepareProduct(config) {
+       agentbrake_meta: { policy_hash: hash.digest("hex") },
+     }),
+     { mode: 0o600 },
+   );
+ }
+ export async function dockerProduct(
+   config,
+   args,
+-  { capture = false, input, timeoutMs = 300000 } = {},
++  { capture = false, input, timeoutMs = 300000, maxOutputBytes = 4000000 } = {},
+ ) {
++  if (
++    !Number.isInteger(maxOutputBytes) ||
++    maxOutputBytes < 1 ||
++    maxOutputBytes > 64 * 1024 * 1024
++  )
++    throw Error("Invalid Docker output limit");
+   const dockerConfig = join(root, ".agentbrake-local/docker-public");
+   await mkdir(dockerConfig, { recursive: true });
+   const prefix = [
+     "--config",
+     dockerConfig,
+     ...(process.platform === "win32"
+       ? ["--host", "npipe:////./pipe/docker_engine"]
+       : []),
+@@ -170,17 +176,17 @@ export async function dockerProduct(
+       ],
+     });
+     const timer = setTimeout(() => {
+       child.kill();
+       reject(Error("Local Docker command deadline exceeded"));
+     }, timeoutMs);
+     child.stdout?.on("data", (chunk) => {
+       output += chunk;
+-      if (output.length > 4000000) child.kill();
++      if (Buffer.byteLength(output) > maxOutputBytes) child.kill();
+     });
+     child.stderr?.on("data", (chunk) => {
+       errorOutput += chunk;
+       if (errorOutput.length > 4000000) child.kill();
+     });
+     child.on("error", (error) => {
+       clearTimeout(timer);
+       reject(error);
+@@ -191,16 +197,21 @@ export async function dockerProduct(
+         reject(
+           Object.assign(Error("Local Docker command failed (" + code + ")"), {
+             output,
+             errorOutput,
+           }),
+         );
+       else resolveResult(output);
+     });
++    child.stdin?.on("error", (error) => {
++      clearTimeout(timer);
++      child.kill();
++      reject(Error("Local Docker input failed"));
++    });
+     if (input !== undefined) child.stdin.end(input);
+   });
+ }
+ export const composeProduct = (config, args, options) =>
+   dockerProduct(
+     config,
+     [
+       "compose",
+@@ -219,46 +230,78 @@ async function main() {
+     console.log(
+       "Created local fixture installation " +
+         config.name +
+         ". Operator login keys: " +
+         join(config.dir, "operators.json"),
+     );
+     return;
+   }
++  if (command === "restore") {
++    const { restoreProduct } = await import("./product-maintenance.mjs");
++    console.log(
++      JSON.stringify(
++        await restoreProduct(
++          extra[0],
++          extra[1],
++          name,
++          Number(extra[2] ?? 4319),
++        ),
++        null,
++        2,
++      ),
++    );
++    return;
++  }
+   const config = await productConfig(name);
+   if (command === "start") {
+-    await prepareProduct(config);
+-    await composeProduct(config, [
+-      "--profile",
+-      "agent",
+-      "up",
+-      "-d",
+-      "--build",
+-      "--wait",
+-      "--wait-timeout",
+-      "180",
+-    ]);
++    const { startProduct, withMaintenance } =
++      await import("./product-maintenance.mjs");
++    await withMaintenance(config, () => startProduct(config));
+     console.log("Local dashboard: http://127.0.0.1:" + config.port);
+-  } else if (command === "stop")
+-    await composeProduct(config, ["--profile", "agent", "down"]);
+-  else if (command === "status") await composeProduct(config, ["ps"]);
++  } else if (command === "stop") {
++    const { withMaintenance } = await import("./product-maintenance.mjs");
++    await withMaintenance(config, () =>
++      composeProduct(config, ["--profile", "agent", "down"]),
++    );
++  } else if (command === "backup") {
++    const { backupProduct } = await import("./product-maintenance.mjs");
++    console.log(JSON.stringify(await backupProduct(config), null, 2));
++  } else if (command === "doctor" || command === "diagnostics") {
++    const { doctorProduct } = await import("./product-maintenance.mjs");
++    const report = await doctorProduct(config);
++    if (command === "diagnostics") {
++      const output = join(
++        root,
++        ".agentbrake-local",
++        "diagnostics-" + name + "-" + Date.now() + ".json",
++      );
++      await writeFile(output, JSON.stringify(report, null, 2), {
++        mode: 0o600,
++        flag: "wx",
++      });
++      console.log(output);
++    } else console.log(JSON.stringify(report, null, 2));
++  } else if (command === "status") await composeProduct(config, ["ps"]);
+   else if (command === "reset") {
+     if (extra[0] !== "--confirm=" + config.id)
+       throw Error(
+         "Reset destroys only this installation data. Require --confirm=" +
+           config.id,
+       );
+-    await composeProduct(config, ["--profile", "agent", "down", "--volumes"]);
++    const { withMaintenance } = await import("./product-maintenance.mjs");
++    await withMaintenance(config, () =>
++      composeProduct(config, ["--profile", "agent", "down", "--volumes"]),
++    );
+     console.log("Removed installation volumes; operator credentials retained.");
+   } else if (command === "credentials")
+     console.log(join(config.dir, "operators.json"));
+   else
+     throw Error(
+-      "Use init/start/stop/status/credentials/reset [installation-name]",
++      "Use init/start/stop/status/doctor/diagnostics/backup/restore/credentials/reset [installation-name]",
+     );
+ }
+ if (
+   process.argv[1] &&
+   import.meta.url === pathToFileURL(resolve(process.argv[1])).href
+ )
+   main().catch((error) => {
+     console.error(error.message);
+
+FILE scripts/verify-release.mjs
+diff --git "a/.agentbrake-local\\service-base\\scripts\\verify-release.mjs" b/scripts/verify-release.mjs
+index 05037b4..1741a93 100644
+--- "a/.agentbrake-local\\service-base\\scripts\\verify-release.mjs"
++++ b/scripts/verify-release.mjs
+@@ -1,15 +1,16 @@
+ import { spawn } from "node:child_process";
+ import { readFile, writeFile } from "node:fs/promises";
+ import { sourceManifest } from "./source-manifest.mjs";
+ const startedAt = new Date().toISOString();
+ for (const args of [
+   ["scripts/verify-all.mjs", "--milestone-b"],
+   ["scripts/verify-product.mjs"],
++  ["scripts/verify-service.mjs"],
+   ["scripts/verify-security.mjs"],
+ ]) {
+   const code = await new Promise((resolve) => {
+     const child = spawn(process.execPath, args, {
+       stdio: "inherit",
+       windowsHide: true,
+     });
+     child.on("error", () => resolve(1));
+@@ -19,36 +20,46 @@ for (const args of [
+ }
+ const json = async (path) => JSON.parse(await readFile(path, "utf8"));
+ const baseline = await json("docs/evidence/milestone-b.json"),
+   productPointer = await json("docs/evidence/latest-product.json"),
+   securityPointer = await json("docs/evidence/latest-security.json");
+ const product = await json(productPointer.directory + "/product-summary.json"),
+   security = await json(securityPointer.directory + "/security-summary.json"),
+   source = await sourceManifest();
++const servicePointer = await json("docs/evidence/latest-service.json");
++const service = await json(servicePointer.directory + "/service-summary.json");
+ if (
+   baseline.result !== "PASS_BOUNDED" ||
+   product.result !== "PASS_LOCAL_PRODUCT" ||
+   security.result !== "PASS_LOCAL_SECURITY_CHECKS" ||
+-  [baseline, product, security].some(
++  service.result !== "PASS_LOCAL_SERVICE" ||
++  service.cleanup.some((item) => item.result !== "PASS") ||
++  [baseline, product, security, service].some(
+     (r) => r.sourceHash !== source.sourceHash,
+   ) ||
+   product.cleanup?.result !== "PASS"
+ )
+   throw Error("Release acceptance or exact-source consistency failed");
+ const report = {
+   result: "LOCAL_MVP_VERIFIED_EXTERNAL_GATES_OPEN",
+   startedAt,
+   finishedAt: new Date().toISOString(),
+   sourceHash: source.sourceHash,
+   gitCommit: null,
+   milestoneC: "PASS_LOCAL",
+   milestoneD: "LOCAL_ENGINEERING_VERIFIED_EXTERNAL_SIGNOFF_PENDING",
+   baseline,
+   productRun: product.runId,
++  service: {
++    runId: service.runId,
++    result: service.result,
++    cases: service.cases,
++    cleanup: service.cleanup,
++  },
+   securityRun: security.runId,
+   productCases: product.cases,
+   security: {
+     scanner: security.scannerVersion,
+     sast: security.sast,
+     root: security.root,
+     dashboard: security.dashboard,
+   },
+
+FILE scripts/verify-service.mjs
+NEW
+import assert from "node:assert/strict";
+import { randomUUID, randomBytes } from "node:crypto";
+import { mkdir, readFile, writeFile, stat } from "node:fs/promises";
+import { join } from "node:path";
+import {
+  initializeProduct,
+  productConfig,
+  composeProduct,
+  dockerProduct,
+} from "./product.mjs";
+import {
+  startProduct,
+  backupProduct,
+  restoreProduct,
+  doctorProduct,
+} from "./product-maintenance.mjs";
+import { sourceManifest } from "./source-manifest.mjs";
+const runId = randomUUID(),
+  directory = join("docs/evidence", runId),
+  name = "verify-service-" + runId.slice(0, 8),
+  restoreName = "verify-restore-" + runId.slice(0, 8);
+await mkdir(directory, { recursive: true });
+const manifest = await sourceManifest();
+await writeFile(
+  join(directory, "source-manifest.json"),
+  JSON.stringify(manifest, null, 2),
+);
+const report = {
+  runId,
+  sourceHash: manifest.sourceHash,
+  startedAt: new Date().toISOString(),
+  result: "NOT_RUN",
+  cases: [],
+  scope:
+    "Local synthetic service maintenance; encrypted cold snapshot, new-installation restore and authority suspension.",
+};
+const config = await initializeProduct(name, 4330);
+let recovered, backup;
+const credential = {
+  email: "owner-" + runId.slice(0, 8) + "@example.test",
+  password: "Service!" + randomBytes(24).toString("hex"),
+};
+const reviewerPassword = "Reviewer!" + randomBytes(24).toString("hex");
+const record = (name, observed) => {
+  report.cases.push({ name, result: "PASS", observed });
+  console.log("PASS " + name);
+};
+const request = async (
+  config,
+  path,
+  session,
+  body,
+  method = body === undefined ? "GET" : "POST",
+) => {
+  const base = "http://127.0.0.1:" + config.port;
+  const r = await fetch(base + path, {
+    method,
+    headers: { Origin: base, "Content-Type": "application/json", ...session },
+    body: body === undefined ? undefined : JSON.stringify(body),
+    redirect: "error",
+    signal: AbortSignal.timeout(15000),
+  });
+  return { status: r.status, body: await r.json(), headers: r.headers };
+};
+const sessionOf = (r) => ({
+  Cookie: r.headers.get("set-cookie").split(";")[0],
+  "X-AB-CSRF": r.body.csrfToken,
+});
+const login = async (config) => {
+  const r = await request(config, "/api/login", {}, credential);
+  assert.equal(r.status, 200);
+  return sessionOf(r);
+};
+const agentCall = async (config, token, body) =>
+  JSON.parse(
+    await composeProduct(
+      config,
+      ["exec", "-T", "agent", "node", "infra/product/agent-probe.mjs"],
+      {
+        capture: true,
+        input: JSON.stringify({
+          kind: "request",
+          path: "/api/actions",
+          token,
+          body,
+        }),
+      },
+    ),
+  );
+const snapshot = async (config) => {
+  const value = JSON.parse(
+    await composeProduct(
+      config,
+      [
+        "exec",
+        "-T",
+        "mock-target",
+        "node",
+        "--input-type=module",
+        "-e",
+        "import {readFile} from 'node:fs/promises';const token=(await readFile('/run/secrets/observer-token','utf8')).trim();const r=await fetch('http://127.0.0.1:8080/snapshot',{headers:{Authorization:'Bearer '+token}});if(!r.ok)process.exit(1);console.log(JSON.stringify(await r.json()));",
+      ],
+      { capture: true },
+    ),
+  );
+  const { calls, ...state } = value;
+  return state;
+};
+try {
+  await startProduct(config);
+  const operators = JSON.parse(
+    await readFile(join(config.dir, "operators.json"), "utf8"),
+  );
+  const key = operators.find((o) => o.role === "administrator").key;
+  const setup = await request(
+    config,
+    "/api/setup",
+    {},
+    { key, name: "Service owner", ...credential },
+  );
+  assert.equal(setup.status, 200);
+  const session = sessionOf(setup);
+  assert.equal((await request(config, "/api/login", {}, { key })).status, 401);
+  const invitation = await request(config, "/api/team/invitations", session, {
+    email: "reviewer-" + runId.slice(0, 8) + "@example.test",
+    role: "approver",
+  });
+  assert.equal(invitation.status, 201);
+  const joined = await request(
+    config,
+    "/api/invitations/accept",
+    {},
+    {
+      token: invitation.body.token,
+      name: "Independent reviewer",
+      password: reviewerPassword,
+    },
+  );
+  assert.equal(joined.status, 200);
+  const reviewer = sessionOf(joined);
+  assert.equal((await request(config, "/api/team", reviewer)).status, 403);
+  const unusedInvite = await request(config, "/api/team/invitations", session, {
+    email: "unused-" + runId.slice(0, 8) + "@example.test",
+    role: "viewer",
+  });
+  assert.equal(unusedInvite.status, 201);
+  const oldRecovery = await request(
+    config,
+    "/api/team/administrator/recovery",
+    session,
+    {},
+  );
+  assert.equal(oldRecovery.status, 200);
+  record(
+    "managed owner bootstrap and invited reviewer work through installed proxy",
+    {
+      legacyKeysDenied: true,
+      reviewerRole: joined.body.actor.role,
+      reviewerTeamAccessDenied: true,
+    },
+  );
+  const made = await request(config, "/api/agents", session, {
+    name: "Restore acceptance task",
+    tools: ["database_read", "database_update"],
+    resources: ["customers"],
+    sandbox: true,
+  });
+  assert.equal(made.status, 201);
+  const token = made.body.token,
+    agentId = made.body.agent.id;
+  const allowed = await agentCall(config, token, {
+    requestId: randomUUID(),
+    tool: "database_read",
+    arguments: { limit: 1 },
+  });
+  assert.equal(allowed.body.status, "allowed");
+  const proposed = await agentCall(config, token, {
+    requestId: randomUUID(),
+    tool: "database_update",
+    arguments: { id: 1, status: "paused" },
+  });
+  assert.equal(proposed.body.status, "pending");
+  const review = await request(
+    config,
+    "/api/approvals/" + proposed.body.id,
+    reviewer,
+  );
+  assert.equal(review.status, 200);
+  const approved = await request(
+    config,
+    "/api/approvals/" + proposed.body.id,
+    reviewer,
+    { decision: "approve", proof: review.body.proof },
+  );
+  assert.equal(approved.status, 200);
+  assert.equal(approved.body.status, "allowed");
+  const pending = await agentCall(config, token, {
+    requestId: randomUUID(),
+    tool: "database_update",
+    arguments: { id: 2, status: "paused" },
+  });
+  assert.equal(pending.body.status, "pending");
+  const targetBefore = await snapshot(config),
+    auditBefore = (await request(config, "/api/audit/export", session)).body;
+  assert.equal(auditBefore.valid, true);
+  backup = await backupProduct(config);
+  assert.ok((await stat(backup.file)).size > 100);
+  assert.equal((await doctorProduct(config)).http, "200");
+  await login(config);
+  const bytes = await readFile(backup.file);
+  assert.equal(bytes.includes(Buffer.from(token)), false);
+  record("encrypted consistent backup resumes original installation", {
+    bytes: bytes.length,
+    sourceResumed: true,
+  });
+  const wrongKey = join(config.dir, "wrong-test-recovery-key");
+  await writeFile(wrongKey, randomBytes(32), { mode: 0o600, flag: "wx" });
+  await assert.rejects(
+    restoreProduct(backup.file, wrongKey, restoreName, 4331),
+    /authentication failed/,
+  );
+  await assert.rejects(stat(join(config.dir, "..", "product-" + restoreName)), {
+    code: "ENOENT",
+  });
+  await assert.rejects(
+    restoreProduct(backup.file, backup.keyFile, config.name, 4331),
+    /new project|EEXIST/,
+  );
+  assert.deepEqual(await snapshot(config), targetBefore);
+  record("wrong key and existing destination rejected without damage", {
+    sourceTargetUnchanged: true,
+    newDestinationAbsent: true,
+  });
+  const restored = await restoreProduct(
+    backup.file,
+    backup.keyFile,
+    restoreName,
+    4331,
+  );
+  recovered = await productConfig(restoreName);
+  const restoredSession = await login(recovered),
+    workspace = (await request(recovered, "/api/workspace", restoredSession))
+      .body;
+  assert.equal(workspace.paused, true);
+  assert.ok(workspace.agents.length > 0);
+  for (const a of workspace.agents) {
+    assert.equal(a.status, "paused");
+    if (a.grant) assert.equal(a.grant.revoked, true);
+  }
+  const restoredPending = workspace.actions.find(
+    (a) => a.id === pending.body.id,
+  );
+  assert.equal(restoredPending.status, "blocked");
+  assert.equal(restoredPending.rule, "recovery-suspension");
+  const audit = (await request(recovered, "/api/audit/export", restoredSession))
+    .body;
+  assert.equal(audit.valid, true);
+  assert.deepEqual(
+    audit.entries.slice(0, auditBefore.entries.length),
+    auditBefore.entries,
+  );
+  assert.deepEqual(await snapshot(recovered), targetBefore);
+  const team = (await request(recovered, "/api/team", restoredSession)).body;
+  assert.equal(team.members.length, 2);
+  assert.equal(team.invitations.length, 0);
+  assert.equal(
+    (
+      await request(
+        recovered,
+        "/api/invitations/accept",
+        {},
+        {
+          token: unusedInvite.body.token,
+          name: "Restored stale invitation",
+          password: reviewerPassword,
+        },
+      )
+    ).status,
+    400,
+  );
+  assert.equal(
+    (
+      await request(
+        recovered,
+        "/api/password/reset",
+        {},
+        { token: oldRecovery.body.token, password: reviewerPassword },
+      )
+    ).status,
+    400,
+  );
+  const denied = await agentCall(recovered, token, {
+    requestId: randomUUID(),
+    tool: "database_read",
+    arguments: { limit: 1 },
+  });
+  assert.ok(
+    [401, 403].includes(denied.status) || denied.body.status === "blocked",
+  );
+  assert.deepEqual(await snapshot(recovered), targetBefore);
+  record("full restore preserves target and audit but suspends old authority", {
+    agentId,
+    oldTokenDenied: true,
+    pendingBlocked: true,
+    auditPrefixPreserved: true,
+    paused: true,
+    accountsPreserved: true,
+    invitationAndRecoveryTokensInvalidated: true,
+  });
+  const current = await sourceManifest();
+  report.result =
+    current.sourceHash === manifest.sourceHash
+      ? "PASS_LOCAL_SERVICE"
+      : "PASS_RUNTIME_SOURCE_CHANGED";
+} catch (error) {
+  report.result = "FAIL";
+  report.error = error.message;
+  console.error(error.message);
+  process.exitCode = 1;
+} finally {
+  if (!recovered)
+    recovered = await productConfig(restoreName).catch(() => undefined);
+  const cleanup = [];
+  for (const c of [recovered, config].filter(Boolean)) {
+    try {
+      await composeProduct(
+        c,
+        ["--profile", "agent", "down", "--volumes", "--remove-orphans"],
+        { capture: true },
+      );
+      const containers = await dockerProduct(
+        c,
+        [
+          "ps",
+          "-a",
+          "-q",
+          "--filter",
+          "label=com.docker.compose.project=" + c.project,
+        ],
+        { capture: true },
+      );
+      const volumes = await dockerProduct(
+        c,
+        [
+          "volume",
+          "ls",
+          "-q",
+          "--filter",
+          "label=com.docker.compose.project=" + c.project,
+        ],
+        { capture: true },
+      );
+      const networks = await dockerProduct(
+        c,
+        [
+          "network",
+          "ls",
+          "-q",
+          "--filter",
+          "label=com.docker.compose.project=" + c.project,
+        ],
+        { capture: true },
+      );
+      assert.equal((containers + volumes + networks).trim(), "");
+      cleanup.push({
+        project: c.project,
+        result: "PASS",
+        containers: 0,
+        volumes: 0,
+        networks: 0,
+      });
+    } catch {
+      cleanup.push({ project: c.project, result: "FAIL" });
+      report.result = "FAIL";
+      process.exitCode = 1;
+    }
+  }
+  report.cleanup = cleanup;
+  report.finishedAt = new Date().toISOString();
+  await writeFile(
+    join(directory, "service-summary.json"),
+    JSON.stringify(report, null, 2),
+  );
+  await writeFile(
+    "docs/evidence/latest-service.json",
+    JSON.stringify({ runId, directory, result: report.result }, null, 2),
+  );
+  console.log(report.result + ": " + directory);
+}
+
+FILE tests/enforcement/backup-format.test.mjs
+NEW
+import test from "node:test";
+import assert from "node:assert/strict";
+import { randomBytes } from "node:crypto";
+import { encryptBackup, decryptBackup } from "../../scripts/backup-format.mjs";
+
+test("backup envelope authenticates metadata and payload without plaintext credentials", () => {
+  const key = randomBytes(32);
+  const value = {
+    schema: 1,
+    secret: "synthetic-password-not-for-output",
+    snapshot: { count: 3 },
+  };
+  const encoded = encryptBackup(value, key);
+  assert.equal(encoded.includes(Buffer.from(value.secret)), false);
+  assert.deepEqual(decryptBackup(encoded, key), value);
+  assert.throws(
+    () => decryptBackup(encoded, randomBytes(32)),
+    /Backup authentication failed/,
+  );
+  const modified = Buffer.from(encoded);
+  modified[modified.length - 2] ^= 1;
+  assert.throws(
+    () => decryptBackup(modified, key),
+    /Backup authentication failed/,
+  );
+  assert.throws(
+    () => decryptBackup(encoded.subarray(0, 20), key),
+    /Invalid backup envelope/,
+  );
+  assert.throws(() => encryptBackup(value, Buffer.alloc(16)), /32 bytes/);
+});
+
+test("backup encryption has fresh nonce and rejects oversized input before parsing", () => {
+  const key = randomBytes(32),
+    a = encryptBackup({ schema: 1 }, key),
+    b = encryptBackup({ schema: 1 }, key);
+  assert.notDeepEqual(a, b);
+  assert.throws(
+    () => decryptBackup(Buffer.alloc(64 * 1024 * 1024 + 1), key),
+    /size limit/,
+  );
+});
+
+FILE tests/enforcement/volume-archive.test.mjs
+NEW
+import test from "node:test";
+import assert from "node:assert/strict";
+import {
+  mkdtemp,
+  mkdir,
+  writeFile,
+  readFile,
+  readdir,
+  rm,
+} from "node:fs/promises";
+import { resolve, join, dirname, basename } from "node:path";
+import { gzipSync } from "node:zlib";
+import {
+  snapshotVolume,
+  restoreVolume,
+  validateSnapshot,
+} from "../../infra/product/volume-archive.mjs";
+test("cold volume roundtrip preserves binary data and refuses nonempty restore", async () => {
+  const dir = await mkdtemp(resolve(".agentbrake-local/archive-test-"));
+  try {
+    const source = join(dir, "source"),
+      target = join(dir, "target");
+    await mkdir(source);
+    await mkdir(target);
+    await mkdir(join(source, "nested"));
+    const bytes = Buffer.alloc(16 * 1024 * 1024, 7);
+    bytes[0] = 255;
+    await writeFile(join(source, "nested", "data"), bytes);
+    const encoded = await snapshotVolume(source);
+    assert.deepEqual(await restoreVolume(target, encoded), { restored: 2 });
+    assert.deepEqual(await readFile(join(target, "nested", "data")), bytes);
+    await assert.rejects(restoreVolume(target, encoded), /empty real volume/);
+    for (const path of [
+      "../escape",
+      "/absolute",
+      "x/../../escape",
+      "C:/escape",
+      "x\\escape",
+    ]) {
+      const bad = gzipSync(
+        JSON.stringify([{ path, type: "file", mode: 384, data: "eA==" }]),
+      ).toString("base64");
+      assert.throws(() => validateSnapshot(bad), /Unsafe|parent/);
+      await assert.rejects(restoreVolume(source, bad), /Unsafe|parent/);
+    }
+    assert.deepEqual((await readdir(dir)).sort(), ["source", "target"]);
+  } finally {
+    assert.equal(dirname(resolve(dir)), resolve(".agentbrake-local"));
+    assert.match(basename(dir), /^archive-test-[a-zA-Z0-9]+$/);
+    await rm(dir, { recursive: true, force: true });
+  }
+});

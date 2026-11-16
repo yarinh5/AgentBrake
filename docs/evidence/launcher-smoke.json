@@ -1,0 +1,18 @@
+{
+  "at": "2026-11-16T09:44:44.139Z",
+  "command": "node scripts/local.mjs --built",
+  "uiStatus": 200,
+  "loginStatus": 200,
+  "simulationStatus": 200,
+  "actionCounts": {
+    "pending": 2,
+    "blocked": 4,
+    "allowed": 3
+  },
+  "auditValid": true,
+  "connections": {
+    "github": "sandbox",
+    "database": "sandbox",
+    "repository": "agentbrake/sandbox"
+  }
+}

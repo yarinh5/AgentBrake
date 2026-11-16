@@ -1,0 +1,24 @@
+{
+  "result": "PASS_BOUNDED",
+  "stage": 2,
+  "startedAt": "2026-11-16T10:56:33.100Z",
+  "finishedAt": "2026-11-16T10:58:00.554Z",
+  "sourceHash": "8acfcc4d0763d00350b314edc20b848b91f493527e1a25baf92e6bcccc3c44fa",
+  "gitCommit": null,
+  "nativeRun": "94f60177-35ba-4138-aa81-f43aa9a97f5e",
+  "isolationRun": "c866eaf9-019c-4f5f-b5db-cb9c0a8c2007",
+  "nativeTests": {
+    "tests": 100,
+    "pass": 97,
+    "fail": 0,
+    "skipped": 3
+  },
+  "postgresTests": {
+    "tests": 18,
+    "pass": 18,
+    "fail": 0,
+    "skipped": 0
+  },
+  "workflowCases": 14,
+  "scope": "Local PostgreSQL control/target + actual disposable Git/mock PR + gateway/OPA/MCP + isolated agent. See known limitations; not Milestone B or live GitHub/Codex acceptance."
+}

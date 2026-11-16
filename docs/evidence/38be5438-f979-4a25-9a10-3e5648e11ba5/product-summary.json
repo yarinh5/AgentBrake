@@ -1,0 +1,21 @@
+{
+  "runId": "38be5438-f979-4a25-9a10-3e5648e11ba5",
+  "sourceHash": "15181c4460366c5545b6919465a3302c5d9ba51087f9cce56a295dfa18407c9d",
+  "startedAt": "2026-11-16T12:35:53.446Z",
+  "installation": {
+    "name": "verify-cd1",
+    "id": "d23e02e9-9d8e-43ab-accc-a0fe031ff147",
+    "port": 4316
+  },
+  "result": "FAIL",
+  "cases": [],
+  "scope": "Local persistent product install; synthetic PostgreSQL/Git, isolated test client. No real GitHub or hosted model. Native process-loss tests are separate evidence.",
+  "error": "fetch failed",
+  "cleanup": {
+    "result": "PASS",
+    "containers": 0,
+    "volumes": 0,
+    "networks": 0
+  },
+  "finishedAt": "2026-11-16T12:37:01.853Z"
+}

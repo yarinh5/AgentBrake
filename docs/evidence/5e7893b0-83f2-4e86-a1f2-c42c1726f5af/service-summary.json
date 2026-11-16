@@ -1,0 +1,53 @@
+{
+  "runId": "5e7893b0-83f2-4e86-a1f2-c42c1726f5af",
+  "sourceHash": "8e30960d63aeb5a97a299df600f0dd2fc657d63c5282aa5d300ef5ce020b5689",
+  "startedAt": "2026-11-16T13:50:42.184Z",
+  "result": "PASS_RUNTIME_SOURCE_CHANGED",
+  "cases": [
+    {
+      "name": "encrypted consistent backup resumes original installation",
+      "result": "PASS",
+      "observed": {
+        "bytes": 25856244,
+        "sourceResumed": true
+      }
+    },
+    {
+      "name": "wrong key and existing destination rejected without damage",
+      "result": "PASS",
+      "observed": {
+        "sourceTargetUnchanged": true,
+        "newDestinationAbsent": true
+      }
+    },
+    {
+      "name": "full restore preserves target and audit but suspends old authority",
+      "result": "PASS",
+      "observed": {
+        "agentId": "9ee34e1a-cea3-406d-9b47-080c0a356d53",
+        "oldTokenDenied": true,
+        "pendingBlocked": true,
+        "auditPrefixPreserved": true,
+        "paused": true
+      }
+    }
+  ],
+  "scope": "Local synthetic service maintenance; encrypted cold snapshot, new-installation restore and authority suspension.",
+  "cleanup": [
+    {
+      "project": "agentbrake-product-verify-restore-5e7893b0",
+      "result": "PASS",
+      "containers": 0,
+      "volumes": 0,
+      "networks": 0
+    },
+    {
+      "project": "agentbrake-product-verify-service-5e7893b0",
+      "result": "PASS",
+      "containers": 0,
+      "volumes": 0,
+      "networks": 0
+    }
+  ],
+  "finishedAt": "2026-11-16T13:53:02.405Z"
+}

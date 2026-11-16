@@ -1,0 +1,342 @@
+[
+    {
+        "Id": "b2456a55bf41fb7cb8b0609ca3db9e44e095ff4adad6ba3a050b7537c8165065",
+        "Created": "2026-11-16T12:17:47.7365342Z",
+        "Path": "docker-entrypoint.sh",
+        "Args": [
+            "postgres"
+        ],
+        "State": {
+            "Status": "running",
+            "Running": true,
+            "Paused": false,
+            "Restarting": false,
+            "OOMKilled": false,
+            "Dead": false,
+            "Pid": 784,
+            "ExitCode": 0,
+            "Error": "",
+            "StartedAt": "2026-11-16T12:17:48.4791961Z",
+            "FinishedAt": "0001-01-01T00:00:00Z",
+            "Health": {
+                "Status": "healthy",
+                "FailingStreak": 0,
+                "Log": [
+                    {
+                        "Start": "2026-11-16T12:17:50.619308Z",
+                        "End": "2026-11-16T12:17:50.679035Z",
+                        "ExitCode": 0,
+                        "Output": "/var/run/postgresql:5432 - accepting connections\n"
+                    },
+                    {
+                        "Start": "2026-11-16T12:17:52.6802485Z",
+                        "End": "2026-11-16T12:17:52.7267828Z",
+                        "ExitCode": 0,
+                        "Output": "/var/run/postgresql:5432 - accepting connections\n"
+                    },
+                    {
+                        "Start": "2026-11-16T12:17:54.7271894Z",
+                        "End": "2026-11-16T12:17:54.7716399Z",
+                        "ExitCode": 0,
+                        "Output": "/var/run/postgresql:5432 - accepting connections\n"
+                    },
+                    {
+                        "Start": "2026-11-16T12:17:56.7723885Z",
+                        "End": "2026-11-16T12:17:56.8182043Z",
+                        "ExitCode": 0,
+                        "Output": "/var/run/postgresql:5432 - accepting connections\n"
+                    }
+                ]
+            }
+        },
+        "Image": "sha256:0f6c51e48b3458e87ab43692e49c9dafc72ffe0a0dbde3fd8cdb6ab92d5c025e",
+        "ResolvConfPath": "/var/lib/docker/containers/b2456a55bf41fb7cb8b0609ca3db9e44e095ff4adad6ba3a050b7537c8165065/resolv.conf",
+        "HostnamePath": "/var/lib/docker/containers/b2456a55bf41fb7cb8b0609ca3db9e44e095ff4adad6ba3a050b7537c8165065/hostname",
+        "HostsPath": "/var/lib/docker/containers/b2456a55bf41fb7cb8b0609ca3db9e44e095ff4adad6ba3a050b7537c8165065/hosts",
+        "LogPath": "",
+        "Name": "/agentbrake-a-e62c56f7-target-db-1",
+        "RestartCount": 0,
+        "Driver": "overlay2",
+        "Platform": "linux",
+        "MountLabel": "",
+        "ProcessLabel": "",
+        "AppArmorProfile": "",
+        "ExecIDs": null,
+        "HostConfig": {
+            "Binds": [
+                "F:\\project love\\AgentBrake\\infra\\local\\target-db\\002-reviewed-update.sql:/opt/agentbrake-target/002-reviewed-update.sql:ro",
+                "F:/project love/AgentBrake/.agentbrake-local/isolation-e62c56f7-2adc-4a3a-a0a0-c16a1b5d62fc/postgres-bootstrap:/run/secrets/bootstrap-password:ro",
+                "F:/project love/AgentBrake/.agentbrake-local/isolation-e62c56f7-2adc-4a3a-a0a0-c16a1b5d62fc/target-read-password:/run/secrets/target-read-password:ro",
+                "F:/project love/AgentBrake/.agentbrake-local/isolation-e62c56f7-2adc-4a3a-a0a0-c16a1b5d62fc/target-write-password:/run/secrets/target-write-password:ro",
+                "F:\\project love\\AgentBrake\\infra\\local\\target-db\\010-target-fixture.sh:/docker-entrypoint-initdb.d/010-target-fixture.sh:ro",
+                "F:\\project love\\AgentBrake\\infra\\local\\target-db\\001-fixture.sql:/opt/agentbrake-target/001-fixture.sql:ro"
+            ],
+            "ContainerIDFile": "",
+            "LogConfig": {
+                "Type": "local",
+                "Config": {}
+            },
+            "NetworkMode": "agentbrake-a-e62c56f7_protected",
+            "PortBindings": {},
+            "RestartPolicy": {
+                "Name": "no",
+                "MaximumRetryCount": 0
+            },
+            "AutoRemove": false,
+            "VolumeDriver": "",
+            "VolumesFrom": null,
+            "ConsoleSize": [
+                0,
+                0
+            ],
+            "CapAdd": null,
+            "CapDrop": [
+                "ALL"
+            ],
+            "CgroupnsMode": "private",
+            "Dns": null,
+            "DnsOptions": null,
+            "DnsSearch": null,
+            "ExtraHosts": [],
+            "GroupAdd": null,
+            "IpcMode": "private",
+            "Cgroup": "",
+            "Links": null,
+            "OomScoreAdj": 0,
+            "PidMode": "",
+            "Privileged": false,
+            "PublishAllPorts": false,
+            "ReadonlyRootfs": true,
+            "SecurityOpt": [
+                "no-new-privileges:true"
+            ],
+            "Tmpfs": {
+                "/tmp": "size=32m,mode=1777",
+                "/var/lib/postgresql/data": "size=256m,uid=70,gid=70,mode=0700",
+                "/var/run/postgresql": "uid=70,gid=70,mode=0770"
+            },
+            "UTSMode": "",
+            "UsernsMode": "",
+            "ShmSize": 67108864,
+            "Runtime": "runc",
+            "Isolation": "",
+            "CpuShares": 0,
+            "Memory": 402653184,
+            "NanoCpus": 0,
+            "CgroupParent": "",
+            "BlkioWeight": 0,
+            "BlkioWeightDevice": null,
+            "BlkioDeviceReadBps": null,
+            "BlkioDeviceWriteBps": null,
+            "BlkioDeviceReadIOps": null,
+            "BlkioDeviceWriteIOps": null,
+            "CpuPeriod": 0,
+            "CpuQuota": 0,
+            "CpuRealtimePeriod": 0,
+            "CpuRealtimeRuntime": 0,
+            "CpusetCpus": "",
+            "CpusetMems": "",
+            "Devices": null,
+            "DeviceCgroupRules": null,
+            "DeviceRequests": null,
+            "MemoryReservation": 0,
+            "MemorySwap": 805306368,
+            "MemorySwappiness": null,
+            "OomKillDisable": null,
+            "PidsLimit": 128,
+            "Ulimits": null,
+            "CpuCount": 0,
+            "CpuPercent": 0,
+            "IOMaximumIOps": 0,
+            "IOMaximumBandwidth": 0,
+            "MaskedPaths": [
+                "/proc/acpi",
+                "/proc/asound",
+                "/proc/interrupts",
+                "/proc/kcore",
+                "/proc/keys",
+                "/proc/latency_stats",
+                "/proc/sched_debug",
+                "/proc/scsi",
+                "/proc/timer_list",
+                "/proc/timer_stats",
+                "/sys/devices/virtual/powercap",
+                "/sys/firmware"
+            ],
+            "ReadonlyPaths": [
+                "/proc/bus",
+                "/proc/fs",
+                "/proc/irq",
+                "/proc/sys",
+                "/proc/sysrq-trigger"
+            ]
+        },
+        "GraphDriver": {
+            "Data": {
+                "ID": "b2456a55bf41fb7cb8b0609ca3db9e44e095ff4adad6ba3a050b7537c8165065",
+                "LowerDir": "/var/lib/docker/overlay2/6f314abc2aa6d8e0cfe5252ff8ac4d2026f81ce024207a8fdfac5ea04700fb38-init/diff:/var/lib/docker/overlay2/8be27f964cf66fe3ed545fbbf49b0dccdb97421d5863aa773e4c299d8fded362/diff:/var/lib/docker/overlay2/018d991af7b527ed9fce994d8f4b3d8f01c2d424f9f28e3f6e19d9c0da640b45/diff:/var/lib/docker/overlay2/cf8d610615aaf97b7f38902ff3631114636e5515333691d6cdbb65157735618f/diff:/var/lib/docker/overlay2/cb838e2bd4faf6494e78e3ff46505ecceed4f72c4ec0a20ae7c5a5e37a0f08c8/diff:/var/lib/docker/overlay2/7c7dac30ad4d87f8d82569f43d6faf086dc0319eac669ebbc13e238d10a0c1e6/diff:/var/lib/docker/overlay2/d190b7b5ddd7d797826978cc67e381fb45be45ce95a17e499ee164325d5575b7/diff:/var/lib/docker/overlay2/45a294df24b11670c70985d12c115661f1ebb8d7cb5932fe017c09e549ced341/diff:/var/lib/docker/overlay2/e94aaef0c5aa06366de31a1f424162985b1ef356e84fbe4d6fd4fb1cbb2641db/diff:/var/lib/docker/overlay2/21d8f98469ed27f9371c917ef7361d7ba357817bcfd93a683c06073361718d7e/diff",
+                "MergedDir": "/var/lib/docker/overlay2/6f314abc2aa6d8e0cfe5252ff8ac4d2026f81ce024207a8fdfac5ea04700fb38/merged",
+                "UpperDir": "/var/lib/docker/overlay2/6f314abc2aa6d8e0cfe5252ff8ac4d2026f81ce024207a8fdfac5ea04700fb38/diff",
+                "WorkDir": "/var/lib/docker/overlay2/6f314abc2aa6d8e0cfe5252ff8ac4d2026f81ce024207a8fdfac5ea04700fb38/work"
+            },
+            "Name": "overlay2"
+        },
+        "Mounts": [
+            {
+                "Type": "bind",
+                "Source": "F:\\project love\\AgentBrake\\infra\\local\\target-db\\010-target-fixture.sh",
+                "Destination": "/docker-entrypoint-initdb.d/010-target-fixture.sh",
+                "Mode": "ro",
+                "RW": false,
+                "Propagation": "rprivate"
+            },
+            {
+                "Type": "bind",
+                "Source": "F:\\project love\\AgentBrake\\infra\\local\\target-db\\001-fixture.sql",
+                "Destination": "/opt/agentbrake-target/001-fixture.sql",
+                "Mode": "ro",
+                "RW": false,
+                "Propagation": "rprivate"
+            },
+            {
+                "Type": "bind",
+                "Source": "F:\\project love\\AgentBrake\\infra\\local\\target-db\\002-reviewed-update.sql",
+                "Destination": "/opt/agentbrake-target/002-reviewed-update.sql",
+                "Mode": "ro",
+                "RW": false,
+                "Propagation": "rprivate"
+            },
+            {
+                "Type": "bind",
+                "Source": "F:/project love/AgentBrake/.agentbrake-local/isolation-e62c56f7-2adc-4a3a-a0a0-c16a1b5d62fc/postgres-bootstrap",
+                "Destination": "/run/secrets/bootstrap-password",
+                "Mode": "ro",
+                "RW": false,
+                "Propagation": "rprivate"
+            },
+            {
+                "Type": "bind",
+                "Source": "F:/project love/AgentBrake/.agentbrake-local/isolation-e62c56f7-2adc-4a3a-a0a0-c16a1b5d62fc/target-read-password",
+                "Destination": "/run/secrets/target-read-password",
+                "Mode": "ro",
+                "RW": false,
+                "Propagation": "rprivate"
+            },
+            {
+                "Type": "bind",
+                "Source": "F:/project love/AgentBrake/.agentbrake-local/isolation-e62c56f7-2adc-4a3a-a0a0-c16a1b5d62fc/target-write-password",
+                "Destination": "/run/secrets/target-write-password",
+                "Mode": "ro",
+                "RW": false,
+                "Propagation": "rprivate"
+            },
+            {
+                "Type": "volume",
+                "Name": "60785dd5afba0b38bebedb1783b5a1de48cb205d8e82f4268c64d219057f7712",
+                "Source": "/var/lib/docker/volumes/60785dd5afba0b38bebedb1783b5a1de48cb205d8e82f4268c64d219057f7712/_data",
+                "Destination": "/var/lib/postgresql",
+                "Driver": "local",
+                "Mode": "",
+                "RW": true,
+                "Propagation": ""
+            }
+        ],
+        "Config": {
+            "Hostname": "b2456a55bf41",
+            "Domainname": "",
+            "User": "postgres",
+            "AttachStdin": false,
+            "AttachStdout": true,
+            "AttachStderr": true,
+            "ExposedPorts": {
+                "5432/tcp": {}
+            },
+            "Tty": false,
+            "OpenStdin": false,
+            "StdinOnce": false,
+            "Env": [
+                "PGDATA=/var/lib/postgresql/data/pgdata",
+                "POSTGRES_DB=agentbrake_target_fixture",
+                "POSTGRES_USER=fixture_owner",
+                "POSTGRES_PASSWORD_FILE=/run/secrets/bootstrap-password",
+                "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+                "GOSU_VERSION=1.19",
+                "LANG=en_US.utf8",
+                "PG_MAJOR=18",
+                "PG_VERSION=18.7",
+                "PG_SHA256=441dfae4280cae3e0425e5f876f80559fb0731c140f1aae22b3e5a54d0411bfd",
+                "DOCKER_PG_LLVM_DEPS=llvm21-dev \t\tclang21"
+            ],
+            "Cmd": [
+                "postgres"
+            ],
+            "Healthcheck": {
+                "Test": [
+                    "CMD",
+                    "pg_isready",
+                    "-U",
+                    "fixture_owner",
+                    "-d",
+                    "agentbrake_target_fixture"
+                ],
+                "Interval": 2000000000,
+                "Timeout": 2000000000,
+                "Retries": 40
+            },
+            "Image": "library/postgres@sha256:b6972e1115a4ff8eba5d7f7d19184926d1e16d7d1136ae1e1a7ebf286da0f015",
+            "Volumes": {
+                "/var/lib/postgresql": {}
+            },
+            "WorkingDir": "/",
+            "Entrypoint": [
+                "docker-entrypoint.sh"
+            ],
+            "Labels": {
+                "com.docker.compose.config-hash": "0bf16a5599c35fe7250f89fe1ec7cc8bf307bfb2125b78aebc6d59033b441763",
+                "com.docker.compose.container-number": "1",
+                "com.docker.compose.depends_on": "",
+                "com.docker.compose.image": "sha256:0f6c51e48b3458e87ab43692e49c9dafc72ffe0a0dbde3fd8cdb6ab92d5c025e",
+                "com.docker.compose.oneoff": "False",
+                "com.docker.compose.project": "agentbrake-a-e62c56f7",
+                "com.docker.compose.project.config_files": "F:\\project love\\AgentBrake\\infra\\local\\compose.yaml",
+                "com.docker.compose.project.working_dir": "F:\\project love\\AgentBrake\\infra\\local",
+                "com.docker.compose.service": "target-db",
+                "com.docker.compose.version": "5.7.0"
+            },
+            "StopSignal": "SIGINT"
+        },
+        "NetworkSettings": {
+            "SandboxID": "e7fec3aba37a75d8a868bf7ba2519a67c9068c007417da0d89695ad4949761f5",
+            "SandboxKey": "/var/run/docker/netns/e7fec3aba37a",
+            "Ports": {
+                "5432/tcp": null
+            },
+            "Networks": {
+                "agentbrake-a-e62c56f7_protected": {
+                    "IPAMConfig": null,
+                    "Links": null,
+                    "Aliases": [
+                        "agentbrake-a-e62c56f7-target-db-1",
+                        "target-db"
+                    ],
+                    "DriverOpts": null,
+                    "GwPriority": 0,
+                    "NetworkID": "85db47374ead3bdcad2cde11bbb9e300789447041b95cf224172681df27ff44e",
+                    "EndpointID": "58d0237486adad42231efd262949e3e1f21731b6d087fb067c467f87dfc5b9d7",
+                    "Gateway": "",
+                    "IPAddress": "172.28.0.4",
+                    "MacAddress": "b2:4f:3d:70:de:9d",
+                    "IPPrefixLen": 16,
+                    "IPv6Gateway": "",
+                    "GlobalIPv6Address": "",
+                    "GlobalIPv6PrefixLen": 0,
+                    "DNSNames": [
+                        "agentbrake-a-e62c56f7-target-db-1",
+                        "target-db",
+                        "b2456a55bf41"
+                    ]
+                }
+            }
+        }
+    }
+]

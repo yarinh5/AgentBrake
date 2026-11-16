@@ -1,0 +1,42 @@
+TAP version 13
+# (node:41032) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# Subtest: cached results are withdrawn from REST and MCP status after policy changes
+ok 1 - cached results are withdrawn from REST and MCP status after policy changes
+  ---
+  duration_ms: 116.4539
+  ...
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# Subtest: status recovery remains available when execution quota is consumed
+ok 2 - status recovery remains available when execution quota is consumed
+  ---
+  duration_ms: 11.7561
+  ...
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# Subtest: approval expiry during awaited real PDP evaluation blocks before dispatch
+ok 3 - approval expiry during awaited real PDP evaluation blocks before dispatch
+  ---
+  duration_ms: 275.1483
+  ...
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# Subtest: credential-shaped unknown tool names never appear in REST records or audit exports
+ok 4 - credential-shaped unknown tool names never appear in REST records or audit exports
+  ---
+  duration_ms: 26.1652
+  ...
+# Subtest: credential-shaped unknown tool names are not echoed in MCP errors
+ok 5 - credential-shaped unknown tool names are not echoed in MCP errors
+  ---
+  duration_ms: 9.0619
+  ...
+1..5
+# tests 5
+# suites 0
+# pass 5
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1177.9598

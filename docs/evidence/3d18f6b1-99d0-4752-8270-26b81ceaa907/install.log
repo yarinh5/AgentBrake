@@ -1,0 +1,145 @@
+#1 [internal] load local bake definitions
+#1 reading from stdin 3.88kB 0.0s done
+#1 DONE 0.0s
+
+#2 [ingress internal] load build definition from Dockerfile
+#2 transferring dockerfile: 443B done
+#2 WARN: InvalidDefaultArgInFrom: Default value for ARG ${NODE_IMAGE} results in empty or invalid base image name (line 2)
+#2 WARN: InvalidDefaultArgInFrom: Default value for ARG ${NODE_IMAGE} results in empty or invalid base image name (line 2)
+#2 WARN: InvalidDefaultArgInFrom: Default value for ARG ${NODE_IMAGE} results in empty or invalid base image name (line 2)
+#2 WARN: InvalidDefaultArgInFrom: Default value for ARG ${NODE_IMAGE} results in empty or invalid base image name (line 2)
+#2 WARN: InvalidDefaultArgInFrom: Default value for ARG ${NODE_IMAGE} results in empty or invalid base image name (line 2)
+#2 DONE 0.0s
+
+#3 [dashboard internal] load build definition from Dockerfile
+#3 transferring dockerfile: 1.09kB done
+#3 DONE 0.0s
+
+#4 [dashboard internal] load metadata for docker.io/library/node@sha256:e9f565d32859f0cbfb52125eafe8be39390f24dac302dc3cdf566e8ba3ab21ee
+#4 DONE 0.0s
+
+#5 [control-api internal] load .dockerignore
+#5 transferring context: 289B done
+#5 DONE 0.0s
+
+#6 [control-api build 1/8] FROM docker.io/library/node@sha256:e9f565d32859f0cbfb52125eafe8be39390f24dac302dc3cdf566e8ba3ab21ee
+#6 DONE 0.0s
+
+#7 [dashboard internal] load build context
+#7 transferring context: 187.07kB 0.0s done
+#7 DONE 0.1s
+
+#8 [dashboard build 5/8] RUN ln -s apps/dashboard/node_modules /workspace/node_modules
+#8 CACHED
+
+#9 [dashboard build 4/8] RUN cd apps/dashboard && npm ci --ignore-scripts
+#9 CACHED
+
+#10 [dashboard build 8/8] RUN cd apps/dashboard && npm run build
+#10 CACHED
+
+#11 [dashboard build 3/8] COPY apps/dashboard/package.json apps/dashboard/package-lock.json ./apps/dashboard/
+#11 CACHED
+
+#12 [dashboard runtime 2/4] WORKDIR /app
+#12 CACHED
+
+#13 [dashboard runtime 3/4] COPY --from=build --chown=node:node /workspace/apps/dashboard/.next/standalone ./
+#13 CACHED
+
+#14 [dashboard build 6/8] COPY apps/dashboard ./apps/dashboard
+#14 CACHED
+
+#15 [dashboard build 2/8] WORKDIR /workspace
+#15 CACHED
+
+#16 [dashboard build 7/8] COPY src ./src
+#16 CACHED
+
+#17 [dashboard runtime 4/4] COPY --from=build --chown=node:node /workspace/apps/dashboard/.next/static ./apps/dashboard/.next/static
+#17 CACHED
+
+#18 [control-api internal] load build context
+#18 transferring context: 842.63kB 0.1s done
+#18 DONE 0.1s
+
+#19 [dashboard] exporting to image
+#19 exporting layers done
+#19 writing image sha256:cf7600f9a124a1f9974ab1fb17854cb03a1fd569d839f23456aba910bd96d013 done
+#19 naming to docker.io/library/agentbrake-product-verify-3d18f6b1-dashboard done
+#19 DONE 0.0s
+
+#20 [ingress  5/10] RUN npm ci
+#20 CACHED
+
+#21 [ingress  8/10] COPY tests ./tests
+#21 CACHED
+
+#22 [ingress  2/10] RUN apt-get update && apt-get install -y --no-install-recommends curl git postgresql-client ca-certificates && rm -rf /var/lib/apt/lists/*
+#22 CACHED
+
+#23 [ingress  9/10] COPY scripts ./scripts
+#23 CACHED
+
+#24 [ingress  4/10] COPY package.json package-lock.json ./
+#24 CACHED
+
+#25 [ingress  6/10] COPY server ./server
+#25 CACHED
+
+#26 [ingress  7/10] COPY services ./services
+#26 CACHED
+
+#27 [ingress  3/10] WORKDIR /app
+#27 CACHED
+
+#28 [ingress 10/10] COPY infra ./infra
+#28 CACHED
+
+#29 [dashboard] resolving provenance for metadata file
+#29 DONE 0.0s
+
+#30 [ingress] exporting to image
+#30 exporting layers done
+#30 writing image sha256:6219da69ba97b539cd45a9d89d6b9469491ec27637d9021cd3721fbdb29ffef6 0.0s done
+#30 naming to docker.io/library/agentbrake-product-verify-3d18f6b1-runtime 0.0s done
+#30 DONE 0.1s
+
+#31 [control-api] exporting to image
+#31 exporting layers done
+#31 writing image sha256:ce89d7e25211b1bb6f800c3524941648759a609b7f70ad693c27717eab63f94a 0.0s done
+#31 naming to docker.io/library/agentbrake-product-verify-3d18f6b1-runtime 0.0s done
+#31 DONE 0.1s
+
+#32 [mock-target] exporting to image
+#32 exporting layers done
+#32 writing image sha256:1d01572cad3d6f397e282a53346e4ba7236e87e6bfb24252e04974be18c6e638 0.0s done
+#32 naming to docker.io/library/agentbrake-product-verify-3d18f6b1-runtime 0.0s done
+#32 DONE 0.1s
+
+#33 [agent] exporting to image
+#33 exporting layers done
+#33 writing image sha256:7505ff9c9e9157c2aa61ae5b7be360ad84522349693c3a3ee4d376bb3fee45fe 0.0s done
+#33 naming to docker.io/library/agentbrake-product-verify-3d18f6b1-runtime 0.0s done
+#33 DONE 0.1s
+
+#34 [gateway] exporting to image
+#34 exporting layers done
+#34 writing image sha256:1021020bd0e83fdd5f1dcc92f33dc6d1388c7a362629f8fbeccb6df2f1893efa 0.0s done
+#34 naming to docker.io/library/agentbrake-product-verify-3d18f6b1-runtime 0.0s done
+#34 DONE 0.1s
+
+#35 [ingress] resolving provenance for metadata file
+#35 DONE 0.1s
+
+#36 [control-api] resolving provenance for metadata file
+#36 DONE 0.1s
+
+#37 [mock-target] resolving provenance for metadata file
+#37 DONE 0.0s
+
+#38 [gateway] resolving provenance for metadata file
+#38 DONE 0.0s
+
+#39 [agent] resolving provenance for metadata file
+#39 DONE 0.0s

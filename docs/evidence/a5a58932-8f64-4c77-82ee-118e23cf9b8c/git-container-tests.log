@@ -1,0 +1,96 @@
+ Container agentbrake-a-a5a58932-verifier-run-c398b49fe7a6 Creating 
+ Container agentbrake-a-a5a58932-verifier-run-c398b49fe7a6 Created 
+TAP version 13
+# Subtest: creates a new real Git fixture with trusted identity, protected main and bounded reads
+ok 1 - creates a new real Git fixture with trusted identity, protected main and bounded reads
+  ---
+  duration_ms: 93.79787
+  type: 'test'
+  ...
+# Subtest: refuses existing directories and repositories without changing their contents
+ok 2 - refuses existing directories and repositories without changing their contents
+  ---
+  duration_ms: 78.041658
+  type: 'test'
+  ...
+# Subtest: canonical proposals return an exact diff and fingerprint without writing Git objects
+ok 3 - canonical proposals return an exact diff and fingerprint without writing Git objects
+  ---
+  duration_ms: 91.265068
+  type: 'test'
+  ...
+# Subtest: proposal diff applies exactly, including empty files and missing terminal newlines
+ok 4 - proposal diff applies exactly, including empty files and missing terminal newlines
+  ---
+  duration_ms: 128.033095
+  type: 'test'
+  ...
+# Subtest: queued requests cannot swap validated branch or content before execution
+ok 5 - queued requests cannot swap validated branch or content before execution
+  ---
+  duration_ms: 105.664179
+  type: 'test'
+  ...
+# Subtest: approved feature branch and mock PR produce one real commit while main remains unchanged
+ok 6 - approved feature branch and mock PR produce one real commit while main remains unchanged
+  ---
+  duration_ms: 181.969636
+  type: 'test'
+  ...
+# Subtest: rejects protected branches, external repos, extra arguments and forbidden tools with no effects
+ok 7 - rejects protected branches, external repos, extra arguments and forbidden tools with no effects
+  ---
+  duration_ms: 69.226452
+  type: 'test'
+  ...
+# Subtest: rejects workflow, secret, traversal and ambiguous paths before reading or writing
+ok 8 - rejects workflow, secret, traversal and ambiguous paths before reading or writing
+  ---
+  duration_ms: 46.209228
+  type: 'test'
+  ...
+# Subtest: enforces file count, UTF-8 bytes, total bytes, duplicate paths and exact nested schemas
+ok 9 - enforces file count, UTF-8 bytes, total bytes, duplicate paths and exact nested schemas
+  ---
+  duration_ms: 62.413123
+  type: 'test'
+  ...
+# Subtest: stale main, stale feature, missing feature and no-op proposals fail before mutation
+ok 10 - stale main, stale feature, missing feature and no-op proposals fail before mutation
+  ---
+  duration_ms: 138.622151
+  type: 'test'
+  ...
+# Subtest: concurrent branch and PR requests produce at most one effect each
+ok 11 - concurrent branch and PR requests produce at most one effect each
+  ---
+  duration_ms: 172.814865
+  type: 'test'
+  ...
+# Subtest: Git tree symlinks are never resolved or overwritten through an allowed path
+ok 12 - Git tree symlinks are never resolved or overwritten through an allowed path
+  ---
+  duration_ms: 88.880033
+  type: 'test'
+  ...
+# Subtest: closing preserves evidence and rejects subsequent execution
+ok 13 - closing preserves evidence and rejects subsequent execution
+  ---
+  duration_ms: 45.804717
+  type: 'test'
+  ...
+# Subtest: fast Git read commands do not fail after an unused stdin pipe closes
+ok 14 - fast Git read commands do not fail after an unused stdin pipe closes
+  ---
+  duration_ms: 285.458906
+  type: 'test'
+  ...
+1..14
+# tests 14
+# suites 0
+# pass 14
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2073.592342

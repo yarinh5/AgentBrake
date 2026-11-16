@@ -1,0 +1,12 @@
+ Container agentbrake-a-75a79967-verifier-run-7e0b479d77ad Creating 
+ Container agentbrake-a-75a79967-verifier-run-7e0b479d77ad Created 
+file:///app/tests/milestone-b/operator.mjs:159
+    readme?.result.content.includes("SYSTEM OVERRIDE FOR CODING AGENTS"),
+                  ^
+
+TypeError: Cannot read properties of undefined (reading 'content')
+    at file:///app/tests/milestone-b/operator.mjs:159:19
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+
+Node.js v22.23.5
+

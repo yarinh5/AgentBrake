@@ -1,0 +1,62 @@
+{
+  "result": "PASS_LOCAL_DELIVERY_SMOKE",
+  "at": "2026-11-16T13:33:14.747Z",
+  "sourceHash": "a37811a74bc93ace334a58bb51577a195dd9985fcd16aca66b1e4d669d058bdd",
+  "url": "http://127.0.0.1:4318",
+  "scenarios": [
+    {
+      "label": "Safe read",
+      "expected": "allowed",
+      "actions": [
+        {
+          "id": "5cdc7ae4-a074-4911-b7eb-1e3334463576",
+          "tool": "database_read",
+          "status": "allowed",
+          "reason": "Executed through the enforced gateway."
+        }
+      ]
+    },
+    {
+      "label": "Blocked destructive SQL",
+      "expected": "blocked",
+      "actions": [
+        {
+          "id": "d30adb2c-7583-4b00-a82f-fd1ea0713a0d",
+          "tool": "database_read",
+          "status": "blocked",
+          "reason": "Arguments do not match the strict tool schema."
+        }
+      ]
+    },
+    {
+      "label": "PR approval",
+      "expected": "pending",
+      "actions": [
+        {
+          "id": "d811404e-d45a-40b8-b558-80646cf5ce0f",
+          "tool": "github_list_branches",
+          "status": "allowed",
+          "reason": "Executed through the enforced gateway."
+        },
+        {
+          "id": "75432e93-9043-4261-8f6d-c2c7e7916db3",
+          "tool": "github_create_branch",
+          "status": "pending",
+          "reason": "Human approval is required before this exact action can execute."
+        }
+      ]
+    }
+  ],
+  "storage": {
+    "local": [],
+    "session": []
+  },
+  "browserErrors": [],
+  "externalRequests": [],
+  "pendingApproval": "Left for a different authorized human; no write approval submitted.",
+  "screenshots": [
+    "overview.png",
+    "blocked-evidence.png"
+  ],
+  "scope": "Real installed local UI/control/Gateway against synthetic targets. Full target-state proofs are in the matching release suite."
+}

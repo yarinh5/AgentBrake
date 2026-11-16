@@ -1,0 +1,334 @@
+Identity fix1 delta
+diff --git "a/.agentbrake-local\\service-identity-fix1-base\\server\\security\\accounts.ts" b/server/security/accounts.ts
+index f36cf42..89927e3 100644
+--- "a/.agentbrake-local\\service-identity-fix1-base\\server\\security\\accounts.ts"
++++ b/server/security/accounts.ts
+@@ -25,19 +25,34 @@ export class ManagedAccounts {
+         const account = state.accounts.find(a => a.id === session.actor.id);
+         if (session.authMode !== "account" || !account?.active || account.revision !== session.revision)
+             throw new HttpError(401, "Account sign-in required");
+         if (admin && account.role !== "administrator")
+             throw new HttpError(403, "Administrator access required");
+         return account;
+     }
+     private session(account: Account) { return this.legacy.issue(actorOf(account), "account", account.revision); }
++    private pruneInvalidSessions(state: IdentityState) {
++        this.legacy.pruneSessions(session => {
++            if (session.authMode === "key") return !state.initialized;
++            const account = state.accounts.find(a => a.id === session.actor.id);
++            // A database read may precede a newer session's commit. Only discard
++            // revisions proven invalid by this snapshot; account IDs are never deleted.
++            if (!account) return true;
++            const revision = session.revision ?? 0;
++            return revision > account.revision || (revision === account.revision && account.active);
++        });
++    }
++    private pruneAccountSessions(id: string, revision: number) {
++        this.legacy.pruneSessions(s => s.authMode !== "account" || s.actor.id !== id || (s.revision ?? 0) >= revision);
++    }
+     async authenticate(cookie?: string) {
+         const session = this.legacy.authenticate(cookie);
+         const state = await this.store.identityState();
++        this.pruneInvalidSessions(state);
+         if (!state.initialized) {
+             if (session.authMode !== "key")
+                 throw new HttpError(401, "Operator sign-in required");
+             return session;
+         }
+         const account = this.account(state, session);
+         return { ...session, actor: actorOf(account) };
+     }
+@@ -59,38 +74,43 @@ export class ManagedAccounts {
+         if (!body.success)
+             throw new HttpError(401, "Invalid account credential");
+         const found = state.accounts.find(a => a.email === body.data.email && a.active);
+         // Unknown emails still perform the same bounded asynchronous KDF.
+         const credential = found?.passwordHash ?? { salt: "0".repeat(32), hash: "0".repeat(128) };
+         const valid = await verifyPassword(body.data.password, credential);
+         if (!found || !valid)
+             throw new HttpError(401, "Invalid account credential");
+-        const current = (await this.store.identityState()).accounts.find(a => a.id === found.id);
++        const latest = await this.store.identityState();
++        this.pruneInvalidSessions(latest);
++        const current = latest.accounts.find(a => a.id === found.id);
+         if (!current?.active || current.revision !== found.revision)
+             throw new HttpError(401, "Invalid account credential");
+         return this.session(current);
+     }
+     async setup(input: unknown) {
+         const body = z.object({ key: z.string().max(200), name: accountSchemas.name, email: accountSchemas.email, password: accountSchemas.password }).strict().parse(input);
+         if ((await this.store.identityState()).initialized)
+             throw new HttpError(409, "Workspace accounts are already initialized");
+         const actor = this.legacy.credential(body.key);
+         if (actor.role !== "administrator")
+             throw new HttpError(401, "Invalid bootstrap credential");
+-        const passwordHash = await hashPassword(body.password);
+-        const account = await this.store.changeIdentity(state => {
++        const reservation = this.legacy.reserveSession(true);
++        try {
++          const passwordHash = await hashPassword(body.password);
++          const account = await this.store.changeIdentity(state => {
+             if (state.initialized)
+                 throw new HttpError(409, "Workspace accounts are already initialized");
+             const account: Account = { id: actor.id, name: body.name, email: body.email, role: "administrator", tenant: "local", active: true, revision: 1, passwordHash };
+             state.initialized = true;
+             state.accounts.push(account);
+             return { result: account, audit: event("initialized", actor.id, account.id, "administrator-bootstrap") };
+-        });
+-        return this.session(account);
++          });
++          return reservation.issue(actorOf(account), "account", account.revision);
++        } finally { reservation.release(); }
+     }
+     async profile(session: OperatorSession) { return safeAccount(this.account(await this.store.identityState(), session)); }
+     async rename(session: OperatorSession, input: unknown) {
+         const { name } = z.object({ name: accountSchemas.name }).strict().parse(input);
+         return this.store.changeIdentity(state => {
+             const a = this.account(state, session);
+             a.name = name;
+             return { result: safeAccount(a), audit: event("profile-changed", a.id, a.id, "name-changed") };
+@@ -124,42 +144,48 @@ export class ManagedAccounts {
+         });
+     }
+     async accept(input: unknown) {
+         const body = z.object({ token: accountSchemas.token, name: accountSchemas.name, password: accountSchemas.password }).strict().parse(input);
+         const tokenHash = digest(body.token);
+         const preliminary = await this.store.identityState();
+         if (!preliminary.initialized || !preliminary.invitations.some(i => i.tokenHash === tokenHash && i.expiresAt > Date.now()))
+             throw invalidToken();
+-        const passwordHash = await hashPassword(body.password);
+-        const account = await this.store.changeIdentity(state => {
++        this.pruneInvalidSessions(preliminary);
++        const reservation = this.legacy.reserveSession();
++        try {
++          const passwordHash = await hashPassword(body.password);
++          const account = await this.store.changeIdentity(state => {
+             const i = state.invitations.find(i => i.tokenHash === tokenHash && i.expiresAt > Date.now());
+             if (!state.initialized || !i)
+                 throw invalidToken();
+             if (state.accounts.length >= 256 || state.accounts.some(a => a.email === i.email))
+                 throw new HttpError(409, "Account limit or duplicate email");
+             const a: Account = { id: randomUUID(), name: body.name, email: i.email, role: i.role, tenant: "local", active: true, revision: 1, passwordHash };
+             state.accounts.push(a);
+             state.invitations = state.invitations.filter(inv => inv.id !== i.id);
+             return { result: a, audit: event("invitation-accepted", a.id, a.id, "invitation-accepted") };
+-        });
+-        return this.session(account);
++          });
++          return reservation.issue(actorOf(account), "account", account.revision);
++        } finally { reservation.release(); }
+     }
+     async changeMember(session: OperatorSession, id: string, input: unknown) {
+         const patch = z.object({ role: accountSchemas.role.optional(), active: z.boolean().optional() }).strict().refine(p => Object.keys(p).length > 0).parse(input);
+-        return this.store.changeIdentity(state => {
++        const updated = await this.store.changeIdentity(state => {
+             const actor = this.account(state, session, true), a = state.accounts.find(a => a.id === id);
+             if (!a)
+                 throw new HttpError(404, "Account not found");
+             Object.assign(a, patch);
+             if (!state.accounts.some(a => a.active && a.role === "administrator"))
+                 throw new HttpError(409, "The last active administrator must remain enabled");
+             a.revision++;
+-            return { result: safeAccount(a), audit: event("member-changed", actor.id, a.id, "authority-changed") };
++            return { result: {member: safeAccount(a), revision: a.revision}, audit: event("member-changed", actor.id, a.id, "authority-changed") };
+         });
++        this.pruneAccountSessions(updated.member.id, updated.revision);
++        return updated.member;
+     }
+     async recovery(session: OperatorSession, id: string, input: unknown) {
+         z.object({}).strict().parse(input);
+         const token = randomBytes(32).toString("hex"), expiresAt = Date.now() + 15 * 60000;
+         return this.store.changeIdentity(state => {
+             const actor = this.account(state, session, true), a = state.accounts.find(a => a.id === id);
+             if (!a)
+                 throw new HttpError(404, "Account not found");
+@@ -169,34 +195,36 @@ export class ManagedAccounts {
+         });
+     }
+     async changePassword(session: OperatorSession, input: unknown) {
+         const body = z.object({ currentPassword: accountSchemas.password, password: accountSchemas.password }).strict().parse(input);
+         const account = this.account(await this.store.identityState(), session);
+         if (!await verifyPassword(body.currentPassword, account.passwordHash))
+             throw new HttpError(401, "Invalid current password");
+         const passwordHash = await hashPassword(body.password);
+-        await this.store.changeIdentity(state => {
++        const updated = await this.store.changeIdentity(state => {
+             const a = this.account(state, session);
+             a.passwordHash = passwordHash;
+             a.revision++;
+             state.recoveries = state.recoveries.filter(r => r.accountId !== a.id);
+-            return { result: undefined, audit: event("password-changed", a.id, a.id, "current-password-verified") };
++            return { result: {id: a.id, revision: a.revision}, audit: event("password-changed", a.id, a.id, "current-password-verified") };
+         });
++        this.pruneAccountSessions(updated.id, updated.revision);
+     }
+     async reset(input: unknown) {
+         const body = z.object({ token: accountSchemas.token, password: accountSchemas.password }).strict().parse(input);
+         const tokenHash = digest(body.token);
+         if (!(await this.store.identityState()).recoveries.some(r => r.tokenHash === tokenHash && r.expiresAt > Date.now()))
+             throw invalidToken();
+         const passwordHash = await hashPassword(body.password);
+-        await this.store.changeIdentity(state => {
++        const updated = await this.store.changeIdentity(state => {
+             const recovery = state.recoveries.find(r => r.tokenHash === tokenHash && r.expiresAt > Date.now());
+             const a = state.accounts.find(a => a.id === recovery?.accountId);
+             if (!a || !recovery)
+                 throw invalidToken();
+             a.passwordHash = passwordHash;
+             a.revision++;
+             state.recoveries = state.recoveries.filter(r => r.accountId !== a.id);
+-            return { result: undefined, audit: event("password-reset", a.id, a.id, "recovery-token-consumed") };
++            return { result: {id: a.id, revision: a.revision}, audit: event("password-reset", a.id, a.id, "recovery-token-consumed") };
+         });
++        this.pruneAccountSessions(updated.id, updated.revision);
+     }
+ }
+diff --git "a/.agentbrake-local\\service-identity-fix1-base\\server\\security\\operators.ts" b/server/security/operators.ts
+index 1aac206..6eb438e 100644
+--- "a/.agentbrake-local\\service-identity-fix1-base\\server\\security\\operators.ts"
++++ b/server/security/operators.ts
+@@ -27,16 +27,17 @@ export type OperatorSession = {
+   expiresAt: number;
+   csrfToken: string;
+   authMode?: "key" | "account";
+   revision?: number;
+ };
+ export class LocalOperators {
+   private identities: { actor: OperatorIdentity; keyHash: string }[];
+   private sessions = new Map<string, OperatorSession>();
++  private reservations = new Set<symbol>();
+   readonly team: boolean;
+   constructor(adminKey: string, configured?: OperatorCredential[]) {
+     this.team = configured !== undefined;
+     const operators = z
+       .array(operatorSchema)
+       .min(1)
+       .max(32)
+       .parse(
+@@ -71,30 +72,47 @@ export class LocalOperators {
+     if (matched.actor.tenant !== "local")
+       throw new HttpError(403, "Tenant access denied");
+     return matched.actor;
+   }
+   login(key: string) {
+     return this.issue(this.credential(key), "key");
+   }
+   issue(actor: OperatorIdentity, authMode: "key" | "account", revision?: number) {
++    return this.reserveSession().issue(actor, authMode, revision);
++  }
++  pruneSessions(keep: (session: OperatorSession) => boolean) {
+     for (const [id, session] of this.sessions)
+-      if (session.expiresAt <= Date.now()) this.sessions.delete(id);
+-    if (this.sessions.size >= 256)
++      if (session.expiresAt <= Date.now() || !keep(session)) this.sessions.delete(id);
++  }
++  // Reserve capacity and generate secrets before a durable operation. Bootstrap
++  // may replace key sessions, but must leave them usable until its audit commits.
++  reserveSession(replaceKeys = false) {
++    this.pruneSessions(() => true);
++    const occupied = replaceKeys
++      ? [...this.sessions.values()].filter(s => s.authMode !== "key").length
++      : this.sessions.size;
++    if (occupied + this.reservations.size >= 256)
+       throw new HttpError(429, "Session limit reached");
+     const token = randomBytes(32).toString("hex");
+-    const session = {
+-      actor,
+-      expiresAt: Date.now() + 8 * 3600_000,
+-      csrfToken: randomBytes(32).toString("hex"),
+-      authMode,
+-      revision,
++    const csrfToken = randomBytes(32).toString("hex");
++    const id = digest(token), reservation = Symbol();
++    this.reservations.add(reservation);
++    const release = () => { this.reservations.delete(reservation); };
++    return {
++      release,
++      issue: (actor: OperatorIdentity, authMode: "key" | "account", revision?: number) => {
++        if (!this.reservations.has(reservation)) throw Error("Session reservation is no longer available");
++        if (replaceKeys) this.pruneSessions(s => s.authMode !== "key");
++        const session = { actor, expiresAt: Date.now() + 8 * 3600_000, csrfToken, authMode, revision };
++        this.sessions.set(id, session);
++        release();
++        return { token, ...session };
++      },
+     };
+-    this.sessions.set(digest(token), session);
+-    return { token, ...session };
+   }
+   authenticate(cookie?: string) {
+     const token = cookie
+       ?.split(";")
+       .map((x) => x.trim())
+       .find((x) => x.startsWith("ab_session="))
+       ?.slice(11);
+     const session = token ? this.sessions.get(digest(token)) : undefined;
+diff --git "a/.agentbrake-local\\service-identity-fix1-base\\tests\\enforcement\\accounts.test.ts" b/tests/enforcement/accounts.test.ts
+index 80bc6c1..04fba67 100644
+--- "a/.agentbrake-local\\service-identity-fix1-base\\tests\\enforcement\\accounts.test.ts"
++++ b/tests/enforcement/accounts.test.ts
+@@ -99,8 +99,64 @@ test("production asynchronous scrypt is salted, bounded to two and does not bloc
+     await timer;
+     assert.equal(timerRan, true);
+     assert.ok(a.salt.length >= 32);
+     assert.notEqual(a.salt, b.salt);
+     assert.notEqual(a.hash, b.hash);
+     assert.equal(await verifyPassword(password, a), true);
+     assert.equal(await verifyPassword(nextPassword, a), false);
+ });
++
++test("session capacity: saturated legacy sessions bootstrap into a usable managed administrator", async () => {
++    const store = new Store(":memory:");
++    const api = await accountApi(store);
++    try {
++        let old;
++        for (let i = 0; i < 256; i++) {
++            old = await api.request("/api/login", {key});
++            assert.equal(old.status, 200);
++        }
++        const initial=store.identityState(), audit=store.auditTrail();
++        store.db.exec("CREATE TRIGGER fixture_bootstrap_audit_failure BEFORE INSERT ON audit BEGIN SELECT RAISE(ABORT,'fixture unavailable'); END");
++        assert.equal((await api.request("/api/setup", {key, name:"Owner", email:"owner@example.test", password})).status,503);
++        assert.deepEqual(store.identityState(),initial);
++        assert.deepEqual(store.auditTrail(),audit);
++        store.db.exec("DROP TRIGGER fixture_bootstrap_audit_failure");
++        assert.equal((await api.request("/api/session",undefined,old)).status,200);
++        const setup = await api.request("/api/setup", {key, name:"Owner", email:"owner@example.test", password});
++        assert.equal(setup.status, 200);
++        assert.equal((await api.request("/api/session", undefined, setup)).status, 200);
++        assert.equal((await api.request("/api/session", undefined, old)).status, 401);
++        assert.equal((await api.request("/api/login", {key})).status, 401);
++        assert.equal((await api.request("/api/login", {email:"owner@example.test", password})).status, 200);
++    } finally { await api.close(); }
++});
++
++test("session capacity: active sessions protect signup state, invalidated revisions reclaim slots", async () => {
++    const store = new Store(":memory:");
++    const api = await accountApi(store);
++    try {
++        const owner = await api.request("/api/setup", {key, name:"Owner", email:"owner@example.test", password});
++        assert.equal(owner.status, 200);
++        const invitation = await api.request("/api/team/invitations", {email:"capacity-viewer@example.test",role:"viewer"}, owner);
++        assert.equal(invitation.status, 201);
++        // Use the real HTTP login path and unchanged production KDF, two at a time.
++        for(let i=1;i<256;i+=2) {
++            const sessions = await Promise.all(Array.from({length:Math.min(2,256-i)},()=>api.request("/api/login", {email:"owner@example.test",password})));
++            for(const session of sessions) assert.equal(session.status, 200);
++        }
++        const before=await store.identityState();
++        assert.equal((await api.request("/api/login", {email:"owner@example.test",password})).status, 429);
++        const accept = {token:invitation.token,name:"Reader",password};
++        assert.equal((await api.request("/api/invitations/accept", accept)).status, 429);
++        assert.deepEqual(await store.identityState(),before);
++        assert.equal((await api.request("/api/session",undefined,owner)).status,200);
++        // Role changes invalidate all of this member's sessions even for a same-role patch.
++        assert.equal((await api.request("/api/team/administrator", {role:"administrator"}, owner,"PATCH")).status,200);
++        assert.equal((await api.request("/api/session",undefined,owner)).status,401);
++        const recovered=await api.request("/api/login", {email:"owner@example.test",password});
++        assert.equal(recovered.status,200);
++        const reader=await api.request("/api/invitations/accept",accept);
++        assert.equal(reader.status,200);
++        assert.equal((await api.request("/api/session",undefined,reader)).status,200);
++        assert.equal(store.identityState().accounts.length,2);
++    } finally { await api.close(); }
++});

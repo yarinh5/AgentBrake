@@ -1,0 +1,110 @@
+diff --git a/.agentbrake-local/product-ui-base/review1-ProductApp.tsx b/src/ProductApp.tsx
+index d1c8858..961ebd3 100644
+--- a/.agentbrake-local/product-ui-base/review1-ProductApp.tsx
++++ b/src/ProductApp.tsx
+@@ -100,17 +100,17 @@ export default function App() {
+       <div className="info-bar scope-banner"><Shield size={18} /><p>Isolated local fixtures: customers and agentbrake/sandbox. Counts describe the recorded workspace snapshot, not target connectivity or production coverage.</p></div>
+       {workspace.paused && <div className="pause-banner"><Pause size={18} /><span><strong>Emergency stop is active.</strong> New and queued actions are blocked. Dispatched changes are not rolled back.</span>{configure && <button disabled={busy} onClick={() => void mutate("/control", { paused: false }, "Gateway resumed.")}>Resume gateway</button>}</div>}
+       {page === "Overview" && <><section className="guard-banner"><div className="guard-copy"><div className="guard-status"><span className="dot" />{workspace.paused ? "STOP ACTIVE" : "LOCAL GATEWAY CONTROLS"}</div><h2>Autonomy, with boundaries.</h2><p>Inspect decisions and recorded execution outcomes for calls routed through this gateway.</p><div className="guard-meta"><Shield size={14} />Scoped grants<i />Exact action review<i />Recorded evidence</div></div><div className="flow"><div className="flow-node"><span><Bot /></span><small>Agent</small></div><div className="flow-line" /><div className="flow-node brake"><span><Shield /></span><small>Gateway</small></div><div className="flow-line" /><div className="flow-node"><span><Database /></span><small>Fixture</small></div></div></section><section className="metrics product-metrics"><Metric icon={<Activity size={17} />} label="Recorded actions" value={workspace.actions.length} detail="Current workspace snapshot" bars={[]} tone="neutral" /><Metric icon={<Shield size={17} />} label="Blocked" value={blocked.length} detail="No dispatch permitted by decision" bars={[]} tone="red" /><Metric icon={<FileCheck2 size={17} />} label="Awaiting approval" value={pending.length} detail="Pending is not execution" bars={[]} tone="amber" /><Metric icon={<Bot size={17} />} label="Active identities" value={workspace.agents.filter(agent => agent.status === "active").length} detail={`${workspace.agents.length} registered identities`} bars={[]} tone="green" /></section>{unknown.length > 0 && <div className="error" role="alert">{unknown.length} UNKNOWN outcome(s). Reconcile target state with the action correlation ID before taking any further action. Do not resubmit.</div>}<section className="panel"><div className="panel-heading"><h2>Recent activity</h2><button className="text-button" onClick={() => navigate("Activity")}>View all <ArrowRight size={14} /></button></div><ActionTable items={workspace.actions.slice(0, 8)} open={open} /></section><div className="bottom-grid"><section className="panel protection-panel"><Shield /><div><h3>Audit chain</h3><p>{workspace.auditValid ? "Recorded chain validated by the control API." : "Chain verification failed. Inspect evidence."}</p></div></section><section className="panel stop-panel"><Square size={16} /><div><h3>Emergency stop</h3><p>Blocks new dispatch. Does not recall work already dispatched.</p></div>{configure && <button className="button stop-button" onClick={() => setModal("stop")}>{workspace.paused ? "Resume" : "Emergency stop"}</button>}</section></div></>}
+       {page === "Tasks" && <Tasks agents={workspace.agents} manage={manage} busy={busy} mutate={mutate} />}
+       {page === "Activity" && <ActivityPage open={open} revision={workspace.updatedAt} />}
+       {page === "Approvals" && <><div className="info-bar"><Fingerprint size={18} /><p>Review the immutable target, exact arguments and adapter preview before submitting a one-time proof. {session.teamMode && "Mutation reviewers must be a different human from the task grant owner."}</p></div><section className="panel"><ActionTable items={pending} open={open} /></section></>}
+       {page === "Policies" && <><PolicyEditor policies={workspace.policies} busy={busy} readOnly={!configure} save={policies => mutate("/policies", policies, "Policy saved. Pending requests will be rechecked.", "PUT")} /><PolicyHistory revision={json(workspace.policies)} /></>}
+       {page === "Connections" && <Connections workspace={workspace} />}
+-      {page === "Evidence" && <EvidencePage actions={workspace.actions} />}
++      {page === "Evidence" && <EvidencePage actions={workspace.actions} revision={workspace.updatedAt} />}
+       {page === "Demo Lab" && <DemoLab manage={manage} busy={busy} mutate={mutate} open={open} />}
+       <footer className="workspace-footer"><span><Shield size={12} />AgentBrake · Local fixture</span><span>API snapshot {date(workspace.updatedAt)} · Audit chain {workspace.auditValid ? "valid" : "invalid"}</span></footer>
+     </main></div>
+     {toast && <div className="toast" role="status"><CheckCheck size={18} />{toast}</div>}
+     {selected && <ActionReview event={selected} workspace={workspace} session={session} refresh={refresh} close={() => setSelected(null)} />}
+     {modal === "agent" && <Modal title={created ? "Task identity created" : "Create task identity"} close={() => { setModal(null); setCreated(null); }}>{created ? <div className="detail-body"><div className="success-note">Your scoped identity is ready.</div><p>Copy this bearer now. It is shown once and is cleared when this dialog closes. Review and narrow the server-issued task grant in Tasks before using this bearer.</p><label>Agent bearer token</label><div className="token-row"><code>{created.token}</code><button className="icon-button" aria-label="Copy agent token" onClick={() => void navigator.clipboard.writeText(created.token).then(() => setToast("Agent token copied.")).catch(() => setError("Clipboard unavailable. Copy the displayed bearer manually."))}><Copy size={17} /></button></div><button className="button dark wide" onClick={() => { setCreated(null); setModal(null); navigate("Tasks"); }}>Configure task grant</button></div> : <IdentityForm busy={busy} create={async body => { const result = await mutate("/agents", body, "Fixture identity created."); if (result) setCreated(result); }} />}</Modal>}
+     {modal === "stop" && <Modal title={workspace.paused ? "Resume gateway?" : "Pause all agent actions?"} close={() => setModal(null)}><div className="detail-body"><p>{workspace.paused ? "New calls will be evaluated under current policies." : "New calls and queued approvals will be blocked. Operations already dispatched cannot be recalled or rolled back."}</p></div><div className="modal-actions"><button className="button secondary" onClick={() => setModal(null)}>Cancel</button><button className="button danger" disabled={busy} onClick={async () => { if (await mutate("/control", { paused: !workspace.paused }, workspace.paused ? "Gateway resumed." : "Emergency stop activated.")) setModal(null); }}>{workspace.paused ? "Resume gateway" : "Pause all actions"}</button></div></Modal>}
+   </div>;
+@@ -179,17 +179,17 @@ function PolicyHistory({ revision }: { revision: string }) {
+   const [items, setItems] = useState<{ version: number; policies: Policies }[]>([]); const [error, setError] = useState("");
+   useEffect(() => { let active = true; void api("/policies/history").then(value => { if (active) { setItems(value.items); setError(""); } }).catch(err => { if (active) setError(message(err)); }); return () => { active = false; }; }, [revision]);
+   const ordered = [...items].sort((a, b) => a.version - b.version);
+   return <section className="panel history-panel"><div className="panel-heading"><div><h2>Policy revision history</h2><p>Read-only recorded differences. Historical timestamps are unavailable.</p></div></div>{error && <div className="error" role="alert">History unavailable: {error}</div>}{ordered.map((item, index) => <details key={item.version}><summary>Revision {item.version}</summary><pre>{json(item.policies)}</pre><dl className="task-details">{(Object.keys(item.policies) as (keyof Policies)[]).map(key => <div key={key}><dt>{key}</dt><dd>{index ? `${ordered[index - 1].policies[key]} → ${item.policies[key]}` : `Initial recorded: ${item.policies[key]}`}</dd></div>)}</dl></details>)}</section>;
+ }
+ function Connections({ workspace }: { workspace: Workspace }) {
+   return <><div className="integration-grid">{[["Repository fixture", workspace.connections.github, workspace.connections.repository], ["Customer fixture", workspace.connections.database, "customers"]].map(([name, status, target]) => <section className="panel integration-card" key={name}><span className="integration-icon"><Plug size={28} /></span><Badge status={status} /><h2>{name}</h2><p>Control API configuration status. Target connectivity is not verified here.</p><div className="integration-state"><span>Target</span><code>{target}</code></div><p className="integration-note">Only isolated fixture execution is in scope. Live GitHub App connectivity remains disabled pending separate setup and verification.</p></section>)}</div><section className="panel config-panel"><div className="panel-heading"><div><h2>Connect your MCP client</h2><p>Server-provided configuration template. Replace the bearer placeholder with a scoped identity token in your client.</p></div></div><pre>{json({ mcpServers: { agentbrake: workspace.mcp } })}</pre><div className="panel-footer">The dashboard does not proxy agent tool traffic or provide target credentials.</div></section></>;
+ }
+-function EvidencePage({ actions }: { actions: Event[] }) {
++function EvidencePage({ actions, revision }: { actions: Event[]; revision: string }) {
+   const [id, setId] = useState(""); const [evidence, setEvidence] = useState<Evidence | null>(null); const [error, setError] = useState("");
+-  useEffect(() => { let active = true; setEvidence(null); setError(""); if (id) void api(`/evidence/${id}`).then(value => { if (active) setEvidence(value); }).catch(err => { if (active) setError(message(err)); }); return () => { active = false; }; }, [id]);
+-  return <section className="panel"><div className="panel-heading"><div><h2>Action evidence</h2><p>Decision, review receipt, dispatch observation and bounded audit entries.</p></div></div><div className="section-pad"><label htmlFor="evidence-action">Recorded action</label><select id="evidence-action" value={id} onChange={event => setId(event.target.value)}><option value="">Choose an action</option>{actions.map(action => <option key={action.id} value={action.id}>{action.tool} · {action.status} · {action.id}</option>)}</select>{error && <div className="error" role="alert">{error}</div>}{evidence && <div className="evidence-detail"><Badge status={evidence.execution.status} /><h3>Execution observation: {evidence.execution.observation}</h3><p>{evidence.execution.observation === "unverified" || evidence.execution.status === "unknown" ? "Outcome is unverified. Reconcile target state using the correlation ID. Do not resubmit this action." : evidence.execution.observation === "not-dispatched" ? "No target dispatch was recorded for this action." : "The adapter reported this outcome. This is not an independent target-state verification."}</p><p>{evidence.coverage}</p><div className="task-actions"><a className="button secondary" href={`/api/evidence/${id}/export?format=json`} download>Export evidence JSON</a><a className="button secondary" href={`/api/evidence/${id}/export?format=csv`} download>Export evidence CSV</a></div><label>Decision and policy hash</label><pre>{json(evidence.decision)}</pre><label>Review and immutable preview</label><pre>{json(evidence.review)}</pre><label>Execution and correlation</label><pre>{json(evidence.execution)}</pre><label>Audit · {evidence.audit.valid ? "valid chain" : "invalid chain"}</label><p>{evidence.audit.verification ?? "The control API checked its stored chain. This display is not an independent full-chain proof."}</p><pre>{json(evidence.audit.entries)}</pre></div>}</div></section>;
++  useEffect(() => { let active = true; setEvidence(null); setError(""); if (id) void api(`/evidence/${id}`).then(value => { if (active) setEvidence(value); }).catch(err => { if (active) setError(message(err)); }); return () => { active = false; }; }, [id, revision]);
++  return <section className="panel"><div className="panel-heading"><div><h2>Action evidence</h2><p>Decision, review receipt, dispatch observation and bounded audit entries.</p></div></div><div className="section-pad"><label htmlFor="evidence-action">Recorded action</label><select id="evidence-action" value={id} onChange={event => setId(event.target.value)}><option value="">Choose an action</option>{actions.map(action => <option key={action.id} value={action.id}>{action.tool} · {action.status} · {action.id}</option>)}</select>{error && <div className="error" role="alert">{error}</div>}{id && !evidence && !error && <p role="status">Refreshing selected evidence...</p>}{evidence && <div className="evidence-detail"><Badge status={evidence.execution.status} /><h3>Execution observation: {evidence.execution.observation}</h3><p>{evidence.execution.observation === "unverified" || evidence.execution.status === "unknown" ? "Outcome is unverified. Reconcile target state using the correlation ID. Do not resubmit this action." : evidence.execution.observation === "not-dispatched" ? "No target dispatch was recorded for this action." : "The adapter reported this outcome. This is not an independent target-state verification."}</p><p>{evidence.coverage}</p><div className="task-actions"><a className="button secondary" href={`/api/evidence/${id}/export?format=json`} download>Export evidence JSON</a><a className="button secondary" href={`/api/evidence/${id}/export?format=csv`} download>Export evidence CSV</a></div><label>Decision and policy hash</label><pre>{json(evidence.decision)}</pre><label>Review and immutable preview</label><pre>{json(evidence.review)}</pre><label>Execution and correlation</label><pre>{json(evidence.execution)}</pre><label>Audit · {evidence.audit.valid ? "valid chain" : "invalid chain"}</label><p>{evidence.audit.verification ?? "The control API checked its stored chain. This display is not an independent full-chain proof."}</p><pre>{json(evidence.audit.entries)}</pre></div>}</div></section>;
+ }
+ function DemoLab({ manage, busy, mutate, open }: { manage: boolean; busy: boolean; mutate: Mutate; open: (event: Event) => void }) {
+   const [result, setResult] = useState<{ actions: Event[]; message: string } | null>(null);
+   return <><div className="info-bar"><Terminal size={18} /><p>These scenarios submit real requests through the local gateway and policy engine. They affect disposable fixtures only. Pending changes still require human review.</p></div><div className="boundary-grid">{[["safe-read", "Safe read", "Read a bounded customer fixture sample."], ["blocked-sql", "Blocked destructive SQL", "Observe default-deny for an unsupported destructive SQL request."], ["pr-approval", "PR approval", "Queue a local repository change for independent human review."]].map(([scenario, name, description]) => <section className="panel boundary-card" key={scenario}><h3>{name}</h3><p>{description}</p><button className="button dark" disabled={!manage || busy} onClick={async () => { setResult(null); const value = await mutate("/demo", { scenario }, "Demo requests recorded. Inspect their outcomes."); if (value) setResult(value); }}><Play size={14} />Run {name}</button></section>)}</div>{!manage && <p className="section-pad">An operator or administrator can run these scenarios.</p>}{result && <section className="panel"><div className="panel-heading"><h2>{result.message}</h2></div><ActionTable items={result.actions} open={open} /></section>}</>;
+ }
+diff --git a/.agentbrake-local/product-ui-base/review1-workflows.spec.ts b/tests/product-ui/workflows.spec.ts
+index 150a0ac..a64064c 100644
+--- a/.agentbrake-local/product-ui-base/review1-workflows.spec.ts
++++ b/tests/product-ui/workflows.spec.ts
+@@ -95,16 +95,61 @@ test("actual lost response after target commit displays UNKNOWN and never offers
+   const fixture = await pending("operator", 2); const before = await state();
+   await signIn(page, "approver"); await openAction(page, fixture.action.id); await page.getByRole("button", { name: "Approve & execute" }).click();
+   const dialog = page.getByRole("dialog"); await expect(dialog.locator(".badge")).toHaveText("Unknown"); await expect(dialog.getByRole("alert")).toContainText("Reconcile target state");
+   await expect(dialog.getByRole("button", { name: /retry|approve/i })).toHaveCount(0); expect((await state()).executions[2]).toBe((before.executions[2] ?? 0) + 1);
+   await page.getByRole("button", { name: "Close dialog" }).click(); await page.getByRole("button", { name: "Evidence", exact: true }).click(); await page.getByLabel("Recorded action").selectOption(fixture.action.id);
+   await expect(page.getByText("Execution observation: unverified")).toBeVisible(); await expect(page.getByText("Outcome is unverified.", { exact: false })).toContainText("Do not resubmit");
+ });
+ 
++async function selectPendingEvidence(page: Page, id: string) {
++  await signIn(page, "viewer");
++  await page.getByRole("button", { name: "Evidence", exact: true }).click();
++  await page.getByLabel("Recorded action").selectOption(id);
++  await expect(page.getByText("Execution observation: not-dispatched")).toBeVisible();
++  await expect(page.locator(".evidence-detail .badge")).toHaveText("Needs approval");
++}
++
++test("selected evidence follows another reviewer's execution after workspace Refresh without reselection", async ({ page }) => {
++  const fixture = await pending("operator", 1); await selectPendingEvidence(page, fixture.action.id);
++  const reviewer = await control("approver"); const approved = await reviewer(`/approvals/${fixture.action.id}`, { decision: "approve", proof: fixture.proof });
++  expect(approved.status).toBe(200); expect(approved.body.status).toBe("allowed");
++  await page.getByRole("button", { name: "Refresh", exact: true }).click();
++  await expect(page.getByText("Execution observation: adapter-reported")).toBeVisible();
++  await expect(page.locator(".evidence-detail .badge")).toHaveText("Allowed");
++  await expect(page.getByLabel("Recorded action")).toHaveValue(fixture.action.id);
++  await expect(page.getByText("No target dispatch was recorded for this action.", { exact: true })).toHaveCount(0);
++});
++
++test("selected evidence follows actual UNKNOWN through normal workspace polling without reselection", async ({ page }) => {
++  const fixture = await pending("operator", 2); await selectPendingEvidence(page, fixture.action.id);
++  const reviewer = await control("approver"); const approved = await reviewer(`/approvals/${fixture.action.id}`, { decision: "approve", proof: fixture.proof });
++  expect(approved.status).toBe(200); expect(approved.body.status).toBe("unknown");
++  // The ordinary ten-second workspace timer is the only refresh trigger here.
++  await expect(page.getByText("Execution observation: unverified")).toBeVisible({ timeout: 15_000 });
++  await expect(page.locator(".evidence-detail .badge")).toHaveText("Unknown");
++  await expect(page.getByLabel("Recorded action")).toHaveValue(fixture.action.id);
++  await expect(page.getByText("Outcome is unverified.", { exact: false })).toContainText("Reconcile target state");
++  await expect(page.getByText("No target dispatch was recorded for this action.", { exact: true })).toHaveCount(0);
++});
++
++test("selected evidence clears an obsolete observation and exposes a refresh read failure", async ({ page }) => {
++  const fixture = await pending("operator", 3); await selectPendingEvidence(page, fixture.action.id);
++  const reviewer = await control("approver"); const approved = await reviewer(`/approvals/${fixture.action.id}`, { decision: "approve", proof: fixture.proof });
++  expect(approved.status).toBe(200); expect(approved.body.status).toBe("allowed");
++  // Only inject a browser-to-API transport failure on the evidence read. The
++  // selected pending record, approval and workspace response are real fixtures.
++  await page.route(`**/api/evidence/${fixture.action.id}`, route => route.abort("connectionfailed"));
++  await page.getByRole("button", { name: "Refresh", exact: true }).click();
++  await expect(page.locator(".section-pad").getByRole("alert")).toContainText("Failed to fetch");
++  await expect(page.locator(".evidence-detail")).toHaveCount(0);
++  await expect(page.getByText("No target dispatch was recorded for this action.", { exact: true })).toHaveCount(0);
++  await expect(page.getByLabel("Recorded action")).toHaveValue(fixture.action.id);
++});
++
+ test("viewer sees policy history and local connections with role-gated controls and mobile layout", async ({ page }) => {
+   const errors: string[] = []; page.on("pageerror", error => errors.push(error.message));
+   await page.setViewportSize({ width: 390, height: 844 }); await signIn(page, "viewer");
+   await expect(page.getByRole("button", { name: "Create task identity" })).toHaveCount(0);
+   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+   await page.getByRole("button", { name: "Toggle navigation" }).click(); await page.getByRole("button", { name: "Policies", exact: true }).click();
+   await expect(page.getByRole("combobox", { name: "Customer record changes" })).toBeDisabled(); await expect(page.getByRole("button", { name: "Save policies" })).toBeDisabled(); await expect(page.getByRole("heading", { name: "Policy revision history" })).toBeVisible();
+   await page.getByRole("button", { name: "Toggle navigation" }).click(); await page.getByRole("button", { name: "Connections", exact: true }).click(); await expect(page.getByRole("heading", { name: "Connect your MCP client" })).toBeVisible();

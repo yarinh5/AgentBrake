@@ -1,0 +1,31 @@
+{
+  "status": 200,
+  "body": {
+    "id": "3855b242-9cc4-483a-ae4e-1ef9dad272d4",
+    "agentId": "413d4d6c-9712-4dbc-b35b-d140eda930d3",
+    "requestId": "c3e2f6f1-798c-4fdf-b04d-03b2b50506d6",
+    "tool": "database_update",
+    "digest": "a075e5ba2cffe67b267052b75d1cd943a0389a7073d86aabf74f470913cc6df2",
+    "destination": "d60c527e64bcfe7572c89cae1f5d412cb0dbf67a44fddbcf7c97a6ef2e83f706",
+    "correlationId": "3da414e5-7a82-403d-b373-5da3eb1fb6ce",
+    "grantId": "6b3af821-bab5-4cde-88a7-6d72edfbbd53",
+    "grantFingerprint": "ab80e2796d1d56c8122cd82aa115bdd6555d3fa5291d7ba5d753d4c7b587ebb6",
+    "policyRevision": 1,
+    "policyDecisionId": "fcf10e93-45b8-47e0-b4ab-91d7e6dff239",
+    "policyVersion": "stage2.v1",
+    "policyHash": "9ac719fef979ee7b37c5c5ef3173621453782a0a02d432727391beeff1234d14",
+    "policyEffect": "REQUIRE_APPROVAL",
+    "arguments": {
+      "id": 2,
+      "status": "paused"
+    },
+    "status": "pending",
+    "rule": "database-writes",
+    "reason": "Human approval is required before this exact action can execute.",
+    "resource": "customers",
+    "sandbox": true,
+    "createdAt": "2026-11-16T14:42:41.590Z",
+    "expiresAt": "2026-11-16T14:57:41.590Z",
+    "durationMs": 4.93
+  }
+}

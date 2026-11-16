@@ -1,0 +1,89 @@
+{
+  "runId": "1456a1a9-6a67-42c9-8ecc-4d34d0994034",
+  "startedAt": "2026-11-16T10:50:10.983Z",
+  "finishedAt": "2026-11-16T10:51:25.388Z",
+  "gitCommit": null,
+  "gitReason": "Workspace is not a Git repository; no commit fabricated.",
+  "sourceHash": "e05274ed5a366de771346a335930b812a2a0c733b56f815228bb6849885ef1f7",
+  "policyHash": "9ac719fef979ee7b37c5c5ef3173621453782a0a02d432727391beeff1234d14",
+  "environment": {
+    "platform": "win32",
+    "architecture": "x64",
+    "node": "v22.13.0",
+    "opa": "1.22.4",
+    "packageLockHash": "94e071ad7b8112a1acdde1d3482751a37fe6a8b0c3face6121cef2eb5859e8ca"
+  },
+  "environmentHash": "53ad6c048459d9123c51b21746a7b48bb89f5c0982e129a7ce8bb4d11e3206df",
+  "commands": [
+    {
+      "label": "rego",
+      "command": ".tools\\opa.exe test services/policy -v",
+      "startedAt": "2026-11-16T10:50:11.486Z",
+      "finishedAt": "2026-11-16T10:50:11.605Z",
+      "exitCode": 0,
+      "result": "PASS",
+      "log": "rego.log"
+    },
+    {
+      "label": "node-tests",
+      "command": "C:\\Program Files\\nodejs\\node.exe --import tsx --test --test-concurrency=1 tests\\enforcement\\core.test.ts tests\\enforcement\\mcp-protocol.test.ts tests\\enforcement\\remote-fixture.test.ts tests\\enforcement\\rest-audit.test.ts tests\\enforcement\\review-regressions.test.ts tests\\enforcement\\task-grants.test.ts tests\\failure-cases.test.ts tests\\gateway.test.ts tests\\mcp.test.ts tests\\policy\\pdp.test.ts tests\\stage2\\git-fixture.test.ts tests\\stage2\\postgres-target.test.ts",
+      "startedAt": "2026-11-16T10:50:11.606Z",
+      "finishedAt": "2026-11-16T10:50:41.321Z",
+      "exitCode": 0,
+      "result": "PASS",
+      "log": "node-tests.log"
+    },
+    {
+      "label": "typecheck",
+      "command": "C:\\Program Files\\nodejs\\node.exe node_modules/typescript/bin/tsc --noEmit",
+      "startedAt": "2026-11-16T10:50:41.321Z",
+      "finishedAt": "2026-11-16T10:50:45.856Z",
+      "exitCode": 0,
+      "result": "PASS",
+      "log": "typecheck.log"
+    },
+    {
+      "label": "build",
+      "command": "C:\\Program Files\\nodejs\\node.exe node_modules/vite/bin/vite.js build",
+      "startedAt": "2026-11-16T10:50:45.856Z",
+      "finishedAt": "2026-11-16T10:50:49.136Z",
+      "exitCode": 0,
+      "result": "PASS",
+      "log": "build.log"
+    },
+    {
+      "label": "browser",
+      "command": "C:\\Program Files\\nodejs\\node.exe node_modules/@playwright/test/cli.js test",
+      "startedAt": "2026-11-16T10:50:49.137Z",
+      "finishedAt": "2026-11-16T10:51:24.415Z",
+      "exitCode": 1,
+      "result": "FAIL",
+      "log": "browser.log"
+    },
+    {
+      "label": "upstream-proof",
+      "command": "C:\\Program Files\\nodejs\\node.exe --import tsx tests/evidence-scenarios.ts F:\\project love\\AgentBrake\\docs\\evidence\\1456a1a9-6a67-42c9-8ecc-4d34d0994034\\upstream-proof.json",
+      "startedAt": "2026-11-16T10:51:24.416Z",
+      "finishedAt": "2026-11-16T10:51:25.264Z",
+      "exitCode": 0,
+      "result": "PASS",
+      "log": "upstream-proof.log"
+    },
+    {
+      "label": "docker-preflight",
+      "command": "docker version --format {{json .Server}}",
+      "startedAt": "2026-11-16T10:51:25.264Z",
+      "finishedAt": "2026-11-16T10:51:25.387Z",
+      "exitCode": 0,
+      "result": "PASS",
+      "log": "docker-preflight.log"
+    }
+  ],
+  "scope": "Authenticated native OPA; loopback HTTP/MCP; counted synthetic SQLite/repository fixture adapters. No external GitHub or PostgreSQL calls.",
+  "isolation": {
+    "T20": "NOT RUN",
+    "reason": "Run verify:isolation separately; native tests do not prove container isolation."
+  },
+  "milestoneA": "See separate native+isolation milestone evidence",
+  "result": "FAIL"
+}

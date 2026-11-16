@@ -1,0 +1,26 @@
+{
+  "milestone": "A",
+  "result": "PASS_BOUNDED",
+  "verifiedAt": "2026-11-16T10:37:08.837Z",
+  "sourceHash": "c5b6e3be7b7d3fe2082eec289eb4d867f51034de997e321c4245a1463180009a",
+  "nativeRun": "f1507535-45ed-4270-8752-fecc0b69fb01",
+  "isolationRun": "04a1a0e8-b953-4d9a-9774-1a6abaf828fe",
+  "tests": {
+    "node": 78,
+    "rego": 12,
+    "browser": 2,
+    "proofScenarios": 10
+  },
+  "acceptance": [
+    "T02 outside repository: no upstream call",
+    "T07 forbidden destructive fixture operation: no call and unchanged schema/state",
+    "T10 invalid/expired identity/grant: denied",
+    "T14 stopped OPA container: denied and no call",
+    "T20 isolated agent: no target/PDP/engine TCP, curl/psql/git denied, no upstream/admin secrets or socket mounts"
+  ],
+  "scope": "Authenticated gateway-mediated synthetic fixtures in the isolated Docker project. Not a universal host agent firewall; Stage 2 PostgreSQL adapter and Git workflow remain separate work.",
+  "failuresRetained": [
+    "38103dd3-a10f-4411-b425-e5386cf9ed6d",
+    "d1cb7852-cf3b-41e8-be4b-5af4c873f4ac"
+  ]
+}

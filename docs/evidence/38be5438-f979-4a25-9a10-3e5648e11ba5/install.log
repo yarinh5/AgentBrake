@@ -1,0 +1,183 @@
+#1 [internal] load local bake definitions
+#1 reading from stdin 3.21kB 0.0s done
+#1 DONE 0.0s
+
+#2 [agent internal] load build definition from Dockerfile
+#2 transferring dockerfile: 443B done
+#2 WARN: InvalidDefaultArgInFrom: Default value for ARG ${NODE_IMAGE} results in empty or invalid base image name (line 2)
+#2 WARN: InvalidDefaultArgInFrom: Default value for ARG ${NODE_IMAGE} results in empty or invalid base image name (line 2)
+#2 WARN: InvalidDefaultArgInFrom: Default value for ARG ${NODE_IMAGE} results in empty or invalid base image name (line 2)
+#2 WARN: InvalidDefaultArgInFrom: Default value for ARG ${NODE_IMAGE} results in empty or invalid base image name (line 2)
+#2 DONE 0.0s
+
+#3 [dashboard internal] load build definition from Dockerfile
+#3 transferring dockerfile: 1.09kB done
+#3 DONE 0.0s
+
+#4 [dashboard internal] load metadata for docker.io/library/node@sha256:e9f565d32859f0cbfb52125eafe8be39390f24dac302dc3cdf566e8ba3ab21ee
+#4 DONE 0.0s
+
+#5 [control-api internal] load .dockerignore
+#5 transferring context: 289B done
+#5 DONE 0.0s
+
+#6 [dashboard  1/10] FROM docker.io/library/node@sha256:e9f565d32859f0cbfb52125eafe8be39390f24dac302dc3cdf566e8ba3ab21ee
+#6 DONE 0.0s
+
+#7 [dashboard internal] load build context
+#7 transferring context: 5.82kB 0.0s done
+#7 DONE 0.0s
+
+#8 [control-api internal] load build context
+#8 transferring context: 154.92kB 0.0s done
+#8 DONE 0.0s
+
+#9 [mock-target  2/10] RUN apt-get update && apt-get install -y --no-install-recommends curl git postgresql-client ca-certificates && rm -rf /var/lib/apt/lists/*
+#9 CACHED
+
+#10 [mock-target  3/10] WORKDIR /app
+#10 CACHED
+
+#11 [dashboard build 2/8] WORKDIR /workspace
+#11 CACHED
+
+#12 [dashboard build 3/8] COPY apps/dashboard/package.json apps/dashboard/package-lock.json ./apps/dashboard/
+#12 CACHED
+
+#13 [dashboard build 4/8] RUN cd apps/dashboard && npm ci --ignore-scripts
+#13 CACHED
+
+#14 [dashboard build 5/8] RUN ln -s apps/dashboard/node_modules /workspace/node_modules
+#14 CACHED
+
+#15 [agent  4/10] COPY package.json package-lock.json ./
+#15 DONE 0.0s
+
+#16 [dashboard build 6/8] COPY apps/dashboard ./apps/dashboard
+#16 DONE 0.0s
+
+#17 [dashboard build 7/8] COPY src ./src
+#17 DONE 0.0s
+
+#18 [agent  5/10] RUN npm ci
+#18 ...
+
+#19 [dashboard build 8/8] RUN cd apps/dashboard && npm run build
+#19 0.293 
+#19 0.293 > agentbrake-dashboard@0.1.0 build
+#19 0.293 > next build --webpack
+#19 0.293 
+#19 0.730 ▲ Next.js 16.4.6 (webpack)
+#19 0.751 ✓ Running next.config.mjs took 22ms
+#19 0.774 
+#19 0.803   Creating an optimized production build ...
+#19 6.592 ✓ Compiled successfully in 5.3s
+#19 6.595   Running TypeScript ...
+#19 ...
+
+#18 [agent  5/10] RUN npm ci
+#18 9.022 
+#18 9.022 added 188 packages, and audited 189 packages in 9s
+#18 9.022 
+#18 9.022 42 packages are looking for funding
+#18 9.022   run `npm fund` for details
+#18 9.023 
+#18 9.023 found 0 vulnerabilities
+#18 9.025 npm notice
+#18 9.025 npm notice New major version of npm available! 10.9.9 -> 12.2.2
+#18 9.025 npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.2
+#18 9.025 npm notice To update run: npm install -g npm@12.2.2
+#18 9.025 npm notice
+#18 DONE 9.4s
+
+#20 [control-api  6/10] COPY server ./server
+#20 DONE 0.0s
+
+#21 [mock-target  7/10] COPY services ./services
+#21 DONE 0.0s
+
+#22 [gateway  8/10] COPY tests ./tests
+#22 DONE 0.0s
+
+#23 [control-api  9/10] COPY scripts ./scripts
+#23 DONE 0.0s
+
+#24 [mock-target 10/10] COPY infra ./infra
+#24 DONE 0.0s
+
+#19 [dashboard build 8/8] RUN cd apps/dashboard && npm run build
+#19 9.552   Finished TypeScript in 3.0s ...
+#19 9.555   Collecting page data using 5 workers ...
+#19 10.05   Generating static pages using 5 workers (0/3) ...
+#19 10.63 ✓ Generating static pages using 5 workers (3/3) in 577ms
+#19 10.92   Finalizing page optimization ...
+#19 10.92   Collecting build traces ...
+#19 ...
+
+#25 [agent] exporting to image
+#25 exporting layers 2.3s done
+#25 writing image sha256:65c9fb45c46fb74c202f09189d282b56eca5cab3fc6f54bc2b11b769af91f45a done
+#25 naming to docker.io/library/agentbrake-product-verify-cd1-runtime 0.0s done
+#25 DONE 2.4s
+
+#26 [control-api] exporting to image
+#26 exporting layers 2.3s done
+#26 writing image sha256:0f0d5e35557b6aa837f6fe57060572cc8af6e1f4a4251ebcd5c1ecdd90700998 done
+#26 naming to docker.io/library/agentbrake-product-verify-cd1-runtime 0.0s done
+#26 DONE 2.4s
+
+#27 [mock-target] exporting to image
+#27 exporting layers 2.3s done
+#27 writing image sha256:d889d942d561618864853098ae4172d5bde1436cf51db6fd5dd8564fedc08d96 0.0s done
+#27 naming to docker.io/library/agentbrake-product-verify-cd1-runtime 0.0s done
+#27 DONE 2.4s
+
+#28 [gateway] exporting to image
+#28 exporting layers 2.3s done
+#28 writing image sha256:198fb72109c88d66c2f292fac65dfdcaed79e44871f696ee983df8f1ae7b1d31 0.0s done
+#28 naming to docker.io/library/agentbrake-product-verify-cd1-runtime 0.0s done
+#28 DONE 2.4s
+
+#29 [agent] resolving provenance for metadata file
+#29 DONE 0.1s
+
+#30 [mock-target] resolving provenance for metadata file
+#30 DONE 0.0s
+
+#31 [control-api] resolving provenance for metadata file
+#31 DONE 0.0s
+
+#32 [gateway] resolving provenance for metadata file
+#32 DONE 0.0s
+
+#19 [dashboard build 8/8] RUN cd apps/dashboard && npm run build
+#19 37.80 
+#19 37.80 Route (app)
+#19 37.80 ┌ ○ /
+#19 37.80 ├ ○ /_not-found
+#19 37.80 └ ƒ /api/[...path]
+#19 37.80 
+#19 37.80 
+#19 37.80 ○  (Static)   prerendered as static content
+#19 37.80 ƒ  (Dynamic)  server-rendered on demand
+#19 37.80 
+#19 DONE 37.9s
+
+#33 [dashboard runtime 2/4] WORKDIR /app
+#33 CACHED
+
+#34 [dashboard runtime 3/4] COPY --from=build --chown=node:node /workspace/apps/dashboard/.next/standalone ./
+#34 DONE 0.5s
+
+#35 [dashboard runtime 4/4] COPY --from=build --chown=node:node /workspace/apps/dashboard/.next/static ./apps/dashboard/.next/static
+#35 DONE 0.1s
+
+#36 [dashboard] exporting to image
+#36 exporting layers
+#36 exporting layers 0.5s done
+#36 writing image sha256:11111d85291acb52aeb52bba8aa5c249a85131f84b69472f24e00bbc7f1daa80 done
+#36 naming to docker.io/library/agentbrake-product-verify-cd1-dashboard done
+#36 DONE 0.6s
+
+#37 [dashboard] resolving provenance for metadata file
+#37 DONE 0.0s

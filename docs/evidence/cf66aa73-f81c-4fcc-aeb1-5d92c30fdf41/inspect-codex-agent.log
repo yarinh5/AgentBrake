@@ -1,0 +1,254 @@
+[
+    {
+        "Id": "94daceabdb898cf7e8104fcb07472b240a9d38bad5db48bb544392d6857d64a1",
+        "Created": "2026-11-16T13:00:35.728281338Z",
+        "Path": "docker-entrypoint.sh",
+        "Args": [
+            "node",
+            "-e",
+            "setInterval(()=\u003e{},60000)"
+        ],
+        "State": {
+            "Status": "running",
+            "Running": true,
+            "Paused": false,
+            "Restarting": false,
+            "OOMKilled": false,
+            "Dead": false,
+            "Pid": 5638,
+            "ExitCode": 0,
+            "Error": "",
+            "StartedAt": "2026-11-16T13:00:36.397351391Z",
+            "FinishedAt": "0001-01-01T00:00:00Z"
+        },
+        "Image": "sha256:bb416dfbe799b73f7c0c730a4596553508e9b879b202bd7b6bab2238de855080",
+        "ResolvConfPath": "/var/lib/docker/containers/94daceabdb898cf7e8104fcb07472b240a9d38bad5db48bb544392d6857d64a1/resolv.conf",
+        "HostnamePath": "/var/lib/docker/containers/94daceabdb898cf7e8104fcb07472b240a9d38bad5db48bb544392d6857d64a1/hostname",
+        "HostsPath": "/var/lib/docker/containers/94daceabdb898cf7e8104fcb07472b240a9d38bad5db48bb544392d6857d64a1/hosts",
+        "LogPath": "",
+        "Name": "/agentbrake-a-cf66aa73-codex-agent-1",
+        "RestartCount": 0,
+        "Driver": "overlay2",
+        "Platform": "linux",
+        "MountLabel": "",
+        "ProcessLabel": "",
+        "AppArmorProfile": "",
+        "ExecIDs": null,
+        "HostConfig": {
+            "Binds": [
+                "F:/project love/AgentBrake/.agentbrake-local/isolation-cf66aa73-f81c-4fcc-aeb1-5d92c30fdf41/codex-credential.json:/run/agent-credential.json:ro"
+            ],
+            "ContainerIDFile": "",
+            "LogConfig": {
+                "Type": "local",
+                "Config": {}
+            },
+            "NetworkMode": "agentbrake-a-cf66aa73_agent",
+            "PortBindings": {},
+            "RestartPolicy": {
+                "Name": "no",
+                "MaximumRetryCount": 0
+            },
+            "AutoRemove": false,
+            "VolumeDriver": "",
+            "VolumesFrom": null,
+            "ConsoleSize": [
+                0,
+                0
+            ],
+            "CapAdd": null,
+            "CapDrop": [
+                "ALL"
+            ],
+            "CgroupnsMode": "private",
+            "Dns": null,
+            "DnsOptions": null,
+            "DnsSearch": null,
+            "ExtraHosts": [],
+            "GroupAdd": null,
+            "IpcMode": "private",
+            "Cgroup": "",
+            "Links": null,
+            "OomScoreAdj": 0,
+            "PidMode": "",
+            "Privileged": false,
+            "PublishAllPorts": false,
+            "ReadonlyRootfs": true,
+            "SecurityOpt": [
+                "no-new-privileges:true"
+            ],
+            "Tmpfs": {
+                "/tmp": "size=256m,mode=1777"
+            },
+            "UTSMode": "",
+            "UsernsMode": "",
+            "ShmSize": 67108864,
+            "Runtime": "runc",
+            "Isolation": "",
+            "CpuShares": 0,
+            "Memory": 2147483648,
+            "NanoCpus": 2000000000,
+            "CgroupParent": "",
+            "BlkioWeight": 0,
+            "BlkioWeightDevice": null,
+            "BlkioDeviceReadBps": null,
+            "BlkioDeviceWriteBps": null,
+            "BlkioDeviceReadIOps": null,
+            "BlkioDeviceWriteIOps": null,
+            "CpuPeriod": 0,
+            "CpuQuota": 0,
+            "CpuRealtimePeriod": 0,
+            "CpuRealtimeRuntime": 0,
+            "CpusetCpus": "",
+            "CpusetMems": "",
+            "Devices": null,
+            "DeviceCgroupRules": null,
+            "DeviceRequests": null,
+            "MemoryReservation": 0,
+            "MemorySwap": 4294967296,
+            "MemorySwappiness": null,
+            "OomKillDisable": null,
+            "PidsLimit": 256,
+            "Ulimits": null,
+            "CpuCount": 0,
+            "CpuPercent": 0,
+            "IOMaximumIOps": 0,
+            "IOMaximumBandwidth": 0,
+            "MaskedPaths": [
+                "/proc/acpi",
+                "/proc/asound",
+                "/proc/interrupts",
+                "/proc/kcore",
+                "/proc/keys",
+                "/proc/latency_stats",
+                "/proc/sched_debug",
+                "/proc/scsi",
+                "/proc/timer_list",
+                "/proc/timer_stats",
+                "/sys/devices/virtual/powercap",
+                "/sys/firmware"
+            ],
+            "ReadonlyPaths": [
+                "/proc/bus",
+                "/proc/fs",
+                "/proc/irq",
+                "/proc/sys",
+                "/proc/sysrq-trigger"
+            ]
+        },
+        "GraphDriver": {
+            "Data": {
+                "ID": "94daceabdb898cf7e8104fcb07472b240a9d38bad5db48bb544392d6857d64a1",
+                "LowerDir": "/var/lib/docker/overlay2/8db5ea1c585e468e1b64b39545ff731b0ff025af0f296075b9c24b357f9f1c8e-init/diff:/var/lib/docker/overlay2/l04vh07wyv8rikw377yvc6cs9/diff:/var/lib/docker/overlay2/hsgwxunx9k239h7snp4tw454b/diff:/var/lib/docker/overlay2/xu0lzd8tki67zd1i11b913hv7/diff:/var/lib/docker/overlay2/7myte547v7u7h33zr3xpg966j/diff:/var/lib/docker/overlay2/uq5ogugelqy52b81zea13sifj/diff:/var/lib/docker/overlay2/y1nnh6urns6p46o0o5em5euca/diff:/var/lib/docker/overlay2/oihe24ir558ho6hu23tch6bm0/diff:/var/lib/docker/overlay2/vdb28ani3kzn2gobq0pm6c0wo/diff:/var/lib/docker/overlay2/3fhaodjulcvs1xqsqofxdzlt2/diff:/var/lib/docker/overlay2/ertdmej6w91mmeo3831gmntb8/diff:/var/lib/docker/overlay2/4c503b18177bd9465c4844f8c6a5fe76ac596ad53210afc9c92a271235e9256e/diff:/var/lib/docker/overlay2/f42a8ba268e08b1a76791c1c6aa2155902a6aff10150a689a319d4577c64ada5/diff:/var/lib/docker/overlay2/d0eb61baabd40b4e21c52fd140e3866aff974aebf8485dea56d6067c26eeb633/diff:/var/lib/docker/overlay2/cdd2f4f6cf547dad7f9c2cdb387992f88a0cbcf2d804dc2b92aa06eef8056838/diff:/var/lib/docker/overlay2/86ab68c64f961689b16e07121bfd3a14c9e157e7da16184452cb0bad59d73ed4/diff",
+                "MergedDir": "/var/lib/docker/overlay2/8db5ea1c585e468e1b64b39545ff731b0ff025af0f296075b9c24b357f9f1c8e/merged",
+                "UpperDir": "/var/lib/docker/overlay2/8db5ea1c585e468e1b64b39545ff731b0ff025af0f296075b9c24b357f9f1c8e/diff",
+                "WorkDir": "/var/lib/docker/overlay2/8db5ea1c585e468e1b64b39545ff731b0ff025af0f296075b9c24b357f9f1c8e/work"
+            },
+            "Name": "overlay2"
+        },
+        "Mounts": [
+            {
+                "Type": "bind",
+                "Source": "F:/project love/AgentBrake/.agentbrake-local/isolation-cf66aa73-f81c-4fcc-aeb1-5d92c30fdf41/codex-credential.json",
+                "Destination": "/run/agent-credential.json",
+                "Mode": "ro",
+                "RW": false,
+                "Propagation": "rprivate"
+            }
+        ],
+        "Config": {
+            "Hostname": "94daceabdb89",
+            "Domainname": "",
+            "User": "1000:1000",
+            "AttachStdin": false,
+            "AttachStdout": true,
+            "AttachStderr": true,
+            "Tty": false,
+            "OpenStdin": false,
+            "StdinOnce": false,
+            "Env": [
+                "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+                "NODE_VERSION=22.23.5",
+                "YARN_VERSION=1.22.22"
+            ],
+            "Cmd": [
+                "node",
+                "-e",
+                "setInterval(()=\u003e{},60000)"
+            ],
+            "Image": "agentbrake-a-cf66aa73-codex",
+            "Volumes": null,
+            "WorkingDir": "/app",
+            "Entrypoint": [
+                "docker-entrypoint.sh"
+            ],
+            "Labels": {
+                "com.docker.compose.config-hash": "dd2688708875db3efd946118b93b9b8343714404a24d182e5e12e1d623cba3d3",
+                "com.docker.compose.container-number": "1",
+                "com.docker.compose.depends_on": "",
+                "com.docker.compose.image": "sha256:bb416dfbe799b73f7c0c730a4596553508e9b879b202bd7b6bab2238de855080",
+                "com.docker.compose.oneoff": "False",
+                "com.docker.compose.project": "agentbrake-a-cf66aa73",
+                "com.docker.compose.project.config_files": "F:\\project love\\AgentBrake\\infra\\local\\compose.yaml,F:\\project love\\AgentBrake\\infra\\local\\codex.compose.yaml",
+                "com.docker.compose.project.working_dir": "F:\\project love\\AgentBrake\\infra\\local",
+                "com.docker.compose.service": "codex-agent",
+                "com.docker.compose.version": "5.7.0"
+            }
+        },
+        "NetworkSettings": {
+            "SandboxID": "ffe29333fc1d8b3208197959ddbfeda6b3888419020b770023cefde5cd68af6c",
+            "SandboxKey": "/var/run/docker/netns/ffe29333fc1d",
+            "Ports": {},
+            "Networks": {
+                "agentbrake-a-cf66aa73_agent": {
+                    "IPAMConfig": null,
+                    "Links": null,
+                    "Aliases": [
+                        "agentbrake-a-cf66aa73-codex-agent-1",
+                        "codex-agent"
+                    ],
+                    "DriverOpts": null,
+                    "GwPriority": 0,
+                    "NetworkID": "a422421ca0259286ac0f048dd75a4756489f6a1036417b15af2ab5e05398fff4",
+                    "EndpointID": "694f32d50d1810a63f5e585fa3b62d5eb8cdba587da6040b982b84525d8a17ec",
+                    "Gateway": "",
+                    "IPAddress": "172.27.0.4",
+                    "MacAddress": "8e:b4:c9:c6:3c:c4",
+                    "IPPrefixLen": 16,
+                    "IPv6Gateway": "",
+                    "GlobalIPv6Address": "",
+                    "GlobalIPv6PrefixLen": 0,
+                    "DNSNames": [
+                        "agentbrake-a-cf66aa73-codex-agent-1",
+                        "codex-agent",
+                        "94daceabdb89"
+                    ]
+                },
+                "agentbrake-a-cf66aa73_inference": {
+                    "IPAMConfig": null,
+                    "Links": null,
+                    "Aliases": [
+                        "agentbrake-a-cf66aa73-codex-agent-1",
+                        "codex-agent"
+                    ],
+                    "DriverOpts": null,
+                    "GwPriority": 0,
+                    "NetworkID": "8a1225ecd5f83934aa34477d1d9d9cefb87994d89c2efa868441e3d72ea32457",
+                    "EndpointID": "6c1219ac37060bdd3c6bd3bb37dad686cbdf1791113f44a6bd895539d4d61b6d",
+                    "Gateway": "",
+                    "IPAddress": "172.29.0.3",
+                    "MacAddress": "0a:82:90:b7:82:63",
+                    "IPPrefixLen": 16,
+                    "IPv6Gateway": "",
+                    "GlobalIPv6Address": "",
+                    "GlobalIPv6PrefixLen": 0,
+                    "DNSNames": [
+                        "agentbrake-a-cf66aa73-codex-agent-1",
+                        "codex-agent",
+                        "94daceabdb89"
+                    ]
+                }
+            }
+        }
+    }
+]

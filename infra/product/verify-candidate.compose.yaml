@@ -1,0 +1,3 @@
+# Verification only: the synthetic App never has Internet egress.
+networks:
+  github-outbound: { internal: true }

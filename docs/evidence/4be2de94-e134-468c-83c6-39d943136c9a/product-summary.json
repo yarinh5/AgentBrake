@@ -1,0 +1,111 @@
+{
+  "runId": "4be2de94-e134-468c-83c6-39d943136c9a",
+  "sourceHash": "527a40f3f1713f73ed252eefee1d48493da1187bd7fdc6e447540486cbf9f2b4",
+  "startedAt": "2026-11-16T12:42:37.998Z",
+  "installation": {
+    "name": "verify-cd1",
+    "id": "d23e02e9-9d8e-43ab-accc-a0fe031ff147",
+    "port": 4316
+  },
+  "result": "PASS_RUNTIME_SOURCE_CHANGED",
+  "cases": [
+    {
+      "name": "separate process topology, internal networks, credentials and loopback publication",
+      "result": "PASS",
+      "observed": {
+        "services": [
+          "agent",
+          "control-api",
+          "control-db",
+          "dashboard",
+          "gateway",
+          "ingress",
+          "mock-target",
+          "opa",
+          "target-db"
+        ],
+        "internalNetworks": 4,
+        "loopbackIngressNetworks": 1,
+        "deniedNetworkProbes": 14,
+        "agentSecrets": 0
+      }
+    },
+    {
+      "name": "permitted read succeeds and rejected SQL has zero upstream execution and unchanged target",
+      "result": "PASS",
+      "observed": {
+        "readCalls": 1,
+        "deniedCalls": 0,
+        "denialRule": "invalid-arguments"
+      }
+    },
+    {
+      "name": "preview, CSRF, role, no-self-review and exact fingerprint gate the real DB write",
+      "result": "PASS",
+      "observed": {
+        "deniedAttempts": 4,
+        "deniedCalls": 0,
+        "concurrentStatuses": [
+          200,
+          409
+        ],
+        "mutations": 1
+      }
+    },
+    {
+      "name": "PostgreSQL activity/history and honest evidence export",
+      "result": "PASS",
+      "observed": {
+        "filteredTotal": 2,
+        "actor": "approver",
+        "auditValid": true,
+        "observation": "adapter-reported"
+      }
+    },
+    {
+      "name": "full installation restart preserves DB, Git branch, audit and pending review proofs",
+      "result": "PASS",
+      "observed": {
+        "pendingProofsPreserved": 2,
+        "mainUnchanged": true,
+        "mockPRs": 1,
+        "auditValid": true
+      }
+    },
+    {
+      "name": "policy change, task revoke and stop withdraw pending authority with no execution",
+      "result": "PASS",
+      "observed": {
+        "policyDenial": true,
+        "revocationDenial": true,
+        "emergencyStopDenial": true,
+        "executionCalls": 0
+      }
+    },
+    {
+      "name": "PDP outage fails closed through the product Gateway",
+      "result": "PASS",
+      "observed": {
+        "status": "blocked",
+        "rule": "pdp-unavailable",
+        "calls": 0
+      }
+    },
+    {
+      "name": "persistent mock PR survives target process restart",
+      "result": "PASS",
+      "observed": {
+        "mockPRs": 1
+      }
+    }
+  ],
+  "scope": "Local persistent product install; synthetic PostgreSQL/Git, isolated test client. No real GitHub or hosted model. Native process-loss tests are separate evidence.",
+  "sourceChangedDuringRun": true,
+  "cleanup": {
+    "result": "PASS",
+    "containers": 0,
+    "volumes": 0,
+    "networks": 0
+  },
+  "finishedAt": "2026-11-16T12:43:50.184Z"
+}

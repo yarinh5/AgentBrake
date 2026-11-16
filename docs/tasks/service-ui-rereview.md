@@ -1,0 +1,11 @@
+# Task 2 — repair round 1 independent rereview
+
+**Original P2: ADDRESSED. Scoped specification and code-quality verdict: PASS.** No introduced actionable defect was found in the repair delta.
+
+The original cause was identity-based synchronization: each normal team fetch returned a fresh member object, so the effect overwrote unsaved role/active controls even when server authority had not changed. At `src/components/AccountPanels.tsx:51`, the effect now depends on member identity, role and active values. An unchanged poll therefore leaves drafts intact; an actual authority change still reconciles the controls. The existing save/reset behavior is preserved. This is the smallest correction for the demonstrated failure and does not alter polling, API authorization, session invalidation or proxy boundaries.
+
+Reviewed the complete two-file repair diff, repair brief and appended implementation report. The added browser regression changes both controls, waits for the normal background team request, checks retained drafts, verifies the actual PATCH payload and persisted team values, checks post-save controls, and exercises a real server-side authority change followed by another background refresh. The existing last-administrator test now also checks both controls after rollback. Reusing the preceding serial test's synthetic member fits the existing serial fixture and avoids adding credential attempts or weakening the rate limiter.
+
+The worker reports a fail-first browser reproduction before the fix and final **7/7 managed workflows passing**, including the polling regression and all six prior managed workflows, plus root TypeScript and production dashboard build success. The intermediate rate-limit failure and its test-setup correction are disclosed in the implementation report. No suite was rerun during this rereview; the verdict combines source/diff inspection with that reported execution evidence.
+
+Completion: the original finding is closed and this scoped rereview is complete. No source edits, services, extra agents or external systems were used. Only this report was written. Combined legacy/managed release verification and installed-service integration remain parent-owned and are not claimed by this verdict.

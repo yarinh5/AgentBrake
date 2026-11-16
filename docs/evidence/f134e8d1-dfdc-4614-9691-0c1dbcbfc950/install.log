@@ -1,0 +1,159 @@
+#1 [internal] load local bake definitions
+#1 reading from stdin 3.82kB 0.0s done
+#1 DONE 0.0s
+
+#2 [agent internal] load build definition from Dockerfile
+#2 transferring dockerfile: 443B done
+#2 WARN: InvalidDefaultArgInFrom: Default value for ARG ${NODE_IMAGE} results in empty or invalid base image name (line 2)
+#2 WARN: InvalidDefaultArgInFrom: Default value for ARG ${NODE_IMAGE} results in empty or invalid base image name (line 2)
+#2 WARN: InvalidDefaultArgInFrom: Default value for ARG ${NODE_IMAGE} results in empty or invalid base image name (line 2)
+#2 WARN: InvalidDefaultArgInFrom: Default value for ARG ${NODE_IMAGE} results in empty or invalid base image name (line 2)
+#2 WARN: InvalidDefaultArgInFrom: Default value for ARG ${NODE_IMAGE} results in empty or invalid base image name (line 2)
+#2 DONE 0.0s
+
+#3 [dashboard internal] load build definition from Dockerfile
+#3 transferring dockerfile: 1.09kB done
+#3 DONE 0.0s
+
+#4 [dashboard internal] load .dockerignore
+#4 transferring context: 289B done
+#4 DONE 0.0s
+
+#5 [dashboard internal] load metadata for docker.io/library/node@sha256:e9f565d32859f0cbfb52125eafe8be39390f24dac302dc3cdf566e8ba3ab21ee
+#5 DONE 0.0s
+
+#6 [dashboard  1/10] FROM docker.io/library/node@sha256:e9f565d32859f0cbfb52125eafe8be39390f24dac302dc3cdf566e8ba3ab21ee
+#6 DONE 0.0s
+
+#7 [dashboard internal] load build context
+#7 transferring context: 1.08kB 0.0s done
+#7 DONE 0.0s
+
+#8 [gateway internal] load build context
+#8 transferring context: 219.23kB 0.0s done
+#8 DONE 0.0s
+
+#9 [dashboard build 8/8] RUN cd apps/dashboard && npm run build
+#9 CACHED
+
+#10 [dashboard build 7/8] COPY src ./src
+#10 CACHED
+
+#11 [dashboard runtime 2/4] WORKDIR /app
+#11 CACHED
+
+#12 [dashboard build 4/8] RUN cd apps/dashboard && npm ci --ignore-scripts
+#12 CACHED
+
+#13 [dashboard build 2/8] WORKDIR /workspace
+#13 CACHED
+
+#14 [dashboard build 6/8] COPY apps/dashboard ./apps/dashboard
+#14 CACHED
+
+#15 [dashboard runtime 3/4] COPY --from=build --chown=node:node /workspace/apps/dashboard/.next/standalone ./
+#15 CACHED
+
+#16 [dashboard build 3/8] COPY apps/dashboard/package.json apps/dashboard/package-lock.json ./apps/dashboard/
+#16 CACHED
+
+#17 [dashboard build 5/8] RUN ln -s apps/dashboard/node_modules /workspace/node_modules
+#17 CACHED
+
+#18 [dashboard runtime 4/4] COPY --from=build --chown=node:node /workspace/apps/dashboard/.next/static ./apps/dashboard/.next/static
+#18 CACHED
+
+#19 [dashboard] exporting to image
+#19 exporting layers done
+#19 writing image sha256:360659ba7abf6820fe821c153dc42e384943a458025e24eb4bb76b0dc8ed1075 done
+#19 naming to docker.io/library/agentbrake-product-verify-cd1-dashboard done
+#19 DONE 0.0s
+
+#20 [mock-target  2/10] RUN apt-get update && apt-get install -y --no-install-recommends curl git postgresql-client ca-certificates && rm -rf /var/lib/apt/lists/*
+#20 CACHED
+
+#21 [mock-target  3/10] WORKDIR /app
+#21 CACHED
+
+#22 [mock-target  4/10] COPY package.json package-lock.json ./
+#22 DONE 0.0s
+
+#23 [dashboard] resolving provenance for metadata file
+#23 DONE 0.0s
+
+#24 [gateway  5/10] RUN npm ci
+#24 8.893 
+#24 8.893 added 188 packages, and audited 189 packages in 9s
+#24 8.894 
+#24 8.894 42 packages are looking for funding
+#24 8.894   run `npm fund` for details
+#24 8.895 
+#24 8.895 found 0 vulnerabilities
+#24 8.897 npm notice
+#24 8.897 npm notice New major version of npm available! 10.9.9 -> 12.2.2
+#24 8.897 npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.2
+#24 8.897 npm notice To update run: npm install -g npm@12.2.2
+#24 8.897 npm notice
+#24 DONE 9.3s
+
+#25 [ingress  6/10] COPY server ./server
+#25 DONE 0.0s
+
+#26 [ingress  7/10] COPY services ./services
+#26 DONE 0.0s
+
+#27 [gateway  8/10] COPY tests ./tests
+#27 DONE 0.0s
+
+#28 [mock-target  9/10] COPY scripts ./scripts
+#28 DONE 0.0s
+
+#29 [mock-target 10/10] COPY infra ./infra
+#29 DONE 0.0s
+
+#30 [gateway] exporting to image
+#30 exporting layers
+#30 exporting layers 2.2s done
+#30 writing image sha256:97d40163a4958838ef02c7d46bdcacb63e0e45f70f1ff0c620d25f228f76b920
+#30 writing image sha256:97d40163a4958838ef02c7d46bdcacb63e0e45f70f1ff0c620d25f228f76b920 0.0s done
+#30 naming to docker.io/library/agentbrake-product-verify-cd1-runtime 0.0s done
+#30 DONE 2.3s
+
+#31 [control-api] exporting to image
+#31 exporting layers 2.2s done
+#31 writing image sha256:242c0103dda269efbe915443897a1118265b4aa7dbb0d8158bc1accf88a4fef0 done
+#31 naming to docker.io/library/agentbrake-product-verify-cd1-runtime 0.0s done
+#31 DONE 2.3s
+
+#32 [agent] exporting to image
+#32 exporting layers 2.2s done
+#32 writing image sha256:9696a85e2ab1c56b71b723eb3bfeb4534ee9d86ba18102435ea8714f36122cad done
+#32 naming to docker.io/library/agentbrake-product-verify-cd1-runtime 0.0s done
+#32 DONE 2.3s
+
+#33 [mock-target] exporting to image
+#33 exporting layers 2.2s done
+#33 writing image sha256:42035c0da9170b9c78194bc11334f20d730161cd4dbdb74879674dac38aa11a6 done
+#33 naming to docker.io/library/agentbrake-product-verify-cd1-runtime 0.0s done
+#33 DONE 2.3s
+
+#34 [ingress] exporting to image
+#34 exporting layers 2.2s done
+#34 writing image sha256:b8210225042261200aec488dfad4e688ac9160a8a3b9923152f1086fee91b5ab done
+#34 naming to docker.io/library/agentbrake-product-verify-cd1-runtime 0.0s done
+#34 DONE 2.3s
+
+#35 [control-api] resolving provenance for metadata file
+#35 DONE 0.1s
+
+#36 [ingress] resolving provenance for metadata file
+#36 DONE 0.0s
+
+#37 [agent] resolving provenance for metadata file
+#37 DONE 0.1s
+
+#38 [mock-target] resolving provenance for metadata file
+#38 DONE 0.0s
+
+#39 [gateway] resolving provenance for metadata file
+#39 DONE 0.0s

@@ -1,0 +1,34 @@
+ Image agentbrake-a-75a79967-codex Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 689B 0.0s done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Codex.Dockerfile
+#2 transferring dockerfile: 245B done
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/agentbrake-a-75a79967-runtime:latest
+#3 DONE 0.0s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 193B done
+#4 DONE 0.0s
+
+#5 [1/2] FROM docker.io/library/agentbrake-a-75a79967-runtime:latest
+#5 DONE 0.1s
+
+#6 [2/2] RUN npm install --global --ignore-scripts @openai/codex@0.169.0
+#6 10.94 
+#6 10.94 added 2 packages in 11s
+#6 DONE 11.4s
+
+#7 exporting to image
+#7 exporting layers
+#7 exporting layers 2.4s done
+#7 writing image sha256:770cf51876694017b614b9d90c74058a066cfd6fe2e1523dd46b9643adf8804c done
+#7 naming to docker.io/library/agentbrake-a-75a79967-codex done
+#7 DONE 2.4s
+
+#8 resolving provenance for metadata file
+#8 DONE 0.0s
+ Image agentbrake-a-75a79967-codex Built 

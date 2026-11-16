@@ -1,0 +1,254 @@
+[
+    {
+        "Id": "a605df51bfe5bdb725ddfaca11c3316d7c6fcd1c8e90321466d4f00d07ca8f03",
+        "Created": "2026-11-16T13:28:23.459212545Z",
+        "Path": "/bin/ollama",
+        "Args": [
+            "serve"
+        ],
+        "State": {
+            "Status": "running",
+            "Running": true,
+            "Paused": false,
+            "Restarting": false,
+            "OOMKilled": false,
+            "Dead": false,
+            "Pid": 5544,
+            "ExitCode": 0,
+            "Error": "",
+            "StartedAt": "2026-11-16T13:28:23.532805641Z",
+            "FinishedAt": "0001-01-01T00:00:00Z"
+        },
+        "Image": "sha256:6c437ef9d364e1712bc7e2342b224369e3669c29d9373f1bbdd68f4601d58fd9",
+        "ResolvConfPath": "/var/lib/docker/containers/a605df51bfe5bdb725ddfaca11c3316d7c6fcd1c8e90321466d4f00d07ca8f03/resolv.conf",
+        "HostnamePath": "/var/lib/docker/containers/a605df51bfe5bdb725ddfaca11c3316d7c6fcd1c8e90321466d4f00d07ca8f03/hostname",
+        "HostsPath": "/var/lib/docker/containers/a605df51bfe5bdb725ddfaca11c3316d7c6fcd1c8e90321466d4f00d07ca8f03/hosts",
+        "LogPath": "",
+        "Name": "/agentbrake-a-7e334645-local-model-1",
+        "RestartCount": 0,
+        "Driver": "overlay2",
+        "Platform": "linux",
+        "MountLabel": "",
+        "ProcessLabel": "",
+        "AppArmorProfile": "",
+        "ExecIDs": null,
+        "HostConfig": {
+            "Binds": [
+                "F:/project love/AgentBrake/.tools/ollama-models:/models:ro"
+            ],
+            "ContainerIDFile": "",
+            "LogConfig": {
+                "Type": "local",
+                "Config": {}
+            },
+            "NetworkMode": "agentbrake-a-7e334645_inference",
+            "PortBindings": {},
+            "RestartPolicy": {
+                "Name": "no",
+                "MaximumRetryCount": 0
+            },
+            "AutoRemove": false,
+            "VolumeDriver": "",
+            "VolumesFrom": null,
+            "ConsoleSize": [
+                0,
+                0
+            ],
+            "CapAdd": null,
+            "CapDrop": [
+                "ALL"
+            ],
+            "CgroupnsMode": "private",
+            "Dns": null,
+            "DnsOptions": null,
+            "DnsSearch": null,
+            "ExtraHosts": [],
+            "GroupAdd": null,
+            "IpcMode": "private",
+            "Cgroup": "",
+            "Links": null,
+            "OomScoreAdj": 0,
+            "PidMode": "",
+            "Privileged": false,
+            "PublishAllPorts": false,
+            "ReadonlyRootfs": true,
+            "SecurityOpt": [
+                "no-new-privileges:true"
+            ],
+            "Tmpfs": {
+                "/tmp": "size=256m,mode=1777"
+            },
+            "UTSMode": "",
+            "UsernsMode": "",
+            "ShmSize": 67108864,
+            "Runtime": "runc",
+            "Isolation": "",
+            "CpuShares": 0,
+            "Memory": 12884901888,
+            "NanoCpus": 0,
+            "CgroupParent": "",
+            "BlkioWeight": 0,
+            "BlkioWeightDevice": null,
+            "BlkioDeviceReadBps": null,
+            "BlkioDeviceWriteBps": null,
+            "BlkioDeviceReadIOps": null,
+            "BlkioDeviceWriteIOps": null,
+            "CpuPeriod": 0,
+            "CpuQuota": 0,
+            "CpuRealtimePeriod": 0,
+            "CpuRealtimeRuntime": 0,
+            "CpusetCpus": "",
+            "CpusetMems": "",
+            "Devices": null,
+            "DeviceCgroupRules": null,
+            "DeviceRequests": [
+                {
+                    "Driver": "",
+                    "Count": -1,
+                    "DeviceIDs": null,
+                    "Capabilities": [
+                        [
+                            "gpu"
+                        ]
+                    ],
+                    "Options": null
+                }
+            ],
+            "MemoryReservation": 0,
+            "MemorySwap": 25769803776,
+            "MemorySwappiness": null,
+            "OomKillDisable": null,
+            "PidsLimit": 256,
+            "Ulimits": null,
+            "CpuCount": 0,
+            "CpuPercent": 0,
+            "IOMaximumIOps": 0,
+            "IOMaximumBandwidth": 0,
+            "MaskedPaths": [
+                "/proc/acpi",
+                "/proc/asound",
+                "/proc/interrupts",
+                "/proc/kcore",
+                "/proc/keys",
+                "/proc/latency_stats",
+                "/proc/sched_debug",
+                "/proc/scsi",
+                "/proc/timer_list",
+                "/proc/timer_stats",
+                "/sys/devices/virtual/powercap",
+                "/sys/firmware"
+            ],
+            "ReadonlyPaths": [
+                "/proc/bus",
+                "/proc/fs",
+                "/proc/irq",
+                "/proc/sys",
+                "/proc/sysrq-trigger"
+            ]
+        },
+        "GraphDriver": {
+            "Data": {
+                "ID": "a605df51bfe5bdb725ddfaca11c3316d7c6fcd1c8e90321466d4f00d07ca8f03",
+                "LowerDir": "/var/lib/docker/overlay2/42d52344d23ddfac67fdd3050f48686338432f6832e0c47fccf1069f1145e08d-init/diff:/var/lib/docker/overlay2/9ece65b7d0d9ec80a9719c4b81d12cfdad9386326efffb005b3f305856fc9569/diff:/var/lib/docker/overlay2/cdbcfd93368a0d00552d5c3a68e6e2602e591cbe9b4ca5d875d184c5f44c807e/diff:/var/lib/docker/overlay2/d653a997940ead5359a183fed842a6a1c271e0e15fa2ac50b5601818eaadda7c/diff:/var/lib/docker/overlay2/a3fcea25a2fbbbbb8131cdf8b3e67f24a096c3dab1d03229b07d51f7f09404a5/diff",
+                "MergedDir": "/var/lib/docker/overlay2/42d52344d23ddfac67fdd3050f48686338432f6832e0c47fccf1069f1145e08d/merged",
+                "UpperDir": "/var/lib/docker/overlay2/42d52344d23ddfac67fdd3050f48686338432f6832e0c47fccf1069f1145e08d/diff",
+                "WorkDir": "/var/lib/docker/overlay2/42d52344d23ddfac67fdd3050f48686338432f6832e0c47fccf1069f1145e08d/work"
+            },
+            "Name": "overlay2"
+        },
+        "Mounts": [
+            {
+                "Type": "bind",
+                "Source": "F:/project love/AgentBrake/.tools/ollama-models",
+                "Destination": "/models",
+                "Mode": "ro",
+                "RW": false,
+                "Propagation": "rprivate"
+            }
+        ],
+        "Config": {
+            "Hostname": "a605df51bfe5",
+            "Domainname": "",
+            "User": "1000:1000",
+            "AttachStdin": false,
+            "AttachStdout": true,
+            "AttachStderr": true,
+            "ExposedPorts": {
+                "11434/tcp": {}
+            },
+            "Tty": false,
+            "OpenStdin": false,
+            "StdinOnce": false,
+            "Env": [
+                "OLLAMA_CONTEXT_LENGTH=65536",
+                "HOME=/tmp",
+                "OLLAMA_NUM_PARALLEL=1",
+                "OLLAMA_KV_CACHE_TYPE=q8_0",
+                "OLLAMA_MAX_LOADED_MODELS=1",
+                "OLLAMA_HOST=0.0.0.0:11434",
+                "OLLAMA_MODELS=/models",
+                "OLLAMA_NO_CLOUD=1",
+                "OLLAMA_FLASH_ATTENTION=1",
+                "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+                "LD_LIBRARY_PATH=/usr/local/nvidia/lib:/usr/local/nvidia/lib64",
+                "NVIDIA_DRIVER_CAPABILITIES=compute,utility",
+                "NVIDIA_VISIBLE_DEVICES=all"
+            ],
+            "Cmd": [
+                "serve"
+            ],
+            "Image": "ollama/ollama@sha256:910d0d8107b538fb0894e63163eb195de0cc7aefcbc666dc62d3b18f71124592",
+            "Volumes": null,
+            "WorkingDir": "",
+            "Entrypoint": [
+                "/bin/ollama"
+            ],
+            "Labels": {
+                "com.docker.compose.config-hash": "948cb90a3832e4f4ad0ed25e36f7cbbdc8fb80ab99f54913fa347c724463a8f9",
+                "com.docker.compose.container-number": "1",
+                "com.docker.compose.depends_on": "",
+                "com.docker.compose.image": "sha256:6c437ef9d364e1712bc7e2342b224369e3669c29d9373f1bbdd68f4601d58fd9",
+                "com.docker.compose.oneoff": "False",
+                "com.docker.compose.project": "agentbrake-a-7e334645",
+                "com.docker.compose.project.config_files": "F:\\project love\\AgentBrake\\infra\\local\\compose.yaml,F:\\project love\\AgentBrake\\infra\\local\\codex.compose.yaml",
+                "com.docker.compose.project.working_dir": "F:\\project love\\AgentBrake\\infra\\local",
+                "com.docker.compose.service": "local-model",
+                "com.docker.compose.version": "5.7.0",
+                "org.opencontainers.image.version": "24.04"
+            }
+        },
+        "NetworkSettings": {
+            "SandboxID": "033290a9586c175cb70f4fc3c3655c5d8e9753e1e3b960637a2880c9ce429b72",
+            "SandboxKey": "/var/run/docker/netns/033290a9586c",
+            "Ports": {
+                "11434/tcp": null
+            },
+            "Networks": {
+                "agentbrake-a-7e334645_inference": {
+                    "IPAMConfig": null,
+                    "Links": null,
+                    "Aliases": [
+                        "agentbrake-a-7e334645-local-model-1",
+                        "local-model"
+                    ],
+                    "DriverOpts": null,
+                    "GwPriority": 0,
+                    "NetworkID": "55869afb33a1976d0f87dbbb71f523dfbce09d1b1e6be648f4e2fd8eb80f9b99",
+                    "EndpointID": "03b85434cca9ac6473691d817328979eee4fa51f088ace16c80d27b2e0311042",
+                    "Gateway": "",
+                    "IPAddress": "172.29.0.2",
+                    "MacAddress": "4e:c1:43:9c:67:7f",
+                    "IPPrefixLen": 16,
+                    "IPv6Gateway": "",
+                    "GlobalIPv6Address": "",
+                    "GlobalIPv6PrefixLen": 0,
+                    "DNSNames": [
+                        "agentbrake-a-7e334645-local-model-1",
+                        "local-model",
+                        "a605df51bfe5"
+                    ]
+                }
+            }
+        }
+    }
+]

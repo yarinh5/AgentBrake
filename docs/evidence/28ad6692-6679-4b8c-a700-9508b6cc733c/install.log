@@ -1,0 +1,176 @@
+#1 [internal] load local bake definitions
+#1 reading from stdin 3.82kB 0.0s done
+#1 DONE 0.0s
+
+#2 [control-api internal] load build definition from Dockerfile
+#2 transferring dockerfile: 443B done
+#2 WARN: InvalidDefaultArgInFrom: Default value for ARG ${NODE_IMAGE} results in empty or invalid base image name (line 2)
+#2 WARN: InvalidDefaultArgInFrom: Default value for ARG ${NODE_IMAGE} results in empty or invalid base image name (line 2)
+#2 WARN: InvalidDefaultArgInFrom: Default value for ARG ${NODE_IMAGE} results in empty or invalid base image name (line 2)
+#2 WARN: InvalidDefaultArgInFrom: Default value for ARG ${NODE_IMAGE} results in empty or invalid base image name (line 2)
+#2 WARN: InvalidDefaultArgInFrom: Default value for ARG ${NODE_IMAGE} results in empty or invalid base image name (line 2)
+#2 DONE 0.0s
+
+#3 [dashboard internal] load build definition from Dockerfile
+#3 transferring dockerfile: 1.09kB done
+#3 DONE 0.0s
+
+#4 [dashboard internal] load .dockerignore
+#4 transferring context: 289B done
+#4 DONE 0.0s
+
+#5 [dashboard internal] load metadata for docker.io/library/node@sha256:e9f565d32859f0cbfb52125eafe8be39390f24dac302dc3cdf566e8ba3ab21ee
+#5 DONE 0.0s
+
+#6 [control-api  1/10] FROM docker.io/library/node@sha256:e9f565d32859f0cbfb52125eafe8be39390f24dac302dc3cdf566e8ba3ab21ee
+#6 DONE 0.0s
+
+#7 [ingress internal] load build context
+#7 transferring context: 53.47kB 0.0s done
+#7 DONE 0.0s
+
+#8 [agent  3/10] WORKDIR /app
+#8 CACHED
+
+#9 [agent  4/10] COPY package.json package-lock.json ./
+#9 CACHED
+
+#10 [agent  2/10] RUN apt-get update && apt-get install -y --no-install-recommends curl git postgresql-client ca-certificates && rm -rf /var/lib/apt/lists/*
+#10 CACHED
+
+#11 [agent  5/10] RUN npm ci
+#11 CACHED
+
+#12 [dashboard internal] load build context
+#12 transferring context: 41.77kB 0.0s done
+#12 DONE 0.0s
+
+#13 [dashboard build 2/8] WORKDIR /workspace
+#13 CACHED
+
+#14 [dashboard build 3/8] COPY apps/dashboard/package.json apps/dashboard/package-lock.json ./apps/dashboard/
+#14 CACHED
+
+#15 [dashboard build 5/8] RUN ln -s apps/dashboard/node_modules /workspace/node_modules
+#15 CACHED
+
+#16 [dashboard build 4/8] RUN cd apps/dashboard && npm ci --ignore-scripts
+#16 CACHED
+
+#17 [dashboard build 6/8] COPY apps/dashboard ./apps/dashboard
+#17 CACHED
+
+#18 [mock-target  6/10] COPY server ./server
+#18 DONE 0.0s
+
+#19 [dashboard build 7/8] COPY src ./src
+#19 DONE 0.0s
+
+#20 [gateway  7/10] COPY services ./services
+#20 DONE 0.0s
+
+#21 [gateway  8/10] COPY tests ./tests
+#21 DONE 0.1s
+
+#22 [gateway  9/10] COPY scripts ./scripts
+#22 DONE 0.0s
+
+#23 [mock-target 10/10] COPY infra ./infra
+#23 DONE 0.0s
+
+#24 [ingress] exporting to image
+#24 exporting layers 0.1s done
+#24 writing image sha256:3fee8cfb807fd29fb8766c6a2dcef76f9c00b9b90e7c312e93185d6050b9caa1
+#24 writing image sha256:3fee8cfb807fd29fb8766c6a2dcef76f9c00b9b90e7c312e93185d6050b9caa1 done
+#24 naming to docker.io/library/agentbrake-product-verify-cd1-runtime 0.0s done
+#24 DONE 0.2s
+
+#25 [control-api] exporting to image
+#25 exporting layers 0.1s done
+#25 writing image sha256:2a19ad1c1eba8562382dd251ebbecccf75da9b0daaf1cf6d9f8e8622b4d0ddc2 done
+#25 naming to docker.io/library/agentbrake-product-verify-cd1-runtime 0.0s done
+#25 DONE 0.1s
+
+#26 [gateway] exporting to image
+#26 exporting layers 0.1s done
+#26 writing image sha256:24921d1985ddd4015b7075228bde254e4b066c241f1e6d858c2367db8819933b 0.0s done
+#26 naming to docker.io/library/agentbrake-product-verify-cd1-runtime 0.0s done
+#26 DONE 0.2s
+
+#27 [mock-target] exporting to image
+#27 exporting layers 0.1s done
+#27 writing image sha256:22186a01b9f44458518cd86cdad29d5d29d04955ff9c08552b5df82c7fea269f 0.0s done
+#27 naming to docker.io/library/agentbrake-product-verify-cd1-runtime 0.0s done
+#27 DONE 0.2s
+
+#28 [agent] exporting to image
+#28 exporting layers 0.1s done
+#28 writing image sha256:9c7f980b8a9b1ac2e3854f38d0602aee7315942f150306d33d7904ee64b4958f 0.0s done
+#28 naming to docker.io/library/agentbrake-product-verify-cd1-runtime 0.0s done
+#28 DONE 0.2s
+
+#29 [dashboard build 8/8] RUN cd apps/dashboard && npm run build
+#29 0.309 
+#29 0.309 > agentbrake-dashboard@0.1.0 build
+#29 0.309 > next build --webpack
+#29 0.309 
+#29 ...
+
+#30 [ingress] resolving provenance for metadata file
+#30 DONE 0.1s
+
+#31 [control-api] resolving provenance for metadata file
+#31 DONE 0.1s
+
+#32 [mock-target] resolving provenance for metadata file
+#32 DONE 0.0s
+
+#33 [gateway] resolving provenance for metadata file
+#33 DONE 0.0s
+
+#34 [agent] resolving provenance for metadata file
+#34 DONE 0.0s
+
+#29 [dashboard build 8/8] RUN cd apps/dashboard && npm run build
+#29 0.759 ▲ Next.js 16.4.6 (webpack)
+#29 0.780 ✓ Running next.config.mjs took 20ms
+#29 0.806 
+#29 0.835   Creating an optimized production build ...
+#29 5.930 ✓ Compiled successfully in 4.6s
+#29 5.933   Running TypeScript ...
+#29 8.695   Finished TypeScript in 2.8s ...
+#29 8.698   Collecting page data using 5 workers ...
+#29 9.177   Generating static pages using 5 workers (0/3) ...
+#29 9.752 ✓ Generating static pages using 5 workers (3/3) in 575ms
+#29 10.05   Finalizing page optimization ...
+#29 10.05   Collecting build traces ...
+#29 36.72 
+#29 36.72 Route (app)
+#29 36.72 ┌ ○ /
+#29 36.72 ├ ○ /_not-found
+#29 36.72 └ ƒ /api/[...path]
+#29 36.72 
+#29 36.72 
+#29 36.72 ○  (Static)   prerendered as static content
+#29 36.72 ƒ  (Dynamic)  server-rendered on demand
+#29 36.72 
+#29 DONE 36.9s
+
+#35 [dashboard runtime 2/4] WORKDIR /app
+#35 CACHED
+
+#36 [dashboard runtime 3/4] COPY --from=build --chown=node:node /workspace/apps/dashboard/.next/standalone ./
+#36 DONE 0.5s
+
+#37 [dashboard runtime 4/4] COPY --from=build --chown=node:node /workspace/apps/dashboard/.next/static ./apps/dashboard/.next/static
+#37 DONE 0.1s
+
+#38 [dashboard] exporting to image
+#38 exporting layers
+#38 exporting layers 0.5s done
+#38 writing image sha256:360659ba7abf6820fe821c153dc42e384943a458025e24eb4bb76b0dc8ed1075 done
+#38 naming to docker.io/library/agentbrake-product-verify-cd1-dashboard done
+#38 DONE 0.6s
+
+#39 [dashboard] resolving provenance for metadata file
+#39 DONE 0.0s

@@ -1,0 +1,67 @@
+{
+  "runId": "96cf7504-a2b8-49c1-9b75-8dd8a6e006b8",
+  "sourceHash": "a37811a74bc93ace334a58bb51577a195dd9985fcd16aca66b1e4d669d058bdd",
+  "startedAt": "2026-11-16T13:30:51.417Z",
+  "result": "PASS_LOCAL_SECURITY_CHECKS",
+  "checks": [
+    {
+      "label": "scanner-version",
+      "exitCode": 0
+    },
+    {
+      "label": "sast-rule-tests",
+      "exitCode": 0
+    },
+    {
+      "label": "sast",
+      "exitCode": 0
+    },
+    {
+      "label": "root-sbom",
+      "exitCode": 0
+    },
+    {
+      "label": "root-audit",
+      "exitCode": 0
+    },
+    {
+      "label": "dashboard-sbom",
+      "exitCode": 0
+    },
+    {
+      "label": "dashboard-audit",
+      "exitCode": 0
+    }
+  ],
+  "limits": "Semgrep OSS with eight local rules, npm advisories and dependency SBOM. Not exhaustive interprocedural analysis, OS image CVE coverage, penetration testing or external human review.",
+  "scannerVersion": "1.184.0",
+  "scannerImage": "semgrep/semgrep@sha256:cc1b68266f267878b39739373ea9985b9a78e5d64497dd875c8de100b22695ed",
+  "sast": {
+    "rules": 8,
+    "findings": 0,
+    "scanned": 69
+  },
+  "root": {
+    "components": 263,
+    "vulnerabilities": {
+      "info": 0,
+      "low": 0,
+      "moderate": 0,
+      "high": 0,
+      "critical": 0,
+      "total": 0
+    }
+  },
+  "dashboard": {
+    "components": 61,
+    "vulnerabilities": {
+      "info": 0,
+      "low": 0,
+      "moderate": 0,
+      "high": 0,
+      "critical": 0,
+      "total": 0
+    }
+  },
+  "finishedAt": "2026-11-16T13:31:09.675Z"
+}

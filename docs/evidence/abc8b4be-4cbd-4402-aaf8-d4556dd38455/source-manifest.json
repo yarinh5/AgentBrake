@@ -1,0 +1,181 @@
+{
+  "sourceHash": "2efe166ac617f79370affebdfae8bbe03046c2d0a7f2c2ad5671ee10e2dd6895",
+  "files": [
+    {
+      "path": "docs/specification/AgentBrake_Codex_Master_Build_Prompt_2026-11-16.md",
+      "sha256": "c16a30cb646996be03fa1171bc8a58b812ba6d41a24622086c99ff56e81c492a"
+    },
+    {
+      "path": "docs/specification/AgentBrake_Product_Security_PRD_2026-11-16.md",
+      "sha256": "8388a64bb0be942ee3e86b99e284f5fbfd852604232b5847270c4fc6021d7e73"
+    },
+    {
+      "path": "package-lock.json",
+      "sha256": "94e071ad7b8112a1acdde1d3482751a37fe6a8b0c3face6121cef2eb5859e8ca"
+    },
+    {
+      "path": "package.json",
+      "sha256": "6b4185891f33678493f0d8b795964c022986b6fcdc89f4a6cbf8245ac7cac6a2"
+    },
+    {
+      "path": "playwright.config.ts",
+      "sha256": "de7831b3e0ab62c68aadeb56fc90dd4b3847c3b69311ae6f39ccdbe7870ae880"
+    },
+    {
+      "path": "scripts/install-opa.mjs",
+      "sha256": "b2092eab30874a9049fb7664c1ab0ffa2048c980b71bffbacbbb678779ff88f3"
+    },
+    {
+      "path": "scripts/local.mjs",
+      "sha256": "ab7738537ef9746c3a73c78856b329b3cc2fcdac808252e087b43eb083db5dcf"
+    },
+    {
+      "path": "scripts/opa-runtime.mjs",
+      "sha256": "e0ec08e392168cc86559043a5e5f6665352c5f08bdff3b633af8d40dd8952fd0"
+    },
+    {
+      "path": "scripts/postgres.sql",
+      "sha256": "d47992e92f7eec4fc41be0c445ed16a202815d2ab824a4905b2fe606b21bbf1f"
+    },
+    {
+      "path": "scripts/setup.mjs",
+      "sha256": "7f9ff5a0b9bdd64e0f8c2507cf2f0aac9cf2ddf7f231eaf045cc7e61d45522b2"
+    },
+    {
+      "path": "scripts/test.mjs",
+      "sha256": "9a9d50d98547b8f11f45e7e360a493c9334ea932d7ab95d8a931faed73a54174"
+    },
+    {
+      "path": "scripts/verify-stage1.mjs",
+      "sha256": "47e94b888d0ffdd45cc18c701ebc7a5608be39f723a2776d8dce3425d38ea250"
+    },
+    {
+      "path": "scripts/with-opa.mjs",
+      "sha256": "c103c5f04b7ec73538e2e407b730abbefd9339b8cfa2ff4e950440d485cb2903"
+    },
+    {
+      "path": "server/app.ts",
+      "sha256": "5656d6dc3b5fc40ec6630e5381f7ba3a2a32076793ef36f27a94892abb156d08"
+    },
+    {
+      "path": "server/connectors.ts",
+      "sha256": "205b1432c72a9911a29f88493003030d2def98f6e16ef37c51acf2ec07a03325"
+    },
+    {
+      "path": "server/contracts.ts",
+      "sha256": "54ea85817b02e899a3d13013abd6f92f91692ff6ca3c045171b4fa4825a27805"
+    },
+    {
+      "path": "server/gateway.ts",
+      "sha256": "71062a2ee91338608b2bb0dca4c6e99cee4f3e0354d2c911fe8082af3b1d3681"
+    },
+    {
+      "path": "server/index.ts",
+      "sha256": "f2db02debe4b14cf4ccbbb16ad6c43cc36cc39e774731428d7859fcffb4e6125"
+    },
+    {
+      "path": "server/mcp-http.ts",
+      "sha256": "9a86f0debcb343808b682e098a5737bcf8b63c99c0aa40efa1abda786b4df107"
+    },
+    {
+      "path": "server/mcp.ts",
+      "sha256": "f9ac317edfab6638c533e64689db0147a367f6a039230c017e5a16bdbfab4061"
+    },
+    {
+      "path": "server/policy/contracts.ts",
+      "sha256": "0a50c6bf919f44fcc68059641ed0d0ae2452cd6c72883910fe1c4bf9d52b9106"
+    },
+    {
+      "path": "server/policy/opa-client.ts",
+      "sha256": "d1cec9c92511a5ba97fce4228c4eaf5e64877b24c994f70e23af2a38c9f19ddd"
+    },
+    {
+      "path": "server/security/limits.ts",
+      "sha256": "ff512fc696365ee0313207c622409bd5ab52dd7df701a6d4d2e4a1980c643e6e"
+    },
+    {
+      "path": "server/stage1.ts",
+      "sha256": "c75d837baabc776a755a4ea27277be22a004a78521bdbcbe1512527f1c6fce5c"
+    },
+    {
+      "path": "server/store.ts",
+      "sha256": "ceb97978712d0430fad50fdc92ccf3398bcb6727684d51e5409efc2e40a2d670"
+    },
+    {
+      "path": "services/policy/agentbrake_test.rego",
+      "sha256": "ff568dc25bb34e3cda59e0e7e6f7bac7b29893343d6adba06a441e9f77216d94"
+    },
+    {
+      "path": "services/policy/agentbrake.rego",
+      "sha256": "2a2c9d3ce950218a57da92c5f70ab8f49e9af2b17e5c85027977e2cd737dad64"
+    },
+    {
+      "path": "services/policy/authz.rego",
+      "sha256": "6336aacaaf3b9e5875ca599345cbf256e7944354062ba0e061aa952c777ddaed"
+    },
+    {
+      "path": "services/policy/toolchain.json",
+      "sha256": "3f1c573cd5c53edb849e9d0e665dfe1c37feb3e8224af82a7c1bc164d849dba8"
+    },
+    {
+      "path": "src/App.tsx",
+      "sha256": "5d6280e6b6e661757d284c5f7e4fa3158e6b6efc696bfc527d2d7b1d9ccf559f"
+    },
+    {
+      "path": "src/main.tsx",
+      "sha256": "7dd0ec7c005211dc0191dbe92115cb395ec8f04c2591d2259039a5d7b42fb3c0"
+    },
+    {
+      "path": "src/styles.css",
+      "sha256": "25ea0f662a8f6186e30d60d1d552e364f75d6f0a673e35ddea1cf127d2184677"
+    },
+    {
+      "path": "src/types.ts",
+      "sha256": "7fd122bebd6d1d6dd2ab24f4baca6aa1c712f12d628573591dc279d61e2029b5"
+    },
+    {
+      "path": "tests/browser/workspace.spec.ts",
+      "sha256": "0dfc03e38ddb8afb6e97d2ed28d36bd495a8f5de850844601d095d09a742c86c"
+    },
+    {
+      "path": "tests/enforcement/core.test.ts",
+      "sha256": "e62cb654916644d790fc56b18a8840ab8dc3cbf4e81fd772b804efa0bd55b595"
+    },
+    {
+      "path": "tests/enforcement/mcp-protocol.test.ts",
+      "sha256": "ef52ff08dae6f5520b2b2a988052a62cb5b59ee58a9d2d8224351a4c28edb0d9"
+    },
+    {
+      "path": "tests/evidence-scenarios.ts",
+      "sha256": "5ecf869eada74da5b6c1cfbb0ec4b7236e4753bb4e4ba14c0ddfdb64309860df"
+    },
+    {
+      "path": "tests/failure-cases.test.ts",
+      "sha256": "6e62da57c93f9af8688902fdf6d03d46601a24040b6d4ed2f6afc0bc034e8d03"
+    },
+    {
+      "path": "tests/gateway.test.ts",
+      "sha256": "dc128efc35248c825a4e003b59ada19a18d1aa832918bfe358fcda07178bbafd"
+    },
+    {
+      "path": "tests/mcp.test.ts",
+      "sha256": "a7afb0d8cae7e88a64d3cf75173ba550d9e60d769525b9eb37c67223da21168c"
+    },
+    {
+      "path": "tests/policy/pdp.test.ts",
+      "sha256": "47b8adcd6f35997ca0617c082c78224f7e1746515115a95e28c6ea590107dc9c"
+    },
+    {
+      "path": "tests/ui-server.ts",
+      "sha256": "3fa57573c0fd3dfd942ce7f49663f11b8d87c9a41042674a74f49b012ace5ed9"
+    },
+    {
+      "path": "tsconfig.json",
+      "sha256": "7b222790ac9f914ad2e9da8cff51f89b17e84c0b5e58edee875dcba904757615"
+    },
+    {
+      "path": "vite.config.ts",
+      "sha256": "99fbb8ce7e92c85f103f41fad1ab7a8a8f0fd70393e47a162064c7d4adf002da"
+    }
+  ]
+}

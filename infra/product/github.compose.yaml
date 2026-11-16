@@ -1,0 +1,35 @@
+services:
+  gateway:
+    environment:
+      AGENTBRAKE_GITHUB_APP: '1'
+    networks:
+      github-private: {}
+    volumes:
+      - ${INSTALL_DIR}/github-app.json:/run/config/github-app.json:ro
+      - ${INSTALL_DIR}/github-app-key.pem:/run/secrets/github-app-key.pem:ro
+    depends_on:
+      github-egress: { condition: service_started }
+  control-api:
+    environment:
+      AGENTBRAKE_GITHUB_APP: '1'
+    volumes:
+      - ${INSTALL_DIR}/github-app.json:/run/config/github-app.json:ro
+  github-egress:
+    image: ${COMPOSE_PROJECT_NAME}-runtime
+    command: [node, infra/product/github-egress.mjs]
+    user: '1000:1000'
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    pids_limit: 64
+    mem_limit: 128m
+    networks: [github-private, github-outbound]
+    volumes:
+      - ${INSTALL_DIR}/github-app.json:/run/config/github-app.json:ro
+    labels: { com.agentbrake.product: '${INSTALLATION_ID}' }
+    logging:
+      driver: json-file
+      options: { max-size: '10m', max-file: '3' }
+networks:
+  github-private: { internal: true }
+  github-outbound: {}

@@ -1,0 +1,111 @@
+TAP version 13
+# (node:65660) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# Subtest: cached results are withdrawn from REST and MCP status after policy changes
+not ok 1 - cached results are withdrawn from REST and MCP status after policy changes
+  ---
+  duration_ms: 65.772
+  location: 'F:\\project love\\AgentBrake\\tests\\enforcement\\review-regressions.test.ts:1:971'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    200 !== 403
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 403
+  actual: 200
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (F:\project love\AgentBrake\tests\enforcement\review-regressions.test.ts:23:12)
+    process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    async Test.run (node:internal/test_runner/test:932:9)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# Subtest: status recovery remains available when execution quota is consumed
+ok 2 - status recovery remains available when execution quota is consumed
+  ---
+  duration_ms: 10.9488
+  ...
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# Subtest: approval expiry during awaited real PDP evaluation blocks before dispatch
+not ok 3 - approval expiry during awaited real PDP evaluation blocks before dispatch
+  ---
+  duration_ms: 278.7407
+  location: 'F:\\project love\\AgentBrake\\tests\\enforcement\\review-regressions.test.ts:1:2612'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+    
+    + 'allowed'
+    - 'blocked'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'blocked'
+  actual: 'allowed'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (F:\project love\AgentBrake\tests\enforcement\review-regressions.test.ts:42:40)
+    async Test.run (node:internal/test_runner/test:932:9)
+    async Test.processPendingSubtests (node:internal/test_runner/test:629:7)
+  ...
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# Subtest: credential-shaped unknown tool names never appear in REST records or audit exports
+not ok 4 - credential-shaped unknown tool names never appear in REST records or audit exports
+  ---
+  duration_ms: 85.5157
+  location: 'F:\\project love\\AgentBrake\\tests\\enforcement\\review-regressions.test.ts:1:3621'
+  failureType: 'testCodeFailure'
+  error: |-
+    The expression evaluated to a falsy value:
+    
+      fetch(url+'/api/actions',{method:'POST',headers:{Authorization:`Bearer ${s.token}`,'Content-Type':'application/json'},body:JSON.stringify({requestId:randomUUID(),tool:sentinel,arguments:{}})})
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: '=='
+  stack: |-
+    TestContext.<anonymous> (F:\project love\AgentBrake\tests\enforcement\review-regressions.test.ts:51:79)
+    process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    async Test.run (node:internal/test_runner/test:932:9)
+    async Test.processPendingSubtests (node:internal/test_runner/test:629:7)
+  ...
+# Subtest: credential-shaped unknown tool names are not echoed in MCP errors
+not ok 5 - credential-shaped unknown tool names are not echoed in MCP errors
+  ---
+  duration_ms: 83.5199
+  location: 'F:\\project love\\AgentBrake\\tests\\enforcement\\review-regressions.test.ts:1:4857'
+  failureType: 'testCodeFailure'
+  error: |-
+    The expression evaluated to a falsy value:
+    
+      JSON.stringify({jsonrpc:'2.0',id:1,method:'tools/call',params:{name:sentinel,arguments:{},_meta:{'io.modelcontextprotocol/protocolVersion':'2026-07-28','io.modelcontextprotocol/clientCapabilities':{}}}})
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: '=='
+  stack: |-
+    TestContext.<anonymous> (F:\project love\AgentBrake\tests\enforcement\review-regressions.test.ts:61:84)
+    process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    async Test.run (node:internal/test_runner/test:932:9)
+    async Test.processPendingSubtests (node:internal/test_runner/test:629:7)
+  ...
+1..5
+# tests 5
+# suites 0
+# pass 1
+# fail 4
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1242.0296

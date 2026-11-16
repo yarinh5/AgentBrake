@@ -1,0 +1,37 @@
+{
+  "result": "PASS_INSTALLED_IMAGE_SCAN",
+  "at": "2026-11-16T20:51:20.369Z",
+  "scanner": "0.76.2",
+  "database": {
+    "Version": 2,
+    "NextUpdate": "2026-11-17T13:03:44.830426014Z",
+    "UpdatedAt": "2026-11-16T13:03:44.830426244Z",
+    "DownloadedAt": "2026-11-16T19:02:52.831437722Z"
+  },
+  "images": [
+    {
+      "name": "runtime",
+      "imageId": "sha256:e16cbde141a84d8f135553a61943d450ae046a1a5dcac89d7c411f5a095a96a0",
+      "findings": 0,
+      "highCritical": 0
+    },
+    {
+      "name": "dashboard",
+      "imageId": "sha256:5d698dcff503d35cb4e11572747ab0d8fd197d73ffca71d0ad2b1332bef2155c",
+      "findings": 0,
+      "highCritical": 0
+    },
+    {
+      "name": "postgres",
+      "imageId": "sha256:318b5febf66ad9d436d1a86a8d7929bcef3876765f82f3595c5d474c7c87cb12",
+      "findings": 0,
+      "highCritical": 0
+    },
+    {
+      "name": "opa",
+      "imageId": "sha256:2d4edc7bcbbba1e07822ccc25d676c0cbe38f17920a01ebc8027279922934bbd",
+      "findings": 0,
+      "highCritical": 0
+    }
+  ]
+}

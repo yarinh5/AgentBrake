@@ -1,0 +1,3904 @@
+diff --git a/.agentbrake-local/product-ui-base/src/App.tsx b/src/App.tsx
+index 45e4aa7..345d929 100644
+--- a/.agentbrake-local/product-ui-base/src/App.tsx
++++ b/src/App.tsx
+@@ -1,1723 +1 @@
+-import {
+-  useCallback,
+-  useEffect,
+-  useRef,
+-  useState,
+-  type FormEvent,
+-  type ReactNode,
+-} from "react";
+-import {
+-  Activity,
+-  ArrowDownToLine,
+-  ArrowRight,
+-  ArrowUpRight,
+-  Bell,
+-  BookOpen,
+-  Bot,
+-  Check,
+-  CheckCheck,
+-  ChevronDown,
+-  ChevronRight,
+-  CircleHelp,
+-  Clock3,
+-  Code2,
+-  Copy,
+-  Database,
+-  Ellipsis,
+-  ExternalLink,
+-  FileCheck2,
+-  Fingerprint,
+-  GitBranch,
+-  Github,
+-  Globe2,
+-  LayoutDashboard,
+-  Loader2,
+-  LockKeyhole,
+-  LogOut,
+-  Menu,
+-  Pause,
+-  Play,
+-  Plug,
+-  Plus,
+-  Radio,
+-  Search,
+-  Shield,
+-  ShieldAlert,
+-  ShieldCheck,
+-  SlidersHorizontal,
+-  Square,
+-  Terminal,
+-  X,
+-  XCircle,
+-  Zap,
+-} from "lucide-react";
+-import type { Agent, Event, Policies, Workspace } from "./types";
+-
+-type Page =
+-  | "Overview"
+-  | "Activity log"
+-  | "Agents"
+-  | "Policies"
+-  | "Approvals"
+-  | "Integrations";
+-const nav = [
+-  { name: "Overview", icon: LayoutDashboard },
+-  { name: "Activity log", icon: Activity },
+-  { name: "Agents", icon: Bot },
+-  { name: "Policies", icon: SlidersHorizontal },
+-  { name: "Approvals", icon: FileCheck2 },
+-  { name: "Integrations", icon: Plug },
+-] as const;
+-const toolNames: Record<string, string> = {
+-  database_read: "Read customer records",
+-  database_update: "Update customer status",
+-  database_delete: "Delete customer records",
+-  github_read_file: "Read repository file",
+-  github_create_issue: "Create repository issue",
+-  http_request: "Send external request",
+-};
+-async function api(path: string, body?: unknown, method?: string) {
+-  const response = await fetch("/api" + path, {
+-    method: method ?? (body ? "POST" : "GET"),
+-    headers: { "Content-Type": "application/json" },
+-    ...(body ? { body: JSON.stringify(body) } : {}),
+-  });
+-  const value = await response.json();
+-  if (!response.ok)
+-    throw Object.assign(new Error(value.error || "Request failed"), {
+-      status: response.status,
+-    });
+-  return value;
+-}
+-const time = (date: string) =>
+-  new Date(date).toLocaleTimeString("en-GB", {
+-    hour: "2-digit",
+-    minute: "2-digit",
+-    second: "2-digit",
+-  });
+-function Logo({ small = false }: { small?: boolean }) {
+-  return (
+-    <div className={"brand " + (small ? "small" : "")}>
+-      <span className="brand-mark">
+-        <Shield size={24} strokeWidth={2.1} />
+-        <i />
+-        <b />
+-      </span>
+-      {!small && (
+-        <span>
+-          agent<span className="brand-bold">brake</span>
+-          <span className="brand-dot">.</span>
+-        </span>
+-      )}
+-    </div>
+-  );
+-}
+-function Badge({ status }: { status: string }) {
+-  return (
+-    <span className={"badge " + status}>
+-      {status === "allowed" ? (
+-        <Check size={12} />
+-      ) : status === "blocked" ? (
+-        <ShieldAlert size={12} />
+-      ) : status === "pending" ? (
+-        <Clock3 size={12} />
+-      ) : (
+-        <span className="dot" />
+-      )}
+-      {status === "pending"
+-        ? "Needs approval"
+-        : status[0].toUpperCase() + status.slice(1)}
+-    </span>
+-  );
+-}
+-function Empty({
+-  title,
+-  description,
+-  icon = <ShieldCheck size={28} />,
+-}: {
+-  title: string;
+-  description: string;
+-  icon?: ReactNode;
+-}) {
+-  return (
+-    <div className="empty">
+-      <span>{icon}</span>
+-      <h3>{title}</h3>
+-      <p>{description}</p>
+-    </div>
+-  );
+-}
+-function Modal({
+-  title,
+-  children,
+-  close,
+-}: {
+-  title: string;
+-  children: ReactNode;
+-  close: () => void;
+-}) {
+-  const dialog = useRef<HTMLDialogElement>(null);
+-  useEffect(() => {
+-    dialog.current?.showModal();
+-  }, []);
+-  return (
+-    <dialog
+-      ref={dialog}
+-      onCancel={close}
+-      onClick={(e) => {
+-        if (e.target === e.currentTarget) close();
+-      }}
+-    >
+-      <div className="modal-head">
+-        <h2>{title}</h2>
+-        <button
+-          className="icon-button"
+-          onClick={close}
+-          aria-label="Close dialog"
+-        >
+-          <X size={19} />
+-        </button>
+-      </div>
+-      {children}
+-    </dialog>
+-  );
+-}
+-
+-export default function App() {
+-  const [workspace, setWorkspace] = useState<Workspace | null>(null);
+-  const [auth, setAuth] = useState<"loading" | "login" | "ready">("loading");
+-  const [key, setKey] = useState("");
+-  const [error, setError] = useState("");
+-  const [toast, setToast] = useState("");
+-  const [page, setPage] = useState<Page>(() => {
+-    const item = decodeURIComponent(location.hash.slice(1));
+-    return nav.some((n) => n.name === item) ? (item as Page) : "Overview";
+-  });
+-  const [live, setLive] = useState(false);
+-  const [busy, setBusy] = useState(false);
+-  const [mobileNav, setMobileNav] = useState(false);
+-  const [filter, setFilter] = useState("all");
+-  const [query, setQuery] = useState("");
+-  const [selected, setSelected] = useState<Event | null>(null);
+-  const [modal, setModal] = useState<"agent" | "stop" | "docs" | null>(null);
+-  const [newAgent, setNewAgent] = useState<{
+-    token: string;
+-    agent: Agent;
+-  } | null>(null);
+-  const refresh = useCallback(async () => {
+-    try {
+-      setWorkspace(await api("/workspace"));
+-      setAuth("ready");
+-    } catch (err) {
+-      if ((err as { status?: number }).status === 401) setAuth("login");
+-      else {
+-        setError((err as Error).message);
+-        setLive(false);
+-      }
+-    }
+-  }, []);
+-  useEffect(() => {
+-    void refresh();
+-  }, [refresh]);
+-  useEffect(() => {
+-    if (auth !== "ready") return;
+-    const stream = new EventSource("/api/events");
+-    let timer: ReturnType<typeof setTimeout>;
+-    stream.onopen = () => setLive(true);
+-    stream.onerror = () => setLive(false);
+-    stream.onmessage = () => {
+-      clearTimeout(timer);
+-      timer = setTimeout(() => void refresh(), 100);
+-    };
+-    const fallback = setInterval(() => {
+-      if (!document.hidden) void refresh();
+-    }, 15_000);
+-    return () => {
+-      stream.close();
+-      clearTimeout(timer);
+-      clearInterval(fallback);
+-    };
+-  }, [auth, refresh]);
+-  useEffect(() => {
+-    if (toast) {
+-      const timer = setTimeout(() => setToast(""), 4500);
+-      return () => clearTimeout(timer);
+-    }
+-  }, [toast]);
+-  useEffect(() => {
+-    const handler = () => {
+-      const item = decodeURIComponent(location.hash.slice(1));
+-      if (nav.some((n) => n.name === item)) setPage(item as Page);
+-    };
+-    window.addEventListener("hashchange", handler);
+-    return () => window.removeEventListener("hashchange", handler);
+-  }, []);
+-  const navigate = (next: Page) => {
+-    setPage(next);
+-    location.hash = encodeURIComponent(next);
+-    setFilter("all");
+-    setQuery("");
+-    setMobileNav(false);
+-  };
+-  const mutate = async (
+-    path: string,
+-    body: unknown,
+-    success: string,
+-    method?: string,
+-  ) => {
+-    setBusy(true);
+-    setError("");
+-    try {
+-      const result = await api(path, body, method);
+-      await refresh();
+-      setToast(success);
+-      return result;
+-    } catch (err) {
+-      setError((err as Error).message);
+-      return null;
+-    } finally {
+-      setBusy(false);
+-    }
+-  };
+-  const login = async (e: FormEvent) => {
+-    e.preventDefault();
+-    setBusy(true);
+-    setError("");
+-    try {
+-      await api("/login", { key });
+-      setKey("");
+-      await refresh();
+-    } catch (err) {
+-      setError((err as Error).message);
+-    } finally {
+-      setBusy(false);
+-    }
+-  };
+-
+-  if (auth === "loading")
+-    return (
+-      <div className="loading-screen">
+-        <Logo />
+-        <Loader2 className="spin" />
+-        <p>Connecting to your workspace…</p>
+-      </div>
+-    );
+-  if (auth === "login")
+-    return (
+-      <div className="login-shell">
+-        <div className="login-story">
+-          <Logo />
+-          <div>
+-            <span className="eyebrow">THE CONTROL LAYER FOR AI AGENTS</span>
+-            <h1>
+-              Give your agents
+-              <br />
+-              room to work.
+-              <br />
+-              <em>Keep control.</em>
+-            </h1>
+-            <p>
+-              Every action checked. Every permission deliberate.
+-              <br />
+-              Your systems, with a safety layer in between.
+-            </p>
+-            <div className="login-flow">
+-              <Bot />
+-              <span />
+-              <ShieldCheck />
+-              <span />
+-              <Database />
+-            </div>
+-          </div>
+-          <small>AgentBrake / Local development workspace</small>
+-        </div>
+-        <main className="login-main">
+-          <div className="login-card">
+-            <span className="square-icon">
+-              <LockKeyhole />
+-            </span>
+-            <h2>Your workspace, secured.</h2>
+-            <p>Enter your administrator key to access the control center.</p>
+-            <form onSubmit={login}>
+-              <label htmlFor="key">Workspace key</label>
+-              <input
+-                id="key"
+-                type="password"
+-                autoComplete="current-password"
+-                placeholder="Enter your administrator key"
+-                value={key}
+-                onChange={(e) => setKey(e.target.value)}
+-                required
+-              />
+-              <small>
+-                Use <code>ADMIN_KEY</code> from your local <code>.env</code>{" "}
+-                file.
+-              </small>
+-              {error && (
+-                <div className="error" role="alert">
+-                  {error}
+-                </div>
+-              )}
+-              <button className="button primary wide" disabled={busy}>
+-                {busy ? (
+-                  <Loader2 className="spin" size={17} />
+-                ) : (
+-                  "Open workspace"
+-                )}
+-                <ArrowRight size={17} />
+-              </button>
+-            </form>
+-            <div className="login-foot">
+-              <ShieldCheck size={14} /> Private session · Local access only
+-            </div>
+-          </div>
+-        </main>
+-      </div>
+-    );
+-  if (!workspace) return null;
+-  const pending = workspace.actions.filter((a) => a.status === "pending");
+-  const blocked = workspace.actions.filter((a) => a.status === "blocked");
+-  const allowed = workspace.actions.filter((a) => a.status === "allowed");
+-  const active = workspace.agents.filter((a) => a.status === "active");
+-  const agentName = (id: string) =>
+-    workspace.agents.find((a) => a.id === id)?.name.split(" · ")[0] ||
+-    "Unknown agent";
+-  const visible = workspace.actions.filter(
+-    (a) =>
+-      (filter === "all" || a.status === filter) &&
+-      `${a.tool} ${a.rule} ${a.reason} ${agentName(a.agentId)}`
+-        .toLowerCase()
+-        .includes(query.toLowerCase()),
+-  );
+-  const approve = async (event: Event, decision: "approve" | "reject") => {
+-    const result = await mutate(
+-      `/approvals/${event.id}`,
+-      { decision },
+-      decision === "approve"
+-        ? "Action reviewed. See the recorded outcome."
+-        : "Action rejected. No tool was executed.",
+-    );
+-    if (result) setSelected(result);
+-  };
+-  const showEvent = (event: Event) => setSelected(event);
+-  const simulate = () =>
+-    mutate(
+-      "/simulate",
+-      {},
+-      "Sandbox sequence completed. Every decision is recorded.",
+-    );
+-  const eventTable = (compact = false) => (
+-    <div className="table-scroll">
+-      <table>
+-        <thead>
+-          <tr>
+-            <th>Agent / action</th>
+-            <th>Decision</th>
+-            <th>Policy</th>
+-            <th>Time</th>
+-            <th aria-label="Details" />
+-          </tr>
+-        </thead>
+-        <tbody>
+-          {visible.slice(0, compact ? 6 : 100).map((event) => (
+-            <tr key={event.id} onClick={() => showEvent(event)}>
+-              <td>
+-                <button
+-                  className="event-title"
+-                  onClick={(e) => {
+-                    e.stopPropagation();
+-                    showEvent(event);
+-                  }}
+-                >
+-                  <span
+-                    className={
+-                      "tool-icon " +
+-                      (event.tool.startsWith("github") ? "repo" : "")
+-                    }
+-                  >
+-                    {event.tool.startsWith("github") ? (
+-                      <Github size={17} />
+-                    ) : event.tool.startsWith("database") ? (
+-                      <Database size={17} />
+-                    ) : (
+-                      <Globe2 size={17} />
+-                    )}
+-                  </span>
+-                  <span>
+-                    <strong>{toolNames[event.tool] || event.tool}</strong>
+-                    <small>
+-                      {agentName(event.agentId)}{" "}
+-                      <span className="tiny-dot">·</span>{" "}
+-                      {event.sandbox ? "Sandbox" : "Configured connection"}
+-                    </small>
+-                  </span>
+-                </button>
+-              </td>
+-              <td>
+-                <Badge status={event.status} />
+-              </td>
+-              <td>
+-                <code className="rule-code">{event.rule}</code>
+-              </td>
+-              <td className="time-cell">{time(event.createdAt)}</td>
+-              <td>
+-                <ChevronRight size={15} />
+-              </td>
+-            </tr>
+-          ))}
+-        </tbody>
+-      </table>
+-      {visible.length === 0 && (
+-        <Empty
+-          title="No activity here yet"
+-          description="Run a sandbox sequence or connect an agent to see real gateway decisions."
+-        />
+-      )}
+-    </div>
+-  );
+-  const approvalCard = (event: Event) => (
+-    <div className="approval-item" key={event.id}>
+-      <div className="approval-item-top">
+-        <span className="square-icon amber">
+-          {event.tool.startsWith("database") ? (
+-            <Database size={17} />
+-          ) : (
+-            <Github size={17} />
+-          )}
+-        </span>
+-        <Badge status="pending" />
+-      </div>
+-      <h3>{toolNames[event.tool]}</h3>
+-      <p>
+-        {agentName(event.agentId)} <span>→</span> {event.resource}
+-      </p>
+-      <div className="approval-preview">
+-        <code>
+-          {event.tool === "database_update"
+-            ? `customer #${event.arguments.id} → ${event.arguments.status}`
+-            : String(event.arguments.title)}
+-        </code>
+-      </div>
+-      <div className="approval-bottom">
+-        <small>
+-          <Clock3 size={12} />
+-          {event.sandbox ? "Sandbox action" : "External action"}
+-        </small>
+-        <button className="text-button" onClick={() => showEvent(event)}>
+-          Review <ArrowUpRight size={14} />
+-        </button>
+-      </div>
+-    </div>
+-  );
+-
+-  return (
+-    <div className="app-shell">
+-      <aside className={"sidebar " + (mobileNav ? "open" : "")}>
+-        <Logo />
+-        <button className="workspace-switch" onClick={() => setModal("docs")}>
+-          <span className="workspace-avatar">A</span>
+-          <span>
+-            <strong>Development workspace</strong>
+-            <small>Local environment</small>
+-          </span>
+-          <ChevronDown size={14} />
+-        </button>
+-        <div className="nav-label">WORKSPACE</div>
+-        <nav aria-label="Main navigation">
+-          {nav.map(({ name, icon: Icon }) => (
+-            <button
+-              key={name}
+-              className={"nav-item " + (page === name ? "selected" : "")}
+-              onClick={() => navigate(name)}
+-              aria-current={page === name ? "page" : undefined}
+-            >
+-              <Icon size={18} />
+-              <span>{name}</span>
+-              {name === "Approvals" && pending.length > 0 && (
+-                <b>{pending.length}</b>
+-              )}
+-            </button>
+-          ))}
+-        </nav>
+-        <div className="sidebar-bottom">
+-          <div className="sidebar-note">
+-            <span className="note-icon">
+-              <ShieldCheck size={19} />
+-            </span>
+-            <strong>Control before execution.</strong>
+-            <p>
+-              Permissions enforced outside
+-              <br />
+-              the model. Always.
+-            </p>
+-            <button onClick={() => setModal("docs")}>
+-              How it works <ArrowUpRight size={13} />
+-            </button>
+-          </div>
+-          <button className="nav-item" onClick={() => setModal("docs")}>
+-            <BookOpen size={17} />
+-            <span>Quick start</span>
+-            <ArrowUpRight size={14} />
+-          </button>
+-          <button
+-            className="user-profile"
+-            onClick={async () => {
+-              await api("/logout", {});
+-              setAuth("login");
+-              setWorkspace(null);
+-            }}
+-            title="Sign out"
+-          >
+-            <span className="avatar">AD</span>
+-            <span>
+-              <strong>Administrator</strong>
+-              <small>Workspace owner</small>
+-            </span>
+-            <LogOut size={15} />
+-          </button>
+-        </div>
+-      </aside>
+-      <div className="main-shell">
+-        <header className="topbar">
+-          <div className="breadcrumbs">
+-            <button
+-              className="icon-button mobile-menu"
+-              aria-label="Toggle navigation"
+-              onClick={() => setMobileNav(!mobileNav)}
+-            >
+-              <Menu size={20} />
+-            </button>
+-            <span>Workspace</span>
+-            <ChevronRight size={13} />
+-            <strong>{page}</strong>
+-          </div>
+-          <div className="topbar-right">
+-            <span className={"connection-state " + (live ? "connected" : "")}>
+-              <span className="dot" />
+-              {live ? "Gateway connected" : "Reconnecting"}
+-            </span>
+-            <span className="top-divider" />
+-            <button
+-              className="icon-button"
+-              aria-label="Open pending approvals"
+-              onClick={() => navigate("Approvals")}
+-            >
+-              <Bell size={18} />
+-              {pending.length > 0 && <i className="notification-dot" />}
+-            </button>
+-            <button
+-              className="icon-button"
+-              aria-label="Quick start help"
+-              onClick={() => setModal("docs")}
+-            >
+-              <CircleHelp size={19} />
+-            </button>
+-          </div>
+-        </header>
+-        <main className="main-content">
+-          <div className="page-heading">
+-            <div>
+-              <div className="eyebrow">AGENT SECURITY / CONTROL CENTER</div>
+-              <h1>{page === "Overview" ? "Security overview" : page}</h1>
+-              <p>
+-                {
+-                  {
+-                    Overview:
+-                      "Your agents move fast. Keep every action in check.",
+-                    "Activity log":
+-                      "A clear record of what your agents tried, and what happened.",
+-                    Agents: "The right access for every agent. Nothing more.",
+-                    Policies:
+-                      "Define the boundaries. Enforce them before execution.",
+-                    Approvals: "Human judgment, exactly where it matters.",
+-                    Integrations:
+-                      "Connect your tools through one controlled entry point.",
+-                  }[page]
+-                }
+-              </p>
+-            </div>
+-            <div className="heading-actions">
+-              {page === "Agents" ? (
+-                <button
+-                  className="button dark"
+-                  onClick={() => setModal("agent")}
+-                >
+-                  <Plus size={16} />
+-                  Connect agent
+-                </button>
+-              ) : page === "Activity log" ? (
+-                <a
+-                  className="button secondary"
+-                  href="/api/audit/export"
+-                  download
+-                >
+-                  <ArrowDownToLine size={16} />
+-                  Export audit
+-                </a>
+-              ) : (
+-                <>
+-                  <button
+-                    className="button secondary"
+-                    disabled={busy}
+-                    onClick={simulate}
+-                  >
+-                    {busy ? (
+-                      <Loader2 className="spin" size={16} />
+-                    ) : (
+-                      <Play size={15} />
+-                    )}
+-                    Run simulation
+-                  </button>
+-                  <button
+-                    className="button dark"
+-                    onClick={() => setModal("agent")}
+-                  >
+-                    <Plus size={16} />
+-                    Connect agent
+-                  </button>
+-                </>
+-              )}
+-            </div>
+-          </div>
+-          {error && (
+-            <div className="error error-banner" role="alert">
+-              <XCircle size={17} />
+-              {error}
+-              <button aria-label="Dismiss error" onClick={() => setError("")}>
+-                <X size={16} />
+-              </button>
+-            </div>
+-          )}
+-          {workspace.paused && (
+-            <div className="pause-banner">
+-              <Pause size={18} />
+-              <span>
+-                <strong>Emergency stop is active.</strong> New and queued agent
+-                actions are blocked.
+-              </span>
+-              <button
+-                disabled={busy}
+-                onClick={() =>
+-                  void mutate("/control", { paused: false }, "Gateway resumed.")
+-                }
+-              >
+-                Resume gateway <Play size={14} />
+-              </button>
+-            </div>
+-          )}
+-
+-          {page === "Overview" && (
+-            <>
+-              <section className="guard-banner">
+-                <div className="guard-copy">
+-                  <div className="guard-status">
+-                    <span className="dot" />
+-                    {workspace.paused
+-                      ? "ENFORCEMENT PAUSED"
+-                      : "ENFORCEMENT ACTIVE"}
+-                  </div>
+-                  <h2>
+-                    {workspace.paused
+-                      ? "Your agents are on hold."
+-                      : "Autonomy, with boundaries."}
+-                  </h2>
+-                  <p>
+-                    {workspace.paused
+-                      ? "All new tool executions are blocked until you resume."
+-                      : "Every connected action passes through your security policies."}
+-                  </p>
+-                  <div className="guard-meta">
+-                    <ShieldCheck size={14} />
+-                    <span>Default deny</span>
+-                    <i />
+-                    <span>Pre-execution checks</span>
+-                    <i />
+-                    <span>Human approvals</span>
+-                  </div>
+-                </div>
+-                <div className="flow">
+-                  <div className="flow-node">
+-                    <span>
+-                      <Bot size={22} />
+-                    </span>
+-                    <small>AI agent</small>
+-                  </div>
+-                  <div className="flow-line">
+-                    <i />
+-                  </div>
+-                  <div className="flow-node brake">
+-                    <span>
+-                      <ShieldCheck size={28} />
+-                    </span>
+-                    <small>AgentBrake</small>
+-                  </div>
+-                  <div className="flow-line">
+-                    <i />
+-                  </div>
+-                  <div className="flow-node">
+-                    <span>
+-                      <Database size={21} />
+-                    </span>
+-                    <small>Your tools</small>
+-                  </div>
+-                </div>
+-                <button
+-                  className="banner-link"
+-                  onClick={() => navigate("Policies")}
+-                >
+-                  View policies <ArrowUpRight size={15} />
+-                </button>
+-              </section>
+-              <div className="overview-meta">
+-                <span>
+-                  <span className="dot" />
+-                  Workspace activity
+-                </span>
+-                <span>
+-                  All recorded events <span className="divider-slash">/</span>{" "}
+-                  Sandbox events are labeled
+-                </span>
+-              </div>
+-              <section className="metrics">
+-                <Metric
+-                  icon={<Activity size={17} />}
+-                  label="Actions evaluated"
+-                  value={workspace.actions.length}
+-                  detail="Across your connected agents"
+-                  bars={workspace.actions}
+-                  tone="neutral"
+-                />
+-                <Metric
+-                  icon={<ShieldAlert size={17} />}
+-                  label="Actions blocked"
+-                  value={blocked.length}
+-                  detail="Stopped by your security policies"
+-                  bars={blocked}
+-                  tone="red"
+-                />
+-                <Metric
+-                  icon={<Clock3 size={17} />}
+-                  label="Awaiting approval"
+-                  value={pending.length}
+-                  detail="Held before execution"
+-                  bars={pending}
+-                  tone="amber"
+-                />
+-                <Metric
+-                  icon={<Bot size={17} />}
+-                  label="Active agents"
+-                  value={active.length}
+-                  detail={`${workspace.agents.length} registered identities`}
+-                  bars={[]}
+-                  tone="green"
+-                />
+-              </section>
+-              <div className="dashboard-grid">
+-                <section className="panel activity-panel">
+-                  <div className="panel-heading">
+-                    <div>
+-                      <h2>
+-                        Recent activity{" "}
+-                        <span className="live-label">
+-                          <span className="dot" />
+-                          {live ? "LIVE" : "OFFLINE"}
+-                        </span>
+-                      </h2>
+-                      <p>Every action. Every decision. In one place.</p>
+-                    </div>
+-                    <button
+-                      className="text-button muted"
+-                      onClick={() => navigate("Activity log")}
+-                    >
+-                      View all <ArrowRight size={14} />
+-                    </button>
+-                  </div>
+-                  <div className="table-filters">
+-                    <div className="tabs">
+-                      {[
+-                        ["all", "All events"],
+-                        ["blocked", "Blocked"],
+-                        ["allowed", "Allowed"],
+-                      ].map(([v, l]) => (
+-                        <button
+-                          key={v}
+-                          className={filter === v ? "active" : ""}
+-                          onClick={() => setFilter(v)}
+-                        >
+-                          {l}
+-                          {v === "blocked" && blocked.length > 0 && (
+-                            <span>{blocked.length}</span>
+-                          )}
+-                        </button>
+-                      ))}
+-                    </div>
+-                    <span className="table-caption">Latest decisions</span>
+-                  </div>
+-                  {eventTable(true)}
+-                  <div className="panel-footer">
+-                    <LockKeyhole size={13} />
+-                    <span>Decisions are recorded before tool execution.</span>
+-                    <span className="footer-count">
+-                      {workspace.actions.length} total events
+-                    </span>
+-                  </div>
+-                </section>
+-                <section className="panel approval-panel">
+-                  <div className="panel-heading">
+-                    <div>
+-                      <h2>
+-                        Needs your attention{" "}
+-                        <span className="count-badge">{pending.length}</span>
+-                      </h2>
+-                      <p>You're in control of what happens next.</p>
+-                    </div>
+-                  </div>
+-                  {pending.length ? (
+-                    <div className="approval-list">
+-                      {pending.slice(0, 2).map(approvalCard)}
+-                    </div>
+-                  ) : (
+-                    <Empty
+-                      title="You're all caught up"
+-                      description="Actions that need your judgment will appear here."
+-                      icon={<CheckCheck size={28} />}
+-                    />
+-                  )}
+-                  <button
+-                    className="approval-footer"
+-                    onClick={() => navigate("Approvals")}
+-                  >
+-                    Open approval queue <ArrowRight size={14} />
+-                  </button>
+-                </section>
+-              </div>
+-              <div className="bottom-grid">
+-                <section className="panel protection-panel">
+-                  <div>
+-                    <span className="square-icon green">
+-                      <ShieldCheck size={21} />
+-                    </span>
+-                    <div>
+-                      <h3>Built-in guardrails</h3>
+-                      <p>Four boundaries that stay enforced.</p>
+-                    </div>
+-                  </div>
+-                  <div className="guardrail-tags">
+-                    <span>
+-                      <Check size={13} />
+-                      Scoped access
+-                    </span>
+-                    <span>
+-                      <Check size={13} />
+-                      Secret protection
+-                    </span>
+-                    <span>
+-                      <Check size={13} />
+-                      Data boundaries
+-                    </span>
+-                    <span>
+-                      <Check size={13} />
+-                      Default deny
+-                    </span>
+-                  </div>
+-                  <button
+-                    className="icon-button"
+-                    aria-label="View guardrail policies"
+-                    onClick={() => navigate("Policies")}
+-                  >
+-                    <ArrowUpRight size={18} />
+-                  </button>
+-                </section>
+-                <section className="panel stop-panel">
+-                  <span className="stop-icon">
+-                    <Square size={15} />
+-                  </span>
+-                  <div>
+-                    <h3>Need to hit the brakes?</h3>
+-                    <p>Pause all new agent actions instantly.</p>
+-                  </div>
+-                  <button
+-                    className="button stop-button"
+-                    onClick={() => setModal("stop")}
+-                  >
+-                    {workspace.paused ? "Resume" : "Emergency stop"}
+-                  </button>
+-                </section>
+-              </div>
+-            </>
+-          )}
+-
+-          {page === "Activity log" && (
+-            <section className="panel">
+-              <div className="activity-toolbar">
+-                <div className="tabs">
+-                  {[
+-                    "all",
+-                    "allowed",
+-                    "blocked",
+-                    "pending",
+-                    "unknown",
+-                    "failed",
+-                  ].map((item) => (
+-                    <button
+-                      key={item}
+-                      className={filter === item ? "active" : ""}
+-                      onClick={() => setFilter(item)}
+-                    >
+-                      {item === "all"
+-                        ? "All events"
+-                        : item[0].toUpperCase() + item.slice(1)}
+-                    </button>
+-                  ))}
+-                </div>
+-                <label className="search">
+-                  <Search size={16} />
+-                  <input
+-                    aria-label="Search activity"
+-                    placeholder="Search actions, agents, policies…"
+-                    value={query}
+-                    onChange={(e) => setQuery(e.target.value)}
+-                  />
+-                </label>
+-              </div>
+-              {eventTable()}
+-              <div className="panel-footer">
+-                Showing {Math.min(visible.length, 100)} of {visible.length}{" "}
+-                matching actions ·{" "}
+-                <span>
+-                  Audit chain{" "}
+-                  {workspace.auditValid ? "verified" : "verification failed"}
+-                </span>
+-              </div>
+-            </section>
+-          )}
+-          {page === "Agents" && (
+-            <div className="agent-grid">
+-              {workspace.agents.map((agent) => (
+-                <section className="panel agent-card" key={agent.id}>
+-                  <div className="agent-card-head">
+-                    <span className="agent-graphic">
+-                      <Bot size={25} />
+-                    </span>
+-                    <Badge status={agent.status} />
+-                  </div>
+-                  <h2>{agent.name}</h2>
+-                  <p>
+-                    {agent.sandbox
+-                      ? "Isolated sandbox identity"
+-                      : "Administrator-issued identity"}
+-                  </p>
+-                  <div className="agent-detail">
+-                    <span>Actions evaluated</span>
+-                    <strong>
+-                      {
+-                        workspace.actions.filter((a) => a.agentId === agent.id)
+-                          .length
+-                      }
+-                    </strong>
+-                  </div>
+-                  <div className="agent-detail">
+-                    <span>Tool permissions</span>
+-                    <strong>{agent.tools.length}</strong>
+-                  </div>
+-                  <div className="agent-detail">
+-                    <span>Protected data accessed</span>
+-                    <strong>
+-                      {agent.tainted ? "Yes · outbound writes blocked" : "No"}
+-                    </strong>
+-                  </div>
+-                  <div className="agent-scopes">
+-                    {agent.tools.map((tool) => (
+-                      <code key={tool}>{tool}</code>
+-                    ))}
+-                  </div>
+-                  <button
+-                    className={
+-                      "button wide " +
+-                      (agent.status === "active" ? "secondary" : "dark")
+-                    }
+-                    disabled={busy}
+-                    onClick={() =>
+-                      void mutate(
+-                        `/agents/${agent.id}`,
+-                        {
+-                          status:
+-                            agent.status === "active" ? "paused" : "active",
+-                        },
+-                        "Agent access updated.",
+-                        "PATCH",
+-                      )
+-                    }
+-                  >
+-                    {agent.status === "active" ? (
+-                      <Pause size={15} />
+-                    ) : (
+-                      <Play size={15} />
+-                    )}{" "}
+-                    {agent.status === "active" ? "Pause agent" : "Resume agent"}
+-                  </button>
+-                </section>
+-              ))}
+-              {workspace.agents.length === 0 && (
+-                <section className="panel span-all">
+-                  <Empty
+-                    title="Meet your first protected agent"
+-                    description="Connect an MCP client or run a sandbox sequence to get started."
+-                    icon={<Bot size={32} />}
+-                  />
+-                </section>
+-              )}
+-            </div>
+-          )}
+-          {page === "Policies" && (
+-            <PolicyEditor
+-              policies={workspace.policies}
+-              busy={busy}
+-              save={(p) =>
+-                mutate(
+-                  "/policies",
+-                  p,
+-                  "Policy updated. Pending actions will be rechecked.",
+-                  "PUT",
+-                )
+-              }
+-            />
+-          )}
+-          {page === "Approvals" && (
+-            <>
+-              <div className="info-bar">
+-                <Fingerprint size={18} />
+-                <p>
+-                  Each approval is bound to one agent and its exact arguments.
+-                  Permissions are checked again before execution. Requests
+-                  expire after 15 minutes.
+-                </p>
+-              </div>
+-              <div className="approval-grid">{pending.map(approvalCard)}</div>
+-              {!pending.length && (
+-                <section className="panel">
+-                  <Empty
+-                    title="Nothing waiting on you"
+-                    description="When an agent requests a protected write, you can inspect and decide here."
+-                  />
+-                </section>
+-              )}
+-            </>
+-          )}
+-          {page === "Integrations" && (
+-            <Integrations
+-              workspace={workspace}
+-              connect={() => setModal("agent")}
+-            />
+-          )}
+-          <footer className="workspace-footer">
+-            <span>
+-              <Shield size={12} />
+-              AgentBrake <span className="footer-dot">·</span> Local MVP
+-            </span>
+-            <span>
+-              {workspace.auditValid ? (
+-                <Check size={12} />
+-              ) : (
+-                <XCircle size={12} />
+-              )}{" "}
+-              Audit chain {workspace.auditValid ? "verified" : "invalid"}
+-              <span className="footer-dot">·</span>Updated{" "}
+-              {time(workspace.updatedAt)}
+-            </span>
+-          </footer>
+-        </main>
+-      </div>
+-      {toast && (
+-        <div className="toast" role="status">
+-          <CheckCheck size={18} />
+-          {toast}
+-        </div>
+-      )}
+-      {selected && (
+-        <Modal title="Action details" close={() => setSelected(null)}>
+-          <div className="detail-body">
+-            <div className="detail-badges">
+-              <Badge
+-                status={
+-                  workspace.actions.find((a) => a.id === selected.id)?.status ??
+-                  selected.status
+-                }
+-              />
+-              <span className="env-tag">
+-                {selected.sandbox ? "Sandbox" : "Configured connection"}
+-              </span>
+-            </div>
+-            <h3>{toolNames[selected.tool] || selected.tool}</h3>
+-            <p>
+-              {workspace.actions.find((a) => a.id === selected.id)?.reason ??
+-                selected.reason}
+-            </p>
+-            <dl>
+-              <dt>Agent</dt>
+-              <dd>{agentName(selected.agentId)}</dd>
+-              <dt>Tool</dt>
+-              <dd>
+-                <code>{selected.tool}</code>
+-              </dd>
+-              <dt>Rule</dt>
+-              <dd>
+-                <code>{selected.rule}</code>
+-              </dd>
+-              <dt>Requested</dt>
+-              <dd>{new Date(selected.createdAt).toLocaleString()}</dd>
+-              <dt>Action ID</dt>
+-              <dd className="break-all">
+-                <code>{selected.id}</code>
+-              </dd>
+-            </dl>
+-            <label>Exact arguments</label>
+-            <pre>{JSON.stringify(selected.arguments, null, 2)}</pre>
+-            {selected.status === "pending" && (
+-              <p className="detail-note">
+-                Approving executes these stored arguments once.{" "}
+-                {selected.sandbox
+-                  ? "This action only affects the isolated sandbox."
+-                  : "This action can change the configured external service."}
+-              </p>
+-            )}
+-          </div>
+-          {(workspace.actions.find((a) => a.id === selected.id)?.status ??
+-            selected.status) === "pending" && (
+-            <div className="modal-actions">
+-              <button
+-                className="button secondary"
+-                disabled={busy}
+-                onClick={() => void approve(selected, "reject")}
+-              >
+-                <X size={16} />
+-                Reject action
+-              </button>
+-              <button
+-                className="button dark"
+-                disabled={busy || Date.parse(selected.expiresAt) <= Date.now()}
+-                onClick={() => void approve(selected, "approve")}
+-              >
+-                <Check size={16} />
+-                Approve & execute
+-              </button>
+-            </div>
+-          )}
+-        </Modal>
+-      )}
+-      {modal === "agent" && (
+-        <Modal
+-          title={newAgent ? "Agent connected" : "Connect an agent"}
+-          close={() => {
+-            setModal(null);
+-            setNewAgent(null);
+-          }}
+-        >
+-          {newAgent ? (
+-            <div className="detail-body">
+-              <div className="success-note">
+-                <CheckCheck size={20} />
+-                Your scoped identity is ready.
+-              </div>
+-              <p>
+-                Copy this token now. It is shown only once. Give the agent this
+-                token, never your administrator key.
+-              </p>
+-              <label>Agent token</label>
+-              <div className="token-row">
+-                <code>{newAgent.token}</code>
+-                <button
+-                  className="icon-button"
+-                  aria-label="Copy agent token"
+-                  onClick={() => {
+-                    navigator.clipboard
+-                      .writeText(newAgent.token)
+-                      .then(() => setToast("Agent token copied."))
+-                      .catch(() =>
+-                        setError(
+-                          "Clipboard unavailable. Select and copy the token manually.",
+-                        ),
+-                      );
+-                  }}
+-                >
+-                  <Copy size={17} />
+-                </button>
+-              </div>
+-              <p>
+-                Add the MCP bridge to your client using the configuration in
+-                Integrations.
+-              </p>
+-              <button
+-                className="button dark wide"
+-                onClick={() => {
+-                  setModal(null);
+-                  setNewAgent(null);
+-                  navigate("Integrations");
+-                }}
+-              >
+-                View connection guide <ArrowRight size={16} />
+-              </button>
+-            </div>
+-          ) : (
+-            <AgentForm
+-              repository={workspace.connections.repository}
+-              busy={busy}
+-              create={async (body) => {
+-                const result = await mutate(
+-                  "/agents",
+-                  body,
+-                  "Scoped agent created.",
+-                );
+-                if (result) setNewAgent(result);
+-              }}
+-            />
+-          )}
+-        </Modal>
+-      )}
+-      {modal === "stop" && (
+-        <Modal
+-          title={
+-            workspace.paused
+-              ? "Resume the gateway?"
+-              : "Pause all agent actions?"
+-          }
+-          close={() => setModal(null)}
+-        >
+-          <div className="detail-body">
+-            <span className="square-icon amber">
+-              <Pause />
+-            </span>
+-            <p>
+-              {workspace.paused
+-                ? "New actions will be evaluated under your current policies."
+-                : "New calls and queued approvals will be blocked. Operations that have already been dispatched cannot be recalled."}
+-            </p>
+-          </div>
+-          <div className="modal-actions">
+-            <button className="button secondary" onClick={() => setModal(null)}>
+-              Cancel
+-            </button>
+-            <button
+-              className="button danger"
+-              disabled={busy}
+-              onClick={async () => {
+-                const result = await mutate(
+-                  "/control",
+-                  { paused: !workspace.paused },
+-                  workspace.paused
+-                    ? "Gateway resumed."
+-                    : "Emergency stop activated.",
+-                );
+-                if (result) setModal(null);
+-              }}
+-            >
+-              {workspace.paused ? "Resume gateway" : "Pause all actions"}
+-            </button>
+-          </div>
+-        </Modal>
+-      )}
+-      {modal === "docs" && (
+-        <Modal
+-          title="A safer path from intent to action"
+-          close={() => setModal(null)}
+-        >
+-          <div className="detail-body quick-start">
+-            <p>
+-              AgentBrake checks supported tool calls outside the AI model,
+-              before they reach your systems.
+-            </p>
+-            <ol>
+-              <li>
+-                <strong>Try the sandbox.</strong>
+-                <p>
+-                  Run a simulation to send nine real requests through the local
+-                  policy engine. No external account is touched.
+-                </p>
+-              </li>
+-              <li>
+-                <strong>Issue a scoped identity.</strong>
+-                <p>
+-                  Connect an agent and select its allowed tools. Use its token
+-                  in your MCP client.
+-                </p>
+-              </li>
+-              <li>
+-                <strong>Review protected writes.</strong>
+-                <p>
+-                  Inspect the exact action in Approvals, then approve or reject
+-                  it.
+-                </p>
+-              </li>
+-              <li>
+-                <strong>Connect your services.</strong>
+-                <p>
+-                  Configure GitHub and PostgreSQL on the server. Keep their
+-                  credentials away from the agent.
+-                </p>
+-              </li>
+-            </ol>
+-            <div className="info-bar">
+-              <Shield size={18} />
+-              <p>
+-                This gateway controls calls routed through it. Production
+-                isolation must also prevent agents from using direct
+-                credentials, network paths or the administrator workspace.
+-              </p>
+-            </div>
+-          </div>
+-        </Modal>
+-      )}
+-    </div>
+-  );
+-}
+-
+-function Metric({
+-  icon,
+-  label,
+-  value,
+-  detail,
+-  bars,
+-  tone,
+-}: {
+-  icon: ReactNode;
+-  label: string;
+-  value: number;
+-  detail: string;
+-  bars: Event[];
+-  tone: string;
+-}) {
+-  // The small bars are an event timeline, not invented metrics.
+-  const buckets = Array.from(
+-    { length: 16 },
+-    (_, i) =>
+-      bars.filter((a) => {
+-        const age = Date.now() - Date.parse(a.createdAt);
+-        return age >= (15 - i) * 60_000 && age < (16 - i) * 60_000;
+-      }).length,
+-  );
+-  const max = Math.max(1, ...buckets);
+-  return (
+-    <div className={"metric-card " + tone}>
+-      <div className="metric-label">
+-        {label}
+-        {icon}
+-      </div>
+-      <div className="metric-middle">
+-        <strong>{value.toLocaleString()}</strong>
+-        {bars.length > 0 ? (
+-          <div
+-            className="mini-bars"
+-            role="img"
+-            aria-label="Events per minute over the last 16 minutes"
+-          >
+-            {buckets.map((n, i) => (
+-              <span
+-                key={i}
+-                style={{
+-                  height: `${Math.max(6, (n / max) * 100)}%`,
+-                  opacity: n ? 1 : 0.14,
+-                }}
+-              />
+-            ))}
+-          </div>
+-        ) : (
+-          <span className="metric-empty-line" />
+-        )}
+-      </div>
+-      <p>{detail}</p>
+-    </div>
+-  );
+-}
+-function PolicyEditor({
+-  policies,
+-  save,
+-  busy,
+-}: {
+-  policies: Policies;
+-  save: (p: Policies) => Promise<unknown>;
+-  busy: boolean;
+-}) {
+-  const [draft, setDraft] = useState(policies);
+-  useEffect(
+-    () => setDraft(policies),
+-    [policies.reads, policies.databaseWrites, policies.githubWrites],
+-  );
+-  const items = [
+-    {
+-      key: "reads",
+-      icon: BookOpen,
+-      title: "Scoped read operations",
+-      description:
+-        "Read approved repository files and customer records within the agent grant.",
+-    },
+-    {
+-      key: "databaseWrites",
+-      icon: Database,
+-      title: "Customer record changes",
+-      description:
+-        "A structured status change to one customer. Raw SQL and bulk writes are never exposed.",
+-    },
+-    {
+-      key: "githubWrites",
+-      icon: Github,
+-      title: "GitHub issue creation",
+-      description:
+-        "Create an issue in the configured repository. Protected-data boundaries still apply.",
+-    },
+-  ] as const;
+-  return (
+-    <>
+-      <section className="panel policy-editor">
+-        <div className="panel-heading">
+-          <div>
+-            <h2>Workspace policies</h2>
+-            <p>Apply decisions consistently to every connected agent.</p>
+-          </div>
+-          <span className="env-tag">ENFORCED</span>
+-        </div>
+-        {items.map(({ key, icon: Icon, title, description }) => (
+-          <div className="policy-row" key={key}>
+-            <span className="square-icon">
+-              <Icon size={21} />
+-            </span>
+-            <div>
+-              <h3>{title}</h3>
+-              <p>{description}</p>
+-            </div>
+-            <select
+-              aria-label={title}
+-              value={draft[key]}
+-              onChange={(e) => setDraft({ ...draft, [key]: e.target.value })}
+-            >
+-              {key === "reads" && (
+-                <option value="allow">Allow within scope</option>
+-              )}
+-              <option value="approval">Require approval</option>
+-              <option value="deny">Always block</option>
+-            </select>
+-          </div>
+-        ))}
+-        <div className="panel-footer">
+-          <span>New policies also apply to pending requests.</span>
+-          <button
+-            className="button dark"
+-            disabled={
+-              busy || JSON.stringify(draft) === JSON.stringify(policies)
+-            }
+-            onClick={() => void save(draft)}
+-          >
+-            Save policies <Check size={15} />
+-          </button>
+-        </div>
+-      </section>
+-      <h2 className="section-title">
+-        Always-on boundaries <LockKeyhole size={16} />
+-      </h2>
+-      <div className="boundary-grid">
+-        {[
+-          {
+-            title: "Default deny",
+-            text: "Unknown tools, ungranted resources and invalid arguments are blocked.",
+-            icon: ShieldCheck,
+-          },
+-          {
+-            title: "Credential protection",
+-            text: "Known secret paths and credential patterns are blocked. This is a heuristic, not a complete DLP scanner.",
+-            icon: LockKeyhole,
+-          },
+-          {
+-            title: "Protected data boundary",
+-            text: "After reading customer data, an identity cannot create outbound GitHub issues.",
+-            icon: Fingerprint,
+-          },
+-          {
+-            title: "One action, one approval",
+-            text: "Approvals expire after 15 minutes, bind exact arguments and cannot be replayed.",
+-            icon: FileCheck2,
+-          },
+-        ].map(({ title, text, icon: Icon }) => (
+-          <section className="panel boundary-card" key={title}>
+-            <Icon size={22} />
+-            <h3>{title}</h3>
+-            <p>{text}</p>
+-            <span>
+-              <Check size={13} />
+-              Always enforced
+-            </span>
+-          </section>
+-        ))}
+-      </div>
+-    </>
+-  );
+-}
+-function AgentForm({
+-  repository,
+-  busy,
+-  create,
+-}: {
+-  repository: string;
+-  busy: boolean;
+-  create: (body: unknown) => Promise<void>;
+-}) {
+-  const [name, setName] = useState("");
+-  const [tools, setTools] = useState(["github_read_file"]);
+-  return (
+-    <form
+-      onSubmit={(e) => {
+-        e.preventDefault();
+-        void create({ name, tools, resources: ["customers", repository] });
+-      }}
+-    >
+-      <div className="detail-body">
+-        <p>
+-          Give this agent only the tools required for its task. Writes remain
+-          subject to workspace policies.
+-        </p>
+-        <label htmlFor="agent-name">Agent name</label>
+-        <input
+-          id="agent-name"
+-          placeholder="e.g. Release assistant"
+-          value={name}
+-          onChange={(e) => setName(e.target.value)}
+-          required
+-          minLength={2}
+-          maxLength={60}
+-        />
+-        <label className="form-label">Allowed tools</label>
+-        <div className="tool-checks">
+-          {[
+-            "github_read_file",
+-            "github_create_issue",
+-            "database_read",
+-            "database_update",
+-          ].map((tool) => (
+-            <label key={tool}>
+-              <input
+-                type="checkbox"
+-                checked={tools.includes(tool)}
+-                onChange={(e) =>
+-                  setTools(
+-                    e.target.checked
+-                      ? [...tools, tool]
+-                      : tools.filter((t) => t !== tool),
+-                  )
+-                }
+-              />
+-              <span>
+-                <strong>{toolNames[tool]}</strong>
+-                <code>{tool}</code>
+-              </span>
+-            </label>
+-          ))}
+-        </div>
+-        <div className="info-bar">
+-          <LockKeyhole size={17} />
+-          <p>
+-            Resources: <strong>{repository}</strong> and the approved customer
+-            table. You can pause this identity at any time.
+-          </p>
+-        </div>
+-      </div>
+-      <div className="modal-actions">
+-        <button
+-          className="button dark wide"
+-          disabled={busy || tools.length === 0}
+-        >
+-          <Plus size={16} />
+-          Create scoped agent
+-        </button>
+-      </div>
+-    </form>
+-  );
+-}
+-function Integrations({
+-  workspace,
+-  connect,
+-}: {
+-  workspace: Workspace;
+-  connect: () => void;
+-}) {
+-  const config = JSON.stringify(
+-    { mcpServers: { agentbrake: workspace.mcp } },
+-    null,
+-    2,
+-  );
+-  return (
+-    <>
+-      <div className="integration-grid">
+-        <section className="panel integration-card">
+-          <span className="integration-icon">
+-            <Github size={29} />
+-          </span>
+-          <Badge status={workspace.connections.github} />
+-          <h2>GitHub</h2>
+-          <p>Scoped file reads and human-approved issue creation.</p>
+-          <div className="integration-state">
+-            <span>Repository</span>
+-            <code>{workspace.connections.repository}</code>
+-          </div>
+-          <p className="integration-note">
+-            Set GITHUB_TOKEN and GITHUB_REPOSITORY on the server, then restart.
+-            Use a fine-grained token with Contents: read and Issues: write.
+-          </p>
+-        </section>
+-        <section className="panel integration-card">
+-          <span className="integration-icon database">
+-            <Database size={29} />
+-          </span>
+-          <Badge status={workspace.connections.database} />
+-          <h2>PostgreSQL</h2>
+-          <p>Bounded customer reads and individual status updates.</p>
+-          <div className="integration-state">
+-            <span>Default store</span>
+-            <code>
+-              {workspace.connections.database === "sandbox"
+-                ? "Isolated SQLite sandbox"
+-                : "public.agentbrake_customers"}
+-            </code>
+-          </div>
+-          <p className="integration-note">
+-            Set DATABASE_URL for a restricted database role. The setup SQL and
+-            required permissions are in the project README.
+-          </p>
+-        </section>
+-        <section className="panel integration-card">
+-          <span className="integration-icon mcp">
+-            <Code2 size={29} />
+-          </span>
+-          <Badge status="available" />
+-          <h2>MCP bridge</h2>
+-          <p>A standard stdio connection for compatible agent clients.</p>
+-          <div className="integration-state">
+-            <span>Transport</span>
+-            <code>stdio → authenticated HTTP</code>
+-          </div>
+-          <button className="button secondary wide" onClick={connect}>
+-            <Plus size={15} />
+-            Create agent credentials
+-          </button>
+-        </section>
+-      </div>
+-      <section className="panel config-panel">
+-        <div className="panel-heading">
+-          <div>
+-            <h2>Connect your MCP client</h2>
+-            <p>
+-              Replace the paths and agent token. The bridge never reads
+-              administrator credentials.
+-            </p>
+-          </div>
+-          <Terminal size={22} />
+-        </div>
+-        <pre>{config}</pre>
+-        <div className="panel-footer">
+-          <Shield size={14} />
+-          <span>
+-            Configured means credentials are present. External connectivity has
+-            not been verified.
+-          </span>
+-        </div>
+-      </section>
+-    </>
+-  );
+-}
++export { default } from "./ProductApp";
+diff --git a/src/ProductApp.tsx b/src/ProductApp.tsx
+new file mode 100644
+index 0000000..d1c8858
+--- /dev/null
++++ b/src/ProductApp.tsx
+@@ -0,0 +1,195 @@
++import { useCallback, useEffect, useRef, useState, type FormEvent } from "react";
++import { Activity, ArrowDownToLine, ArrowRight, Bot, CheckCheck, ChevronRight, Copy, Database, FileCheck2, Fingerprint, Github, LayoutDashboard, Loader2, LockKeyhole, LogOut, Menu, Pause, Play, Plug, Plus, Shield, SlidersHorizontal, Square, Terminal, X } from "lucide-react";
++import { api, setCsrf } from "./api";
++import { Badge, Empty, Logo, Metric, Modal, PolicyEditor } from "./ui";
++import type { Agent, Event, Evidence, Policies, Review, Session, Workspace } from "./types";
++
++const navigation = [
++  ["Overview", LayoutDashboard], ["Tasks", Bot], ["Activity", Activity], ["Approvals", FileCheck2],
++  ["Policies", SlidersHorizontal], ["Connections", Plug], ["Evidence", Fingerprint], ["Demo Lab", Terminal],
++] as const;
++type Page = typeof navigation[number][0];
++// Exact supported server/contracts.ts catalog; no arbitrary SQL or URL tool.
++const tools = ["database_schema", "database_read", "database_update", "github_list_repo", "github_list_branches", "github_read_file", "github_propose_change", "github_create_branch", "github_open_pull_request", "github_create_issue"];
++const resources = ["customers", "agentbrake/sandbox"];
++const message = (error: unknown) => error instanceof Error ? error.message : "Request failed";
++const json = (value: unknown) => JSON.stringify(value, null, 2);
++const date = (value: string | number) => new Date(value).toLocaleString();
++type Mutate = (path: string, body: unknown, success: string, method?: string) => Promise<any>;
++
++function ActionTable({ items, open }: { items: Event[]; open: (event: Event) => void }) {
++  return <div className="table-scroll"><table><thead><tr><th>Action / target</th><th>Outcome</th><th>Policy reason</th><th>Requested</th><th /></tr></thead><tbody>
++    {items.map(event => <tr key={event.id}><td><button className="event-title" onClick={() => open(event)}><span className="tool-icon">{event.tool.startsWith("github") ? <Github size={18} /> : <Database size={18} />}</span><span><strong>{event.tool}</strong><small>{event.resource} · {event.agentId}</small></span></button></td><td><Badge status={event.status} /></td><td>{event.reason}</td><td>{date(event.createdAt)}</td><td><button className="icon-button" aria-label={`Inspect ${event.id}`} onClick={() => open(event)}><ChevronRight size={16} /></button></td></tr>)}
++  </tbody></table>{!items.length && <Empty title="No recorded actions" description="Actions routed through this local gateway will appear here." />}</div>;
++}
++
++export default function App() {
++  const [workspace, setWorkspace] = useState<Workspace | null>(null);
++  const [session, setSession] = useState<Session | null>(null);
++  const [auth, setAuth] = useState<"loading" | "login" | "ready">("loading");
++  const [key, setKey] = useState("");
++  const [error, setError] = useState("");
++  const [toast, setToast] = useState("");
++  const [busy, setBusy] = useState(false);
++  const [page, setPage] = useState<Page>("Overview");
++  const [mobileNav, setMobileNav] = useState(false);
++  const [connected, setConnected] = useState(false);
++  const [selected, setSelected] = useState<Event | null>(null);
++  const [modal, setModal] = useState<"agent" | "stop" | null>(null);
++  const [created, setCreated] = useState<{ agent: Agent; token: string } | null>(null);
++  const refresh = useCallback(async () => {
++    try {
++      const value: Workspace = await api("/workspace");
++      setWorkspace(value); setConnected(true); setAuth("ready");
++    } catch (err) {
++      setConnected(false);
++      if ((err as { status?: number }).status === 401) { setCsrf(""); setSession(null); setWorkspace(null); setCreated(null); setAuth("login"); }
++      else { setError(message(err)); throw err; }
++    }
++  }, []);
++  useEffect(() => {
++    let active = true;
++    void api("/session").then(async (value: Session) => {
++      if (!active) return;
++      setSession(value); setCsrf(value.csrfToken); await refresh();
++    }).catch(err => { if (active) { setAuth("login"); if ((err as { status?: number }).status !== 401) setError(message(err)); } });
++    return () => { active = false; };
++  }, [refresh]);
++  useEffect(() => {
++    const readHash = () => {
++      try { const next = decodeURIComponent(window.location.hash.slice(1)); if (navigation.some(([name]) => name === next)) setPage(next as Page); } catch { /* Invalid hash leaves the current page. */ }
++    };
++    readHash(); window.addEventListener("hashchange", readHash); return () => window.removeEventListener("hashchange", readHash);
++  }, []);
++  useEffect(() => {
++    if (auth !== "ready") return;
++    const timer = setInterval(() => { if (!document.hidden) void refresh().catch(() => {}); }, 10_000);
++    return () => clearInterval(timer);
++  }, [auth, refresh]);
++  useEffect(() => { if (!toast) return; const timer = setTimeout(() => setToast(""), 4500); return () => clearTimeout(timer); }, [toast]);
++  const navigate = (next: Page) => { setPage(next); window.location.hash = encodeURIComponent(next); setMobileNav(false); };
++  const mutate: Mutate = async (path, body, success, method) => {
++    setBusy(true); setError("");
++    try {
++      const result = await api(path, body, method);
++      // Return already-issued credentials even if the subsequent read fails.
++      await refresh().catch(() => {}); setToast(success); return result;
++    } catch (err) { setError(message(err)); return null; } finally { setBusy(false); }
++  };
++  const login = async (event: FormEvent) => {
++    event.preventDefault(); setBusy(true); setError(""); const entered = key; setKey("");
++    try { const value: Session = await api("/login", { key: entered }); setSession(value); setCsrf(value.csrfToken); await refresh(); }
++    catch (err) { setError(message(err)); } finally { setBusy(false); }
++  };
++  const logout = async () => {
++    try { await api("/logout", {}); setCsrf(""); setSession(null); setWorkspace(null); setSelected(null); setCreated(null); setModal(null); setAuth("login"); }
++    catch (err) { setError(message(err)); }
++  };
++  if (auth === "loading") return <div className="loading-screen"><Logo /><Loader2 className="spin" /><p>Reading your local session…</p></div>;
++  if (auth === "login" || !workspace || !session) return <div className="login-shell"><div className="login-story"><Logo /><div><span className="eyebrow">LOCAL AGENT CONTROL</span><h1>Give your agents<br />room to work.<br /><em>Keep control.</em></h1><p>Scope tasks. Review exact changes. Inspect recorded outcomes.</p></div><small>AgentBrake / Isolated local fixture</small></div><main className="login-main"><div className="login-card"><span className="square-icon"><LockKeyhole /></span><h2>Open your local workspace</h2><p>Sign in with your generated operator credential. Your role controls the available actions.</p><form onSubmit={login}><label htmlFor="key">Workspace key</label><input id="key" type="password" autoComplete="current-password" value={key} onChange={event => setKey(event.target.value)} required />{error && <div className="error" role="alert">{error}</div>}<button className="button primary wide" disabled={busy}>Open workspace <ArrowRight size={16} /></button></form><div className="login-foot"><Shield size={14} />Local HTTP · isolated fixtures only</div></div></main></div>;
++  const actor = session.actor;
++  const manage = ["administrator", "operator"].includes(actor.role);
++  const configure = actor.role === "administrator";
++  const pending = workspace.actions.filter(action => action.status === "pending");
++  const blocked = workspace.actions.filter(action => action.status === "blocked");
++  const unknown = workspace.actions.filter(action => action.status === "unknown");
++  const open = (event: Event) => setSelected(event);
++  return <div className="app-shell"><aside className={`sidebar ${mobileNav ? "open" : ""}`}><Logo /><div className="workspace-switch"><span className="workspace-avatar">L</span><span><strong>Local workspace</strong><small>{session.teamMode ? "Independent team review" : "Single-owner compatibility fixture"}</small></span></div><div className="nav-label">CONTROL CENTER</div><nav aria-label="Main navigation">{navigation.map(([name, Icon]) => <button key={name} className={`nav-item ${page === name ? "selected" : ""}`} aria-current={page === name ? "page" : undefined} onClick={() => navigate(name)}><Icon size={18} /><span>{name}</span>{name === "Approvals" && pending.length > 0 && <b>{pending.length}</b>}</button>)}</nav><div className="sidebar-bottom"><div className="sidebar-note"><Shield size={20} /><strong>Isolated fixture scope</strong><p>Local customer data and repository. No live service verification.</p></div><button className="user-profile" onClick={() => void logout()} title="Sign out"><span className="avatar">{actor.name.slice(0, 2).toUpperCase()}</span><span><strong>{actor.name}</strong><small>{actor.role} · {actor.tenant}</small></span><LogOut size={16} /></button></div></aside>
++    <div className="main-shell"><header className="topbar"><div className="breadcrumbs"><button className="icon-button mobile-menu" aria-label="Toggle navigation" onClick={() => setMobileNav(!mobileNav)}><Menu /></button><span>Local fixture</span><ChevronRight size={13} /><strong>{page}</strong></div><div className="topbar-right"><span className={`connection-state ${connected ? "connected" : ""}`}><span className="dot" />{connected ? "API observed · 10s polling" : "API unavailable"}</span></div></header><main className="main-content"><div className="page-heading"><div><div className="eyebrow">AGENT SECURITY / LOCAL CONTROL CENTER</div><h1>{page === "Overview" ? "Security overview" : page}</h1><p>{actor.name} · {actor.role} · {session.teamMode ? "Team controls enabled" : "Single-owner compatibility mode"}</p></div><div className="heading-actions">{manage && <button className="button dark" onClick={() => { setCreated(null); setModal("agent"); }}><Plus size={16} />Create task identity</button>}<button className="button secondary" disabled={busy} onClick={() => void refresh().catch(() => {})}>Refresh</button></div></div>
++      {error && <div className="error error-banner" role="alert">{error}<button aria-label="Dismiss error" onClick={() => setError("")}><X size={16} /></button></div>}
++      <div className="info-bar scope-banner"><Shield size={18} /><p>Isolated local fixtures: customers and agentbrake/sandbox. Counts describe the recorded workspace snapshot, not target connectivity or production coverage.</p></div>
++      {workspace.paused && <div className="pause-banner"><Pause size={18} /><span><strong>Emergency stop is active.</strong> New and queued actions are blocked. Dispatched changes are not rolled back.</span>{configure && <button disabled={busy} onClick={() => void mutate("/control", { paused: false }, "Gateway resumed.")}>Resume gateway</button>}</div>}
++      {page === "Overview" && <><section className="guard-banner"><div className="guard-copy"><div className="guard-status"><span className="dot" />{workspace.paused ? "STOP ACTIVE" : "LOCAL GATEWAY CONTROLS"}</div><h2>Autonomy, with boundaries.</h2><p>Inspect decisions and recorded execution outcomes for calls routed through this gateway.</p><div className="guard-meta"><Shield size={14} />Scoped grants<i />Exact action review<i />Recorded evidence</div></div><div className="flow"><div className="flow-node"><span><Bot /></span><small>Agent</small></div><div className="flow-line" /><div className="flow-node brake"><span><Shield /></span><small>Gateway</small></div><div className="flow-line" /><div className="flow-node"><span><Database /></span><small>Fixture</small></div></div></section><section className="metrics product-metrics"><Metric icon={<Activity size={17} />} label="Recorded actions" value={workspace.actions.length} detail="Current workspace snapshot" bars={[]} tone="neutral" /><Metric icon={<Shield size={17} />} label="Blocked" value={blocked.length} detail="No dispatch permitted by decision" bars={[]} tone="red" /><Metric icon={<FileCheck2 size={17} />} label="Awaiting approval" value={pending.length} detail="Pending is not execution" bars={[]} tone="amber" /><Metric icon={<Bot size={17} />} label="Active identities" value={workspace.agents.filter(agent => agent.status === "active").length} detail={`${workspace.agents.length} registered identities`} bars={[]} tone="green" /></section>{unknown.length > 0 && <div className="error" role="alert">{unknown.length} UNKNOWN outcome(s). Reconcile target state with the action correlation ID before taking any further action. Do not resubmit.</div>}<section className="panel"><div className="panel-heading"><h2>Recent activity</h2><button className="text-button" onClick={() => navigate("Activity")}>View all <ArrowRight size={14} /></button></div><ActionTable items={workspace.actions.slice(0, 8)} open={open} /></section><div className="bottom-grid"><section className="panel protection-panel"><Shield /><div><h3>Audit chain</h3><p>{workspace.auditValid ? "Recorded chain validated by the control API." : "Chain verification failed. Inspect evidence."}</p></div></section><section className="panel stop-panel"><Square size={16} /><div><h3>Emergency stop</h3><p>Blocks new dispatch. Does not recall work already dispatched.</p></div>{configure && <button className="button stop-button" onClick={() => setModal("stop")}>{workspace.paused ? "Resume" : "Emergency stop"}</button>}</section></div></>}
++      {page === "Tasks" && <Tasks agents={workspace.agents} manage={manage} busy={busy} mutate={mutate} />}
++      {page === "Activity" && <ActivityPage open={open} revision={workspace.updatedAt} />}
++      {page === "Approvals" && <><div className="info-bar"><Fingerprint size={18} /><p>Review the immutable target, exact arguments and adapter preview before submitting a one-time proof. {session.teamMode && "Mutation reviewers must be a different human from the task grant owner."}</p></div><section className="panel"><ActionTable items={pending} open={open} /></section></>}
++      {page === "Policies" && <><PolicyEditor policies={workspace.policies} busy={busy} readOnly={!configure} save={policies => mutate("/policies", policies, "Policy saved. Pending requests will be rechecked.", "PUT")} /><PolicyHistory revision={json(workspace.policies)} /></>}
++      {page === "Connections" && <Connections workspace={workspace} />}
++      {page === "Evidence" && <EvidencePage actions={workspace.actions} />}
++      {page === "Demo Lab" && <DemoLab manage={manage} busy={busy} mutate={mutate} open={open} />}
++      <footer className="workspace-footer"><span><Shield size={12} />AgentBrake · Local fixture</span><span>API snapshot {date(workspace.updatedAt)} · Audit chain {workspace.auditValid ? "valid" : "invalid"}</span></footer>
++    </main></div>
++    {toast && <div className="toast" role="status"><CheckCheck size={18} />{toast}</div>}
++    {selected && <ActionReview event={selected} workspace={workspace} session={session} refresh={refresh} close={() => setSelected(null)} />}
++    {modal === "agent" && <Modal title={created ? "Task identity created" : "Create task identity"} close={() => { setModal(null); setCreated(null); }}>{created ? <div className="detail-body"><div className="success-note">Your scoped identity is ready.</div><p>Copy this bearer now. It is shown once and is cleared when this dialog closes. Review and narrow the server-issued task grant in Tasks before using this bearer.</p><label>Agent bearer token</label><div className="token-row"><code>{created.token}</code><button className="icon-button" aria-label="Copy agent token" onClick={() => void navigator.clipboard.writeText(created.token).then(() => setToast("Agent token copied.")).catch(() => setError("Clipboard unavailable. Copy the displayed bearer manually."))}><Copy size={17} /></button></div><button className="button dark wide" onClick={() => { setCreated(null); setModal(null); navigate("Tasks"); }}>Configure task grant</button></div> : <IdentityForm busy={busy} create={async body => { const result = await mutate("/agents", body, "Fixture identity created."); if (result) setCreated(result); }} />}</Modal>}
++    {modal === "stop" && <Modal title={workspace.paused ? "Resume gateway?" : "Pause all agent actions?"} close={() => setModal(null)}><div className="detail-body"><p>{workspace.paused ? "New calls will be evaluated under current policies." : "New calls and queued approvals will be blocked. Operations already dispatched cannot be recalled or rolled back."}</p></div><div className="modal-actions"><button className="button secondary" onClick={() => setModal(null)}>Cancel</button><button className="button danger" disabled={busy} onClick={async () => { if (await mutate("/control", { paused: !workspace.paused }, workspace.paused ? "Gateway resumed." : "Emergency stop activated.")) setModal(null); }}>{workspace.paused ? "Resume gateway" : "Pause all actions"}</button></div></Modal>}
++  </div>;
++}
++
++function IdentityForm({ busy, create }: { busy: boolean; create: (body: unknown) => Promise<void> }) {
++  const [name, setName] = useState(""); const [selected, setSelected] = useState(["github_read_file"]); const [scope, setScope] = useState(resources);
++  return <form onSubmit={event => { event.preventDefault(); void create({ name, tools: selected, resources: scope, sandbox: true }); }}><div className="detail-body"><p>Issue an isolated fixture identity. Its task grant will further restrict actions, resources, expiry and budgets.</p><label htmlFor="agent-name">Agent name</label><input id="agent-name" value={name} onChange={event => setName(event.target.value)} required minLength={2} maxLength={60} /><ToolChecks values={tools} selected={selected} set={setSelected} label="Allowed identity tools" /><ToolChecks values={resources} selected={scope} set={setScope} label="Fixture resources" /></div><div className="modal-actions"><button className="button dark wide" disabled={busy || !selected.length || !scope.length}>Create scoped agent</button></div></form>;
++}
++function ToolChecks({ values, selected, set, label }: { values: string[]; selected: string[]; set: (value: string[]) => void; label: string }) {
++  return <fieldset className="scope-checks"><legend>{label}</legend><div className="tool-checks">{values.map(value => <label key={value}><input type="checkbox" checked={selected.includes(value)} onChange={event => set(event.target.checked ? [...selected, value] : selected.filter(item => item !== value))} /><code>{value}</code></label>)}</div></fieldset>;
++}
++function Tasks({ agents, manage, busy, mutate }: { agents: Agent[]; manage: boolean; busy: boolean; mutate: Mutate }) {
++  const [grantAgent, setGrantAgent] = useState<Agent | null>(null);
++  return <><div className="agent-grid">{agents.map(agent => <section className="panel agent-card" key={agent.id}><div className="agent-card-head"><span className="agent-graphic"><Bot size={25} /></span><Badge status={agent.status} /></div><h2>{agent.name}</h2><p>{agent.sandbox ? "Isolated fixture identity" : "Configured identity"} · {agent.id}</p><dl className="task-details"><dt>Identity owner</dt><dd>{agent.ownerId ?? "Unavailable"}</dd><dt>Resources</dt><dd>{agent.resources.join(", ")}</dd><dt>Protected data accessed</dt><dd>{agent.tainted ? "Yes · outbound boundary applies" : "No"}</dd><dt>Bearer expiry</dt><dd>{agent.tokenExpiresAt ? date(agent.tokenExpiresAt) : "Unavailable"}</dd></dl><div className="agent-scopes">{agent.tools.map(tool => <code key={tool}>{tool}</code>)}</div>{agent.grant ? <div className="task-grant"><h3>Current task grant</h3><Badge status={agent.grant.revoked ? "revoked" : agent.grant.expires_at_ms <= Date.now() ? "expired" : "active"} /><dl className="task-details"><dt>Grant ID</dt><dd>{agent.grant.id}</dd><dt>Human owner</dt><dd>{agent.grant.human_owner}</dd><dt>Actions</dt><dd>{agent.grant.actions.join(", ")}</dd><dt>Resources</dt><dd>{agent.grant.resources.join(", ")}</dd><dt>Environment</dt><dd>{agent.grant.environments.join(", ")}</dd><dt>Expires</dt><dd>{date(agent.grant.expires_at_ms)}</dd><dt>Calls used / limit</dt><dd>{agent.grant.used_calls} / {agent.grant.max_calls}</dd><dt>Maximum rows</dt><dd>{agent.grant.max_rows}</dd></dl></div> : <p>No task grant recorded. Calls fail closed without a valid grant.</p>}{manage && <div className="task-actions"><button className="button secondary" disabled={busy} onClick={() => void mutate(`/agents/${agent.id}`, { status: agent.status === "active" ? "paused" : "active" }, "Identity state updated.", "PATCH")}>{agent.status === "active" ? "Pause agent" : "Resume agent"}</button><button className="button dark" disabled={busy || !agent.sandbox} onClick={() => setGrantAgent(agent)}>Grant task</button>{agent.grant && <button className="button secondary" disabled={busy || agent.grant.revoked} onClick={() => void mutate(`/agents/${agent.id}/grant/revoke`, {}, "Task grant revoked. Already dispatched work is not rolled back.")}>Revoke grant</button>}</div>}</section>)}</div>{!agents.length && <section className="panel"><Empty title="No task identities" description="An operator or administrator can create an identity and issue a bounded grant." /></section>}{grantAgent && <Modal title={`Grant task · ${grantAgent.name}`} close={() => setGrantAgent(null)}><GrantForm agent={grantAgent} busy={busy} save={async body => { if (await mutate(`/agents/${grantAgent.id}/grant`, body, "Task grant issued.")) setGrantAgent(null); }} /></Modal>}</>;
++}
++function GrantForm({ agent, busy, save }: { agent: Agent; busy: boolean; save: (body: unknown) => Promise<void> }) {
++  const [actions, setActions] = useState(agent.grant?.actions ?? agent.tools.slice(0, 1)); const [scope, setScope] = useState(agent.grant?.resources ?? agent.resources.filter(value => resources.includes(value)));
++  const [expiry, setExpiry] = useState(300); const [calls, setCalls] = useState(10); const [rows, setRows] = useState(1);
++  return <form onSubmit={event => { event.preventDefault(); void save({ actions, resources: scope, environments: ["sandbox"], expiresInSeconds: expiry, maxCalls: calls, maxRows: rows }); }}><div className="detail-body"><p>Target: {agent.id}. Environment: sandbox. The server records your signed-in identity as the human owner.</p><ToolChecks values={agent.tools} selected={actions} set={setActions} label="Task actions" /><ToolChecks values={agent.resources.filter(value => resources.includes(value))} selected={scope} set={setScope} label="Task resources" /><div className="form-grid"><label>Expiry in seconds<input aria-label="Expiry in seconds" type="number" min={30} max={3600} value={expiry} onChange={event => setExpiry(Number(event.target.value))} required /></label><label>Maximum calls<input aria-label="Maximum calls" type="number" min={1} max={1000} value={calls} onChange={event => setCalls(Number(event.target.value))} required /></label><label>Maximum rows<input aria-label="Maximum rows" type="number" min={1} max={100} value={rows} onChange={event => setRows(Number(event.target.value))} required /></label></div></div><div className="modal-actions"><button className="button dark wide" disabled={busy || !actions.length || !scope.length}>Issue task grant</button></div></form>;
++}
++
++function ActionReview({ event, workspace, session, refresh, close }: { event: Event; workspace: Workspace; session: Session; refresh: () => Promise<void>; close: () => void }) {
++  const [review, setReview] = useState<Review | null>(null); const [error, setError] = useState(""); const [busy, setBusy] = useState(false); const [invalidated, setInvalidated] = useState(false); const [now, setNow] = useState(Date.now());
++  const requested = useRef(event.id);
++  useEffect(() => { requested.current = event.id; let active = true; setReview(null); setError(""); setInvalidated(false); void api(`/approvals/${event.id}`).then(value => { if (active) setReview(value); }).catch(err => { if (active) setError(`Review unavailable: ${message(err)}`); }); return () => { active = false; }; }, [event.id]);
++  useEffect(() => { const timer = setInterval(() => setNow(Date.now()), 1000); return () => clearInterval(timer); }, []);
++  const action = review?.action ?? event;
++  const current = workspace.actions.find(value => value.id === action.id) ?? action;
++  const status = current.status === "pending" ? action.status : current.status;
++  const currentGrant = workspace.agents.find(agent => agent.id === action.agentId)?.grant;
++  const humanOwner = currentGrant?.human_owner;
++  const mutation = ["database_update", "github_create_branch", "github_open_pull_request", "github_create_issue"].includes(action.tool);
++  const own = session.teamMode && mutation && humanOwner === session.actor.id;
++  const permitted = ["administrator", "approver"].includes(session.actor.role);
++  const expired = Date.parse(action.expiresAt) <= now;
++  const decide = async (decision: "approve" | "reject") => {
++    if (!review || invalidated || busy) return;
++    setBusy(true); setError(""); setInvalidated(true);
++    try {
++      const result: Event = await api(`/approvals/${action.id}`, { decision, proof: review.proof });
++      if (requested.current === action.id) setReview({ ...review, action: result });
++      await refresh().catch(() => {});
++    } catch (err) {
++      setError(`${message(err)}. This review cannot be submitted again. Close and inspect the recorded state.`);
++      // Read after conflict, but do not acquire a replacement proof or retry.
++      if ((err as { status?: number }).status === 409) await refresh().catch(() => {});
++    } finally { setBusy(false); }
++  };
++  return <Modal title="Action details" close={close}><div className="detail-body"><div className="detail-badges"><Badge status={status} /><span className="env-tag">{action.sandbox ? "Isolated fixture" : "Configured target"}</span></div><h3>{action.tool}</h3><p>{current.reason}</p><dl><dt>Target</dt><dd>{action.resource}</dd><dt>Destination</dt><dd className="break-all">{action.destination}</dd><dt>Agent</dt><dd className="break-all">{action.agentId}</dd><dt>Grant</dt><dd className="break-all">{action.grantId ?? "Unavailable"}</dd><dt>Grant fingerprint</dt><dd className="break-all"><code>{action.grantFingerprint}</code></dd><dt>Policy hash</dt><dd className="break-all"><code>{action.policyHash}</code></dd><dt>Expires</dt><dd>{date(action.expiresAt)}{expired ? " · Expired" : ""}</dd><dt>Reviewer</dt><dd>{session.actor.name} ({session.actor.id}) · {session.actor.role}</dd><dt>Fingerprint</dt><dd className="break-all"><code>{review?.proof.fingerprint ?? "Unavailable"}</code></dd><dt>Correlation</dt><dd className="break-all">{action.correlationId}</dd></dl><label>Current task scope</label><p>Current grant metadata is shown for context. The reviewed action is bound to the grant fingerprint above; changed authority is rechecked before dispatch.</p><pre>{json(currentGrant ?? { unavailable: true })}</pre><label>Exact arguments</label><pre>{json(action.arguments)}</pre><label>Immutable adapter preview</label>{review?.action.preview ? <div data-testid="action-preview"><h3>{review.action.preview.summary}</h3><p>{review.action.preview.kind}</p><pre>{json(review.action.preview.details)}</pre></div> : <p>Preview unavailable. Approval is disabled.</p>}
++      {status === "unknown" && <div className="error" role="alert">UNKNOWN: dispatch may have changed the target. Reconcile target state and audit evidence using the correlation ID. Do not retry or resubmit.</div>}
++      {action.approvalReceipt && <><label>Recorded reviewer receipt</label><pre>{json(action.approvalReceipt)}</pre></>}
++      {own && <div className="error" role="alert">Independent reviewer required. You own this task grant and cannot approve its mutation.</div>}
++      {!permitted && <p>Your {session.actor.role} role can inspect actions. An approver or administrator must review them.</p>}
++      {error && <div className="error" role="alert">{error}</div>}
++      <a className="button secondary" href={`/api/evidence/${action.id}/export?format=json`} download><ArrowDownToLine size={15} />Export evidence JSON</a>
++    </div>{status === "pending" && <div className="modal-actions"><button className="button secondary" disabled={busy || !review || invalidated || !permitted} onClick={() => void decide("reject")}>Reject action</button><button className="button dark" disabled={busy || !review?.action.preview || invalidated || !permitted || own || expired} onClick={() => void decide("approve")}>Approve & execute</button></div>}</Modal>;
++}
++
++function ActivityPage({ open, revision }: { open: (event: Event) => void; revision: string }) {
++  const [filters, setFilters] = useState<Record<string, string>>({}); const [applied, setApplied] = useState<Record<string, string>>({}); const [offset, setOffset] = useState(0); const [result, setResult] = useState<{ items: Event[]; total: number; limit: number } | null>(null); const [error, setError] = useState("");
++  useEffect(() => { let active = true; setError(""); setResult(null); const params = new URLSearchParams({ offset: String(offset), limit: "50", ...applied }); void api(`/activity?${params}`).then(value => { if (active) setResult(value); }).catch(err => { if (active) setError(message(err)); }); return () => { active = false; }; }, [applied, offset, revision]);
++  return <section className="panel"><div className="panel-heading"><h2>Recorded activity</h2><div className="task-actions"><a className="button secondary" href="/api/audit/export?format=json" download>Audit JSON</a><a className="button secondary" href="/api/audit/export?format=csv" download>Audit CSV</a></div></div><form className="filter-grid" onSubmit={event => { event.preventDefault(); const values: Record<string, string> = {}; for (const [key, value] of Object.entries(filters)) if (value.trim()) values[key] = ["from", "to"].includes(key) ? new Date(value).toISOString() : value.trim(); setOffset(0); setApplied(values); }}>{["agentId", "grantId", "tool", "resource", "from", "to"].map(key => <label key={key}>{({ agentId: "Agent ID", grantId: "Grant ID", tool: "Tool", resource: "Resource", from: "From", to: "To" } as Record<string, string>)[key]}<input type={["from", "to"].includes(key) ? "datetime-local" : "text"} value={filters[key] ?? ""} onChange={event => setFilters({ ...filters, [key]: event.target.value })} /></label>)}<label>Status<select value={filters.status ?? ""} onChange={event => setFilters({ ...filters, status: event.target.value })}><option value="">All</option>{["queued", "pending", "executing", "allowed", "blocked", "failed", "unknown"].map(status => <option key={status}>{status}</option>)}</select></label><button className="button dark">Apply filters</button></form>{error && <div className="error" role="alert">{error}</div>}{result ? <><ActionTable items={result.items} open={open} /><div className="panel-footer"><span>{result.total ? offset + 1 : 0}–{offset + result.items.length} of {result.total} matching actions</span><div className="task-actions"><button className="button secondary" disabled={offset === 0} onClick={() => setOffset(Math.max(0, offset - 50))}>Previous</button><button className="button secondary" disabled={offset + result.items.length >= result.total} onClick={() => setOffset(offset + 50)}>Next</button></div></div></> : !error && <div className="section-pad">Loading activity…</div>}</section>;
++}
++function PolicyHistory({ revision }: { revision: string }) {
++  const [items, setItems] = useState<{ version: number; policies: Policies }[]>([]); const [error, setError] = useState("");
++  useEffect(() => { let active = true; void api("/policies/history").then(value => { if (active) { setItems(value.items); setError(""); } }).catch(err => { if (active) setError(message(err)); }); return () => { active = false; }; }, [revision]);
++  const ordered = [...items].sort((a, b) => a.version - b.version);
++  return <section className="panel history-panel"><div className="panel-heading"><div><h2>Policy revision history</h2><p>Read-only recorded differences. Historical timestamps are unavailable.</p></div></div>{error && <div className="error" role="alert">History unavailable: {error}</div>}{ordered.map((item, index) => <details key={item.version}><summary>Revision {item.version}</summary><pre>{json(item.policies)}</pre><dl className="task-details">{(Object.keys(item.policies) as (keyof Policies)[]).map(key => <div key={key}><dt>{key}</dt><dd>{index ? `${ordered[index - 1].policies[key]} → ${item.policies[key]}` : `Initial recorded: ${item.policies[key]}`}</dd></div>)}</dl></details>)}</section>;
++}
++function Connections({ workspace }: { workspace: Workspace }) {
++  return <><div className="integration-grid">{[["Repository fixture", workspace.connections.github, workspace.connections.repository], ["Customer fixture", workspace.connections.database, "customers"]].map(([name, status, target]) => <section className="panel integration-card" key={name}><span className="integration-icon"><Plug size={28} /></span><Badge status={status} /><h2>{name}</h2><p>Control API configuration status. Target connectivity is not verified here.</p><div className="integration-state"><span>Target</span><code>{target}</code></div><p className="integration-note">Only isolated fixture execution is in scope. Live GitHub App connectivity remains disabled pending separate setup and verification.</p></section>)}</div><section className="panel config-panel"><div className="panel-heading"><div><h2>Connect your MCP client</h2><p>Server-provided configuration template. Replace the bearer placeholder with a scoped identity token in your client.</p></div></div><pre>{json({ mcpServers: { agentbrake: workspace.mcp } })}</pre><div className="panel-footer">The dashboard does not proxy agent tool traffic or provide target credentials.</div></section></>;
++}
++function EvidencePage({ actions }: { actions: Event[] }) {
++  const [id, setId] = useState(""); const [evidence, setEvidence] = useState<Evidence | null>(null); const [error, setError] = useState("");
++  useEffect(() => { let active = true; setEvidence(null); setError(""); if (id) void api(`/evidence/${id}`).then(value => { if (active) setEvidence(value); }).catch(err => { if (active) setError(message(err)); }); return () => { active = false; }; }, [id]);
++  return <section className="panel"><div className="panel-heading"><div><h2>Action evidence</h2><p>Decision, review receipt, dispatch observation and bounded audit entries.</p></div></div><div className="section-pad"><label htmlFor="evidence-action">Recorded action</label><select id="evidence-action" value={id} onChange={event => setId(event.target.value)}><option value="">Choose an action</option>{actions.map(action => <option key={action.id} value={action.id}>{action.tool} · {action.status} · {action.id}</option>)}</select>{error && <div className="error" role="alert">{error}</div>}{evidence && <div className="evidence-detail"><Badge status={evidence.execution.status} /><h3>Execution observation: {evidence.execution.observation}</h3><p>{evidence.execution.observation === "unverified" || evidence.execution.status === "unknown" ? "Outcome is unverified. Reconcile target state using the correlation ID. Do not resubmit this action." : evidence.execution.observation === "not-dispatched" ? "No target dispatch was recorded for this action." : "The adapter reported this outcome. This is not an independent target-state verification."}</p><p>{evidence.coverage}</p><div className="task-actions"><a className="button secondary" href={`/api/evidence/${id}/export?format=json`} download>Export evidence JSON</a><a className="button secondary" href={`/api/evidence/${id}/export?format=csv`} download>Export evidence CSV</a></div><label>Decision and policy hash</label><pre>{json(evidence.decision)}</pre><label>Review and immutable preview</label><pre>{json(evidence.review)}</pre><label>Execution and correlation</label><pre>{json(evidence.execution)}</pre><label>Audit · {evidence.audit.valid ? "valid chain" : "invalid chain"}</label><p>{evidence.audit.verification ?? "The control API checked its stored chain. This display is not an independent full-chain proof."}</p><pre>{json(evidence.audit.entries)}</pre></div>}</div></section>;
++}
++function DemoLab({ manage, busy, mutate, open }: { manage: boolean; busy: boolean; mutate: Mutate; open: (event: Event) => void }) {
++  const [result, setResult] = useState<{ actions: Event[]; message: string } | null>(null);
++  return <><div className="info-bar"><Terminal size={18} /><p>These scenarios submit real requests through the local gateway and policy engine. They affect disposable fixtures only. Pending changes still require human review.</p></div><div className="boundary-grid">{[["safe-read", "Safe read", "Read a bounded customer fixture sample."], ["blocked-sql", "Blocked destructive SQL", "Observe default-deny for an unsupported destructive SQL request."], ["pr-approval", "PR approval", "Queue a local repository change for independent human review."]].map(([scenario, name, description]) => <section className="panel boundary-card" key={scenario}><h3>{name}</h3><p>{description}</p><button className="button dark" disabled={!manage || busy} onClick={async () => { setResult(null); const value = await mutate("/demo", { scenario }, "Demo requests recorded. Inspect their outcomes."); if (value) setResult(value); }}><Play size={14} />Run {name}</button></section>)}</div>{!manage && <p className="section-pad">An operator or administrator can run these scenarios.</p>}{result && <section className="panel"><div className="panel-heading"><h2>{result.message}</h2></div><ActionTable items={result.actions} open={open} /></section>}</>;
++}
+diff --git a/src/api.ts b/src/api.ts
+new file mode 100644
+index 0000000..15872c3
+--- /dev/null
++++ b/src/api.ts
+@@ -0,0 +1,16 @@
++// Session credentials stay in this module's memory and disappear on reload/logout.
++let csrfToken = "";
++export const setCsrf = (value: string) => { csrfToken = value; };
++export async function api(path: string, body?: unknown, method?: string) {
++  const verb = method ?? (body !== undefined ? "POST" : "GET");
++  const response = await fetch("/api" + path, {
++    method: verb,
++    credentials: "same-origin",
++    cache: "no-store",
++    headers: { "Content-Type": "application/json", ...(verb !== "GET" && csrfToken ? { "X-AB-CSRF": csrfToken } : {}) },
++    ...(body !== undefined ? { body: JSON.stringify(body) } : {}),
++  });
++  const value = await response.json().catch(() => ({ error: "Control API returned an unreadable response" }));
++  if (!response.ok) throw Object.assign(new Error(value.error || "Request failed"), { status: response.status });
++  return value;
++}
+diff --git a/.agentbrake-local/product-ui-base/src/styles.css b/src/styles.css
+index 4840574..b2f8c75 100644
+--- a/.agentbrake-local/product-ui-base/src/styles.css
++++ b/src/styles.css
+@@ -1,10 +1,8 @@
+-@import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;450;500;550;600;650;700&family=Manrope:wght@400;500;600;650;700;750;800&display=swap");
+-
+ :root {
+   font-family:
+     "DM Sans",
+     -apple-system,
+     BlinkMacSystemFont,
+     "Segoe UI",
+     sans-serif;
+   color: #202623;
+@@ -2584,8 +2582,53 @@ dialog::backdrop {
+   *,
+   *:before,
+   *:after {
+     animation: none !important;
+     transition: none !important;
+     scroll-behavior: auto !important;
+   }
+ }
++
++/* Product controls reuse the existing dashboard's palette and layout. */
++.scope-banner { margin-bottom: 20px; }
++.product-metrics { margin-top: 22px; }
++.task-details { display: grid; grid-template-columns: 130px minmax(0, 1fr); gap: 9px 12px; font-size: 12px; margin: 20px 0; }
++.task-details dt { color: #626e60; }
++.task-details dd { margin: 0; overflow-wrap: anywhere; }
++.task-grant { border-top: 1px solid var(--border); padding-top: 18px; margin-top: 14px; }
++.task-grant h3 { margin-bottom: 10px; font-size: 14px; }
++.task-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 9px; }
++.agent-card > p { overflow-wrap: anywhere; }
++.scope-checks { border: 0; padding: 0; margin: 20px 0; min-width: 0; }
++.scope-checks legend { font-weight: 600; font-size: 12px; margin-bottom: 8px; }
++.scope-checks .tool-checks { grid-template-columns: 1fr; }
++.scope-checks code { overflow-wrap: anywhere; white-space: normal; }
++.form-grid, .filter-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
++.form-grid label, .filter-grid label { display: flex; flex-direction: column; gap: 8px; font-size: 12px; }
++.filter-grid { padding: 20px; align-items: end; border-bottom: 1px solid var(--border); }
++.filter-grid .button { min-height: 41px; }
++.section-pad { padding: 22px; }
++.section-pad > label { display: block; margin-bottom: 10px; }
++.section-pad > select { max-width: 100%; width: 100%; }
++.history-panel { margin-top: 24px; }
++.history-panel details { padding: 18px 24px; border-bottom: 1px solid var(--border); }
++.history-panel summary { cursor: pointer; font-weight: 600; }
++.history-panel .task-details { display: block; }
++.history-panel .task-details > div { display: grid; grid-template-columns: 140px minmax(0, 1fr); margin-top: 8px; }
++.evidence-detail { margin-top: 24px; }
++.evidence-detail h3, .evidence-detail p, .evidence-detail .task-actions { margin: 15px 0; }
++.evidence-detail label { font-weight: 600; font-size: 12px; }
++.evidence-detail pre { background: #f5f7f3; border: 1px solid var(--border); padding: 16px; border-radius: 8px; }
++.detail-body pre { white-space: pre-wrap; overflow-wrap: anywhere; }
++.error { white-space: normal; overflow-wrap: anywhere; }
++.boundary-card .button { margin-top: 18px; }
++.badge.executing, .badge.queued { color: #665324; background: #f4efdb; }
++.badge.revoked, .badge.expired { color: #9d4545; background: #fbebeb; }
++.table-scroll td { font-size: 11px; }
++@media (max-width: 760px) {
++ .form-grid, .filter-grid { grid-template-columns: 1fr; }
++ .task-details { grid-template-columns: 105px minmax(0, 1fr); }
++ .topbar .connection-state { font-size: 9px; }
++ .table-scroll table { min-width: 650px; }
++ .panel { min-width: 0; }
++ .task-actions .button { font-size: 11px; }
++}
+diff --git a/.agentbrake-local/product-ui-base/src/types.ts b/src/types.ts
+index 0473748..c190987 100644
+--- a/.agentbrake-local/product-ui-base/src/types.ts
++++ b/src/types.ts
+@@ -1,12 +1,41 @@
+-import type { ActionRecord, Agent, Policies } from "../server/contracts";
+-export type { Agent, Policies };
+-export type Event = Omit<ActionRecord, "result" | "digest">;
++// Public control API projections. Kept browser-only so standalone UI builds need
++// no control process, target driver, policy runtime, or server credentials.
++export type Policies = { reads: "allow" | "approval" | "deny"; databaseWrites: "approval" | "deny"; githubWrites: "approval" | "deny" };
++export type Agent = {
++  id: string; name: string; status: "active" | "paused"; tools: string[]; resources: string[];
++  sandbox: boolean; tainted: boolean; createdAt: string; ownerId?: string;
++  tokenAudience?: string; tokenExpiresAt?: number;
++  grant?: { id: string; agent_id: string; tenant: string; human_owner: string; actions: string[]; resources: string[]; environments: string[]; expires_at_ms: number; revoked: boolean; policy_version: string; max_calls: number; used_calls: number; max_rows: number };
++};
++export type Event = {
++  id: string; agentId: string; requestId: string; tool: string; arguments: Record<string, unknown>;
++  destination: string; correlationId: string; grantId?: string; grantFingerprint: string;
++  policyRevision: number; policyDecisionId: string; policyVersion: string; policyHash: string;
++  policyEffect: "ALLOW" | "DENY" | "REQUIRE_APPROVAL";
++  status: "queued" | "pending" | "executing" | "allowed" | "blocked" | "failed" | "unknown";
++  rule: string; reason: string; resource: string; sandbox: boolean; createdAt: string; expiresAt: string; durationMs: number;
++  preview?: { kind: "database-update" | "git-change" | "git-branch" | "operation"; summary: string; details: Record<string, unknown> };
++  review?: { nonce: string; fingerprint: string };
++  approvalReceipt?: { actorId: string; tenant: string; decision: "approve" | "reject"; at: string; proof: { nonce: string; fingerprint: string } };
++};
++export type Actor = { id: string; name: string; tenant: string; role: "administrator" | "operator" | "approver" | "viewer" };
++export type Session = { actor: Actor; csrfToken: string; teamMode: boolean };
++export type Review = { action: Event; proof: { nonce: string; fingerprint: string } };
++export type Evidence = {
++  schemaVersion: 1; action: Event;
++  decision: { id: string; policyHash: string; version: string; effect: string; reason: string };
++  review: { fingerprint?: string; receipt?: unknown; preview?: unknown };
++  execution: { status: string; observation: "adapter-reported" | "not-dispatched" | "unverified"; summary?: object; correlationId: string };
++  audit: { valid: boolean; entries: object[]; redacted?: boolean; verification?: string }; coverage: string;
++};
+ export type Workspace = {
++  actor: Actor;
++  teamMode: boolean;
+   agents: Agent[];
+   actions: Event[];
+   paused: boolean;
+   policies: Policies;
+   connections: { github: string; database: string; repository: string };
+   mcp: { command: string; args: string[]; env: Record<string, string> };
+   auditValid: boolean;
+   updatedAt: string;
+diff --git a/src/ui.tsx b/src/ui.tsx
+new file mode 100644
+index 0000000..d31d22f
+--- /dev/null
++++ b/src/ui.tsx
+@@ -0,0 +1,273 @@
++import { useEffect, useRef, useState, type ReactNode } from "react";
++import { Shield, Check, ShieldAlert, Clock3, ShieldCheck, X, BookOpen, Database, Github, LockKeyhole, Fingerprint, FileCheck2 } from "lucide-react";
++import type { Event, Policies } from "./types";
++export function Logo({ small = false }: { small?: boolean }) {
++  return (
++    <div className={"brand " + (small ? "small" : "")}>
++      <span className="brand-mark">
++        <Shield size={24} strokeWidth={2.1} />
++        <i />
++        <b />
++      </span>
++      {!small && (
++        <span>
++          agent<span className="brand-bold">brake</span>
++          <span className="brand-dot">.</span>
++        </span>
++      )}
++    </div>
++  );
++}
++export function Badge({ status }: { status: string }) {
++  return (
++    <span className={"badge " + status}>
++      {status === "allowed" ? (
++        <Check size={12} />
++      ) : status === "blocked" ? (
++        <ShieldAlert size={12} />
++      ) : status === "pending" ? (
++        <Clock3 size={12} />
++      ) : (
++        <span className="dot" />
++      )}
++      {status === "pending"
++        ? "Needs approval"
++        : status[0].toUpperCase() + status.slice(1)}
++    </span>
++  );
++}
++export function Empty({
++  title,
++  description,
++  icon = <ShieldCheck size={28} />,
++}: {
++  title: string;
++  description: string;
++  icon?: ReactNode;
++}) {
++  return (
++    <div className="empty">
++      <span>{icon}</span>
++      <h3>{title}</h3>
++      <p>{description}</p>
++    </div>
++  );
++}
++export function Modal({
++  title,
++  children,
++  close,
++}: {
++  title: string;
++  children: ReactNode;
++  close: () => void;
++}) {
++  const dialog = useRef<HTMLDialogElement>(null);
++  useEffect(() => {
++    dialog.current?.showModal();
++  }, []);
++  return (
++    <dialog
++      ref={dialog}
++      onCancel={close}
++      onClick={(e) => {
++        if (e.target === e.currentTarget) close();
++      }}
++    >
++      <div className="modal-head">
++        <h2>{title}</h2>
++        <button
++          className="icon-button"
++          onClick={close}
++          aria-label="Close dialog"
++        >
++          <X size={19} />
++        </button>
++      </div>
++      {children}
++    </dialog>
++  );
++}
++
++export function Metric({
++  icon,
++  label,
++  value,
++  detail,
++  bars,
++  tone,
++}: {
++  icon: ReactNode;
++  label: string;
++  value: number;
++  detail: string;
++  bars: Event[];
++  tone: string;
++}) {
++  // The small bars are an event timeline, not invented metrics.
++  const buckets = Array.from(
++    { length: 16 },
++    (_, i) =>
++      bars.filter((a) => {
++        const age = Date.now() - Date.parse(a.createdAt);
++        return age >= (15 - i) * 60_000 && age < (16 - i) * 60_000;
++      }).length,
++  );
++  const max = Math.max(1, ...buckets);
++  return (
++    <div className={"metric-card " + tone}>
++      <div className="metric-label">
++        {label}
++        {icon}
++      </div>
++      <div className="metric-middle">
++        <strong>{value.toLocaleString()}</strong>
++        {bars.length > 0 ? (
++          <div
++            className="mini-bars"
++            role="img"
++            aria-label="Events per minute over the last 16 minutes"
++          >
++            {buckets.map((n, i) => (
++              <span
++                key={i}
++                style={{
++                  height: `${Math.max(6, (n / max) * 100)}%`,
++                  opacity: n ? 1 : 0.14,
++                }}
++              />
++            ))}
++          </div>
++        ) : (
++          <span className="metric-empty-line" />
++        )}
++      </div>
++      <p>{detail}</p>
++    </div>
++  );
++}
++export function PolicyEditor({
++  policies,
++  save,
++  busy,
++  readOnly = false,
++}: {
++  readOnly?: boolean;
++  policies: Policies;
++  save: (p: Policies) => Promise<unknown>;
++  busy: boolean;
++}) {
++  const [draft, setDraft] = useState(policies);
++  useEffect(
++    () => setDraft(policies),
++    [policies.reads, policies.databaseWrites, policies.githubWrites],
++  );
++  const items = [
++    {
++      key: "reads",
++      icon: BookOpen,
++      title: "Scoped read operations",
++      description:
++        "Read approved repository files and customer records within the agent grant.",
++    },
++    {
++      key: "databaseWrites",
++      icon: Database,
++      title: "Customer record changes",
++      description:
++        "A structured status change to one customer. Raw SQL and bulk writes are never exposed.",
++    },
++    {
++      key: "githubWrites",
++      icon: Github,
++      title: "Repository mutations",
++      description:
++        "Create branches, local pull requests and issues. Protected-data boundaries still apply.",
++    },
++  ] as const;
++  return (
++    <>
++      <section className="panel policy-editor">
++        <div className="panel-heading">
++          <div>
++            <h2>Workspace policies</h2>
++            <p>Apply decisions consistently to every connected agent.</p>
++          </div>
++          <span className="env-tag">ENFORCED</span>
++        </div>
++        {items.map(({ key, icon: Icon, title, description }) => (
++          <div className="policy-row" key={key}>
++            <span className="square-icon">
++              <Icon size={21} />
++            </span>
++            <div>
++              <h3>{title}</h3>
++              <p>{description}</p>
++            </div>
++            <select
++              aria-label={title}
++              disabled={readOnly}
++              value={draft[key]}
++              onChange={(e) => setDraft({ ...draft, [key]: e.target.value })}
++            >
++              {key === "reads" && (
++                <option value="allow">Allow within scope</option>
++              )}
++              <option value="approval">Require approval</option>
++              <option value="deny">Always block</option>
++            </select>
++          </div>
++        ))}
++        <div className="panel-footer">
++          <span>New policies also apply to pending requests.</span>
++          <button
++            className="button dark"
++            disabled={
++              readOnly || busy || JSON.stringify(draft) === JSON.stringify(policies)
++            }
++            onClick={() => void save(draft)}
++          >
++            Save policies <Check size={15} />
++          </button>
++        </div>
++      </section>
++      <h2 className="section-title">
++        Always-on boundaries <LockKeyhole size={16} />
++      </h2>
++      <div className="boundary-grid">
++        {[
++          {
++            title: "Default deny",
++            text: "Unknown tools, ungranted resources and invalid arguments are blocked.",
++            icon: ShieldCheck,
++          },
++          {
++            title: "Credential protection",
++            text: "Known secret paths and credential patterns are blocked. This is a heuristic, not a complete DLP scanner.",
++            icon: LockKeyhole,
++          },
++          {
++            title: "Protected data boundary",
++            text: "After reading customer data, an identity cannot create outbound GitHub issues.",
++            icon: Fingerprint,
++          },
++          {
++            title: "One action, one approval",
++            text: "Approvals bind exact arguments and expire at the time shown in the review.",
++            icon: FileCheck2,
++          },
++        ].map(({ title, text, icon: Icon }) => (
++          <section className="panel boundary-card" key={title}>
++            <Icon size={22} />
++            <h3>{title}</h3>
++            <p>{text}</p>
++            <span>
++              <Check size={13} />
++              Always enforced
++            </span>
++          </section>
++        ))}
++      </div>
++    </>
++  );
++}
+
+NEW FILE apps\dashboard\.gitignore
+node_modules/
+.next/
+*.tsbuildinfo
+npm-debug.log*
+
+NEW FILE apps\dashboard\app\api\[...path]\route.ts
+import { controlProxy } from "../../../lib/control-proxy";
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
+async function handle(request: Request, context: { params: Promise<{ path: string[] }> }) {
+  return controlProxy(request, (await context.params).path);
+}
+export { handle as GET, handle as POST, handle as PUT, handle as PATCH, handle as DELETE, handle as OPTIONS };
+
+NEW FILE apps\dashboard\app\dashboard.tsx
+"use client";
+import App from "../../../src/App";
+export default function Dashboard() { return <App />; }
+
+NEW FILE apps\dashboard\app\layout.tsx
+import type { ReactNode } from "react";
+import "../../../src/styles.css";
+export const metadata = { title: "AgentBrake · Local control", description: "Isolated local agent control and evidence workspace" };
+export default function Layout({ children }: { children: ReactNode }) {
+  return <html lang="en"><body>{children}</body></html>;
+}
+
+NEW FILE apps\dashboard\app\page.tsx
+import Dashboard from "./dashboard";
+export default function Page() { return <Dashboard />; }
+
+NEW FILE apps\dashboard\Dockerfile
+ARG NODE_IMAGE=library/node@sha256:e9f565d32859f0cbfb52125eafe8be39390f24dac302dc3cdf566e8ba3ab21ee
+FROM ${NODE_IMAGE} AS build
+WORKDIR /workspace
+ENV NEXT_TELEMETRY_DISABLED=1
+COPY apps/dashboard/package.json apps/dashboard/package-lock.json ./apps/dashboard/
+RUN cd apps/dashboard && npm ci --ignore-scripts
+# TypeScript resolves imports relative to shared /workspace/src. The container
+# uses only this app's pinned install, so expose that same install at its parent.
+RUN ln -s apps/dashboard/node_modules /workspace/node_modules
+COPY apps/dashboard ./apps/dashboard
+COPY src ./src
+RUN cd apps/dashboard && npm run build
+
+FROM ${NODE_IMAGE} AS runtime
+WORKDIR /app
+ENV NODE_ENV=production NEXT_TELEMETRY_DISABLED=1 HOSTNAME=0.0.0.0 PORT=3000 AGENTBRAKE_CONTROL_URL=http://control-api:4314
+COPY --from=build --chown=node:node /workspace/apps/dashboard/.next/standalone ./
+COPY --from=build --chown=node:node /workspace/apps/dashboard/.next/static ./apps/dashboard/.next/static
+USER 1000:1000
+EXPOSE 3000
+CMD ["node", "apps/dashboard/server.js"]
+
+NEW FILE apps\dashboard\lib\control-proxy.ts
+const MAX_BODY = 32 * 1024;
+const id = "[a-zA-Z0-9_-]{1,100}";
+const routes: [RegExp, string[]][] = [
+  [/^(?:health|session|workspace|activity|policies\/history|audit\/export)$/, ["GET"]],
+  [/^events$/, ["GET"]],
+  [/^(?:login|logout|control|demo|agents)$/, ["POST"]],
+  [/^policies$/, ["PUT"]],
+  [new RegExp(`^agents/${id}$`), ["PATCH"]],
+  [new RegExp(`^agents/${id}/grant(?:/revoke)?$`), ["POST"]],
+  [new RegExp(`^approvals/${id}$`), ["GET", "POST"]],
+  [new RegExp(`^evidence/${id}(?:/export)?$`), ["GET"]],
+];
+const fail = (status: number, error: string) => Response.json({ error }, { status, headers: { "Cache-Control": "no-store" } });
+export async function controlProxy(request: Request, path: string[], configured = process.env.AGENTBRAKE_CONTROL_URL ?? "http://127.0.0.1:4314", transport: typeof fetch = fetch) {
+  const browser = new URL(request.url);
+  const host = request.headers.get("host") ?? "";
+  if (!/^(?:localhost|127\.0\.0\.1|\[::1\])(?::[0-9]{1,5})?$/.test(host) || browser.protocol !== "http:") return fail(403, "Dashboard requires a trusted loopback HTTP host");
+  // Next reconstructs Request.url using its listening hostname (localhost or
+  // 0.0.0.0), which can differ from the browser's loopback Host. Validate the
+  // actual Host first and derive the browser origin from that trusted header.
+  const dashboardOrigin = `http://${host}`;
+  const origin = request.headers.get("origin");
+  if ((origin && origin !== dashboardOrigin) || (request.method !== "GET" && origin !== dashboardOrigin)) return fail(403, "Dashboard origin verification failed");
+  const pathname = path.join("/");
+  if (path.some(segment => !/^[a-zA-Z0-9_-]+$/.test(segment)) || pathname.length > 220) return fail(404, "Unsupported dashboard API route");
+  const route = routes.find(([pattern]) => pattern.test(pathname));
+  if (!route) return fail(404, "Unsupported dashboard API route");
+  if (!route[1].includes(request.method)) return fail(405, "Unsupported dashboard API method");
+  // This server-only destination is never read from browser input.
+  let backend: URL;
+  try {
+    backend = new URL(configured);
+    if (backend.protocol !== "http:" || !["127.0.0.1", "localhost", "control-api"].includes(backend.hostname) || backend.username || backend.password || backend.pathname !== "/" || backend.search || backend.hash) throw Error();
+  } catch { return fail(503, "Local control API configuration is invalid"); }
+  const length = request.headers.get("content-length");
+  if (length && (!/^\d+$/.test(length) || Number(length) > MAX_BODY)) return fail(413, "Request exceeds the 32 KiB limit");
+  let body: string | undefined;
+  if (request.method !== "GET") {
+    if (!request.headers.get("content-type")?.match(/^application\/json(?:\s*;|$)/i)) return fail(415, "JSON body required");
+    const reader = request.body?.getReader();
+    const chunks: Uint8Array[] = []; let size = 0;
+    try {
+      if (reader) while (true) {
+        const next = await reader.read(); if (next.done) break;
+        size += next.value.byteLength;
+        if (size > MAX_BODY) { await reader.cancel(); return fail(413, "Request exceeds the 32 KiB limit"); }
+        chunks.push(next.value);
+      }
+      const bytes = new Uint8Array(size); let offset = 0;
+      for (const chunk of chunks) { bytes.set(chunk, offset); offset += chunk.byteLength; }
+      body = new TextDecoder("utf-8", { fatal: true }).decode(bytes);
+      JSON.parse(body);
+    } catch { return fail(400, "Malformed JSON request"); }
+    finally { reader?.releaseLock(); }
+  }
+  const headers = new Headers({ "Accept": "application/json", "Host": backend.host, "Origin": backend.origin });
+  for (const name of ["cookie", "x-ab-csrf"]) { const value = request.headers.get(name); if (value) headers.set(name, value); }
+  if (body !== undefined) headers.set("Content-Type", "application/json");
+  const target = new URL(`/api/${pathname}`, backend); target.search = browser.search;
+  try {
+    const response = await transport(target, { method: request.method, headers, body, redirect: "error", cache: "no-store", signal: AbortSignal.any([request.signal, AbortSignal.timeout(30_000)]) });
+    const outgoing = new Headers({ "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff" });
+    for (const name of ["content-type", "content-disposition", "x-correlation-id"]) { const value = response.headers.get(name); if (value) outgoing.set(name, value); }
+    for (const cookie of response.headers.getSetCookie()) outgoing.append("Set-Cookie", cookie);
+    return new Response(response.body, { status: response.status, headers: outgoing });
+  } catch { return fail(502, "Local control API unavailable. Inspect recorded state before repeating a mutation."); }
+}
+
+NEW FILE apps\dashboard\next-env.d.ts
+/// <reference types="next" />
+/// <reference types="next/image-types/global" />
+import "./.next/types/routes.d.ts";
+import "./.next/types/root-params.d.ts";
+
+// NOTE: This file should not be edited
+// see https://nextjs.org/docs/app/api-reference/config/typescript for more information.
+
+NEW FILE apps\dashboard\next.config.mjs
+import { dirname, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
+const directory = dirname(fileURLToPath(import.meta.url));
+export default {
+  output: "standalone",
+  outputFileTracingRoot: resolve(directory, "../.."),
+  poweredByHeader: false,
+  webpack(config) {
+    // Keep Next's conditional React aliases intact while resolving shared src's
+    // ordinary packages from this app, including in the standalone Docker build.
+    config.resolve.modules = [resolve(directory, "node_modules"), ...config.resolve.modules];
+    return config;
+  },
+  async headers() {
+    return [{ source: "/:path*", headers: [
+      { key: "X-Content-Type-Options", value: "nosniff" },
+      { key: "Referrer-Policy", value: "no-referrer" },
+      { key: "X-Frame-Options", value: "DENY" },
+    ] }];
+  },
+};
+
+NEW FILE apps\dashboard\package-lock.json
+{
+  "name": "agentbrake-dashboard",
+  "version": "0.1.0",
+  "lockfileVersion": 3,
+  "requires": true,
+  "packages": {
+    "": {
+      "name": "agentbrake-dashboard",
+      "version": "0.1.0",
+      "dependencies": {
+        "lucide-react": "0.468.0",
+        "next": "16.4.6",
+        "react": "19.3.1",
+        "react-dom": "19.3.1"
+      },
+      "devDependencies": {
+        "@types/node": "22.19.0",
+        "@types/react": "19.2.2",
+        "@types/react-dom": "19.2.2",
+        "typescript": "5.9.3"
+      },
+      "engines": {
+        "node": ">=22.13"
+      }
+    },
+    "node_modules/@emnapi/runtime": {
+      "version": "1.11.3",
+      "resolved": "https://registry.npmjs.org/@emnapi/runtime/-/runtime-1.11.3.tgz",
+      "integrity": "sha512-Xz4Tpyki7XyrpbUK1jR1AhdAdaXyhhY4lZ3neLodmhpuWfy2PAQN5B46sAiU4liOXGLkHypn/qU+jvfWSCYYLA==",
+      "license": "MIT",
+      "optional": true,
+      "dependencies": {
+        "tslib": "^2.4.0"
+      }
+    },
+    "node_modules/@img/colour": {
+      "version": "1.1.0",
+      "resolved": "https://registry.npmjs.org/@img/colour/-/colour-1.1.0.tgz",
+      "integrity": "sha512-Td76q7j57o/tLVdgS746cYARfSyxk8iEfRxewL9h4OMzYhbW4TAcppl0mT4eyqXddh6L/jwoM75mo7ixa/pCeQ==",
+      "license": "MIT",
+      "optional": true,
+      "engines": {
+        "node": ">=18"
+      }
+    },
+    "node_modules/@img/sharp-darwin-arm64": {
+      "version": "0.35.5",
+      "resolved": "https://registry.npmjs.org/@img/sharp-darwin-arm64/-/sharp-darwin-arm64-0.35.5.tgz",
+      "integrity": "sha512-QRUlFQ0WxvdWyqqG/WtI3iupfD5rBzmCHXSdPsY91sAtVtTo7Q4cb6zOccZ3gqEqkr0f1As1ehLqmEpDsRf+lg==",
+      "cpu": [
+        "arm64"
+      ],
+      "license": "Apache-2.0",
+      "optional": true,
+      "os": [
+        "darwin"
+      ],
+      "engines": {
+        "node": ">=20.9.0"
+      },
+      "funding": {
+        "url": "https://opencollective.com/libvips"
+      },
+      "optionalDependencies": {
+        "@img/sharp-libvips-darwin-arm64": "1.3.4"
+      }
+    },
+    "node_modules/@img/sharp-darwin-x64": {
+      "version": "0.35.5",
+      "resolved": "https://registry.npmjs.org/@img/sharp-darwin-x64/-/sharp-darwin-x64-0.35.5.tgz",
+      "integrity": "sha512-+BR255RhDlpygUpOc/Jdt1nT6DQ3XG/ERo5wbcdOf5Q320dKtPCKPLR1LJs9VGXRaMa8l1uUa0tkCNOXiAxZUw==",
+      "cpu": [
+        "x64"
+      ],
+      "license": "Apache-2.0",
+      "optional": true,
+      "os": [
+        "darwin"
+      ],
+      "engines": {
+        "node": ">=20.9.0"
+      },
+      "funding": {
+        "url": "https://opencollective.com/libvips"
+      },
+      "optionalDependencies": {
+        "@img/sharp-libvips-darwin-x64": "1.3.4"
+      }
+    },
+    "node_modules/@img/sharp-freebsd-wasm32": {
+      "version": "0.35.5",
+      "resolved": "https://registry.npmjs.org/@img/sharp-freebsd-wasm32/-/sharp-freebsd-wasm32-0.35.5.tgz",
+      "integrity": "sha512-Y/z91nEZ4uIBX5X3nfTovjU9lHNKFYbL2lpHCLVNmXQK03VIZvXBBt0KxbPGp2SdGSF+2mQU4e+hQaWOt86iAw==",
+      "license": "Apache-2.0",
+      "optional": true,
+      "os": [
+        "freebsd"
+      ],
+      "dependencies": {
+        "@img/sharp-wasm32": "0.35.5"
+      },
+      "engines": {
+        "node": ">=20.9.0"
+      },
+      "funding": {
+        "url": "https://opencollective.com/libvips"
+      }
+    },
+    "node_modules/@img/sharp-libvips-darwin-arm64": {
+      "version": "1.3.4",
+      "resolved": "https://registry.npmjs.org/@img/sharp-libvips-darwin-arm64/-/sharp-libvips-darwin-arm64-1.3.4.tgz",
+      "integrity": "sha512-5R89nBYiRdUlSWJxPhO+GVtaXzXSxKnRu/xqMn3KTA3L9EB9Oy/P+Nn2f2vlhPuUdy/Zusb2DarbyTpGCfEDuw==",
+      "cpu": [
+        "arm64"
+      ],
+      "license": "LGPL-3.0-or-later",
+      "optional": true,
+      "os": [
+        "darwin"
+      ],
+      "funding": {
+        "url": "https://opencollective.com/libvips"
+      }
+    },
+    "node_modules/@img/sharp-libvips-darwin-x64": {
+      "version": "1.3.4",
+      "resolved": "https://registry.npmjs.org/@img/sharp-libvips-darwin-x64/-/sharp-libvips-darwin-x64-1.3.4.tgz",
+      "integrity": "sha512-iR2OKH80yi0U+dUplyh3/xdpFvps6YkCwsXenIJxqxR1v9o+xtKTGbS9H7cps+2Vxjc8B1j96p75NmTGjIhtpQ==",
+      "cpu": [
+        "x64"
+      ],
+      "license": "LGPL-3.0-or-later",
+      "optional": true,
+      "os": [
+        "darwin"
+      ],
+      "funding": {
+        "url": "https://opencollective.com/libvips"
+      }
+    },
+    "node_modules/@img/sharp-libvips-linux-arm": {
+      "version": "1.3.4",
+      "resolved": "https://registry.npmjs.org/@img/sharp-libvips-linux-arm/-/sharp-libvips-linux-arm-1.3.4.tgz",
+      "integrity": "sha512-LmRtTsOHuvM2+wlO2Db37dx5MiZhB0FvSunciw48YjdOkZz9KAiRbm8ujeMOA1INqmei5NapFxYEK1D1ZSidmw==",
+      "cpu": [
+        "arm"
+      ],
+      "license": "LGPL-3.0-or-later",
+      "optional": true,
+      "os": [
+        "linux"
+      ],
+      "funding": {
+        "url": "https://opencollective.com/libvips"
+      }
+    },
+    "node_modules/@img/sharp-libvips-linux-arm64": {
+      "version": "1.3.4",
+      "resolved": "https://registry.npmjs.org/@img/sharp-libvips-linux-arm64/-/sharp-libvips-linux-arm64-1.3.4.tgz",
+      "integrity": "sha512-Y3dgX/6lE2QhQb+Gxy0WZxfg9MEm/JBjamZpS2IklP7xIQoKN4hzAm7KcMVGtaVDt3neE9OKBC7vAfonA/Lr1A==",
+      "cpu": [
+        "arm64"
+      ],
+      "license": "LGPL-3.0-or-later",
+      "optional": true,
+      "os": [
+        "linux"
+      ],
+      "funding": {
+        "url": "https://opencollective.com/libvips"
+      }
+    },
+    "node_modules/@img/sharp-libvips-linux-ppc64": {
+      "version": "1.3.4",
+      "resolved": "https://registry.npmjs.org/@img/sharp-libvips-linux-ppc64/-/sharp-libvips-linux-ppc64-1.3.4.tgz",
+      "integrity": "sha512-Le6boB8Tai0Nis+gIxIpKx68UDVVIqdR8Tin5Yf1z2LJJQLDJvCDRqRu+jC2qCoD+eIomonmOwB4smBRxfVpYQ==",
+      "cpu": [
+        "ppc64"
+      ],
+      "license": "LGPL-3.0-or-later",
+      "optional": true,
+      "os": [
+        "linux"
+      ],
+      "funding": {
+        "url": "https://opencollective.com/libvips"
+      }
+    },
+    "node_modules/@img/sharp-libvips-linux-riscv64": {
+      "version": "1.3.4",
+      "resolved": "https://registry.npmjs.org/@img/sharp-libvips-linux-riscv64/-/sharp-libvips-linux-riscv64-1.3.4.tgz",
+      "integrity": "sha512-aHkkIEHPRdQEegJN20MLmGtxYD9R2wQr3Cwpddnu5+YKMt6Uzax7S9h5gpZTo8wyrGuZSlfQ63OevL5mTyOC7Q==",
+      "cpu": [
+        "riscv64"
+      ],
+      "license": "LGPL-3.0-or-later",
+      "optional": true,
+      "os": [
+        "linux"
+      ],
+      "funding": {
+        "url": "https://opencollective.com/libvips"
+      }
+    },
+    "node_modules/@img/sharp-libvips-linux-s390x": {
+      "version": "1.3.4",
+      "resolved": "https://registry.npmjs.org/@img/sharp-libvips-linux-s390x/-/sharp-libvips-linux-s390x-1.3.4.tgz",
+      "integrity": "sha512-ra/mB6MikESDUO7Yg+Mi95bFBb9GsObURuhnOv3OqknjGe9sZrG8tCe9q0xSIGrtLgvgw0gKnFWcK4blSgQOuQ==",
+      "cpu": [
+        "s390x"
+      ],
+      "license": "LGPL-3.0-or-later",
+      "optional": true,
+      "os": [
+        "linux"
+      ],
+      "funding": {
+        "url": "https://opencollective.com/libvips"
+      }
+    },
+    "node_modules/@img/sharp-libvips-linux-x64": {
+      "version": "1.3.4",
+      "resolved": "https://registry.npmjs.org/@img/sharp-libvips-linux-x64/-/sharp-libvips-linux-x64-1.3.4.tgz",
+      "integrity": "sha512-GJ//SSXbnwSDes02umB3nDJLFcQzw8a18V8fyhqr6tV515tOEMdImjjxj1AoafMRz56F3PHgftnj1QEKSU1zkw==",
+      "cpu": [
+        "x64"
+      ],
+      "license": "LGPL-3.0-or-later",
+      "optional": true,
+      "os": [
+        "linux"
+      ],
+      "funding": {
+        "url": "https://opencollective.com/libvips"
+      }
+    },
+    "node_modules/@img/sharp-libvips-linuxmusl-arm64": {
+      "version": "1.3.4",
+      "resolved": "https://registry.npmjs.org/@img/sharp-libvips-linuxmusl-arm64/-/sharp-libvips-linuxmusl-arm64-1.3.4.tgz",
+      "integrity": "sha512-hvulFwtjUcagsis6BBxHwGFwWoNZjgYmULGVrZcyfNbjA8hKILbRxGg15/7w5HDyXHXUos/j6baAWqnCyQ2DWA==",
+      "cpu": [
+        "arm64"
+      ],
+      "license": "LGPL-3.0-or-later",
+      "optional": true,
+      "os": [
+        "linux"
+      ],
+      "funding": {
+        "url": "https://opencollective.com/libvips"
+      }
+    },
+    "node_modules/@img/sharp-libvips-linuxmusl-x64": {
+      "version": "1.3.4",
+      "resolved": "https://registry.npmjs.org/@img/sharp-libvips-linuxmusl-x64/-/sharp-libvips-linuxmusl-x64-1.3.4.tgz",
+      "integrity": "sha512-6zXKeE/p39I1AmA3cJG35eyBGNqNddLnUXjhwBnsGjFPWqf5VKkDBEqaEkPDoTEtkxwi2vv8Tcr2mDyP4So7Fg==",
+      "cpu": [
+        "x64"
+      ],
+      "license": "LGPL-3.0-or-later",
+      "optional": true,
+      "os": [
+        "linux"
+      ],
+      "funding": {
+        "url": "https://opencollective.com/libvips"
+      }
+    },
+    "node_modules/@img/sharp-linux-arm": {
+      "version": "0.35.5",
+      "resolved": "https://registry.npmjs.org/@img/sharp-linux-arm/-/sharp-linux-arm-0.35.5.tgz",
+      "integrity": "sha512-LEaXK2WdXVK5ykcw0buWyPMsmLLL2vpHLD6yrNSW+JGEL3BZPA4tpKN6iaMc4AxTTAoaX/sU1rOL51lcIz48ZQ==",
+      "cpu": [
+        "arm"
+      ],
+      "license": "Apache-2.0",
+      "optional": true,
+      "os": [
+        "linux"
+      ],
+      "engines": {
+        "node": ">=20.9.0"
+      },
+      "funding": {
+        "url": "https://opencollective.com/libvips"
+      },
+      "optionalDependencies": {
+        "@img/sharp-libvips-linux-arm": "1.3.4"
+      }
+    },
+    "node_modules/@img/sharp-linux-arm64": {
+      "version": "0.35.5",
+      "resolved": "https://registry.npmjs.org/@img/sharp-linux-arm64/-/sharp-linux-arm64-0.35.5.tgz",
+      "integrity": "sha512-LYVx5JTsOM2CBzmxreh+nl64/3H6Xb09iSLknqH47z2T2DFFxDeFLP5y4dJwe6H7uGQlHPyEEtIqyo3DYsRwdQ==",
+      "cpu": [
+        "arm64"
+      ],
+      "license": "Apache-2.0",
+      "optional": true,
+      "os": [
+        "linux"
+      ],
+      "engines": {
+        "node": ">=20.9.0"
+      },
+      "funding": {
+        "url": "https://opencollective.com/libvips"
+      },
+      "optionalDependencies": {
+        "@img/sharp-libvips-linux-arm64": "1.3.4"
+      }
+    },
+    "node_modules/@img/sharp-linux-ppc64": {
+      "version": "0.35.5",
+      "resolved": "https://registry.npmjs.org/@img/sharp-linux-ppc64/-/sharp-linux-ppc64-0.35.5.tgz",
+      "integrity": "sha512-QVxAAq8evVRI9ia2vqgwrmWucn5Dfv+JdWzj75pD8omHLPSP7f8p20O8jxzjCcuCEQEOtYOZUmX1hkiZ0kdevA==",
+      "cpu": [
+        "ppc64"
+      ],
+      "license": "Apache-2.0",
+      "optional": true,
+      "os": [
+        "linux"
+      ],
+      "engines": {
+        "node": ">=20.9.0"
+      },
+      "funding": {
+        "url": "https://opencollective.com/libvips"
+      },
+      "optionalDependencies": {
+        "@img/sharp-libvips-linux-ppc64": "1.3.4"
+      }
+    },
+    "node_modules/@img/sharp-linux-riscv64": {
+      "version": "0.35.5",
+      "resolved": "https://registry.npmjs.org/@img/sharp-linux-riscv64/-/sharp-linux-riscv64-0.35.5.tgz",
+      "integrity": "sha512-LtdreXguaavKODPIfzJ4kffx7UNt1omwtK0rch4EBbbSTXPnxWmYSayXdLJw0fJzQ97kHt1gL/yh4tvU+nCyRQ==",
+      "cpu": [
+        "riscv64"
+      ],
+      "license": "Apache-2.0",
+      "optional": true,
+      "os": [
+        "linux"
+      ],
+      "engines": {
+        "node": ">=20.9.0"
+      },
+      "funding": {
+        "url": "https://opencollective.com/libvips"
+      },
+      "optionalDependencies": {
+        "@img/sharp-libvips-linux-riscv64": "1.3.4"
+      }
+    },
+    "node_modules/@img/sharp-linux-s390x": {
+      "version": "0.35.5",
+      "resolved": "https://registry.npmjs.org/@img/sharp-linux-s390x/-/sharp-linux-s390x-0.35.5.tgz",
+      "integrity": "sha512-UZasTOFiYzotTsGOCu42BfUzP6Tu6Do/947iRm1RsLKvlllxwGcn4RN27LibGWceix4Y+Pmw3jsnTcCQIgWjqA==",
+      "cpu": [
+        "s390x"
+      ],
+      "license": "Apache-2.0",
+      "optional": true,
+      "os": [
+        "linux"
+      ],
+      "engines": {
+        "node": ">=20.9.0"
+      },
+      "funding": {
+        "url": "https://opencollective.com/libvips"
+      },
+      "optionalDependencies": {
+        "@img/sharp-libvips-linux-s390x": "1.3.4"
+      }
+    },
+    "node_modules/@img/sharp-linux-x64": {
+      "version": "0.35.5",
+      "resolved": "https://registry.npmjs.org/@img/sharp-linux-x64/-/sharp-linux-x64-0.35.5.tgz",
+      "integrity": "sha512-SxFtLTeJInhAA9Q836kux2vZNeOBQEx658qvbboZScr0wIARym3IcGmW7KpVD5sbVg0Ojy+udFQdayYIZyoNog==",
+      "cpu": [
+        "x64"
+      ],
+      "license": "Apache-2.0",
+      "optional": true,
+      "os": [
+        "linux"
+      ],
+      "engines": {
+        "node": ">=20.9.0"
+      },
+      "funding": {
+        "url": "https://opencollective.com/libvips"
+      },
+      "optionalDependencies": {
+        "@img/sharp-libvips-linux-x64": "1.3.4"
+      }
+    },
+    "node_modules/@img/sharp-linuxmusl-arm64": {
+      "version": "0.35.5",
+      "resolved": "https://registry.npmjs.org/@img/sharp-linuxmusl-arm64/-/sharp-linuxmusl-arm64-0.35.5.tgz",
+      "integrity": "sha512-9HbMclmI1zlNkFRs3z9/eBtDjfD0sGlrX1z6b1qwmiFY5ElDLh4BC0LPBdVp7z1DXFiKlIcznf+ZlsuZzLxQqg==",
+      "cpu": [
+        "arm64"
+      ],
+      "license": "Apache-2.0",
+      "optional": true,
+      "os": [
+        "linux"
+      ],
+      "engines": {
+        "node": ">=20.9.0"
+      },
+      "funding": {
+        "url": "https://opencollective.com/libvips"
+      },
+      "optionalDependencies": {
+        "@img/sharp-libvips-linuxmusl-arm64": "1.3.4"
+      }
+    },
+    "node_modules/@img/sharp-linuxmusl-x64": {
+      "version": "0.35.5",
+      "resolved": "https://registry.npmjs.org/@img/sharp-linuxmusl-x64/-/sharp-linuxmusl-x64-0.35.5.tgz",
+      "integrity": "sha512-4KOphqB035HrVdqLZfCgMzzERrQkkzOwRhl4OAkRO1YCldbaFjySXMaK534Mo0V+LndnlJk+sbUyLeU0ULyD1A==",
+      "cpu": [
+        "x64"
+      ],
+      "license": "Apache-2.0",
+      "optional": true,
+      "os": [
+        "linux"
+      ],
+      "engines": {
+        "node": ">=20.9.0"
+      },
+      "funding": {
+        "url": "https://opencollective.com/libvips"
+      },
+      "optionalDependencies": {
+        "@img/sharp-libvips-linuxmusl-x64": "1.3.4"
+      }
+    },
+    "node_modules/@img/sharp-wasm32": {
+      "version": "0.35.5",
+      "resolved": "https://registry.npmjs.org/@img/sharp-wasm32/-/sharp-wasm32-0.35.5.tgz",
+      "integrity": "sha512-Ptsga1su4tQx+LLF1ECS9U6nz5kmrXKo6XVbtR48Ke3ZRxxgaWBu7IDtEe1quo8hiupwm6WFqxVlXaSf7IINGQ==",
+      "license": "Apache-2.0 AND LGPL-3.0-or-later AND MIT",
+      "optional": true,
+      "dependencies": {
+        "@emnapi/runtime": "^1.11.3"
+      },
+      "engines": {
+        "node": ">=20.9.0"
+      },
+      "funding": {
+        "url": "https://opencollective.com/libvips"
+      }
+    },
+    "node_modules/@img/sharp-webcontainers-wasm32": {
+      "version": "0.35.5",
+      "resolved": "https://registry.npmjs.org/@img/sharp-webcontainers-wasm32/-/sharp-webcontainers-wasm32-0.35.5.tgz",
+      "integrity": "sha512-hfhF/FmoQyTUkA0bIKFOtw536BQSeBMe6BF6QyWlrPxT754+TFLaZ7sKKTfvvM0yJgKgaYTwnFCIZ/GuDw5SUA==",
+      "cpu": [
+        "wasm32"
+      ],
+      "license": "Apache-2.0",
+      "optional": true,
+      "dependencies": {
+        "@img/sharp-wasm32": "0.35.5"
+      },
+      "engines": {
+        "node": ">=20.9.0"
+      },
+      "funding": {
+        "url": "https://opencollective.com/libvips"
+      }
+    },
+    "node_modules/@img/sharp-win32-arm64": {
+      "version": "0.35.5",
+      "resolved": "https://registry.npmjs.org/@img/sharp-win32-arm64/-/sharp-win32-arm64-0.35.5.tgz",
+      "integrity": "sha512-X4t7g+7ZA5DKblCBEXGjUqqemj4vczING/5viFwAL8h4N3qYeyjwdCvRLHi4EdOUI+2Z7UFlp1VM+p/AuEtm6Q==",
+      "cpu": [
+        "arm64"
+      ],
+      "license": "Apache-2.0 AND LGPL-3.0-or-later",
+      "optional": true,
+      "os": [
+        "win32"
+      ],
+      "engines": {
+        "node": ">=20.9.0"
+      },
+      "funding": {
+        "url": "https://opencollective.com/libvips"
+      }
+    },
+    "node_modules/@img/sharp-win32-ia32": {
+      "version": "0.35.5",
+      "resolved": "https://registry.npmjs.org/@img/sharp-win32-ia32/-/sharp-win32-ia32-0.35.5.tgz",
+      "integrity": "sha512-5Zm82LoBc43nhwNybZlG7Y1KO//Zhsn306fQl29ZOuStHLGTo3BWL83q3cznX0poxSAMuYL1On/BHBxkBeKr6A==",
+      "cpu": [
+        "ia32"
+      ],
+      "license": "Apache-2.0 AND LGPL-3.0-or-later",
+      "optional": true,
+      "os": [
+        "win32"
+      ],
+      "engines": {
+        "node": "^20.9.0"
+      },
+      "funding": {
+        "url": "https://opencollective.com/libvips"
+      }
+    },
+    "node_modules/@img/sharp-win32-x64": {
+      "version": "0.35.5",
+      "resolved": "https://registry.npmjs.org/@img/sharp-win32-x64/-/sharp-win32-x64-0.35.5.tgz",
+      "integrity": "sha512-x76eH0vEiHlcMQu8Y8IenntaACtddpT6W0wmXtWrnKcnKI7ME5DdgqhAD6SEWOEl1v2zDvkZDhFA9KnURwpfqg==",
+      "cpu": [
+        "x64"
+      ],
+      "license": "Apache-2.0 AND LGPL-3.0-or-later",
+      "optional": true,
+      "os": [
+        "win32"
+      ],
+      "engines": {
+        "node": ">=20.9.0"
+      },
+      "funding": {
+        "url": "https://opencollective.com/libvips"
+      }
+    },
+    "node_modules/@next/env": {
+      "version": "16.4.6",
+      "resolved": "https://registry.npmjs.org/@next/env/-/env-16.4.6.tgz",
+      "integrity": "sha512-SunBjJ6t+oBtecS3dTjdVuMhUogP5wD/vrGL5EVuQYM1iS4O5ilL51HkiJ3sPjMzRHiCChvr4dbaSJbR7F3lxA==",
+      "license": "MIT"
+    },
+    "node_modules/@next/swc-darwin-arm64": {
+      "version": "16.4.6",
+      "resolved": "https://registry.npmjs.org/@next/swc-darwin-arm64/-/swc-darwin-arm64-16.4.6.tgz",
+      "integrity": "sha512-kJ4VVZkley17xKaJx72QN2IBqjrj7zenCQZaUF0l9ShS/1Mt2kW4+Z5KGG6vgr3L/J562xTOizVyM1iA/u5nlg==",
+      "cpu": [
+        "arm64"
+      ],
+      "license": "MIT",
+      "optional": true,
+      "os": [
+        "darwin"
+      ],
+      "engines": {
+        "node": ">= 10"
+      }
+    },
+    "node_modules/@next/swc-darwin-x64": {
+      "version": "16.4.6",
+      "resolved": "https://registry.npmjs.org/@next/swc-darwin-x64/-/swc-darwin-x64-16.4.6.tgz",
+      "integrity": "sha512-eIPGZIqC+8JKaeZmvnCANJQF4xWkkHqSnAAajtFxgwDMAOnCgxNvP52SeWZ41PyVwoe+Le/NQuZSaQ8j7YshSA==",
+      "cpu": [
+        "x64"
+      ],
+      "license": "MIT",
+      "optional": true,
+      "os": [
+        "darwin"
+      ],
+      "engines": {
+        "node": ">= 10"
+      }
+    },
+    "node_modules/@next/swc-linux-arm64-gnu": {
+      "version": "16.4.6",
+      "resolved": "https://registry.npmjs.org/@next/swc-linux-arm64-gnu/-/swc-linux-arm64-gnu-16.4.6.tgz",
+      "integrity": "sha512-9nI6O8vvczH2D9ZNdMGqb/3NuT15T9ksOZnAmx9/gjF2cOi74+xxyf1Hk96uIMfm14c9y6wHeBq6SH8g6udvcA==",
+      "cpu": [
+        "arm64"
+      ],
+      "license": "MIT",
+      "optional": true,
+      "os": [
+        "linux"
+      ],
+      "engines": {
+        "node": ">= 10"
+      }
+    },
+    "node_modules/@next/swc-linux-arm64-musl": {
+      "version": "16.4.6",
+      "resolved": "https://registry.npmjs.org/@next/swc-linux-arm64-musl/-/swc-linux-arm64-musl-16.4.6.tgz",
+      "integrity": "sha512-7/qPhTxDp2ScluOJOhLuhWmlA17o1yZ0SIgpISBCpBxXgtnK4+KGywBpFkfLPiU1rnSM1faFGzYkH6i7JdTrqA==",
+      "cpu": [
+        "arm64"
+      ],
+      "license": "MIT",
+      "optional": true,
+      "os": [
+        "linux"
+      ],
+      "engines": {
+        "node": ">= 10"
+      }
+    },
+    "node_modules/@next/swc-linux-x64-gnu": {
+      "version": "16.4.6",
+      "resolved": "https://registry.npmjs.org/@next/swc-linux-x64-gnu/-/swc-linux-x64-gnu-16.4.6.tgz",
+      "integrity": "sha512-oOpbNa8XOW1qCGd9VvzC4fbkkRxEls7/WI6tz+YHC0xRA7KpV1U7DrAnCPjzVyOk/karzWEepCOcTIDmwK8FwQ==",
+      "cpu": [
+        "x64"
+      ],
+      "license": "MIT",
+      "optional": true,
+      "os": [
+        "linux"
+      ],
+      "engines": {
+        "node": ">= 10"
+      }
+    },
+    "node_modules/@next/swc-linux-x64-musl": {
+      "version": "16.4.6",
+      "resolved": "https://registry.npmjs.org/@next/swc-linux-x64-musl/-/swc-linux-x64-musl-16.4.6.tgz",
+      "integrity": "sha512-aM8CZ+OR2EwXaAYw7KGkW2GDmNDsLBIRe1MMRZCJPTdw/xhTD0IMUVO4sf3KqrzuRouGzwwLZn34+gFeVXiUQA==",
+      "cpu": [
+        "x64"
+      ],
+      "license": "MIT",
+      "optional": true,
+      "os": [
+        "linux"
+      ],
+      "engines": {
+        "node": ">= 10"
+      }
+    },
+    "node_modules/@next/swc-win32-arm64-msvc": {
+      "version": "16.4.6",
+      "resolved": "https://registry.npmjs.org/@next/swc-win32-arm64-msvc/-/swc-win32-arm64-msvc-16.4.6.tgz",
+      "integrity": "sha512-U0p7/tEtqvHX2crhd841CDwKtp5CFkKXVjOhmfccR3Pvp64sj8KBwRqsvltqLOwVBbj0NtkxwXSDpEHYGbxeXQ==",
+      "cpu": [
+        "arm64"
+      ],
+      "license": "MIT",
+      "optional": true,
+      "os": [
+        "win32"
+      ],
+      "engines": {
+        "node": ">= 10"
+      }
+    },
+    "node_modules/@next/swc-win32-x64-msvc": {
+      "version": "16.4.6",
+      "resolved": "https://registry.npmjs.org/@next/swc-win32-x64-msvc/-/swc-win32-x64-msvc-16.4.6.tgz",
+      "integrity": "sha512-3ZG15/5WIdlTQsIEvc9sPTTSL5XFrlLklIKmfF4fwsDnoAhu6NcBDXsk3mbGxNyo6aVLEGex+fHCv2MahY7a9g==",
+      "cpu": [
+        "x64"
+      ],
+      "license": "MIT",
+      "optional": true,
+      "os": [
+        "win32"
+      ],
+      "engines": {
+        "node": ">= 10"
+      }
+    },
+    "node_modules/@swc/helpers": {
+      "version": "0.5.23",
+      "resolved": "https://registry.npmjs.org/@swc/helpers/-/helpers-0.5.23.tgz",
+      "integrity": "sha512-5lSsMOTXURePglDfvuAQUqkGek9Hg2kksOYay2m0+XR++b2NWYL/4sWyuvVBIs8oKnJaxkdi9whaL/sqN13afw==",
+      "license": "Apache-2.0",
+      "dependencies": {
+        "tslib": "^2.8.0"
+      }
+    },
+    "node_modules/@types/node": {
+      "version": "22.19.0",
+      "resolved": "https://registry.npmjs.org/@types/node/-/node-22.19.0.tgz",
+      "integrity": "sha512-xpr/lmLPQEj+TUnHmR+Ab91/glhJvsqcjB+yY0Ix9GO70H6Lb4FHH5GeqdOE5btAx7eIMwuHkp4H2MSkLcqWbA==",
+      "dev": true,
+      "license": "MIT",
+      "dependencies": {
+        "undici-types": "~6.21.0"
+      }
+    },
+    "node_modules/@types/react": {
+      "version": "19.2.2",
+      "resolved": "https://registry.npmjs.org/@types/react/-/react-19.2.2.tgz",
+      "integrity": "sha512-6mDvHUFSjyT2B2yeNx2nUgMxh9LtOWvkhIU3uePn2I2oyNymUAX1NIsdgviM4CH+JSrp2D2hsMvJOkxY+0wNRA==",
+      "dev": true,
+      "license": "MIT",
+      "dependencies": {
+        "csstype": "^3.0.2"
+      }
+    },
+    "node_modules/@types/react-dom": {
+      "version": "19.2.2",
+      "resolved": "https://registry.npmjs.org/@types/react-dom/-/react-dom-19.2.2.tgz",
+      "integrity": "sha512-9KQPoO6mZCi7jcIStSnlOWn2nEF3mNmyr3rIAsGnAbQKYbRLyqmeSc39EVgtxXVia+LMT8j3knZLAZAh+xLmrw==",
+      "dev": true,
+      "license": "MIT",
+      "peerDependencies": {
+        "@types/react": "^19.2.0"
+      }
+    },
+    "node_modules/baseline-browser-mapping": {
+      "version": "2.11.37",
+      "resolved": "https://registry.npmjs.org/baseline-browser-mapping/-/baseline-browser-mapping-2.11.37.tgz",
+      "integrity": "sha512-QYph+vfurmaxhNwi9FprfmtkT5cx2Keg8FzZ0vnjO8ukscIybVyZGMFwdllKGlTI6qyU8ck43OM9UXh+IFJihQ==",
+      "license": "Apache-2.0",
+      "bin": {
+        "baseline-browser-mapping": "dist/cli.cjs"
+      },
+      "engines": {
+        "node": ">=6.0.0"
+      }
+    },
+    "node_modules/caniuse-lite": {
+      "version": "1.0.30001826",
+      "resolved": "https://registry.npmjs.org/caniuse-lite/-/caniuse-lite-1.0.30001826.tgz",
+      "integrity": "sha512-wTB+9tIbLro/BCXwLuNV1meHE4L9dS6dArMDwgYfNBPMYScqClHyGunhkCSDtHhe/69Xl0sHlKgBVZ+fNsYtWA==",
+      "funding": [
+        {
+          "type": "opencollective",
+          "url": "https://opencollective.com/browserslist"
+        },
+        {
+          "type": "tidelift",
+          "url": "https://tidelift.com/funding/github/npm/caniuse-lite"
+        },
+        {
+          "type": "github",
+          "url": "https://github.com/sponsors/ai"
+        }
+      ],
+      "license": "CC-BY-4.0"
+    },
+    "node_modules/client-only": {
+      "version": "0.0.1",
+      "resolved": "https://registry.npmjs.org/client-only/-/client-only-0.0.1.tgz",
+      "integrity": "sha512-IV3Ou0jSMzZrd3pZ48nLkT9DA7Ag1pnPzaiQhpW7c3RbcqqzvzzVu+L8gfqMp/8IM2MQtSiqaCxrrcfu8I8rMA==",
+      "license": "MIT"
+    },
+    "node_modules/csstype": {
+      "version": "3.2.3",
+      "resolved": "https://registry.npmjs.org/csstype/-/csstype-3.2.3.tgz",
+      "integrity": "sha512-z1HGKcYy2xA8AGQfwrn0PAy+PB7X/GSj3UVJW9qKyn43xWa+gl5nXmU4qqLMRzWVLFC8KusUX8T/0kCiOYpAIQ==",
+      "dev": true,
+      "license": "MIT"
+    },
+    "node_modules/detect-libc": {
+      "version": "2.1.2",
+      "resolved": "https://registry.npmjs.org/detect-libc/-/detect-libc-2.1.2.tgz",
+      "integrity": "sha512-Btj2BOOO83o3WyH59e8MgXsxEQVcarkUOpEYrubB0urwnN10yQ364rsiByU11nZlqWYZm05i/of7io4mzihBtQ==",
+      "license": "Apache-2.0",
+      "optional": true,
+      "engines": {
+        "node": ">=8"
+      }
+    },
+    "node_modules/lucide-react": {
+      "version": "0.468.0",
+      "resolved": "https://registry.npmjs.org/lucide-react/-/lucide-react-0.468.0.tgz",
+      "integrity": "sha512-6koYRhnM2N0GGZIdXzSeiNwguv1gt/FAjZOiPl76roBi3xKEXa4WmfpxgQwTTL4KipXjefrnf3oV4IsYhi4JFA==",
+      "license": "ISC",
+      "peerDependencies": {
+        "react": "^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0-rc"
+      }
+    },
+    "node_modules/nanoid": {
+      "version": "3.3.20",
+      "resolved": "https://registry.npmjs.org/nanoid/-/nanoid-3.3.20.tgz",
+      "integrity": "sha512-uKdg2G3GNCKQn9byYOpxbGqrT2fGO5KRt5J/8b3pok8rT6qxGWF6hxMyJiEYtAf+FVyYuD9hRaDqX5uPFYJ4ZQ==",
+      "funding": [
+        {
+          "type": "github",
+          "url": "https://github.com/sponsors/ai"
+        }
+      ],
+      "license": "MIT",
+      "bin": {
+        "nanoid": "bin/nanoid.cjs"
+      },
+      "engines": {
+        "node": "^10 || ^12 || ^13.7 || ^14 || >=15.0.1"
+      }
+    },
+    "node_modules/next": {
+      "version": "16.4.6",
+      "resolved": "https://registry.npmjs.org/next/-/next-16.4.6.tgz",
+      "integrity": "sha512-QZJiYhaZLJMo2KpkQGQIwvmd79WVsAWeYIU554a8d7zArS3si/IRy3lBNV/rtYhE70oLwdLYhPAXLPx8HwcwtA==",
+      "license": "MIT",
+      "dependencies": {
+        "@next/env": "16.4.6",
+        "@swc/helpers": "0.5.23",
+        "baseline-browser-mapping": "^2.9.19",
+        "caniuse-lite": "^1.0.30001579",
+        "postcss": "8.5.23",
+        "styled-jsx": "5.1.6"
+      },
+      "bin": {
+        "next": "dist/bin/next"
+      },
+      "engines": {
+        "node": ">=20.9.0"
+      },
+      "optionalDependencies": {
+        "@next/swc-darwin-arm64": "16.4.6",
+        "@next/swc-darwin-x64": "16.4.6",
+        "@next/swc-linux-arm64-gnu": "16.4.6",
+        "@next/swc-linux-arm64-musl": "16.4.6",
+        "@next/swc-linux-x64-gnu": "16.4.6",
+        "@next/swc-linux-x64-musl": "16.4.6",
+        "@next/swc-win32-arm64-msvc": "16.4.6",
+        "@next/swc-win32-x64-msvc": "16.4.6",
+        "sharp": "^0.35.5"
+      },
+      "peerDependencies": {
+        "@opentelemetry/api": "^1.1.0",
+        "@playwright/test": "^1.51.1",
+        "babel-plugin-react-compiler": "*",
+        "react": "^18.2.0 || 19.0.0-rc-de68d2f4-20241204 || ^19.0.0",
+        "react-dom": "^18.2.0 || 19.0.0-rc-de68d2f4-20241204 || ^19.0.0",
+        "sass": "^1.3.0"
+      },
+      "peerDependenciesMeta": {
+        "@opentelemetry/api": {
+          "optional": true
+        },
+        "@playwright/test": {
+          "optional": true
+        },
+        "babel-plugin-react-compiler": {
+          "optional": true
+        },
+        "sass": {
+          "optional": true
+        }
+      }
+    },
+    "node_modules/picocolors": {
+      "version": "1.1.1",
+      "resolved": "https://registry.npmjs.org/picocolors/-/picocolors-1.1.1.tgz",
+      "integrity": "sha512-xceH2snhtb5M9liqDsmEw56le376mTZkEX/jEb/RxNFyegNul7eNslCXP9FDj/Lcu0X8KEyMceP2ntpaHrDEVA==",
+      "license": "ISC"
+    },
+    "node_modules/postcss": {
+      "version": "8.5.23",
+      "resolved": "https://registry.npmjs.org/postcss/-/postcss-8.5.23.tgz",
+      "integrity": "sha512-g50586zr4bZmwFiTlflMu8E0bDTb5I5gertgwAKmsdUlTQIhZtunzUlD1WSzwcVWPoAVpsrA6vlfCD7oXvRwgg==",
+      "funding": [
+        {
+          "type": "opencollective",
+          "url": "https://opencollective.com/postcss/"
+        },
+        {
+          "type": "tidelift",
+          "url": "https://tidelift.com/funding/github/npm/postcss"
+        },
+        {
+          "type": "github",
+          "url": "https://github.com/sponsors/ai"
+        }
+      ],
+      "license": "MIT",
+      "dependencies": {
+        "nanoid": "^3.3.16",
+        "picocolors": "^1.1.1",
+        "source-map-js": "^1.2.1"
+      },
+      "engines": {
+        "node": "^10 || ^12 || >=14"
+      }
+    },
+    "node_modules/react": {
+      "version": "19.3.1",
+      "resolved": "https://registry.npmjs.org/react/-/react-19.3.1.tgz",
+      "integrity": "sha512-QNhWdt7nrgVWWQG58QuGsAR3jv3Hbe4mb4vz7w2csnHavciZJgda1CPNaldF6eVxv90ud3jUXpKlHL69gO38yw==",
+      "license": "MIT",
+      "engines": {
+        "node": ">=0.10.0"
+      }
+    },
+    "node_modules/react-dom": {
+      "version": "19.3.1",
+      "resolved": "https://registry.npmjs.org/react-dom/-/react-dom-19.3.1.tgz",
+      "integrity": "sha512-Y0bARz53lhEC1NMCASs0/j+faB/zqt3R8hpvg1e8+61ZVJ4UL0UdC4cBbXfZMcIuhrfgeILTLe+ZeBCavQPtKQ==",
+      "license": "MIT",
+      "dependencies": {
+        "scheduler": "^0.28.0"
+      },
+      "peerDependencies": {
+        "react": "^19.3.1"
+      }
+    },
+    "node_modules/scheduler": {
+      "version": "0.28.0",
+      "resolved": "https://registry.npmjs.org/scheduler/-/scheduler-0.28.0.tgz",
+      "integrity": "sha512-juorfCmIkIw8tT+p5BXSm6PJjQF/ycEYmKyzURCIt/RaZIhL+PulbQ9Yu2z1HdOJDdqDTlxA1+xKBmHXJsczAw==",
+      "license": "MIT"
+    },
+    "node_modules/semver": {
+      "version": "7.8.6",
+      "resolved": "https://registry.npmjs.org/semver/-/semver-7.8.6.tgz",
+      "integrity": "sha512-9lpSSU4Mly3mrtruwLs1eLK6+gzbzqeBFwRNjIjE+9LuDpWdYctrQlQ3ej1Ilgi7gknpsTRnPoLP8DpCHqHIJw==",
+      "license": "ISC",
+      "optional": true,
+      "bin": {
+        "semver": "bin/semver.js"
+      },
+      "engines": {
+        "node": ">=10"
+      }
+    },
+    "node_modules/sharp": {
+      "version": "0.35.5",
+      "resolved": "https://registry.npmjs.org/sharp/-/sharp-0.35.5.tgz",
+      "integrity": "sha512-Ywn4OnzGukp7CDMrp08RQ50YKmuwG47brZgIVPTvBaaAfQlRlygrRqSrxdCiL9M+LlzLBiJ68IR1QqvzHyjC7g==",
+      "license": "Apache-2.0",
+      "optional": true,
+      "dependencies": {
+        "@img/colour": "^1.1.0",
+        "detect-libc": "^2.1.2",
+        "semver": "^7.8.5"
+      },
+      "engines": {
+        "node": ">=20.9.0"
+      },
+      "funding": {
+        "url": "https://opencollective.com/libvips"
+      },
+      "optionalDependencies": {
+        "@img/sharp-darwin-arm64": "0.35.5",
+        "@img/sharp-darwin-x64": "0.35.5",
+        "@img/sharp-freebsd-wasm32": "0.35.5",
+        "@img/sharp-libvips-darwin-arm64": "1.3.4",
+        "@img/sharp-libvips-darwin-x64": "1.3.4",
+        "@img/sharp-libvips-linux-arm": "1.3.4",
+        "@img/sharp-libvips-linux-arm64": "1.3.4",
+        "@img/sharp-libvips-linux-ppc64": "1.3.4",
+        "@img/sharp-libvips-linux-riscv64": "1.3.4",
+        "@img/sharp-libvips-linux-s390x": "1.3.4",
+        "@img/sharp-libvips-linux-x64": "1.3.4",
+        "@img/sharp-libvips-linuxmusl-arm64": "1.3.4",
+        "@img/sharp-libvips-linuxmusl-x64": "1.3.4",
+        "@img/sharp-linux-arm": "0.35.5",
+        "@img/sharp-linux-arm64": "0.35.5",
+        "@img/sharp-linux-ppc64": "0.35.5",
+        "@img/sharp-linux-riscv64": "0.35.5",
+        "@img/sharp-linux-s390x": "0.35.5",
+        "@img/sharp-linux-x64": "0.35.5",
+        "@img/sharp-linuxmusl-arm64": "0.35.5",
+        "@img/sharp-linuxmusl-x64": "0.35.5",
+        "@img/sharp-webcontainers-wasm32": "0.35.5",
+        "@img/sharp-win32-arm64": "0.35.5",
+        "@img/sharp-win32-ia32": "0.35.5",
+        "@img/sharp-win32-x64": "0.35.5"
+      },
+      "peerDependenciesMeta": {
+        "@types/node": {
+          "optional": true
+        }
+      }
+    },
+    "node_modules/source-map-js": {
+      "version": "1.2.2",
+      "resolved": "https://registry.npmjs.org/source-map-js/-/source-map-js-1.2.2.tgz",
+      "integrity": "sha512-KGj/8Y43x35aZVDtt+J4mK1hoLGHULMYfSkODJNQjNDC3oW1PqPoxMwo0pLUsWM/UEGzON/NxeHywEfNXNP3Vw==",
+      "license": "BSD-3-Clause",
+      "engines": {
+        "node": ">=0.10.0"
+      }
+    },
+    "node_modules/styled-jsx": {
+      "version": "5.1.6",
+      "resolved": "https://registry.npmjs.org/styled-jsx/-/styled-jsx-5.1.6.tgz",
+      "integrity": "sha512-qSVyDTeMotdvQYoHWLNGwRFJHC+i+ZvdBRYosOFgC+Wg1vx4frN2/RG/NA7SYqqvKNLf39P2LSRA2pu6n0XYZA==",
+      "license": "MIT",
+      "dependencies": {
+        "client-only": "0.0.1"
+      },
+      "engines": {
+        "node": ">= 12.0.0"
+      },
+      "peerDependencies": {
+        "react": ">= 16.8.0 || 17.x.x || ^18.0.0-0 || ^19.0.0-0"
+      },
+      "peerDependenciesMeta": {
+        "@babel/core": {
+          "optional": true
+        },
+        "babel-plugin-macros": {
+          "optional": true
+        }
+      }
+    },
+    "node_modules/tslib": {
+      "version": "2.9.1",
+      "resolved": "https://registry.npmjs.org/tslib/-/tslib-2.9.1.tgz",
+      "integrity": "sha512-a4Ux9VKuIMHsOS7ENbEq6hK2ZGYIT27Rtl0E4eD9KqwxhKiQeMZE/9xb3IdYwWaSOyIBQLExhQgXDTYoiCxnWA==",
+      "license": "0BSD"
+    },
+    "node_modules/typescript": {
+      "version": "5.9.3",
+      "resolved": "https://registry.npmjs.org/typescript/-/typescript-5.9.3.tgz",
+      "integrity": "sha512-jl1vZzPDinLr9eUt3J/t7V6FgNEw9QjvBPdysz9KfQDD41fQrC2Y4vKQdiaUpFT4bXlb1RHhLpp8wtm6M5TgSw==",
+      "dev": true,
+      "license": "Apache-2.0",
+      "bin": {
+        "tsc": "bin/tsc",
+        "tsserver": "bin/tsserver"
+      },
+      "engines": {
+        "node": ">=14.17"
+      }
+    },
+    "node_modules/undici-types": {
+      "version": "6.21.0",
+      "resolved": "https://registry.npmjs.org/undici-types/-/undici-types-6.21.0.tgz",
+      "integrity": "sha512-iwDZqg0QAGrg9Rav5H4n0M64c3mkR59cJ6wQp+7C4nI0gsmExaedaYLNO44eT4AtBBwjbTiGPMlt2Md0T9H9JQ==",
+      "dev": true,
+      "license": "MIT"
+    }
+  }
+}
+
+NEW FILE apps\dashboard\package.json
+{
+  "name": "agentbrake-dashboard",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=22.13" },
+  "scripts": {
+    "dev": "next dev --webpack --hostname 127.0.0.1 --port 4315",
+    "build": "next build --webpack",
+    "typecheck": "tsc --noEmit",
+    "start": "next start --hostname 127.0.0.1 --port 4315"
+  },
+  "dependencies": {
+    "next": "16.4.6",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
+    "lucide-react": "0.468.0"
+  },
+  "devDependencies": {
+    "typescript": "5.9.3",
+    "@types/node": "22.19.0",
+    "@types/react": "19.2.2",
+    "@types/react-dom": "19.2.2"
+  }
+}
+
+NEW FILE apps\dashboard\tsconfig.json
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "react-jsx",
+    "incremental": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ]
+  },
+  "include": [
+    "next-env.d.ts",
+    "app/**/*.ts",
+    "app/**/*.tsx",
+    "lib/**/*.ts",
+    ".next/types/**/*.ts",
+    "../../src/**/*.ts",
+    "../../src/**/*.tsx",
+    ".next/dev/types/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "../../src/main.tsx"
+  ]
+}
+
+NEW FILE tests\product-ui\constants.ts
+export const frontend = "http://127.0.0.1:44215";
+export const backend = "http://127.0.0.1:44214";
+export const keys = {
+  administrator: "isolated-product-ui-admin-000000000000",
+  operator: "isolated-product-ui-operator-000000000",
+  approver: "isolated-product-ui-reviewer-000000000",
+  viewer: "isolated-product-ui-viewer-00000000000",
+};
+
+NEW FILE tests\product-ui\fixture.ts
+import { createServer, type Server } from "node:http";
+import { once } from "node:events";
+import { spawn, type ChildProcess } from "node:child_process";
+import { mkdtemp, cp, rm } from "node:fs/promises";
+import { join, resolve, sep } from "node:path";
+import { tmpdir } from "node:os";
+import { createApp } from "../../server/app.js";
+import { OpaEvaluator } from "../../server/policy/opa-client.js";
+import { databasePreview } from "../../server/adapters/preview.js";
+import { GitFixtureAdapter } from "../../server/adapters/git-fixture.js";
+import { keys, backend } from "./constants.js";
+// @ts-expect-error The existing verified native OPA launcher is plain JavaScript.
+import { startOpa } from "../../scripts/opa-runtime.mjs";
+
+const root = process.cwd();
+const temporary = await mkdtemp(join(tmpdir(), "agentbrake-product-ui-"));
+const targetToken = "isolated-ui-target-credential-0000000000";
+let opa: Awaited<ReturnType<typeof startOpa>> | undefined;
+let git: GitFixtureAdapter | undefined;
+let system: ReturnType<typeof createApp> | undefined;
+let target: Server | undefined, control: Server | undefined, dashboard: ChildProcess | undefined;
+let closing = false;
+async function close() {
+  if (closing) return; closing = true;
+  if (dashboard && dashboard.exitCode === null) { const exited = once(dashboard, "exit"); dashboard.kill(); await exited; }
+  for (const server of [control, target]) if (server) { server.closeAllConnections(); await new Promise<void>(done => server.close(() => done())); }
+  await system?.close(); await git?.close(); await opa?.stop();
+  if (!resolve(temporary).startsWith(resolve(tmpdir()) + sep)) throw Error("Unsafe fixture cleanup path");
+  await rm(temporary, { recursive: true, force: true });
+}
+try {
+  opa = await startOpa(); git = await GitFixtureAdapter.create(join(temporary, "repository.git"));
+  const rows = [{ id: 1, status: "active", version: 0 }, { id: 2, status: "active", version: 0 }, { id: 3, status: "active", version: 0 }];
+  const executions: Record<number, number> = {};
+  const adapter = git;
+  target = createServer(async (req, res) => {
+    if (req.headers.authorization !== `Bearer ${targetToken}`) { res.writeHead(401).end(); return; }
+    const chunks = []; for await (const chunk of req) chunks.push(chunk);
+    const body = JSON.parse(Buffer.concat(chunks).toString()); res.setHeader("Content-Type", "application/json");
+    try {
+      if (body.tool.startsWith("github_")) { const operation = { ...body, sandbox: true }; res.end(JSON.stringify(req.url === "/preview" ? await adapter.preview(operation) : await adapter.execute(operation))); return; }
+      const row = rows.find(value => value.id === body.arguments.id);
+      if (req.url === "/preview") { res.end(JSON.stringify(databasePreview(row, body.arguments.status))); return; }
+      if (body.tool === "database_read") { res.end(JSON.stringify({ rows: rows.slice(0, body.arguments.limit) })); return; }
+      if (!row || body.precondition?.version !== row.version) { res.writeHead(409).end(); return; }
+      row.status = body.arguments.status; row.version++; executions[row.id] = (executions[row.id] ?? 0) + 1;
+      // Actual committed target mutation with an actual lost response: Gateway
+      // transport times out and records UNKNOWN. No fabricated API status.
+      if (row.id === 2) return;
+      res.end(JSON.stringify(row));
+    } catch { res.writeHead(400).end(JSON.stringify({ error: "Fixture operation failed" })); }
+  });
+  target.listen(0, "127.0.0.1"); await once(target, "listening");
+  system = createApp({ databasePath: ":memory:", adminKey: keys.administrator,
+    operators: Object.entries(keys).map(([role, key]) => ({ id: role, name: `Fixture ${role}`, tenant: "local", role: role as keyof typeof keys, key })),
+    connections: { fixture: { url: `http://127.0.0.1:${(target.address() as { port: number }).port}`, token: targetToken } },
+    policy: new OpaEvaluator({ url: opa.url, token: opa.token, timeoutMs: 1000 }),
+  });
+  // Read-only diagnostic endpoint exists only in this ephemeral test fixture.
+  system.app.get("/__fixture", (_req, res) => res.json({ rows, executions }));
+  control = system.app.listen(44214, "127.0.0.1"); await once(control, "listening");
+  await cp(join(root, "apps/dashboard/.next/static"), join(root, "apps/dashboard/.next/standalone/apps/dashboard/.next/static"), { recursive: true });
+  dashboard = spawn(process.execPath, [join(root, "apps/dashboard/.next/standalone/apps/dashboard/server.js")], {
+    cwd: root, windowsHide: true, stdio: ["ignore", "pipe", "pipe"], env: {
+      PATH: process.env.PATH, SystemRoot: process.env.SystemRoot, TEMP: process.env.TEMP, TMP: process.env.TMP,
+      NODE_ENV: "production", NEXT_TELEMETRY_DISABLED: "1", HOSTNAME: "127.0.0.1", PORT: "44215", AGENTBRAKE_CONTROL_URL: backend,
+    },
+  });
+  dashboard.stdout?.pipe(process.stdout); dashboard.stderr?.pipe(process.stderr);
+  dashboard.once("exit", () => { if (!closing) void close().finally(() => process.exit(1)); });
+  process.once("SIGINT", () => void close().finally(() => process.exit(0)));
+  process.once("SIGTERM", () => void close().finally(() => process.exit(0)));
+  process.on("message", value => { if (value === "close") void close().finally(() => process.exit(0)); });
+} catch (error) { await close(); throw error; }
+
+NEW FILE tests\product-ui\playwright.config.ts
+import { defineConfig } from "@playwright/test";
+import { frontend } from "./constants.js";
+export default defineConfig({
+  testDir: ".", testMatch: "**/*.spec.ts", workers: 1, retries: 0, timeout: 30_000,
+  use: { baseURL: frontend, browserName: "chromium", viewport: { width: 1440, height: 1000 } },
+  outputDir: "../../.agentbrake-local/product-ui-results", reporter: "list",
+});
+
+NEW FILE tests\product-ui\proxy.test.ts
+import test from "node:test";
+import assert from "node:assert/strict";
+import { controlProxy } from "../../apps/dashboard/lib/control-proxy.js";
+const origin = "http://127.0.0.1:44215";
+function request(path: string, options: RequestInit = {}, headers: Record<string, string> = {}) {
+  return new Request(origin + "/api/" + path, { ...options, headers: { host: "127.0.0.1:44215", origin, "content-type": "application/json", ...headers } });
+}
+test("dashboard proxy rejects untrusted origins, routes, destinations and oversized or malformed bodies before dispatch", async () => {
+  let calls = 0; const transport: typeof fetch = async () => { calls++; return Response.json({ ok: true }); };
+  const cases: [Request, string[], string, number][] = [
+    [request("login", { method: "POST", body: "{}" }, { origin: "http://attacker.invalid" }), ["login"], "http://127.0.0.1:4314", 403],
+    [request("workspace", {}, { host: "attacker.invalid" }), ["workspace"], "http://127.0.0.1:4314", 403],
+    [request("mcp"), ["mcp"], "http://127.0.0.1:4314", 404],
+    [request("workspace"), ["workspace"], "https://example.com", 503],
+    [request("workspace", { method: "DELETE" }), ["workspace"], "http://127.0.0.1:4314", 405],
+    [request("login", { method: "POST", body: "{}" }, { "content-length": "32769" }), ["login"], "http://127.0.0.1:4314", 413],
+    [request("login", { method: "POST", body: JSON.stringify({ key: "x".repeat(32768) }) }), ["login"], "http://127.0.0.1:4314", 413],
+    [request("login", { method: "POST", body: "{" }), ["login"], "http://127.0.0.1:4314", 400],
+  ];
+  for (const [input, path, target, expected] of cases) assert.equal((await controlProxy(input, path, target, transport)).status, expected);
+  assert.equal(calls, 0);
+});
+test("dashboard proxy binds backend host/origin, preserves CSRF/cookie and streams the response without forwarding bearer credentials", async () => {
+  let observed = false;
+  const transport: typeof fetch = async (url, options) => {
+    assert.equal(String(url), "http://control-api:4314/api/control");
+    const headers = new Headers(options?.headers);
+    assert.equal(headers.get("host"), "control-api:4314"); assert.equal(headers.get("origin"), "http://control-api:4314");
+    assert.equal(headers.get("cookie"), "ab_session=test-fixture"); assert.equal(headers.get("x-ab-csrf"), "fixture-csrf");
+    assert.equal(headers.get("authorization"), null); assert.equal(options?.redirect, "error"); assert.equal(options?.cache, "no-store");
+    assert.equal(options?.body, '{"paused":true}'); observed = true;
+    return new Response("data: observed\n\n", { headers: { "content-type": "text/event-stream", "set-cookie": "ab_session=new; HttpOnly; Path=/api" } });
+  };
+  const result = await controlProxy(request("control", { method: "POST", body: '{"paused":true}' }, { cookie: "ab_session=test-fixture", "x-ab-csrf": "fixture-csrf", authorization: "Bearer must-not-leave-dashboard" }), ["control"], "http://control-api:4314", transport);
+  assert.ok(observed); assert.equal(result.headers.get("content-type"), "text/event-stream"); assert.match(result.headers.get("set-cookie")!, /HttpOnly/); assert.equal(await result.text(), "data: observed\n\n");
+});
+test("dashboard validates browser origin against trusted Host when Next reconstructs an internal listening URL", async () => {
+  const input = new Request("http://0.0.0.0:3000/api/login", { method: "POST", headers: { host: "127.0.0.1:44215", origin, "content-type": "application/json" }, body: "{}" });
+  assert.equal((await controlProxy(input, ["login"], "http://127.0.0.1:4314", async () => Response.json({ ok: true }))).status, 200);
+});
+
+NEW FILE tests\product-ui\run.mjs
+import { fork, spawn } from "node:child_process";
+import { once } from "node:events";
+import { fileURLToPath } from "node:url";
+const root = fileURLToPath(new URL("../../", import.meta.url));
+const fixture = fork(fileURLToPath(new URL("./fixture.ts", import.meta.url)), [], { cwd: root, execArgv: ["--import", "tsx"], windowsHide: true, stdio: ["ignore", "inherit", "inherit", "ipc"] });
+let browser;
+async function cleanup() {
+  if (browser && browser.exitCode === null) { const ended = once(browser, "exit"); browser.kill(); await ended; }
+  if (fixture.exitCode === null) {
+    const ended = once(fixture, "exit"); fixture.send("close");
+    let timeout;
+    try { await Promise.race([ended, new Promise((_, reject) => { timeout = setTimeout(() => reject(Error("Fixture cleanup timeout")), 10_000); })]); }
+    catch { fixture.kill(); await ended; }
+    finally { clearTimeout(timeout); }
+  }
+}
+process.once("SIGINT", () => void cleanup().finally(() => process.exit(130)));
+process.once("SIGTERM", () => void cleanup().finally(() => process.exit(143)));
+try {
+  let ready = false;
+  for (let index = 0; index < 150; index++) {
+    if (fixture.exitCode !== null) throw Error("Fixture exited before readiness");
+    try { const response = await fetch("http://127.0.0.1:44215/api/health", { signal: AbortSignal.timeout(300) }); if (response.status === 200) { ready = true; break; } }
+    catch {}
+    await new Promise(resolve => setTimeout(resolve, 200));
+  }
+  if (!ready) throw Error("Standalone dashboard fixture failed readiness");
+  browser = spawn(process.execPath, ["node_modules/@playwright/test/cli.js", "test", "--config", "tests/product-ui/playwright.config.ts", ...process.argv.slice(2)], { cwd: root, windowsHide: true, stdio: "inherit" });
+  const [code] = await once(browser, "exit"); process.exitCode = code ?? 1;
+} catch (error) { console.error(error.message); process.exitCode = 1; }
+finally { await cleanup(); }
+
+NEW FILE tests\product-ui\workflows.spec.ts
+import { test, expect, type Page } from "@playwright/test";
+import { randomUUID } from "node:crypto";
+import { backend, frontend, keys } from "./constants.js";
+
+async function control(role: keyof typeof keys) {
+  const login = await fetch(backend + "/api/login", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ key: keys[role] }) });
+  expect(login.status).toBe(200); const session = await login.json(); const cookie = login.headers.get("set-cookie")!.split(";")[0];
+  return async (path: string, body?: unknown, method = body === undefined ? "GET" : "POST") => {
+    const response = await fetch(backend + "/api" + path, { method, headers: { Cookie: cookie, "Content-Type": "application/json", "X-AB-CSRF": session.csrfToken }, body: body === undefined ? undefined : JSON.stringify(body) });
+    return { status: response.status, body: await response.json() };
+  };
+}
+async function signIn(page: Page, role: keyof typeof keys) {
+  await page.goto("/"); await page.getByLabel("Workspace key").fill(keys[role]); await page.getByRole("button", { name: "Open workspace" }).click();
+  await expect(page.getByRole("heading", { name: "Security overview" })).toBeVisible();
+}
+async function pending(role: "administrator" | "operator" = "operator", id = 1) {
+  const request = await control(role);
+  const created = await request("/agents", { name: `UI ${role} ${randomUUID().slice(0, 8)}`, tools: ["database_update"], resources: ["customers"], sandbox: true });
+  expect(created.status).toBe(201);
+  const envelope = { requestId: randomUUID(), tool: "database_update", arguments: { id, status: "paused" } };
+  const response = await fetch(backend + "/api/actions", { method: "POST", headers: { "Content-Type": "application/json", Authorization: `Bearer ${created.body.token}` }, body: JSON.stringify(envelope) });
+  const action = await response.json(); expect(action.status).toBe("pending");
+  const reviewed = await request(`/approvals/${action.id}`); expect(reviewed.status).toBe(200);
+  return { action, proof: reviewed.body.proof, request, token: created.body.token, envelope };
+}
+async function openAction(page: Page, id: string) {
+  await page.getByRole("navigation").getByRole("button", { name: /^Approvals/ }).click();
+  await page.getByRole("button", { name: `Inspect ${id}`, exact: true }).click();
+  await expect(page.getByTestId("action-preview")).toBeVisible();
+}
+async function state() { return (await fetch(backend + "/__fixture")).json(); }
+
+test("operator can create identity, issue a bounded task grant, revoke, reload session and keep bearer only in memory", async ({ page }) => {
+  await signIn(page, "operator");
+  await page.getByRole("button", { name: "Create task identity" }).click();
+  await page.getByLabel("Agent name").fill("Bounded fixture task");
+  await page.getByRole("button", { name: "Create scoped agent" }).click();
+  await expect(page.locator(".token-row code")).toContainText("ab_");
+  const token = await page.locator(".token-row code").textContent();
+  await expect(page.getByRole("button", { name: "Configure task grant" })).toBeVisible();
+  await page.getByRole("button", { name: "Configure task grant" }).click();
+  expect(await page.evaluate(() => ({ local: Object.keys(localStorage), session: Object.keys(sessionStorage) }))).toEqual({ local: [], session: [] });
+  await expect(page.getByText(token!, { exact: true })).toHaveCount(0);
+  const card = page.locator(".agent-card").filter({ has: page.getByRole("heading", { name: "Bounded fixture task" }) });
+  await card.getByRole("button", { name: "Grant task" }).click();
+  await page.getByLabel("Expiry in seconds").fill("120"); await page.getByLabel("Maximum calls").fill("3"); await page.getByLabel("Maximum rows").fill("2");
+  const granted = page.waitForResponse(response => response.url().endsWith("/grant") && response.request().method() === "POST");
+  await page.getByRole("button", { name: "Issue task grant" }).click(); expect((await granted).status()).toBe(201);
+  await expect(card.locator(".task-grant")).toContainText("0 / 3");
+  await page.reload(); await expect(page.getByRole("heading", { name: "Tasks", exact: true })).toBeVisible();
+  await card.getByRole("button", { name: "Revoke grant" }).click(); await expect(card.locator(".task-grant .badge")).toHaveText("Revoked");
+  await page.getByTitle("Sign out").click(); await expect(page.getByLabel("Workspace key")).toHaveValue("");
+});
+
+test("administrator sees independent-review restriction; server rejects self-approval without target dispatch", async ({ page }) => {
+  const fixture = await pending("administrator", 3); const before = await state();
+  await signIn(page, "administrator"); await openAction(page, fixture.action.id);
+  await expect(page.getByRole("dialog")).toContainText("Independent reviewer required"); await expect(page.getByRole("button", { name: "Approve & execute" })).toBeDisabled();
+  const denied = await fixture.request(`/approvals/${fixture.action.id}`, { decision: "approve", proof: fixture.proof }); expect(denied.status).toBe(403);
+  expect((await state()).executions).toEqual(before.executions);
+});
+
+test("independent reviewer submits displayed real preview proof, executes once and exports recorded evidence", async ({ page }) => {
+  const fixture = await pending(); const before = await state();
+  await signIn(page, "approver"); await openAction(page, fixture.action.id);
+  const dialog = page.getByRole("dialog"); await expect(dialog).toContainText(fixture.proof.fingerprint); await expect(dialog).toContainText("Fixture approver");
+  await expect(dialog.getByTestId("action-preview")).toContainText('"before"'); await expect(dialog.getByTestId("action-preview")).toContainText('"after"');
+  const sent = page.waitForRequest(request => request.url().endsWith(`/approvals/${fixture.action.id}`) && request.method() === "POST");
+  await page.getByRole("button", { name: "Approve & execute" }).click(); expect((await sent).postDataJSON()).toEqual({ decision: "approve", proof: fixture.proof });
+  await expect(dialog.locator(".badge")).toHaveText("Allowed"); await expect(dialog).toContainText('"actorId": "approver"');
+  expect((await state()).executions[1]).toBe((before.executions[1] ?? 0) + 1);
+  const reviewer = await control("approver"); expect((await reviewer(`/approvals/${fixture.action.id}`, { decision: "approve", proof: fixture.proof })).status).toBe(409);
+  expect((await state()).executions[1]).toBe((before.executions[1] ?? 0) + 1);
+  const download = page.waitForEvent("download"); await dialog.getByRole("link", { name: "Export evidence JSON" }).click(); expect((await download).suggestedFilename()).toContain("agentbrake-evidence-");
+  await page.getByRole("button", { name: "Close dialog" }).click(); await page.getByRole("button", { name: "Evidence", exact: true }).click();
+  await page.getByLabel("Recorded action").selectOption(fixture.action.id); await expect(page.getByText("Execution observation: adapter-reported")).toBeVisible();
+  const exported = await page.request.get(`/api/evidence/${fixture.action.id}/export?format=json`); expect(exported.status()).toBe(200); const evidence = await exported.json();
+  expect(evidence.review.fingerprint).toBe(fixture.proof.fingerprint); expect(evidence.action.result).toBeUndefined(); expect(evidence.review.receipt.actorId).toBe("approver");
+  await page.getByRole("button", { name: "Activity", exact: true }).click(); await page.getByLabel("Agent ID", { exact: true }).fill(fixture.action.agentId); await page.getByRole("button", { name: "Apply filters" }).click();
+  await expect(page.getByRole("button", { name: `Inspect ${fixture.action.id}` })).toBeVisible();
+});
+
+test("stale one-time review displays conflict and refreshes status without retrying", async ({ page }) => {
+  const fixture = await pending("operator", 3); const reviewer = await control("approver");
+  await signIn(page, "approver"); await openAction(page, fixture.action.id);
+  expect((await reviewer(`/approvals/${fixture.action.id}`, { decision: "reject", proof: fixture.proof })).status).toBe(200);
+  const requests: string[] = []; page.on("request", request => { if (request.method() === "POST" && request.url().endsWith(`/approvals/${fixture.action.id}`)) requests.push(request.postData()!); });
+  await page.getByRole("button", { name: "Approve & execute" }).click();
+  await expect(page.getByRole("dialog").getByRole("alert")).toContainText("no longer awaiting approval"); await expect(page.getByRole("dialog").locator(".badge")).toHaveText("Blocked");
+  expect(requests).toHaveLength(1); await expect(page.getByRole("button", { name: "Approve & execute" })).toHaveCount(0);
+});
+
+test("actual lost response after target commit displays UNKNOWN and never offers retry", async ({ page }) => {
+  const fixture = await pending("operator", 2); const before = await state();
+  await signIn(page, "approver"); await openAction(page, fixture.action.id); await page.getByRole("button", { name: "Approve & execute" }).click();
+  const dialog = page.getByRole("dialog"); await expect(dialog.locator(".badge")).toHaveText("Unknown"); await expect(dialog.getByRole("alert")).toContainText("Reconcile target state");
+  await expect(dialog.getByRole("button", { name: /retry|approve/i })).toHaveCount(0); expect((await state()).executions[2]).toBe((before.executions[2] ?? 0) + 1);
+  await page.getByRole("button", { name: "Close dialog" }).click(); await page.getByRole("button", { name: "Evidence", exact: true }).click(); await page.getByLabel("Recorded action").selectOption(fixture.action.id);
+  await expect(page.getByText("Execution observation: unverified")).toBeVisible(); await expect(page.getByText("Outcome is unverified.", { exact: false })).toContainText("Do not resubmit");
+});
+
+test("viewer sees policy history and local connections with role-gated controls and mobile layout", async ({ page }) => {
+  const errors: string[] = []; page.on("pageerror", error => errors.push(error.message));
+  await page.setViewportSize({ width: 390, height: 844 }); await signIn(page, "viewer");
+  await expect(page.getByRole("button", { name: "Create task identity" })).toHaveCount(0);
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+  await page.getByRole("button", { name: "Toggle navigation" }).click(); await page.getByRole("button", { name: "Policies", exact: true }).click();
+  await expect(page.getByRole("combobox", { name: "Customer record changes" })).toBeDisabled(); await expect(page.getByRole("button", { name: "Save policies" })).toBeDisabled(); await expect(page.getByRole("heading", { name: "Policy revision history" })).toBeVisible();
+  await page.getByRole("button", { name: "Toggle navigation" }).click(); await page.getByRole("button", { name: "Connections", exact: true }).click(); await expect(page.getByRole("heading", { name: "Connect your MCP client" })).toBeVisible();
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true); expect(errors).toEqual([]);
+});
+
+test("Demo Lab uses real gateway denial/read and canonical Git branch/PR reviews", async ({ page, browser }) => {
+  await signIn(page, "operator"); await page.getByRole("button", { name: "Demo Lab", exact: true }).click();
+  await page.getByRole("button", { name: "Run Safe read" }).click(); await expect(page.locator("main table .badge")).toHaveText("Allowed");
+  await page.getByRole("button", { name: "Run Blocked destructive SQL" }).click(); await expect(page.locator("main table .badge")).toHaveText("Blocked");
+  await page.getByRole("button", { name: "Run PR approval" }).click(); await expect(page.locator("main table .badge").last()).toHaveText("Needs approval");
+  const operator = await control("operator"); let workspace = (await operator("/workspace")).body; const branch = workspace.actions.find((action: any) => action.tool === "github_create_branch" && action.status === "pending"); expect(branch).toBeTruthy();
+  const context = await browser.newContext({ baseURL: frontend }); const reviewer = await context.newPage();
+  try {
+    await signIn(reviewer, "approver"); await openAction(reviewer, branch.id); await expect(reviewer.getByTestId("action-preview")).toContainText("git-branch"); await reviewer.getByRole("button", { name: "Approve & execute" }).click(); await expect(reviewer.getByRole("dialog").locator(".badge")).toHaveText("Allowed"); await reviewer.getByRole("button", { name: "Close dialog" }).click();
+    const prRequested = page.waitForResponse(response => response.url().endsWith("/api/demo") && response.request().method() === "POST");
+    await page.getByRole("button", { name: "Run PR approval" }).click(); expect((await prRequested).status()).toBe(200); workspace = (await operator("/workspace")).body; const pr = workspace.actions.find((action: any) => action.tool === "github_open_pull_request" && action.status === "pending"); expect(pr).toBeTruthy();
+    await reviewer.getByRole("button", { name: "Refresh", exact: true }).click(); await openAction(reviewer, pr.id); await expect(reviewer.getByTestId("action-preview")).toContainText("diff --git"); await expect(reviewer.getByTestId("action-preview")).toContainText("proposalFingerprint"); await reviewer.getByRole("button", { name: "Approve & execute" }).click(); await expect(reviewer.getByRole("dialog").locator(".badge")).toHaveText("Allowed");
+  } finally { await context.close(); }
+});

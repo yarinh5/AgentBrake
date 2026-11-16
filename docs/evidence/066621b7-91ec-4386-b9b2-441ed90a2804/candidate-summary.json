@@ -1,0 +1,14 @@
+{
+  "runId": "066621b7-91ec-4386-b9b2-441ed90a2804",
+  "sourceHash": "f0bdb8c15c24ffad122d165eaa4577918a665eb521eb773d2d585538d8e3094f",
+  "startedAt": "2026-11-16T19:04:34.675Z",
+  "result": "FAIL",
+  "cases": [],
+  "scope": "Local disposable Docker install with actual TLS/Next/control/Gateway and synthetic App key. GitHub outbound network internal; no real GitHub call or production certificate validation.",
+  "error": "Cannot read properties of undefined (reading 'networks')",
+  "cleanup": {
+    "result": "PASS",
+    "containers": 0
+  },
+  "finishedAt": "2026-11-16T19:04:35.639Z"
+}

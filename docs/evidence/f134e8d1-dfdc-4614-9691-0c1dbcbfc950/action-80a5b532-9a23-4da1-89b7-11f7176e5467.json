@@ -1,0 +1,28 @@
+{
+  "status": 200,
+  "body": {
+    "id": "80a5b532-9a23-4da1-89b7-11f7176e5467",
+    "agentId": "8009f754-6b96-4432-b3cb-8e5a8f10af8f",
+    "requestId": "2a233351-11a4-4a01-b84a-86c856ab4f92",
+    "tool": "database_read",
+    "digest": "4a67b0e0e931dc47d5bc085c017a9d0dafc8a953f633f4aa6b1220c4c08f9284",
+    "destination": "c72fd090cd5cd04da045b7d3c5804c1f4dfdd2c3930e57b76c03d15edbe404d5",
+    "correlationId": "bf04b2d1-f4ea-431c-bf64-ef797bc39e19",
+    "grantId": "ebdec4c6-72b1-4c2c-b7bd-3a57bf418c01",
+    "grantFingerprint": "9014174ad541484950361342f42be66a5703dde55a0a5718d8a207a58ef24781",
+    "policyRevision": 1,
+    "policyDecisionId": "14c30053-9605-4f80-80e5-f250d30d5ea6",
+    "policyVersion": "stage2.v1",
+    "policyHash": "9ac719fef979ee7b37c5c5ef3173621453782a0a02d432727391beeff1234d14",
+    "policyEffect": "DENY",
+    "arguments": {},
+    "status": "blocked",
+    "rule": "pdp-invalid-response",
+    "reason": "The policy engine denied this action.",
+    "resource": "customers",
+    "sandbox": true,
+    "createdAt": "2026-11-16T12:41:40.654Z",
+    "expiresAt": "2026-11-16T12:56:40.654Z",
+    "durationMs": 26.8
+  }
+}

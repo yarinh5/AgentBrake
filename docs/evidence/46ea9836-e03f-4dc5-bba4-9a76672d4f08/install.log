@@ -1,0 +1,173 @@
+#1 [internal] load local bake definitions
+#1 reading from stdin 3.88kB 0.0s done
+#1 DONE 0.0s
+
+#2 [mock-target internal] load build definition from Dockerfile
+#2 transferring dockerfile: 443B done
+#2 WARN: InvalidDefaultArgInFrom: Default value for ARG ${NODE_IMAGE} results in empty or invalid base image name (line 2)
+#2 WARN: InvalidDefaultArgInFrom: Default value for ARG ${NODE_IMAGE} results in empty or invalid base image name (line 2)
+#2 WARN: InvalidDefaultArgInFrom: Default value for ARG ${NODE_IMAGE} results in empty or invalid base image name (line 2)
+#2 WARN: InvalidDefaultArgInFrom: Default value for ARG ${NODE_IMAGE} results in empty or invalid base image name (line 2)
+#2 WARN: InvalidDefaultArgInFrom: Default value for ARG ${NODE_IMAGE} results in empty or invalid base image name (line 2)
+#2 DONE 0.0s
+
+#3 [dashboard internal] load build definition from Dockerfile
+#3 transferring dockerfile: 1.09kB done
+#3 DONE 0.0s
+
+#4 [dashboard internal] load metadata for docker.io/library/node@sha256:e9f565d32859f0cbfb52125eafe8be39390f24dac302dc3cdf566e8ba3ab21ee
+#4 DONE 0.0s
+
+#5 [dashboard internal] load .dockerignore
+#5 transferring context: 289B done
+#5 DONE 0.0s
+
+#6 [ingress  1/10] FROM docker.io/library/node@sha256:e9f565d32859f0cbfb52125eafe8be39390f24dac302dc3cdf566e8ba3ab21ee
+#6 DONE 0.0s
+
+#7 [gateway internal] load build context
+#7 transferring context: 6.24kB 0.0s done
+#7 DONE 0.0s
+
+#8 [mock-target  6/10] COPY server ./server
+#8 CACHED
+
+#9 [mock-target  4/10] COPY package.json package-lock.json ./
+#9 CACHED
+
+#10 [mock-target  9/10] COPY scripts ./scripts
+#10 CACHED
+
+#11 [mock-target  2/10] RUN apt-get update && apt-get install -y --no-install-recommends curl git postgresql-client ca-certificates && rm -rf /var/lib/apt/lists/*
+#11 CACHED
+
+#12 [mock-target  3/10] WORKDIR /app
+#12 CACHED
+
+#13 [mock-target  8/10] COPY tests ./tests
+#13 CACHED
+
+#14 [mock-target  5/10] RUN npm ci
+#14 CACHED
+
+#15 [mock-target  7/10] COPY services ./services
+#15 CACHED
+
+#16 [mock-target 10/10] COPY infra ./infra
+#16 CACHED
+
+#17 [dashboard internal] load build context
+#17 transferring context: 62.59kB 0.0s done
+#17 DONE 0.0s
+
+#18 [dashboard build 4/8] RUN cd apps/dashboard && npm ci --ignore-scripts
+#18 CACHED
+
+#19 [dashboard build 5/8] RUN ln -s apps/dashboard/node_modules /workspace/node_modules
+#19 CACHED
+
+#20 [dashboard build 2/8] WORKDIR /workspace
+#20 CACHED
+
+#21 [dashboard build 3/8] COPY apps/dashboard/package.json apps/dashboard/package-lock.json ./apps/dashboard/
+#21 CACHED
+
+#22 [dashboard build 6/8] COPY apps/dashboard ./apps/dashboard
+#22 CACHED
+
+#23 [agent] exporting to image
+#23 exporting layers done
+#23 writing image sha256:91c9d8fe663cbff71a0328a21501f6f2864876ac962521c11edc7a7d1b718fd8 0.0s done
+#23 naming to docker.io/library/agentbrake-product-verify-46ea9836-runtime
+#23 naming to docker.io/library/agentbrake-product-verify-46ea9836-runtime 0.0s done
+#23 DONE 0.1s
+
+#24 [mock-target] exporting to image
+#24 exporting layers done
+#24 writing image sha256:84368236677bb071d6a4976f21555cf108ef43c81d8447685a377879f915b7f3 done
+#24 naming to docker.io/library/agentbrake-product-verify-46ea9836-runtime 0.0s done
+#24 DONE 0.0s
+
+#25 [dashboard build 7/8] COPY src ./src
+#25 DONE 0.0s
+
+#26 [ingress] exporting to image
+#26 exporting layers done
+#26 writing image sha256:4c2f62c24ffabc429dadac6d87674e9a52f01f603220c59f660ed3ee3aa78c19 done
+#26 naming to docker.io/library/agentbrake-product-verify-46ea9836-runtime 0.0s done
+#26 DONE 0.1s
+
+#27 [gateway] exporting to image
+#27 exporting layers done
+#27 writing image sha256:486b34756b28f0fa5838bf23fd448dcdc795bff9837a1b02348ac2f7b3fc3e83 0.0s done
+#27 naming to docker.io/library/agentbrake-product-verify-46ea9836-runtime 0.0s done
+#27 DONE 0.1s
+
+#28 [control-api] exporting to image
+#28 exporting layers done
+#28 writing image sha256:73bf3e42bb0d38960fa9ef0412e1567f2e4e324e86a27141ba16008772e2f63f 0.0s done
+#28 naming to docker.io/library/agentbrake-product-verify-46ea9836-runtime done
+#28 DONE 0.1s
+
+#29 [mock-target] resolving provenance for metadata file
+#29 DONE 0.1s
+
+#30 [gateway] resolving provenance for metadata file
+#30 DONE 0.0s
+
+#31 [ingress] resolving provenance for metadata file
+#31 DONE 0.1s
+
+#32 [agent] resolving provenance for metadata file
+#32 DONE 0.0s
+
+#33 [control-api] resolving provenance for metadata file
+#33 DONE 0.0s
+
+#34 [dashboard build 8/8] RUN cd apps/dashboard && npm run build
+#34 0.450 
+#34 0.450 > agentbrake-dashboard@0.1.0 build
+#34 0.450 > next build --webpack
+#34 0.450 
+#34 1.019 ▲ Next.js 16.4.6 (webpack)
+#34 1.040 ✓ Running next.config.mjs took 21ms
+#34 1.125 
+#34 1.155   Creating an optimized production build ...
+#34 6.717 ✓ Compiled successfully in 5.0s
+#34 6.721   Running TypeScript ...
+#34 9.633   Finished TypeScript in 2.9s ...
+#34 9.636   Collecting page data using 5 workers ...
+#34 10.19   Generating static pages using 5 workers (0/3) ...
+#34 10.76 ✓ Generating static pages using 5 workers (3/3) in 568ms
+#34 11.05   Finalizing page optimization ...
+#34 11.05   Collecting build traces ...
+#34 37.92 
+#34 37.93 Route (app)
+#34 37.93 ┌ ○ /
+#34 37.93 ├ ○ /_not-found
+#34 37.93 └ ƒ /api/[...path]
+#34 37.93 
+#34 37.93 
+#34 37.93 ○  (Static)   prerendered as static content
+#34 37.93 ƒ  (Dynamic)  server-rendered on demand
+#34 37.93 
+#34 DONE 38.0s
+
+#35 [dashboard runtime 2/4] WORKDIR /app
+#35 CACHED
+
+#36 [dashboard runtime 3/4] COPY --from=build --chown=node:node /workspace/apps/dashboard/.next/standalone ./
+#36 DONE 0.5s
+
+#37 [dashboard runtime 4/4] COPY --from=build --chown=node:node /workspace/apps/dashboard/.next/static ./apps/dashboard/.next/static
+#37 DONE 0.1s
+
+#38 [dashboard] exporting to image
+#38 exporting layers
+#38 exporting layers 0.6s done
+#38 writing image sha256:dd5107f0161ccf4c9b420c7fcd996694bfe2a4f31da995798012d49152c37631 done
+#38 naming to docker.io/library/agentbrake-product-verify-46ea9836-dashboard done
+#38 DONE 0.6s
+
+#39 [dashboard] resolving provenance for metadata file
+#39 DONE 0.0s

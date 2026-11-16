@@ -1,0 +1,155 @@
+{
+  "result": "PASS_PRESERVED_LOCAL_UPGRADE",
+  "at": "2026-11-16T15:05:34.723Z",
+  "sourceHash": "d036bd48e5521a477fb407cf71a8692aee31b7275da0d170fa76e64ca2f66700",
+  "url": "http://127.0.0.1:4318",
+  "version": "0.2.0",
+  "actionsPreserved": 4,
+  "auditPrefixPreserved": 13,
+  "targetFingerprint": "2bf71f7d00f799cc49c9b81a7fd7e7408bb42f7381252c11c31e24300b89b5be",
+  "ownerSetup": "Awaiting user-chosen identity/password",
+  "preUpgradeBackup": "F:\\project love\\AgentBrake\\.agentbrake-local\\backups\\local-dd9edc2c-bb4c-498b-83c8-6b305931bf30.abk",
+  "recoveryKeyFile": "F:\\project love\\AgentBrake\\.agentbrake-local\\product-local\\recovery-key",
+  "runtimeSourceFilesMatched": 142,
+  "containers": [
+    {
+      "service": "ingress",
+      "image": "sha256:2755148d71c6a0221ec86976dd7f1a22562c7167de2660273d76f42d4f4d9fd3",
+      "state": "running",
+      "health": "healthy",
+      "published": [
+        {
+          "containerPort": "3000/tcp",
+          "hostIp": "127.0.0.1",
+          "hostPort": "4318"
+        }
+      ]
+    },
+    {
+      "service": "dashboard",
+      "image": "sha256:ec995bfeb9db4824783095533b9bf3d6745e73b00bfc98ffa8868587704c526b",
+      "state": "running",
+      "health": "healthy",
+      "published": []
+    },
+    {
+      "service": "control-api",
+      "image": "sha256:2755148d71c6a0221ec86976dd7f1a22562c7167de2660273d76f42d4f4d9fd3",
+      "state": "running",
+      "health": "healthy",
+      "published": []
+    },
+    {
+      "service": "agent",
+      "image": "sha256:2755148d71c6a0221ec86976dd7f1a22562c7167de2660273d76f42d4f4d9fd3",
+      "state": "running",
+      "health": "not-configured",
+      "published": []
+    },
+    {
+      "service": "gateway",
+      "image": "sha256:2755148d71c6a0221ec86976dd7f1a22562c7167de2660273d76f42d4f4d9fd3",
+      "state": "running",
+      "health": "healthy",
+      "published": []
+    },
+    {
+      "service": "mock-target",
+      "image": "sha256:2755148d71c6a0221ec86976dd7f1a22562c7167de2660273d76f42d4f4d9fd3",
+      "state": "running",
+      "health": "healthy",
+      "published": []
+    },
+    {
+      "service": "control-db",
+      "image": "sha256:0f6c51e48b3458e87ab43692e49c9dafc72ffe0a0dbde3fd8cdb6ab92d5c025e",
+      "state": "running",
+      "health": "healthy",
+      "published": []
+    },
+    {
+      "service": "target-db",
+      "image": "sha256:0f6c51e48b3458e87ab43692e49c9dafc72ffe0a0dbde3fd8cdb6ab92d5c025e",
+      "state": "running",
+      "health": "healthy",
+      "published": []
+    },
+    {
+      "service": "opa",
+      "image": "sha256:327128c76b65ec10a3c071a6a24647c1fddc1af3232a9d7a8fd9f8dec040cdc1",
+      "state": "running",
+      "health": "not-configured",
+      "published": []
+    }
+  ],
+  "published": [
+    {
+      "service": "ingress",
+      "containerPort": "3000/tcp",
+      "hostIp": "127.0.0.1",
+      "hostPort": "4318"
+    }
+  ],
+  "status": {
+    "schema": 1,
+    "at": "2026-11-16T15:05:35.079Z",
+    "installation": "local",
+    "url": "http://127.0.0.1:4318",
+    "sourceHash": "d036bd48e5521a477fb407cf71a8692aee31b7275da0d170fa76e64ca2f66700",
+    "services": [
+      {
+        "name": "agent",
+        "state": "running",
+        "health": "not-configured"
+      },
+      {
+        "name": "control-api",
+        "state": "running",
+        "health": "healthy"
+      },
+      {
+        "name": "control-db",
+        "state": "running",
+        "health": "healthy"
+      },
+      {
+        "name": "dashboard",
+        "state": "running",
+        "health": "healthy"
+      },
+      {
+        "name": "gateway",
+        "state": "running",
+        "health": "healthy"
+      },
+      {
+        "name": "ingress",
+        "state": "running",
+        "health": "healthy"
+      },
+      {
+        "name": "mock-target",
+        "state": "running",
+        "health": "healthy"
+      },
+      {
+        "name": "opa",
+        "state": "running",
+        "health": "not-configured"
+      },
+      {
+        "name": "target-db",
+        "state": "running",
+        "health": "healthy"
+      },
+      {
+        "name": "volume-init",
+        "state": "exited",
+        "health": "not-configured"
+      }
+    ],
+    "http": "200",
+    "scope": "Local private team installation; no target credentials or request contents included",
+    "nextSteps": []
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "name": "verify-foreign-e8568bf7",
+  "volume": "agentbrake-product-verify-foreign-e8568bf7_control-data",
+  "before": {
+    "uid": 0,
+    "gid": 0,
+    "mode": 489,
+    "sentinel": "synthetic collision sentinel"
+  },
+  "restore": "Restore did not complete; destination retained stopped for diagnosis. Volume ownership mismatch",
+  "after": {
+    "uid": 70,
+    "gid": 70,
+    "mode": 448,
+    "sentinel": "synthetic collision sentinel"
+  },
+  "metadataUnchanged": false,
+  "destinationCreated": true,
+  "cleanup": "PASS"
+}

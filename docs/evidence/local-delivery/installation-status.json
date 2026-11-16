@@ -1,0 +1,94 @@
+{
+  "result": "PASS_INSTALLED_LOCAL_PRODUCT",
+  "at": "2026-11-16T13:34:39.521Z",
+  "sourceHash": "a37811a74bc93ace334a58bb51577a195dd9985fcd16aca66b1e4d669d058bdd",
+  "installation": "local",
+  "url": "http://127.0.0.1:4318",
+  "services": [
+    {
+      "service": "agent",
+      "state": "running",
+      "health": "NOT_CONFIGURED",
+      "publishers": []
+    },
+    {
+      "service": "control-api",
+      "state": "running",
+      "health": "healthy",
+      "publishers": []
+    },
+    {
+      "service": "control-db",
+      "state": "running",
+      "health": "healthy",
+      "publishers": [
+        {
+          "URL": "",
+          "TargetPort": 5432,
+          "PublishedPort": 0,
+          "Protocol": "tcp"
+        }
+      ]
+    },
+    {
+      "service": "dashboard",
+      "state": "running",
+      "health": "healthy",
+      "publishers": [
+        {
+          "URL": "",
+          "TargetPort": 3000,
+          "PublishedPort": 0,
+          "Protocol": "tcp"
+        }
+      ]
+    },
+    {
+      "service": "gateway",
+      "state": "running",
+      "health": "healthy",
+      "publishers": []
+    },
+    {
+      "service": "ingress",
+      "state": "running",
+      "health": "healthy",
+      "publishers": [
+        {
+          "URL": "127.0.0.1",
+          "TargetPort": 3000,
+          "PublishedPort": 4318,
+          "Protocol": "tcp"
+        }
+      ]
+    },
+    {
+      "service": "mock-target",
+      "state": "running",
+      "health": "healthy",
+      "publishers": []
+    },
+    {
+      "service": "opa",
+      "state": "running",
+      "health": "NOT_CONFIGURED",
+      "publishers": []
+    },
+    {
+      "service": "target-db",
+      "state": "running",
+      "health": "healthy",
+      "publishers": [
+        {
+          "URL": "",
+          "TargetPort": 5432,
+          "PublishedPort": 0,
+          "Protocol": "tcp"
+        }
+      ]
+    }
+  ],
+  "healthStatus": 200,
+  "healthScope": "Seven configured Docker health checks pass; idle agent and OPA have no separate Docker health check. Actual policy-mediated UI workflows pass in smoke.json.",
+  "scope": "Persistent intended local installation left running; disposable acceptance projects were cleaned separately."
+}

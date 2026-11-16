@@ -1,0 +1,104 @@
+{
+  "files": [
+    {
+      "path": "apps/dashboard/.gitignore",
+      "sha256": "7b1875ec87a1322172b1c27bc978b08d3c8feb989cbb030499b94a0aeb6cafa3"
+    },
+    {
+      "path": "apps/dashboard/app/api/[...path]/route.ts",
+      "sha256": "2c68771c1eeb372306842940322810af9e65600f66609df5d8260fac29245486"
+    },
+    {
+      "path": "apps/dashboard/app/dashboard.tsx",
+      "sha256": "c928134a69274d00963bd42e9e746cd946ffae7edfff81226dc0bfc40eb2c62d"
+    },
+    {
+      "path": "apps/dashboard/app/layout.tsx",
+      "sha256": "68aeb3db9ab65a366bf934ecc04f2da13bafc23354718198b95c99c8d006b58f"
+    },
+    {
+      "path": "apps/dashboard/app/page.tsx",
+      "sha256": "96b124479091e5eb0e53439bb1a99b3ec984aeb70887439b4940a20f3a41d432"
+    },
+    {
+      "path": "apps/dashboard/Dockerfile",
+      "sha256": "e2a42122280e995b376d544bfe7c4ca4ad0ac456449fde42b4288eee77e23d77"
+    },
+    {
+      "path": "apps/dashboard/lib/control-proxy.ts",
+      "sha256": "6a2fa1bc7a429f8da3bddcc2e2c115214c9a09204a3d4ed5cdcaeac0204abaf8"
+    },
+    {
+      "path": "apps/dashboard/next-env.d.ts",
+      "sha256": "1862ac4bbbc5192d4bf562161df66ea547ed3e67173100656ab606ae9797db2b"
+    },
+    {
+      "path": "apps/dashboard/next.config.mjs",
+      "sha256": "cd54744f486f9ec531d00952b7b3cc3398d18952c42a4116a6cc8865fdf59180"
+    },
+    {
+      "path": "apps/dashboard/package-lock.json",
+      "sha256": "8dd3cc2661ee33a8e0f9c2105a212bae207e2a2ef005b0e7b87a8bacf4c24aeb"
+    },
+    {
+      "path": "apps/dashboard/package.json",
+      "sha256": "b84e8165832873747a59ba93fb380e9c7d4a87e1e1dafe08ab916996b5f5237a"
+    },
+    {
+      "path": "apps/dashboard/tsconfig.json",
+      "sha256": "7f65a6c678ddf7d8cad0fb19fb659c45b6ee7120e5b50f5271a25849a60a3bf6"
+    },
+    {
+      "path": "src/api.ts",
+      "sha256": "3036b5c13e3a99dba828c2a668dccd1e6bf9214cee8476f539f1a16a82ca1cb1"
+    },
+    {
+      "path": "src/App.tsx",
+      "sha256": "f24215845e8f5faa6896938cfa28881475905f5a46078fcc4c5453fbb06a9ef8"
+    },
+    {
+      "path": "src/main.tsx",
+      "sha256": "7dd0ec7c005211dc0191dbe92115cb395ec8f04c2591d2259039a5d7b42fb3c0"
+    },
+    {
+      "path": "src/ProductApp.tsx",
+      "sha256": "3a15cd375d20c39e120c516a1eb4884176a21e21611243a6d18a51f56bba2a8d"
+    },
+    {
+      "path": "src/styles.css",
+      "sha256": "a52e7bbfced59d54668453b957d378d085956cf7f5343db9609291e0db114bfa"
+    },
+    {
+      "path": "src/types.ts",
+      "sha256": "88cbd1bc27d1521064d13ac63bbd12faf00ae81006bbba5db6d5b3faac442d7b"
+    },
+    {
+      "path": "src/ui.tsx",
+      "sha256": "21f2e32c5418db4d8c509ed310b41ef21e29d19c0f693d1c58682db1272c45c7"
+    },
+    {
+      "path": "tests/product-ui/constants.ts",
+      "sha256": "4c3b88930fa94a6d3ad91896486016fe19fc50c5e7be7678cbc7023f814c42b0"
+    },
+    {
+      "path": "tests/product-ui/fixture.ts",
+      "sha256": "247e2cbde188cf91f796b26d4adfe81cbf2ec42d8284bfb5ed591b7d8bbeef2d"
+    },
+    {
+      "path": "tests/product-ui/playwright.config.ts",
+      "sha256": "2312b2c56c80decdd4c4210078e02a6080eab62b06a88902c698ebf9cda704c3"
+    },
+    {
+      "path": "tests/product-ui/proxy.test.ts",
+      "sha256": "f4dfc761f99662d9847dae351b2c8f2c774300db3fca66d4a01dc7fef5fb8c24"
+    },
+    {
+      "path": "tests/product-ui/run.mjs",
+      "sha256": "4d5ebac8910d1d5df4c21b88480b5757b7951a2fe38469bb90edcb5627eab2ca"
+    },
+    {
+      "path": "tests/product-ui/workflows.spec.ts",
+      "sha256": "2be615c6b9896bd150dc0d6845abdb641afc40964e20f26698db529e2c2a8a6c"
+    }
+  ]
+}

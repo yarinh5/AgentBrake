@@ -1,0 +1,65 @@
+[
+    {
+        "Name": "agentbrake-a-c866eaf9_agent",
+        "Id": "e336d8e8df8be7ac960e23774ef214e7a67b0f9b2f207c001621ddd3445005f5",
+        "Created": "2026-11-16T10:57:33.2038668Z",
+        "Scope": "local",
+        "Driver": "bridge",
+        "EnableIPv4": true,
+        "EnableIPv6": false,
+        "IPAM": {
+            "Driver": "default",
+            "Options": null,
+            "Config": [
+                {
+                    "Subnet": "172.28.0.0/16",
+                    "Gateway": "172.28.0.1"
+                }
+            ]
+        },
+        "Internal": true,
+        "Attachable": false,
+        "Ingress": false,
+        "ConfigFrom": {
+            "Network": ""
+        },
+        "ConfigOnly": false,
+        "Options": {
+            "com.docker.network.enable_ipv4": "true",
+            "com.docker.network.enable_ipv6": "false"
+        },
+        "Labels": {
+            "com.agentbrake.fixture": "true",
+            "com.docker.compose.config-hash": "1444e717b4b01cce8dc11c22f30322fc1b49f91e73d4e078f0a0f65de7208697",
+            "com.docker.compose.network": "agent",
+            "com.docker.compose.project": "agentbrake-a-c866eaf9",
+            "com.docker.compose.version": "5.7.0"
+        },
+        "Containers": {
+            "36ab0fab6426f21d8ffa517b8016877714ed343d949793a547325f566b3e072c": {
+                "Name": "agentbrake-a-c866eaf9-agent-1",
+                "EndpointID": "c140be3dff363a9b0ed66a7755ff4f996d360359ffcd69fb9d2b993cae6e252e",
+                "MacAddress": "ba:5d:b6:26:70:b1",
+                "IPv4Address": "172.28.0.3/16",
+                "IPv6Address": ""
+            },
+            "a78da5e61f58aa103bb85ca420499e7a58d0092056bac10c8fad87caf6b673dc": {
+                "Name": "agentbrake-a-c866eaf9-gateway-1",
+                "EndpointID": "96d30fd9ab8d31a12c149f9fc4cc1805f59c0cbea3e15fceac62e2cc4045cb4f",
+                "MacAddress": "be:5b:ad:ff:4a:d7",
+                "IPv4Address": "172.28.0.2/16",
+                "IPv6Address": ""
+            }
+        },
+        "Status": {
+            "IPAM": {
+                "Subnets": {
+                    "172.28.0.0/16": {
+                        "IPsInUse": 5,
+                        "DynamicIPsAvailable": 65531
+                    }
+                }
+            }
+        }
+    }
+]

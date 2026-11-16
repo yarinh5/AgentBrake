@@ -1,0 +1,171 @@
+name: ${COMPOSE_PROJECT_NAME:?Use the AgentBrake verifier}
+x-runtime: &runtime
+  image: ${COMPOSE_PROJECT_NAME}-runtime
+  build:
+    context: ../..
+    dockerfile: infra/local/Dockerfile
+    args:
+      NODE_IMAGE: ${NODE_IMAGE:?Resolve pinned images first}
+  user: "1000:1000"
+  read_only: true
+  cap_drop: [ALL]
+  security_opt: [no-new-privileges:true]
+  pids_limit: 128
+  mem_limit: 512m
+  cpus: 1
+  tmpfs: ["/tmp:size=64m,mode=1777"]
+  labels:
+    com.agentbrake.fixture: "true"
+    com.agentbrake.run: ${RUN_ID}
+services:
+  gateway:
+    <<: *runtime
+    environment:
+      AGENTBRAKE_ISOLATED: "1"
+    command: [node, --import, tsx, server/isolated.ts]
+    networks: [agent, protected]
+    volumes:
+      - ${RUN_DIR}/admin-key:/run/secrets/admin-key:ro
+      - ${RUN_DIR}/opa-token:/run/secrets/opa-token:ro
+      - ${RUN_DIR}/target-token:/run/secrets/target-token:ro
+      - ${RUN_DIR}/control-password:/run/secrets/control-password:ro
+      - ${RUN_DIR}/agent-credential.json:/run/agent-credential.json
+    depends_on:
+      opa: { condition: service_started }
+      mock-target: { condition: service_healthy }
+      control-db: { condition: service_healthy }
+    healthcheck:
+      test: [CMD, curl, --fail, --silent, http://127.0.0.1:4313/api/health]
+      interval: 2s
+      timeout: 2s
+      retries: 30
+  mock-target:
+    <<: *runtime
+    command: [node, --import, tsx, infra/local/mock-target.ts]
+    networks: [protected]
+    volumes:
+      - ${RUN_DIR}/target-token:/run/secrets/target-token:ro
+      - ${RUN_DIR}/observer-token:/run/secrets/observer-token:ro
+      - ${RUN_DIR}/target-read-password:/run/secrets/target-read-password:ro
+      - ${RUN_DIR}/target-write-password:/run/secrets/target-write-password:ro
+    depends_on:
+      target-db: { condition: service_healthy }
+    healthcheck:
+      test: [CMD, curl, --fail, --silent, http://127.0.0.1:8080/health]
+      interval: 2s
+      timeout: 2s
+      retries: 20
+  opa:
+    image: ${OPA_IMAGE:?Resolve pinned images first}
+    user: "1000:1000"
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    pids_limit: 64
+    mem_limit: 256m
+    command:
+      [
+        run,
+        --server,
+        --addr=0.0.0.0:8181,
+        --authentication=token,
+        --authorization=basic,
+        --log-level=error,
+        /policy/agentbrake.rego,
+        /policy/authz.rego,
+        /run/secrets/auth.json,
+      ]
+    networks: [protected]
+    volumes:
+      - ../../services/policy/agentbrake.rego:/policy/agentbrake.rego:ro
+      - ../../services/policy/authz.rego:/policy/authz.rego:ro
+      - ${RUN_DIR}/opa-auth.json:/run/secrets/auth.json:ro
+  target-db:
+    image: ${POSTGRES_IMAGE:?Resolve pinned images first}
+    user: postgres
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    pids_limit: 128
+    mem_limit: 384m
+    environment:
+      POSTGRES_DB: agentbrake_target_fixture
+      POSTGRES_USER: fixture_owner
+      POSTGRES_PASSWORD_FILE: /run/secrets/bootstrap-password
+      PGDATA: /var/lib/postgresql/data/pgdata
+    networks: [protected]
+    volumes:
+      - ${RUN_DIR}/postgres-bootstrap:/run/secrets/bootstrap-password:ro
+      - ${RUN_DIR}/target-read-password:/run/secrets/target-read-password:ro
+      - ${RUN_DIR}/target-write-password:/run/secrets/target-write-password:ro
+      - ./target-db/010-target-fixture.sh:/docker-entrypoint-initdb.d/010-target-fixture.sh:ro
+      - ./target-db/001-fixture.sql:/opt/agentbrake-target/001-fixture.sql:ro
+      - ./target-db/002-reviewed-update.sql:/opt/agentbrake-target/002-reviewed-update.sql:ro
+    tmpfs:
+      - /var/lib/postgresql/data:size=256m,uid=70,gid=70,mode=0700
+      - /var/run/postgresql:uid=70,gid=70,mode=0770
+      - /tmp:size=32m,mode=1777
+    healthcheck:
+      test: [CMD, pg_isready, -U, fixture_owner, -d, agentbrake_target_fixture]
+      interval: 2s
+      timeout: 2s
+      retries: 40
+  control-db:
+    image: ${POSTGRES_IMAGE:?Resolve pinned images first}
+    user: postgres
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    pids_limit: 128
+    mem_limit: 384m
+    environment:
+      POSTGRES_DB: agentbrake_control_fixture
+      POSTGRES_USER: control_owner
+      POSTGRES_PASSWORD_FILE: /run/secrets/bootstrap-password
+      PGDATA: /var/lib/postgresql/data/pgdata
+    networks: [protected]
+    volumes:
+      - ${RUN_DIR}/control-owner-password:/run/secrets/bootstrap-password:ro
+      - ${RUN_DIR}/control-password:/run/secrets/control-password:ro
+      - ./control-db/010-control-fixture.sh:/docker-entrypoint-initdb.d/010-control-fixture.sh:ro
+      - ./control-db/001-control.sql:/opt/agentbrake-control/001-control.sql:ro
+      - ./control-db/002-accounts.sql:/opt/agentbrake-control/002-accounts.sql:ro
+    tmpfs:
+      - /var/lib/postgresql/data:size=256m,uid=70,gid=70,mode=0700
+      - /var/run/postgresql:uid=70,gid=70,mode=0770
+      - /tmp:size=32m,mode=1777
+    healthcheck:
+      test: [CMD, pg_isready, -U, control_owner, -d, agentbrake_control_fixture]
+      interval: 2s
+      timeout: 2s
+      retries: 40
+  verifier:
+    <<: *runtime
+    profiles: [verification]
+    networks: [agent, protected]
+    environment:
+      POSTGRES_CONTROL_TEST: "1"
+      POSTGRES_TARGET_TEST: "1"
+    volumes:
+      - ${RUN_DIR}/admin-key:/run/secrets/admin-key:ro
+      - ${RUN_DIR}/observer-token:/run/secrets/observer-token:ro
+      - ${RUN_DIR}/target-read-password:/run/secrets/target-read-password:ro
+      - ${RUN_DIR}/target-write-password:/run/secrets/target-write-password:ro
+      - ${RUN_DIR}/control-password:/run/secrets/control-password:ro
+      - ${RUN_DIR}/control-owner-password:/run/secrets/control-owner-password:ro
+  agent:
+    <<: *runtime
+    command: [node, -e, "setInterval(()=>{},60000)"]
+    networks: [agent]
+    volumes:
+      - ${RUN_DIR}/agent-credential.json:/run/agent-credential.json:ro
+    depends_on:
+      gateway: { condition: service_healthy }
+      target-db: { condition: service_healthy }
+networks:
+  agent:
+    internal: true
+    labels: { com.agentbrake.fixture: "true" }
+  protected:
+    internal: true
+    labels: { com.agentbrake.fixture: "true" }

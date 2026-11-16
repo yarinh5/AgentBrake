@@ -1,0 +1,51 @@
+{
+  "runId": "d1fd1b91-9df4-4800-b694-6dad82bfdcfa",
+  "sourceHash": "993f7cbf1a3a56dcb421f88368efa67dbbcf37809d0d45b9cdf54e0ab80287c7",
+  "currentSourceHash": "993f7cbf1a3a56dcb421f88368efa67dbbcf37809d0d45b9cdf54e0ab80287c7",
+  "startedAt": "2026-11-16T19:52:37.583Z",
+  "scanner": {
+    "version": "0.76.2",
+    "image": "aquasec/trivy@sha256:8f6bb947dbc528902e11f2f5be52f7b519f6a39d5d148f41166f2040499768fb",
+    "resolvedAt": "2026-11-16",
+    "source": "https://github.com/aquasecurity/trivy/releases/tag/v0.76.2"
+  },
+  "result": "PASS_IMAGE_SCAN",
+  "images": [
+    {
+      "name": "runtime",
+      "imageId": "sha256:65a3144fb1b4d22d35925d884f9930fc3a2f4108c3b93ea7cdc5c91c41d69d83",
+      "reference": "agentbrake-product-verify-candidate-ec851b7a-runtime",
+      "total": 0,
+      "highCritical": []
+    },
+    {
+      "name": "dashboard",
+      "imageId": "sha256:7e566e218a8c3509f34b0b4b8ac0a765d1087433cbcc5a99d61c52a9c297d21e",
+      "reference": "agentbrake-product-verify-candidate-ec851b7a-dashboard",
+      "total": 0,
+      "highCritical": []
+    },
+    {
+      "name": "postgres",
+      "imageId": "sha256:7aa5c1314fa74a3c2d6c155c537f0eb4ab26c25d315f221ca8c5a5d089dc65cd",
+      "reference": "agentbrake-postgres:18-193f481f609ba4086c53",
+      "total": 0,
+      "highCritical": []
+    },
+    {
+      "name": "opa",
+      "imageId": "sha256:60601fc530dfd3edc411a86180c45fadf7ec1f59732d770c14811d784b9d7131",
+      "reference": "agentbrake-opa:1.22.4-3f9e5f443c6e97aa147e",
+      "total": 0,
+      "highCritical": []
+    }
+  ],
+  "scope": "Offline Trivy vulnerability scan of locally exported images. Database downloaded separately; no source or image uploaded. Unfixed findings included; no blanket suppression.",
+  "database": {
+    "Version": 2,
+    "NextUpdate": "2026-11-17T13:03:44.830426014Z",
+    "UpdatedAt": "2026-11-16T13:03:44.830426244Z",
+    "DownloadedAt": "2026-11-16T19:02:52.831437722Z"
+  },
+  "finishedAt": "2026-11-16T19:54:21.710Z"
+}

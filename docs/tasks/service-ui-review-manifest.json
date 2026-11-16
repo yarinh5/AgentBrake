@@ -1,0 +1,60 @@
+{
+  "files": [
+    {
+      "path": "src/ProductApp.tsx",
+      "sha256": "795f4fe3874215b0bc3fe43a8b247b5d836f314a1398cac444c21bf7abfbc9ff"
+    },
+    {
+      "path": "src/api.ts",
+      "sha256": "258532cef72ded6e7d59e3a7067029321702a96d0c5e351f9e10930b8c1dfe35"
+    },
+    {
+      "path": "src/types.ts",
+      "sha256": "844764e7c99d7e69c707cc558c869077e66c373d73a7de301179a6d4451b9343"
+    },
+    {
+      "path": "src/styles.css",
+      "sha256": "2c20613365a716a42f4156b119f85d9bcfc7577580f3814dd19f6b77ede0d911"
+    },
+    {
+      "path": "src/components/AuthPanel.tsx",
+      "sha256": "d52e96ca154f3d4bdc8b931bec9fae3b3ccce8e7871d4b76238146bb7c176a99"
+    },
+    {
+      "path": "src/components/AccountPanels.tsx",
+      "sha256": "61e8218d923fa6a31e8290ced309b8cb75a68303ce6ff4b3a5e3765a324dd6a4"
+    },
+    {
+      "path": "src/components/GettingStarted.tsx",
+      "sha256": "1e15e1310147343803166867171d875027d051e1951447934a15d82cdd809206"
+    },
+    {
+      "path": "apps/dashboard/lib/control-proxy.ts",
+      "sha256": "edae17f76340bd80618e286cd23ec05858d37bfd3f0d4f019bcb828edba1d999"
+    },
+    {
+      "path": "apps/dashboard/package.json",
+      "sha256": "f85464bac14b965d7a7f34f45d9aea0a1c909577ab281394cac9ab25597e15dd"
+    },
+    {
+      "path": "apps/dashboard/package-lock.json",
+      "sha256": "1f031d5414059f835a8e575e39fd2271972b6108b4ebbd11031fe28f5538f88c"
+    },
+    {
+      "path": "tests/product-ui/fixture.ts",
+      "sha256": "78b0daf09732abcf423289bdcc555d2bee5f0028e1ca60a6c55def8562a42288"
+    },
+    {
+      "path": "tests/product-ui/run.mjs",
+      "sha256": "cff02a101efda3fe800eec05b556dd69dbb10c6d8f7546f0131a33d28c94e36f"
+    },
+    {
+      "path": "tests/product-ui/proxy.test.ts",
+      "sha256": "9c067100be115f71765dced4ff7238a264f81a6493950238da8e2a68f2849f0a"
+    },
+    {
+      "path": "tests/product-ui/managed.spec.ts",
+      "sha256": "e2c1fb68ac08be63b50c3c63b3ed4a05e042c2fc465253b42ffaf012556d6254"
+    }
+  ]
+}

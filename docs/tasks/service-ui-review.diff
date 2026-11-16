@@ -1,0 +1,1177 @@
+Task2 scoped review. Snapshot baseline .agentbrake-local/service-ui-base; no Git repository.
+
+--- base/src/ProductApp.tsx
++++ current/src/ProductApp.tsx
+@@ -1,75 +1,80 @@
+ import {
+   useCallback,
+   useEffect,
+   useRef,
+   useState,
+-  type FormEvent,
+ } from "react";
+ import {
+   Activity,
+   ArrowDownToLine,
+   ArrowRight,
+   Bot,
+   CheckCheck,
+   ChevronRight,
+   Copy,
+   Database,
+   FileCheck2,
+   Fingerprint,
+   Github,
+   LayoutDashboard,
+   Loader2,
+-  LockKeyhole,
+   LogOut,
+   Menu,
+   Pause,
+   Play,
+   Plug,
+   Plus,
+   Shield,
+   SlidersHorizontal,
+   Square,
+   Terminal,
+   X,
+ } from "lucide-react";
+ import { api, setCsrf } from "./api";
++import { AuthPanel, type Landing } from "./components/AuthPanel";
++import { SettingsPanel, TeamPanel } from "./components/AccountPanels";
++import { GettingStarted } from "./components/GettingStarted";
+ import { Badge, Empty, Logo, Metric, Modal, PolicyEditor } from "./ui";
+ import type {
+   Agent,
+   Event,
+   Evidence,
+   Policies,
+   Review,
+   Session,
++  Setup,
+   Workspace,
+ } from "./types";
+ 
+ const navigation = [
+   ["Overview", LayoutDashboard],
+   ["Tasks", Bot],
+   ["Activity", Activity],
+   ["Approvals", FileCheck2],
+   ["Policies", SlidersHorizontal],
+   ["Connections", Plug],
+   ["Evidence", Fingerprint],
+   ["Demo Lab", Terminal],
++  ["Get started", Shield],
++  ["Team", Bot],
++  ["Settings", SlidersHorizontal],
+ ] as const;
+ type Page = (typeof navigation)[number][0];
+ // Exact supported server/contracts.ts catalog; no arbitrary SQL or URL tool.
+ const tools = [
+   "database_schema",
+   "database_read",
+   "database_update",
+   "github_list_repo",
+   "github_list_branches",
+   "github_read_file",
+   "github_propose_change",
+   "github_create_branch",
+   "github_open_pull_request",
+   "github_create_issue",
+ ];
+ const resources = ["customers", "agentbrake/sandbox"];
+ const message = (error: unknown) =>
+   error instanceof Error ? error.message : "Request failed";
+ const json = (value: unknown) => JSON.stringify(value, null, 2);
+ const date = (value: string | number) => new Date(value).toLocaleString();
+@@ -134,264 +139,212 @@
+                 </button>
+               </td>
+             </tr>
+           ))}
+         </tbody>
+       </table>
+       {!items.length && (
+         <Empty
+           title="No recorded actions"
+           description="Actions routed through this local gateway will appear here."
+         />
+       )}
+     </div>
+   );
+ }
+ 
+ export default function App() {
+   const [workspace, setWorkspace] = useState<Workspace | null>(null);
+   const [session, setSession] = useState<Session | null>(null);
+   const [auth, setAuth] = useState<"loading" | "login" | "ready">("loading");
+-  const [key, setKey] = useState("");
++  const [setup, setSetup] = useState<Setup | null>(null);
++  const [landing, setLanding] = useState<Landing | null>(null);
++  const [connectionAttempt, setConnectionAttempt] = useState(0);
+   const [error, setError] = useState("");
+   const [toast, setToast] = useState("");
+   const [busy, setBusy] = useState(false);
+   const [page, setPage] = useState<Page>("Overview");
+   const [mobileNav, setMobileNav] = useState(false);
+   const [connected, setConnected] = useState(false);
+   const [selected, setSelected] = useState<Event | null>(null);
+   const [modal, setModal] = useState<"agent" | "stop" | null>(null);
+   const [created, setCreated] = useState<{
+     agent: Agent;
+     token: string;
+   } | null>(null);
+   const refresh = useCallback(async () => {
+     try {
+       const value: Workspace = await api("/workspace");
+       setWorkspace(value);
+       setConnected(true);
+       setAuth("ready");
+     } catch (err) {
+       setConnected(false);
+       if ((err as { status?: number }).status === 401) {
+         setCsrf("");
+         setSession(null);
+         setWorkspace(null);
+         setCreated(null);
+         setAuth("login");
+       } else {
+         setError(message(err));
+         throw err;
+       }
+     }
+   }, []);
++  const clearSession = useCallback(() => {
++    setCsrf(""); setSession(null); setWorkspace(null); setCreated(null);
++    setSelected(null); setModal(null); setError(""); setToast(""); setAuth("login");
++  }, []);
++  const signedIn = async (value: Session) => {
++    setLanding(null); setSetup(previous => previous ? {...previous, initialized: previous.managed || previous.initialized} : previous);
++    setSession(value); setCsrf(value.csrfToken); setError(""); await refresh();
++  };
+   useEffect(() => {
+     let active = true;
+-    void api("/session")
+-      .then(async (value: Session) => {
++    const match = /^#(invite|reset)=([^&]+)$/.exec(window.location.hash);
++    if (match) {
++      window.history.replaceState(null, "", window.location.pathname + window.location.search);
++      setLanding({kind: match[1] as "invite" | "reset", token: match[2]});
++    }
++    setAuth("loading"); setError("");
++    void api("/setup").then(async (value: Setup) => {
++      if (!active) return;
++      setSetup(value);
++      if (match) { setAuth("login"); return; }
++      try {
++        const current: Session = await api("/session");
+         if (!active) return;
+-        setSession(value);
+-        setCsrf(value.csrfToken);
+-        await refresh();
+-      })
+-      .catch((err) => {
+-        if (active) {
+-          setAuth("login");
+-          if ((err as { status?: number }).status !== 401)
+-            setError(message(err));
+-        }
+-      });
+-    return () => {
+-      active = false;
+-    };
+-  }, [refresh]);
++        setSession(current); setCsrf(current.csrfToken); await refresh();
++      } catch (err) {
++        if (active) { setAuth("login"); if ((err as {status?:number}).status !== 401) setError(message(err)); }
++      }
++    }).catch(err => { if(active) {setSetup(null); setAuth("login"); setError(message(err));} });
++    return () => { active = false; };
++  }, [refresh, connectionAttempt]);
++  useEffect(() => {
++    const unauthorized = () => { if (session) clearSession(); };
++    window.addEventListener("agentbrake:unauthorized", unauthorized);
++    return () => window.removeEventListener("agentbrake:unauthorized", unauthorized);
++  }, [session, clearSession]);
+   useEffect(() => {
+     const readHash = () => {
++      const landingMatch = /^#(invite|reset)=([^&]+)$/.exec(window.location.hash);
++      if (landingMatch) {
++        window.history.replaceState(null, "", window.location.pathname + window.location.search);
++        clearSession();
++        setLanding({kind: landingMatch[1] as "invite" | "reset", token: landingMatch[2]});
++        return;
++      }
+       try {
+         const next = decodeURIComponent(window.location.hash.slice(1));
+         if (navigation.some(([name]) => name === next)) setPage(next as Page);
+       } catch {
+         /* Invalid hash leaves the current page. */
+       }
+     };
+     readHash();
+     window.addEventListener("hashchange", readHash);
+     return () => window.removeEventListener("hashchange", readHash);
+-  }, []);
++  }, [clearSession]);
+   useEffect(() => {
+     if (auth !== "ready") return;
+     const timer = setInterval(() => {
+       if (!document.hidden) void refresh().catch(() => {});
+     }, 10_000);
+     return () => clearInterval(timer);
+   }, [auth, refresh]);
+   useEffect(() => {
+     if (!toast) return;
+     const timer = setTimeout(() => setToast(""), 4500);
+     return () => clearTimeout(timer);
+   }, [toast]);
+   const navigate = (next: Page) => {
+     setPage(next);
+     window.location.hash = encodeURIComponent(next);
+     setMobileNav(false);
+   };
+   const mutate: Mutate = async (path, body, success, method) => {
+     setBusy(true);
+     setError("");
+     try {
+       const result = await api(path, body, method);
+       // Return already-issued credentials even if the subsequent read fails.
+       await refresh().catch(() => {});
+       setToast(success);
+       return result;
+     } catch (err) {
+       setError(message(err));
+       return null;
+     } finally {
+       setBusy(false);
+     }
+   };
+-  const login = async (event: FormEvent) => {
+-    event.preventDefault();
+-    setBusy(true);
+-    setError("");
+-    const entered = key;
+-    setKey("");
+-    try {
+-      const value: Session = await api("/login", { key: entered });
+-      setSession(value);
+-      setCsrf(value.csrfToken);
+-      await refresh();
+-    } catch (err) {
+-      setError(message(err));
+-    } finally {
+-      setBusy(false);
+-    }
+-  };
+   const logout = async () => {
+     try {
+       await api("/logout", {});
+-      setCsrf("");
+-      setSession(null);
+-      setWorkspace(null);
+-      setSelected(null);
+-      setCreated(null);
+-      setModal(null);
+-      setAuth("login");
++      clearSession();
+     } catch (err) {
+       setError(message(err));
+     }
+   };
+   if (auth === "loading")
+     return (
+       <div className="loading-screen">
+         <Logo />
+         <Loader2 className="spin" />
+         <p>Reading your local session…</p>
+       </div>
+     );
+   if (auth === "login" || !workspace || !session)
+-    return (
+-      <div className="login-shell">
+-        <div className="login-story">
+-          <Logo />
+-          <div>
+-            <span className="eyebrow">LOCAL AGENT CONTROL</span>
+-            <h1>
+-              Give your agents
+-              <br />
+-              room to work.
+-              <br />
+-              <em>Keep control.</em>
+-            </h1>
+-            <p>Scope tasks. Review exact changes. Inspect recorded outcomes.</p>
+-          </div>
+-          <small>AgentBrake / Isolated local fixture</small>
+-        </div>
+-        <main className="login-main">
+-          <div className="login-card">
+-            <span className="square-icon">
+-              <LockKeyhole />
+-            </span>
+-            <h2>Open your local workspace</h2>
+-            <p>
+-              Sign in with your generated operator credential. Your role
+-              controls the available actions.
+-            </p>
+-            <form onSubmit={login}>
+-              <label htmlFor="key">Workspace key</label>
+-              <input
+-                id="key"
+-                type="password"
+-                autoComplete="current-password"
+-                value={key}
+-                onChange={(event) => setKey(event.target.value)}
+-                required
+-              />
+-              {error && (
+-                <div className="error" role="alert">
+-                  {error}
+-                </div>
+-              )}
+-              <button className="button primary wide" disabled={busy}>
+-                Open workspace <ArrowRight size={16} />
+-              </button>
+-            </form>
+-            <div className="login-foot">
+-              <Shield size={14} />
+-              Local HTTP · isolated fixtures only
+-            </div>
+-          </div>
+-        </main>
+-      </div>
+-    );
++    return <AuthPanel setup={setup} landing={landing} onSession={signedIn} onReset={() => {setLanding(null); clearSession();}} initialError={error} retry={() => setConnectionAttempt(value => value + 1)} />;
+   const actor = session.actor;
+   const manage = ["administrator", "operator"].includes(actor.role);
+   const configure = actor.role === "administrator";
+   const pending = workspace.actions.filter(
+     (action) => action.status === "pending",
+   );
+   const blocked = workspace.actions.filter(
+     (action) => action.status === "blocked",
+   );
+   const unknown = workspace.actions.filter(
+     (action) => action.status === "unknown",
+   );
+   const open = (event: Event) => setSelected(event);
+   return (
+     <div className="app-shell">
+       <aside className={`sidebar ${mobileNav ? "open" : ""}`}>
+         <Logo />
+         <div className="workspace-switch">
+           <span className="workspace-avatar">L</span>
+           <span>
+             <strong>Local workspace</strong>
+             <small>
+               {session.teamMode
+                 ? "Independent team review"
+                 : "Single-owner compatibility fixture"}
+             </small>
+           </span>
+         </div>
+         <div className="nav-label">CONTROL CENTER</div>
+         <nav aria-label="Main navigation">
+-          {navigation.map(([name, Icon]) => (
++          {navigation.filter(([name]) => name !== "Team" ? name !== "Settings" || session.authMode === "account" : session.authMode === "account" && configure).map(([name, Icon]) => (
+             <button
+               key={name}
+               className={`nav-item ${page === name ? "selected" : ""}`}
+               aria-current={page === name ? "page" : undefined}
+               onClick={() => navigate(name)}
+             >
+               <Icon size={18} />
+               <span>{name}</span>
+               {name === "Approvals" && pending.length > 0 && (
+                 <b>{pending.length}</b>
+               )}
+             </button>
+           ))}
+         </nav>
+         <div className="sidebar-bottom">
+           <div className="sidebar-note">
+             <Shield size={20} />
+             <strong>Isolated fixture scope</strong>
+             <p>
+               Local customer data and repository. No live service verification.
+@@ -496,40 +449,45 @@
+               <span>
+                 <strong>Emergency stop is active.</strong> New and queued
+                 actions are blocked. Dispatched changes are not rolled back.
+               </span>
+               {configure && (
+                 <button
+                   disabled={busy}
+                   onClick={() =>
+                     void mutate(
+                       "/control",
+                       { paused: false },
+                       "Gateway resumed.",
+                     )
+                   }
+                 >
+                   Resume gateway
+                 </button>
+               )}
+             </div>
+           )}
++          {(page === "Overview" || page === "Connections") && <button className="button secondary onboarding-link" onClick={() => navigate("Get started")}>Get started: Connect a scoped task <ArrowRight size={15} /></button>}
++          {page === "Get started" && <GettingStarted />}
++          {page === "Settings" && session.authMode === "account" && <SettingsPanel onSignedOut={clearSession} onProfile={async () => { const current: Session = await api("/session"); setSession(current); await refresh(); }} />}
++          {page === "Team" && session.authMode === "account" && configure && <TeamPanel revision={workspace.updatedAt} />}
++          {page === "Team" && !(session.authMode === "account" && configure) && <p>Administrator access is required for team management.</p>}
+           {page === "Overview" && (
+             <>
+               <section className="guard-banner">
+                 <div className="guard-copy">
+                   <div className="guard-status">
+                     <span className="dot" />
+                     {workspace.paused
+                       ? "STOP ACTIVE"
+                       : "LOCAL GATEWAY CONTROLS"}
+                   </div>
+                   <h2>Autonomy, with boundaries.</h2>
+                   <p>
+                     Inspect decisions and recorded execution outcomes for calls
+                     routed through this gateway.
+                   </p>
+                   <div className="guard-meta">
+                     <Shield size={14} />
+                     Scoped grants
+                     <i />
+                     Exact action review
+@@ -1844,20 +1802,21 @@
+             </button>
+           </section>
+         ))}
+       </div>
+       {!manage && (
+         <p className="section-pad">
+           An operator or administrator can run these scenarios.
+         </p>
+       )}
+       {result && (
+         <section className="panel">
+           <div className="panel-heading">
+             <h2>{result.message}</h2>
+           </div>
+           <ActionTable items={result.actions} open={open} />
+         </section>
+       )}
+     </>
+   );
+ }
++
+
+--- base/src/api.ts
++++ current/src/api.ts
+@@ -1,26 +1,27 @@
+ // Session credentials stay in this module's memory and disappear on reload/logout.
+ let csrfToken = "";
+ export const setCsrf = (value: string) => {
+   csrfToken = value;
+ };
+ export async function api(path: string, body?: unknown, method?: string) {
+   const verb = method ?? (body !== undefined ? "POST" : "GET");
+   const response = await fetch("/api" + path, {
+     method: verb,
+     credentials: "same-origin",
+     cache: "no-store",
+     headers: {
+       "Content-Type": "application/json",
+       ...(verb !== "GET" && csrfToken ? { "X-AB-CSRF": csrfToken } : {}),
+     },
+     ...(body !== undefined ? { body: JSON.stringify(body) } : {}),
+   });
+   const value = await response
+     .json()
+     .catch(() => ({ error: "Control API returned an unreadable response" }));
++  if (response.status === 401 && typeof window !== "undefined") window.dispatchEvent(new Event("agentbrake:unauthorized"));
+   if (!response.ok)
+     throw Object.assign(new Error(value.error || "Request failed"), {
+       status: response.status,
+     });
+   return value;
+ }
+
+--- base/src/types.ts
++++ current/src/types.ts
+@@ -66,41 +66,45 @@
+   preview?: {
+     kind: "database-update" | "git-change" | "git-branch" | "operation";
+     summary: string;
+     details: Record<string, unknown>;
+   };
+   review?: { nonce: string; fingerprint: string };
+   approvalReceipt?: {
+     actorId: string;
+     tenant: string;
+     decision: "approve" | "reject";
+     at: string;
+     proof: { nonce: string; fingerprint: string };
+   };
+ };
+ export type Actor = {
+   id: string;
+   name: string;
+   tenant: string;
+   role: "administrator" | "operator" | "approver" | "viewer";
+ };
+-export type Session = { actor: Actor; csrfToken: string; teamMode: boolean };
++export type Session = { actor: Actor; csrfToken: string; teamMode: boolean; authMode?: "key" | "account" };
++export type Setup = { managed: boolean; initialized: boolean };
++export type Account = Actor & { email: string; active: boolean };
++export type Invitation = { id: string; email: string; role: Actor["role"]; expiresAt: number };
++export type Team = { members: Account[]; invitations: Invitation[] };
+ export type Review = {
+   action: Event;
+   proof: { nonce: string; fingerprint: string };
+ };
+ export type Evidence = {
+   schemaVersion: 1;
+   action: Event;
+   decision: {
+     id: string;
+     policyHash: string;
+     version: string;
+     effect: string;
+     reason: string;
+   };
+   review: { fingerprint?: string; receipt?: unknown; preview?: unknown };
+   execution: {
+     status: string;
+     observation: "adapter-reported" | "not-dispatched" | "unverified";
+     summary?: object;
+     correlationId: string;
+
+--- base/src/styles.css
++++ current/src/styles.css
+@@ -2572,40 +2572,60 @@
+ .stop-button { color: #986044; }
+ .table-filters .tabs button { color: #697661; }
+ .table-filters .tabs button.active { color: #3f5531; }
+ @media (max-width: 760px) {
+   .event-title strong { font-size: 11px; }
+   .metric-label { font-size: 11px; }
+   .stop-panel p, .workspace-footer { font-size: 9px; }
+   .stop-button { min-height: 36px; }
+ }
+ @media (prefers-reduced-motion: reduce) {
+   *,
+   *:before,
+   *:after {
+     animation: none !important;
+     transition: none !important;
+     scroll-behavior: auto !important;
+   }
+ }
+ 
+ /* Product controls reuse the existing dashboard's palette and layout. */
++.account-form { display: grid; gap: 16px; max-width: 560px; }
++.account-form label, .one-time-link label { display: grid; gap: 8px; font-size: 13px; font-weight: 600; }
++.account-form input, .account-form select, .one-time-link input { width: 100%; min-width: 0; padding: 11px; border: 1px solid var(--border); border-radius: 7px; background: #fff; color: #34462d; }
++.account-form input[readonly] { background: #f5f7f3; }
++.account-form .inline-check { display: flex; align-items: center; }
++.inline-check input { width: auto; }
++.password-form { margin-top: 35px; padding-top: 26px; border-top: 1px solid var(--border); }
++.password-form p, .team-section > p, .getting-started p, .getting-started li, .one-time-link p { font-size: 13px; color: #5b6955; line-height: 1.7; }
++.team-section, .one-time-link { margin-top: 24px; margin-bottom: 24px; }
++.team-section > h2 { margin-bottom: 10px; }
++.member-card { padding: 22px; min-width: 0; }
++.member-card h3, .member-card > p { margin-bottom: 12px; overflow-wrap: anywhere; }
++.member-card > .button { margin-top: 14px; }
++.invitation-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-top: 16px; overflow-wrap: anywhere; }
++.one-time-link input { margin: 12px 0; }
++.getting-started li { margin: 0 0 22px 22px; padding-left: 8px; }
++.getting-started h3 { margin: 24px 0 12px; }
++.getting-started pre { white-space: pre-wrap; overflow-wrap: anywhere; background: #f5f7f3; padding: 18px; margin: 18px 0; font-size: 12px; }
++.onboarding-link { margin-bottom: 20px; }
++@media (max-width: 760px) { .invitation-row { align-items: stretch; flex-direction: column; } .login-main { padding: 24px 18px; } .one-time-link { padding: 18px; } }
+ .scope-banner { margin-bottom: 20px; }
+ .product-metrics { margin-top: 22px; }
+ .task-details { display: grid; grid-template-columns: 130px minmax(0, 1fr); gap: 9px 12px; font-size: 12px; margin: 20px 0; }
+ .task-details dt { color: #626e60; }
+ .task-details dd { margin: 0; overflow-wrap: anywhere; }
+ .task-grant { border-top: 1px solid var(--border); padding-top: 18px; margin-top: 14px; }
+ .task-grant h3 { margin-bottom: 10px; font-size: 14px; }
+ .task-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 9px; }
+ .agent-card > p { overflow-wrap: anywhere; }
+ .scope-checks { border: 0; padding: 0; margin: 20px 0; min-width: 0; }
+ .scope-checks legend { font-weight: 600; font-size: 12px; margin-bottom: 8px; }
+ .scope-checks .tool-checks { grid-template-columns: 1fr; }
+ .scope-checks code { overflow-wrap: anywhere; white-space: normal; }
+ .form-grid, .filter-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+ .form-grid label, .filter-grid label { display: flex; flex-direction: column; gap: 8px; font-size: 12px; }
+ .filter-grid { padding: 20px; align-items: end; border-bottom: 1px solid var(--border); }
+ .filter-grid .button { min-height: 41px; }
+ .section-pad { padding: 22px; }
+ .section-pad > label { display: block; margin-bottom: 10px; }
+ .section-pad > select { max-width: 100%; width: 100%; }
+
+--- base/src/components/AuthPanel.tsx
++++ current/src/components/AuthPanel.tsx
+@@ -0,0 +1,59 @@
++import { useState, type FormEvent } from "react";
++import { ArrowRight, LockKeyhole, Shield } from "lucide-react";
++import { api } from "../api";
++import { Logo } from "../ui";
++import type { Session, Setup } from "../types";
++
++export type Landing = { kind: "invite" | "reset"; token: string };
++export function AuthPanel({ setup, landing, onSession, onReset, retry, initialError }: {
++  setup: Setup | null; landing: Landing | null; onSession: (session: Session) => Promise<void>;
++  onReset: () => void; retry: () => void; initialError: string;
++}) {
++  const [fields, setFields] = useState({ key: "", name: "", email: "", password: "", confirmation: "" });
++  const [busy, setBusy] = useState(false), [error, setError] = useState("");
++  const [notice, setNotice] = useState("");
++  const bootstrap = setup?.managed && !setup.initialized && !landing;
++  const account = setup?.managed;
++  const title = landing?.kind === "invite" ? "Accept invitation" : landing?.kind === "reset" ? "Reset password" : bootstrap ? "Set up workspace" : account ? "Sign in" : "Open your local workspace";
++  const field = (key: keyof typeof fields, label: string, type = "text", password = false) => <label key={key} htmlFor={`auth-${key}`}>{label}<input id={`auth-${key}`} type={type} value={fields[key]} required maxLength={password ? 128 : key === "name" ? 80 : 254} minLength={password && (bootstrap || landing) ? 15 : undefined} autoComplete={key === "email" ? "username" : password ? (bootstrap || landing ? "new-password" : "current-password") : "off"} onChange={e => setFields({ ...fields, [key]: e.target.value })} /></label>;
++  async function submit(e: FormEvent) {
++    e.preventDefault(); setError(""); setNotice("");
++    if ((bootstrap || landing) && fields.password !== fields.confirmation) { setError("Passwords do not match."); return; }
++    setBusy(true);
++    const entered = { ...fields };
++    setFields(previous => ({ ...previous, key: "", password: "", confirmation: "" }));
++    try {
++      if (landing?.kind === "reset") {
++        await api("/password/reset", { token: landing.token, password: entered.password });
++        onReset(); setNotice("Password reset. Sign in with your new password.");
++      } else {
++        const value: Session = landing ? await api("/invitations/accept", { token: landing.token, name: entered.name, password: entered.password }) : bootstrap ? await api("/setup", { key: entered.key, name: entered.name, email: entered.email, password: entered.password }) : await api("/login", account ? { email: entered.email, password: entered.password } : { key: entered.key });
++        await onSession(value);
++      }
++    } catch (err) {
++      setError((err instanceof Error ? err.message : "Request failed") + (landing ? ". Ask your administrator for a fresh link if this link expired or was already used." : ""));
++    } finally { setBusy(false); }
++  }
++  return <div className="login-shell">
++    <div className="login-story"><Logo /><div><span className="eyebrow">LOCAL AGENT CONTROL</span><h1>Give your agents<br />room to work.<br /><em>Keep control.</em></h1><p>Scope tasks. Review exact changes. Inspect recorded outcomes.</p></div><small>AgentBrake / Private local evaluation</small></div>
++    <main className="login-main"><div className="login-card"><span className="square-icon"><LockKeyhole /></span>
++      <h2>{setup ? title : "Workspace unavailable"}</h2>
++      {initialError && <div className="error" role="alert">{initialError}</div>}
++      {!setup ? <button className="button secondary" onClick={retry}>Retry connection</button> : <>
++        <p>{landing ? "This one-use link is kept in memory only. Choose a password of 15 to 128 characters." : bootstrap ? "Use the bootstrap key from this installation’s generated administrator entry once. Then use your email and password; no daily file editing is needed." : account ? "Use your workspace account. Need to reset your password? Ask an administrator to issue a recovery link and share it securely." : "Sign in with your generated operator credential. Your role controls the available actions."}</p>
++        <form onSubmit={submit} className="account-form">
++          {!landing && (!account || bootstrap) && field("key", bootstrap ? "Bootstrap key" : "Workspace key", "password")}
++          {(bootstrap || landing?.kind === "invite") && field("name", "Full name")}
++          {!landing && account && field("email", "Email", "email")}
++          {(account || landing) && field("password", "Password", "password", true)}
++          {(bootstrap || landing) && field("confirmation", "Confirm password", "password", true)}
++          {error && <div className="error" role="alert">{error}</div>}
++          {notice && <p role="status">{notice}</p>}
++          <button className="button primary wide" disabled={busy}>{bootstrap ? "Set up workspace" : landing?.kind === "invite" ? "Accept invitation" : landing?.kind === "reset" ? "Reset password" : account ? "Sign in" : "Open workspace"}<ArrowRight size={16} /></button>
++        </form>
++        {landing && <button className="button secondary" disabled={busy} onClick={() => { setFields({key:"",name:"",email:"",password:"",confirmation:""}); setError(""); onReset(); }}>Return to sign in</button>}
++      </>}
++      <div className="login-foot"><Shield size={14} />Local HTTP · private evaluation</div>
++    </div></main>
++  </div>;
++}
+
+--- base/src/components/AccountPanels.tsx
++++ current/src/components/AccountPanels.tsx
+@@ -0,0 +1,85 @@
++import { useEffect, useState, type FormEvent } from "react";
++import { api } from "../api";
++import type { Account, Actor, Team } from "../types";
++
++const roles: Actor["role"][] = ["administrator", "operator", "approver", "viewer"];
++const message = (err: unknown) => err instanceof Error ? err.message : "Request failed";
++const passwordValid = (password: string, confirmation: string) => password.length >= 15 && password.length <= 128 && password === confirmation;
++
++export function SettingsPanel({ onSignedOut, onProfile }: { onSignedOut: () => void; onProfile: () => Promise<void> }) {
++  const [account, setAccount] = useState<Account | null>(null), [name, setName] = useState("");
++  const [error, setError] = useState(""), [notice, setNotice] = useState(""), [busy, setBusy] = useState(false);
++  const [current, setCurrent] = useState(""), [password, setPassword] = useState(""), [confirmation, setConfirmation] = useState("");
++  useEffect(() => {
++    let active = true;
++    void api("/profile").then(value => { if (active) { setAccount(value.account); setName(value.account.name); } }).catch(err => {if(active)setError(message(err));});
++    return () => { active = false; };
++  }, []);
++  async function save(e: FormEvent) {
++    e.preventDefault(); setBusy(true); setError(""); setNotice("");
++    try { const value = await api("/profile", { name }, "PATCH"); setAccount(value.account); await onProfile(); setNotice("Profile saved."); }
++    catch(err) {setError(message(err));} finally {setBusy(false);}
++  }
++  async function changePassword(e: FormEvent) {
++    e.preventDefault(); setError(""); setNotice("");
++    if (!passwordValid(password,confirmation)) {setError("Use 15 to 128 characters and matching passwords.");return;}
++    const entered = {currentPassword:current,password}; setCurrent("");setPassword("");setConfirmation("");setBusy(true);
++    try {await api("/password/change",entered);onSignedOut();} catch(err){setError(message(err));} finally {setBusy(false);}
++  }
++  return <section className="panel"><div className="panel-heading"><h2>Account settings</h2></div><div className="section-pad account-panel">
++    {error && <div className="error" role="alert">{error}</div>}{notice && <p role="status">{notice}</p>}
++    {!account ? !error && <p role="status">Loading profile…</p> : <>
++      <form className="account-form" onSubmit={save}>
++        <label>Profile name<input value={name} maxLength={80} required onChange={e=>setName(e.target.value)} autoComplete="name" /></label>
++        <label>Email<input type="email" value={account.email} readOnly /></label>
++        <label>Role<input value={account.role} readOnly /></label>
++        <button className="button dark" disabled={busy}>Save profile</button>
++      </form>
++      <form className="account-form password-form" onSubmit={changePassword}><h3>Change password</h3><p>Use 15 to 128 characters. Changing your password signs out all your sessions. Sign in again afterward.</p>
++        <label>Current password<input type="password" value={current} required maxLength={128} autoComplete="current-password" onChange={e=>setCurrent(e.target.value)} /></label>
++        <label>New password<input type="password" value={password} required minLength={15} maxLength={128} autoComplete="new-password" onChange={e=>setPassword(e.target.value)} /></label>
++        <label>Confirm new password<input type="password" value={confirmation} required minLength={15} maxLength={128} autoComplete="new-password" onChange={e=>setConfirmation(e.target.value)} /></label>
++        <button className="button dark" disabled={busy}>Change password</button>
++      </form>
++    </>}
++  </div></section>;
++}
++
++function MemberCard({member,busy,change,recover}: {member:Account;busy:boolean;change:(id:string,patch:{role:Actor["role"];active:boolean})=>Promise<void>;recover:(id:string)=>void}) {
++  const [role,setRole]=useState(member.role),[active,setActive]=useState(member.active);
++  useEffect(()=>{setRole(member.role);setActive(member.active);},[member]);
++  return <article className="panel member-card"><h3>{member.name}</h3><p>{member.email}</p><p>Current role: {member.role}</p><p>{member.active ? "Active" : "Disabled"}</p>
++    <form className="account-form" onSubmit={async e=>{e.preventDefault();await change(member.id,{role,active});setRole(member.role);setActive(member.active);}}>
++      <label>Member role<select value={role} onChange={e=>setRole(e.target.value as Actor["role"])}>{roles.map(value=><option key={value}>{value}</option>)}</select></label>
++      <label className="inline-check"><input type="checkbox" checked={active} onChange={e=>setActive(e.target.checked)} />Account active</label>
++      <button className="button secondary" disabled={busy}>Save member</button>
++    </form>
++    <button className="button secondary" disabled={busy} onClick={()=>recover(member.id)}>Issue recovery link</button>
++  </article>;
++}
++
++export function TeamPanel({revision}: {revision?:string}) {
++  const [team,setTeam]=useState<Team|null>(null),[email,setEmail]=useState(""),[role,setRole]=useState<Actor["role"]>("viewer");
++  const [error,setError]=useState(""),[notice,setNotice]=useState(""),[busy,setBusy]=useState(false);
++  const [secret,setSecret]=useState<{url:string;expiresAt:number;kind:"invite"|"reset"}|null>(null);
++  const [copyError,setCopyError]=useState("");
++  async function load(){const value:Team=await api("/team");setTeam(value);}
++  useEffect(()=>{let active=true;void api("/team").then(value=>{if(active)setTeam(value);}).catch(err=>{if(active)setError(message(err));});return()=>{active=false;};},[revision]);
++  async function run(operation:()=>Promise<void>) {setBusy(true);setError("");setNotice("");try{await operation();}catch(err){setError(message(err));}finally{setBusy(false);}}
++  function show(value:{token:string;expiresAt:number},kind:"invite"|"reset") {setCopyError("");setSecret({url:window.location.origin+window.location.pathname+`#${kind}=${encodeURIComponent(value.token)}`,expiresAt:value.expiresAt,kind});}
++  async function invite(e:FormEvent){e.preventDefault();await run(async()=>{const value=await api("/team/invitations",{email,role});show(value,"invite");setEmail("");await load();});}
++  return <>
++    {error && <div className="error" role="alert">{error}</div>}{notice && <p role="status">{notice}</p>}
++    {secret && <section className="panel section-pad one-time-link"><h2>{secret.kind==="invite"?"Invitation created":"Recovery link created"}</h2><p>Shown once. Copy now and share manually through a secure channel. No email was sent. {secret.kind==="reset"?"Recovery links expire after 15 minutes.":"Invitation links expire after 24 hours."}</p><p>Expires {new Date(secret.expiresAt).toLocaleString()}</p>
++      <label>One-time link<input readOnly value={secret.url} onFocus={e=>e.target.select()} /></label>
++      <div className="task-actions"><button className="button secondary" onClick={()=>void navigator.clipboard.writeText(secret.url).then(()=>setNotice("Link copied."),()=>setCopyError("Copy unavailable. Select the link and copy it manually."))}>Copy link</button><button className="button secondary" onClick={()=>{setSecret(null);setCopyError("");setNotice("");}}>Dismiss link</button></div>{copyError && <p role="alert">{copyError}</p>}
++    </section>}
++    <section className="panel"><div className="panel-heading"><h2>Invite a teammate</h2></div><form className="section-pad account-form" onSubmit={invite}>
++      <label>Invitation email<input type="email" maxLength={254} required value={email} onChange={e=>setEmail(e.target.value)} /></label><label>Invitation role<select value={role} onChange={e=>setRole(e.target.value as Actor["role"])}>{roles.map(value=><option key={value}>{value}</option>)}</select></label><button className="button dark" disabled={busy || !!secret}>Create invitation</button>
++    </form></section>
++    <section className="team-section"><h2>Workspace members</h2><p>Authority changes revoke the member’s current sessions. Keep at least one active administrator.</p>{!team && !error && <p role="status">Loading team…</p>}
++      <div className="boundary-grid">{team?.members.map(member=><MemberCard key={member.id} member={member} busy={busy} change={(id,patch)=>run(async()=>{await api(`/team/${id}`,patch,"PATCH");await load();setNotice("Member updated.");})} recover={id=>{if(!secret)void run(async()=>{show(await api(`/team/${id}/recovery`,{}),"reset");});else setError("Dismiss the current one-time link before issuing another.");}} />)}</div>
++    </section>
++    <section className="panel section-pad team-section"><h2>Pending invitations</h2>{team?.invitations.length===0 && <p>No pending invitations.</p>}{team?.invitations.map(invitation=><div className="invitation-row" key={invitation.id}><p>{invitation.email} · {invitation.role}<br /><small>Expires {new Date(invitation.expiresAt).toLocaleString()}</small></p><button className="button secondary" disabled={busy} onClick={()=>void run(async()=>{await api(`/team/invitations/${invitation.id}`,{},"DELETE");await load();setNotice("Invitation revoked.");})}>Revoke invitation for {invitation.email}</button></div>)}</section>
++  </>;
++}
+
+--- base/src/components/GettingStarted.tsx
++++ current/src/components/GettingStarted.tsx
+@@ -0,0 +1,19 @@
++export function GettingStarted() {
++  return <section className="panel"><div className="panel-heading"><div><h2>Your first controlled task</h2><p>Private local evaluation · use the disposable customer and repository fixtures.</p></div></div><div className="section-pad getting-started">
++    <ol>
++      <li><strong>Create a scoped task.</strong> From Tasks, create an identity with only the required catalog tools and resources. Copy its bearer credential once and issue a short, bounded task grant.</li>
++      <li><strong>Connect from the isolated agent network.</strong> Open Connections and copy the generated MCP HTTP template for this installation. Put the task bearer in the named environment variable in the isolated agent runtime. The private service uses the HTTP gateway; the separate stdio template belongs to the local compatibility fixture.</li>
++      <li><strong>Try a permitted read.</strong> Allow reads in Policies, then call database_read for customers with a small limit using your connected agent. Demo Lab also submits real read and denial requests through the local gateway.</li>
++      <li><strong>Request independent review.</strong> A database update or repository change can become pending. A different administrator or approver opens Approvals, inspects the immutable before/after preview, and approves the exact one-use proof. The task owner cannot approve its own mutation.</li>
++      <li><strong>Inspect evidence.</strong> Open Activity or Evidence to see the policy decision, review receipt, dispatch observation, correlation ID and audit entries. An UNKNOWN outcome needs target-state reconciliation; do not resubmit it.</li>
++    </ol>
++    <h3>Keep the boundary intact</h3><p>Agent traffic goes to the gateway on the isolated network. The dashboard is a human control plane and never proxies MCP traffic or exposes target credentials. Keep target services inaccessible to agents by other routes. Recorded adapter outcomes are local observations, not independent production verification.</p>
++    <h3>Installation and recovery help</h3><p>Run these commands in the AgentBrake installation directory on the host. Replace NAME and the other placeholders. These are instructions; the dashboard has not executed them.</p>
++    <pre>{`node scripts/product.mjs doctor NAME
++node scripts/product.mjs backup NAME
++node scripts/product.mjs restore NEW_NAME BACKUP_FILE KEY_FILE PORT
++node scripts/product.mjs diagnostics NAME`}</pre>
++    <p>Doctor checks the installation. Backup creates an encrypted recovery archive and separate key file. Store them securely and separately. Restore targets a new installation name and available port. Diagnostics produces a bounded, redacted support bundle. Review command output for the actual result.</p>
++    <p>Account access: an administrator creates invitations and 15-minute recovery links from Team and shares them manually. There is no public signup or email delivery.</p>
++  </div></section>;
++}
+
+--- base/apps/dashboard/lib/control-proxy.ts
++++ current/apps/dashboard/lib/control-proxy.ts
+@@ -1,23 +1,30 @@
+ const MAX_BODY = 32 * 1024;
+ const id = "[a-zA-Z0-9_-]{1,100}";
+ const routes: [RegExp, string[]][] = [
++  [/^setup$/, ["GET", "POST"]],
++  [/^profile$/, ["GET", "PATCH"]],
++  [/^team$/, ["GET"]],
++  [/^(?:invitations\/accept|password\/(?:reset|change)|team\/invitations)$/, ["POST"]],
++  [new RegExp(`^team/invitations/${id}$`), ["DELETE"]],
++  [new RegExp(`^team/${id}$`), ["PATCH"]],
++  [new RegExp(`^team/${id}/recovery$`), ["POST"]],
+   [/^(?:health|session|workspace|activity|policies\/history|audit\/export)$/, ["GET"]],
+   [/^events$/, ["GET"]],
+   [/^(?:login|logout|control|demo|agents)$/, ["POST"]],
+   [/^policies$/, ["PUT"]],
+   [new RegExp(`^agents/${id}$`), ["PATCH"]],
+   [new RegExp(`^agents/${id}/grant(?:/revoke)?$`), ["POST"]],
+   [new RegExp(`^approvals/${id}$`), ["GET", "POST"]],
+   [new RegExp(`^evidence/${id}(?:/export)?$`), ["GET"]],
+ ];
+ const fail = (status: number, error: string) => Response.json({ error }, { status, headers: { "Cache-Control": "no-store" } });
+ export async function controlProxy(request: Request, path: string[], configured = process.env.AGENTBRAKE_CONTROL_URL ?? "http://127.0.0.1:4314", transport: typeof fetch = fetch) {
+   const browser = new URL(request.url);
+   const host = request.headers.get("host") ?? "";
+   if (!/^(?:localhost|127\.0\.0\.1|\[::1\])(?::[0-9]{1,5})?$/.test(host) || browser.protocol !== "http:") return fail(403, "Dashboard requires a trusted loopback HTTP host");
+   // Next reconstructs Request.url using its listening hostname (localhost or
+   // 0.0.0.0), which can differ from the browser's loopback Host. Validate the
+   // actual Host first and derive the browser origin from that trusted header.
+   const dashboardOrigin = `http://${host}`;
+   const origin = request.headers.get("origin");
+   if ((origin && origin !== dashboardOrigin) || (request.method !== "GET" && origin !== dashboardOrigin)) return fail(403, "Dashboard origin verification failed");
+
+--- base/apps/dashboard/package.json
++++ current/apps/dashboard/package.json
+@@ -1,23 +1,23 @@
+ {
+   "name": "agentbrake-dashboard",
+-  "version": "0.1.0",
++  "version": "0.2.0",
+   "private": true,
+   "type": "module",
+   "engines": { "node": ">=22.13" },
+   "scripts": {
+     "dev": "next dev --webpack --hostname 127.0.0.1 --port 4315",
+     "build": "next build --webpack",
+     "typecheck": "tsc --noEmit",
+     "start": "next start --hostname 127.0.0.1 --port 4315"
+   },
+   "dependencies": {
+     "next": "16.4.6",
+     "react": "19.3.1",
+     "react-dom": "19.3.1",
+     "lucide-react": "0.468.0"
+   },
+   "devDependencies": {
+     "typescript": "5.9.3",
+     "@types/node": "22.19.0",
+     "@types/react": "19.2.2",
+     "@types/react-dom": "19.2.2"
+
+--- base/apps/dashboard/package-lock.json
++++ current/apps/dashboard/package-lock.json
+@@ -1,29 +1,29 @@
+ {
+   "name": "agentbrake-dashboard",
+-  "version": "0.1.0",
++  "version": "0.2.0",
+   "lockfileVersion": 3,
+   "requires": true,
+   "packages": {
+     "": {
+       "name": "agentbrake-dashboard",
+-      "version": "0.1.0",
++      "version": "0.2.0",
+       "dependencies": {
+         "lucide-react": "0.468.0",
+         "next": "16.4.6",
+         "react": "19.3.1",
+         "react-dom": "19.3.1"
+       },
+       "devDependencies": {
+         "@types/node": "22.19.0",
+         "@types/react": "19.2.2",
+         "@types/react-dom": "19.2.2",
+         "typescript": "5.9.3"
+       },
+       "engines": {
+         "node": ">=22.13"
+       }
+     },
+     "node_modules/@emnapi/runtime": {
+       "version": "1.11.3",
+       "resolved": "https://registry.npmjs.org/@emnapi/runtime/-/runtime-1.11.3.tgz",
+       "integrity": "sha512-Xz4Tpyki7XyrpbUK1jR1AhdAdaXyhhY4lZ3neLodmhpuWfy2PAQN5B46sAiU4liOXGLkHypn/qU+jvfWSCYYLA==",
+
+--- base/tests/product-ui/fixture.ts
++++ current/tests/product-ui/fixture.ts
+@@ -34,41 +34,51 @@
+   const executions: Record<number, number> = {};
+   const adapter = git;
+   target = createServer(async (req, res) => {
+     if (req.headers.authorization !== `Bearer ${targetToken}`) { res.writeHead(401).end(); return; }
+     const chunks = []; for await (const chunk of req) chunks.push(chunk);
+     const body = JSON.parse(Buffer.concat(chunks).toString()); res.setHeader("Content-Type", "application/json");
+     try {
+       if (body.tool.startsWith("github_")) { const operation = { ...body, sandbox: true }; res.end(JSON.stringify(req.url === "/preview" ? await adapter.preview(operation) : await adapter.execute(operation))); return; }
+       const row = rows.find(value => value.id === body.arguments.id);
+       if (req.url === "/preview") { res.end(JSON.stringify(databasePreview(row, body.arguments.status))); return; }
+       if (body.tool === "database_read") { res.end(JSON.stringify({ rows: rows.slice(0, body.arguments.limit) })); return; }
+       if (!row || body.precondition?.version !== row.version) { res.writeHead(409).end(); return; }
+       row.status = body.arguments.status; row.version++; executions[row.id] = (executions[row.id] ?? 0) + 1;
+       // Actual committed target mutation with an actual lost response: Gateway
+       // transport times out and records UNKNOWN. No fabricated API status.
+       if (row.id === 2) return;
+       res.end(JSON.stringify(row));
+     } catch { res.writeHead(400).end(JSON.stringify({ error: "Fixture operation failed" })); }
+   });
+   target.listen(0, "127.0.0.1"); await once(target, "listening");
+-  system = createApp({ databasePath: ":memory:", adminKey: keys.administrator,
++  system = createApp({ databasePath: ":memory:", adminKey: keys.administrator, managedAccounts: process.argv.includes("--managed"),
+     operators: Object.entries(keys).map(([role, key]) => ({ id: role, name: `Fixture ${role}`, tenant: "local", role: role as keyof typeof keys, key })),
+     connections: { fixture: { url: `http://127.0.0.1:${(target.address() as { port: number }).port}`, token: targetToken } },
+     policy: new OpaEvaluator({ url: opa.url, token: opa.token, timeoutMs: 1000 }),
+   });
+   // Read-only diagnostic endpoint exists only in this ephemeral test fixture.
+   system.app.get("/__fixture", (_req, res) => res.json({ rows, executions }));
++  // Explicit test-only clock boundary: expire only existing invitations, without
++  // changing production time/KDF/session behavior or exposing persisted secrets.
++  if (process.argv.includes("--managed")) system.app.post("/__fixture/expire-invitations", async (_req,res) => {
++    await system!.store.changeIdentity(state => {
++      for (const invitation of state.invitations) invitation.expiresAt = Date.now() - 1;
++      return {result:undefined,audit:{type:"fixture.invitation-expired",details:{actorId:"fixture",targetId:"fixture",reason:"bounded-expiry-test"}}};
++    });
++    res.json({ok:true});
++  });
+   control = system.app.listen(44214, "127.0.0.1"); await once(control, "listening");
+   await cp(join(root, "apps/dashboard/.next/static"), join(root, "apps/dashboard/.next/standalone/apps/dashboard/.next/static"), { recursive: true });
+   dashboard = spawn(process.execPath, [join(root, "apps/dashboard/.next/standalone/apps/dashboard/server.js")], {
+     cwd: root, windowsHide: true, stdio: ["ignore", "pipe", "pipe"], env: {
+       PATH: process.env.PATH, SystemRoot: process.env.SystemRoot, TEMP: process.env.TEMP, TMP: process.env.TMP,
+       NODE_ENV: "production", NEXT_TELEMETRY_DISABLED: "1", HOSTNAME: "127.0.0.1", PORT: "44215", AGENTBRAKE_CONTROL_URL: backend,
+     },
+   });
+   dashboard.stdout?.pipe(process.stdout); dashboard.stderr?.pipe(process.stderr);
+   dashboard.once("exit", () => { if (!closing) void close().finally(() => process.exit(1)); });
+   process.once("SIGINT", () => void close().finally(() => process.exit(0)));
+   process.once("SIGTERM", () => void close().finally(() => process.exit(0)));
+   process.on("message", value => { if (value === "close") void close().finally(() => process.exit(0)); });
+ } catch (error) { await close(); throw error; }
++
+
+--- base/tests/product-ui/run.mjs
++++ current/tests/product-ui/run.mjs
+@@ -1,31 +1,36 @@
+ import { fork, spawn } from "node:child_process";
+ import { once } from "node:events";
+ import { fileURLToPath } from "node:url";
+ const root = fileURLToPath(new URL("../../", import.meta.url));
+-const fixture = fork(fileURLToPath(new URL("./fixture.ts", import.meta.url)), [], { cwd: root, execArgv: ["--import", "tsx"], windowsHide: true, stdio: ["ignore", "inherit", "inherit", "ipc"] });
++let fixture;
+ let browser;
+ async function cleanup() {
+   if (browser && browser.exitCode === null) { const ended = once(browser, "exit"); browser.kill(); await ended; }
+-  if (fixture.exitCode === null) {
++  if (fixture && fixture.exitCode === null) {
+     const ended = once(fixture, "exit"); fixture.send("close");
+     let timeout;
+     try { await Promise.race([ended, new Promise((_, reject) => { timeout = setTimeout(() => reject(Error("Fixture cleanup timeout")), 10_000); })]); }
+     catch { fixture.kill(); await ended; }
+     finally { clearTimeout(timeout); }
+   }
+ }
+ process.once("SIGINT", () => void cleanup().finally(() => process.exit(130)));
+ process.once("SIGTERM", () => void cleanup().finally(() => process.exit(143)));
+ try {
++ for (const managed of process.argv.includes("--managed-only") ? [true] : [false, true]) {
++  fixture = fork(fileURLToPath(new URL("./fixture.ts", import.meta.url)), managed ? ["--managed"] : [], { cwd: root, execArgv: ["--import", "tsx"], windowsHide: true, stdio: ["ignore", "inherit", "inherit", "ipc"] });
+   let ready = false;
+   for (let index = 0; index < 150; index++) {
+     if (fixture.exitCode !== null) throw Error("Fixture exited before readiness");
+     try { const response = await fetch("http://127.0.0.1:44215/api/health", { signal: AbortSignal.timeout(300) }); if (response.status === 200) { ready = true; break; } }
+     catch {}
+     await new Promise(resolve => setTimeout(resolve, 200));
+   }
+   if (!ready) throw Error("Standalone dashboard fixture failed readiness");
+-  browser = spawn(process.execPath, ["node_modules/@playwright/test/cli.js", "test", "--config", "tests/product-ui/playwright.config.ts", ...process.argv.slice(2)], { cwd: root, windowsHide: true, stdio: "inherit" });
++  browser = spawn(process.execPath, ["node_modules/@playwright/test/cli.js", "test", "--config", "tests/product-ui/playwright.config.ts", managed ? "managed.spec.ts" : "workflows.spec.ts", ...process.argv.slice(2).filter(arg => arg !== "--managed-only")], { cwd: root, windowsHide: true, stdio: "inherit" });
+   const [code] = await once(browser, "exit"); process.exitCode = code ?? 1;
++  await cleanup();
++  if (process.exitCode) break;
++ }
+ } catch (error) { console.error(error.message); process.exitCode = 1; }
+ finally { await cleanup(); }
+
+--- base/tests/product-ui/proxy.test.ts
++++ current/tests/product-ui/proxy.test.ts
+@@ -1,40 +1,62 @@
+ import test from "node:test";
+ import assert from "node:assert/strict";
+ import { controlProxy } from "../../apps/dashboard/lib/control-proxy.js";
+ const origin = "http://127.0.0.1:44215";
+ function request(path: string, options: RequestInit = {}, headers: Record<string, string> = {}) {
+   return new Request(origin + "/api/" + path, { ...options, headers: { host: "127.0.0.1:44215", origin, "content-type": "application/json", ...headers } });
+ }
++
++test("account routes allow exact methods and retain origin and route boundaries", async () => {
++  const transport: typeof fetch = async () => Response.json({ ok: true });
++  const allowed: [string, string[]][] = [
++    ["setup", ["GET", "POST"]], ["profile", ["GET", "PATCH"]], ["team", ["GET"]],
++    ["invitations/accept", ["POST"]], ["password/reset", ["POST"]], ["password/change", ["POST"]],
++    ["team/invitations", ["POST"]], ["team/invitations/fixture-id", ["DELETE"]],
++    ["team/fixture-id", ["PATCH"]], ["team/fixture-id/recovery", ["POST"]],
++  ];
++  for (const [path, methods] of allowed) {
++    for (const method of methods) {
++      const init = { method, ...(method !== "GET" ? { body: "{}" } : {}) };
++      assert.equal((await controlProxy(request(path, init), path.split("/"), undefined, transport)).status, 200, `${method} ${path}`);
++      assert.equal((await controlProxy(request(path, init, { origin: "http://attacker.invalid" }), path.split("/"), undefined, transport)).status, 403);
++    }
++    assert.equal((await controlProxy(request(path, { method: "PUT", body: "{}" }), path.split("/"), undefined, transport)).status, 405);
++  }
++  for (const path of ["team/members/x/delete", "team/invitations/x/accept", "password", "setup/x"]) {
++    assert.equal((await controlProxy(request(path), path.split("/"), undefined, transport)).status, 404);
++  }
++});
+ test("dashboard proxy rejects untrusted origins, routes, destinations and oversized or malformed bodies before dispatch", async () => {
+   let calls = 0; const transport: typeof fetch = async () => { calls++; return Response.json({ ok: true }); };
+   const cases: [Request, string[], string, number][] = [
+     [request("login", { method: "POST", body: "{}" }, { origin: "http://attacker.invalid" }), ["login"], "http://127.0.0.1:4314", 403],
+     [request("workspace", {}, { host: "attacker.invalid" }), ["workspace"], "http://127.0.0.1:4314", 403],
+     [request("mcp"), ["mcp"], "http://127.0.0.1:4314", 404],
+     [request("workspace"), ["workspace"], "https://example.com", 503],
+     [request("workspace", { method: "DELETE" }), ["workspace"], "http://127.0.0.1:4314", 405],
+     [request("login", { method: "POST", body: "{}" }, { "content-length": "32769" }), ["login"], "http://127.0.0.1:4314", 413],
+     [request("login", { method: "POST", body: JSON.stringify({ key: "x".repeat(32768) }) }), ["login"], "http://127.0.0.1:4314", 413],
+     [request("login", { method: "POST", body: "{" }), ["login"], "http://127.0.0.1:4314", 400],
+   ];
+   for (const [input, path, target, expected] of cases) assert.equal((await controlProxy(input, path, target, transport)).status, expected);
+   assert.equal(calls, 0);
+ });
+ test("dashboard proxy binds backend host/origin, preserves CSRF/cookie and streams the response without forwarding bearer credentials", async () => {
+   let observed = false;
+   const transport: typeof fetch = async (url, options) => {
+     assert.equal(String(url), "http://control-api:4314/api/control");
+     const headers = new Headers(options?.headers);
+     assert.equal(headers.get("host"), "control-api:4314"); assert.equal(headers.get("origin"), "http://control-api:4314");
+     assert.equal(headers.get("cookie"), "ab_session=test-fixture"); assert.equal(headers.get("x-ab-csrf"), "fixture-csrf");
+     assert.equal(headers.get("authorization"), null); assert.equal(options?.redirect, "error"); assert.equal(options?.cache, "no-store");
+     assert.equal(options?.body, '{"paused":true}'); observed = true;
+     return new Response("data: observed\n\n", { headers: { "content-type": "text/event-stream", "set-cookie": "ab_session=new; HttpOnly; Path=/api" } });
+   };
+   const result = await controlProxy(request("control", { method: "POST", body: '{"paused":true}' }, { cookie: "ab_session=test-fixture", "x-ab-csrf": "fixture-csrf", authorization: "Bearer must-not-leave-dashboard" }), ["control"], "http://control-api:4314", transport);
+   assert.ok(observed); assert.equal(result.headers.get("content-type"), "text/event-stream"); assert.match(result.headers.get("set-cookie")!, /HttpOnly/); assert.equal(await result.text(), "data: observed\n\n");
+ });
+ test("dashboard validates browser origin against trusted Host when Next reconstructs an internal listening URL", async () => {
+   const input = new Request("http://0.0.0.0:3000/api/login", { method: "POST", headers: { host: "127.0.0.1:44215", origin, "content-type": "application/json" }, body: "{}" });
+   assert.equal((await controlProxy(input, ["login"], "http://127.0.0.1:4314", async () => Response.json({ ok: true }))).status, 200);
+ });
++
+
+--- base/tests/product-ui/managed.spec.ts
++++ current/tests/product-ui/managed.spec.ts
+@@ -0,0 +1,125 @@
++import { test, expect } from "@playwright/test";
++import { keys } from "./constants.js";
++import { backend, frontend } from "./constants.js";
++import type { Page } from "@playwright/test";
++test.describe.configure({ mode: "serial" });
++const adminEmail = "admin@fixture.test", adminPassword = "synthetic-admin-password";
++async function login(page: Page, email = adminEmail, password = adminPassword) {
++  await page.goto("/"); await page.getByLabel("Email", { exact: true }).fill(email);
++  await page.getByLabel("Password", { exact: true }).fill(password); await page.getByRole("button", { name: "Sign in", exact: true }).click();
++  await expect(page.getByRole("heading", { name: "Security overview" })).toBeVisible();
++
++}
++async function team(page: Page) { await page.getByRole("navigation").getByRole("button", {name:"Team",exact:true}).click(); await expect(page.getByRole("heading",{name:"Workspace members"})).toBeVisible(); await page.getByRole("button",{name:"Refresh",exact:true}).click(); }
++async function invite(page: Page, email: string, role: string) {
++  await team(page); await page.getByLabel("Invitation email").fill(email); await page.getByLabel("Invitation role").selectOption(role);
++  await page.getByRole("button",{name:"Create invitation"}).click(); await expect(page.getByLabel("One-time link")).toBeVisible();
++  const link = await page.getByLabel("One-time link").inputValue(); await page.getByRole("button",{name:"Dismiss link"}).click(); return link;
++}
++async function accept(page: Page, link: string, name: string, password = "synthetic-member-password") {
++  await page.goto(link); await expect(page.getByRole("heading",{name:"Accept invitation"})).toBeVisible();
++  expect(page.url()).toBe(frontend + "/");
++  expect(await page.evaluate(() => ({local:Object.keys(localStorage),session:Object.keys(sessionStorage)}))).toEqual({local:[],session:[]});
++  await page.getByLabel("Full name").fill(name); await page.getByLabel("Password",{exact:true}).fill(password); await page.getByLabel("Confirm password").fill(password);
++  await page.getByRole("button",{name:"Accept invitation",exact:true}).click();
++}
++
++test("managed workspace requires one-time bootstrap then account sign-in", async ({ page }) => {
++  await page.goto("/");
++  await expect(page.getByRole("heading", { name: "Set up workspace" })).toBeVisible();
++  await page.getByLabel("Bootstrap key").fill("incorrect-bootstrap");
++  await page.getByLabel("Full name").fill("Workspace Admin");
++  await page.getByLabel("Email", { exact: true }).fill("admin@fixture.test");
++  await page.getByLabel("Password", { exact: true }).fill("synthetic-admin-password");
++  await page.getByLabel("Confirm password").fill("synthetic-admin-password");
++  await page.getByRole("button", { name: "Set up workspace" }).click();
++  await expect(page.locator(".error[role=alert]")).toBeVisible();
++  await page.getByLabel("Bootstrap key").fill(keys.administrator);
++  await page.getByLabel("Password", { exact: true }).fill("synthetic-admin-password");
++  await page.getByLabel("Confirm password").fill("synthetic-admin-password");
++  await page.getByRole("button", { name: "Set up workspace" }).click();
++  await expect(page.getByRole("heading", { name: "Security overview" })).toBeVisible();
++  await page.getByTitle("Sign out").click();
++  await expect(page.getByRole("heading", { name: "Sign in" })).toBeVisible();
++  const repeated = await page.request.post("/api/setup", {headers:{Origin:frontend},data:{key:keys.administrator,name:"Repeat",email:adminEmail,password:adminPassword}}); expect(repeated.status()).toBe(409);
++  await page.getByLabel("Email",{exact:true}).fill(adminEmail); await page.getByLabel("Password",{exact:true}).fill("incorrect-password-long"); await page.getByRole("button",{name:"Sign in",exact:true}).click();
++  await expect(page.locator(".error[role=alert]")).toContainText("Invalid account credential");
++  await login(page);
++  await page.getByRole("button",{name:/^Get started:/}).click(); await expect(page.getByRole("heading",{name:"Your first controlled task"})).toBeVisible();
++});
++
++test("administrator invites viewer, changes role, disables session and preserves last administrator", async ({page,browser}) => {
++  await login(page);
++  const link = await invite(page,"viewer@fixture.test","viewer");
++  const context = await browser.newContext(), viewer = await context.newPage();
++  try {
++    await accept(viewer,link,"Fixture Viewer"); await expect(viewer.getByRole("heading",{name:"Security overview"})).toBeVisible();
++    await expect(viewer.getByRole("navigation").getByRole("button",{name:"Team",exact:true})).toHaveCount(0);
++    await expect(viewer.locator(".user-profile")).toContainText("viewer");
++    expect((await viewer.request.get(frontend+"/api/team")).status()).toBe(403);
++    await viewer.goto(frontend+"/#Team"); await expect(viewer.getByRole("heading",{name:"Workspace members"})).toHaveCount(0);
++    await team(page); const member=page.locator(".member-card").filter({has:page.getByRole("heading",{name:"Fixture Viewer",exact:true})});
++    await member.getByLabel("Member role").selectOption("operator"); await member.getByRole("button",{name:"Save member"}).click();
++    await expect(member.getByText("Current role: operator",{exact:true})).toBeVisible();
++    await viewer.getByRole("button",{name:"Refresh",exact:true}).click(); await expect(viewer.getByRole("heading",{name:"Sign in",exact:true})).toBeVisible();
++    await login(viewer,"viewer@fixture.test","synthetic-member-password"); await expect(viewer.getByRole("button",{name:"Create task identity"})).toBeVisible();
++    await member.getByLabel("Account active").uncheck(); await member.getByRole("button",{name:"Save member"}).click(); await expect(member.getByText("Disabled",{exact:true})).toBeVisible();
++    await viewer.getByRole("button",{name:"Refresh",exact:true}).click(); await expect(viewer.getByRole("heading",{name:"Sign in",exact:true})).toBeVisible();
++    const admin=page.locator(".member-card").filter({has:page.getByRole("heading",{name:"Workspace Admin",exact:true})});
++    await admin.getByLabel("Account active").uncheck(); await admin.getByRole("button",{name:"Save member"}).click(); await expect(page.locator(".error[role=alert]")).toContainText("last active administrator");
++    await expect(admin.getByText("Active",{exact:true})).toBeVisible();
++  } finally {await context.close();}
++});
++
++test("profile/password and administrator recovery use real one-time links and fresh login", async ({page,browser}) => {
++  await login(page); const link=await invite(page,"profile@fixture.test","operator"); const context=await browser.newContext(), member=await context.newPage();
++  const changed="synthetic-changed-password", recovered="synthetic-recovered-password";
++  try {
++    await accept(member,link,"Profile Member"); await expect(member.getByRole("heading",{name:"Security overview"})).toBeVisible();
++    await member.getByRole("button",{name:"Settings",exact:true}).click(); await member.getByLabel("Profile name").fill("Renamed Member"); await member.getByRole("button",{name:"Save profile"}).click(); await expect(member.getByRole("status")).toContainText("Profile saved");
++    await member.getByLabel("Current password").fill("synthetic-member-password"); await member.getByLabel("New password",{exact:true}).fill(changed); await member.getByLabel("Confirm new password").fill(changed); await member.getByRole("button",{name:"Change password"}).click(); await expect(member.getByRole("heading",{name:"Sign in",exact:true})).toBeVisible();
++    await member.getByLabel("Email",{exact:true}).fill("profile@fixture.test"); await member.getByLabel("Password",{exact:true}).fill("synthetic-member-password"); await member.getByRole("button",{name:"Sign in",exact:true}).click(); await expect(member.locator(".error[role=alert]")).toContainText("Invalid account credential");
++    await login(member,"profile@fixture.test",changed);
++    await team(page); const card=page.locator(".member-card").filter({has:page.getByRole("heading",{name:"Renamed Member",exact:true})}); await card.getByRole("button",{name:"Issue recovery link"}).click(); const recovery=await page.getByLabel("One-time link").inputValue(); await expect(page.getByText(/15 minutes/)).toBeVisible();
++    await member.goto(recovery); await expect(member.getByRole("heading",{name:"Reset password"})).toBeVisible(); expect(member.url()).toBe(frontend+"/");
++    await member.getByLabel("Password",{exact:true}).fill(recovered); await member.getByLabel("Confirm password").fill(recovered); await member.getByRole("button",{name:"Reset password",exact:true}).click(); await expect(member.getByRole("heading",{name:"Sign in",exact:true})).toBeVisible();
++    await login(member,"profile@fixture.test",recovered);
++    expect((await member.request.post(frontend+"/api/login",{headers:{Origin:frontend},data:{email:"profile@fixture.test",password:changed}})).status()).toBe(401);
++    await member.goto(recovery); await member.getByLabel("Password",{exact:true}).fill(recovered); await member.getByLabel("Confirm password").fill(recovered); await member.getByRole("button",{name:"Reset password",exact:true}).click(); await expect(member.locator(".error[role=alert]")).toContainText("fresh link");
++  } finally {await context.close();}
++});
++
++test("expired, revoked and replayed invitations are actionable and fragment secrets stay out of browser storage", async({page,browser})=>{
++  await login(page);
++  const context=await browser.newContext(), recipient=await context.newPage();
++  try {
++    const expired=await invite(page,"expired@fixture.test","viewer");
++    expect((await fetch(backend+"/__fixture/expire-invitations",{method:"POST"})).status).toBe(200);
++    await accept(recipient,expired,"Expired Viewer"); await expect(recipient.locator(".error[role=alert]")).toContainText("fresh link");
++    const revoked=await invite(page,"revoked@fixture.test","viewer"); await page.getByRole("button",{name:"Revoke invitation for revoked@fixture.test"}).click(); await expect(page.getByRole("button",{name:"Revoke invitation for revoked@fixture.test"})).toHaveCount(0);
++    await accept(recipient,revoked,"Revoked Viewer"); await expect(recipient.locator(".error[role=alert]")).toContainText("fresh link");
++    const used=await invite(page,"used@fixture.test","viewer"); await accept(recipient,used,"Used Viewer"); await expect(recipient.getByRole("heading",{name:"Security overview"})).toBeVisible();
++    await accept(recipient,used,"Used Again"); await expect(recipient.locator(".error[role=alert]")).toContainText("fresh link");
++    expect(recipient.url()).toBe(frontend+"/"); expect(await recipient.evaluate(()=>({local:Object.keys(localStorage),session:Object.keys(sessionStorage)}))).toEqual({local:[],session:[]});
++  } finally {await context.close();}
++});
++
++test("setup transport errors offer a real retry and managed account forms fit mobile",async({page})=>{
++  await page.setViewportSize({width:390,height:844});
++  await page.route("**/api/setup",route=>route.abort("connectionfailed")); await page.goto("/");
++  await expect(page.getByRole("heading",{name:"Workspace unavailable"})).toBeVisible(); await page.unroute("**/api/setup"); await page.getByRole("button",{name:"Retry connection"}).click(); await expect(page.getByRole("heading",{name:"Sign in",exact:true})).toBeVisible(); expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
++});
++
++test("managed owner and invited independent approver review real preview once with evidence",async({page,browser})=>{
++  await login(page); const link=await invite(page,"approver@fixture.test","approver"); const context=await browser.newContext(), reviewer=await context.newPage();
++  try {
++    await accept(reviewer,link,"Independent Approver"); await expect(reviewer.getByRole("heading",{name:"Security overview"})).toBeVisible();
++    await page.getByRole("button",{name:"Create task identity"}).click(); await page.getByLabel("Agent name").fill("Managed reviewed task"); await page.getByLabel("database_update",{exact:true}).check();
++    const createdResponse=page.waitForResponse(r=>r.url().endsWith("/api/agents")&&r.request().method()==="POST"); await page.getByRole("button",{name:"Create scoped agent"}).click(); const created=await (await createdResponse).json();
++    const actionResponse=await fetch(backend+"/api/actions",{method:"POST",headers:{"Content-Type":"application/json",Authorization:`Bearer ${created.token}`},body:JSON.stringify({requestId:crypto.randomUUID(),tool:"database_update",arguments:{id:1,status:"paused"}})}); const action=await actionResponse.json(); expect(action.status).toBe("pending");
++    await reviewer.getByRole("button",{name:/^Approvals/}).click(); await reviewer.getByRole("button",{name:"Refresh",exact:true}).click(); await reviewer.getByRole("button",{name:`Inspect ${action.id}`,exact:true}).click(); await expect(reviewer.getByTestId("action-preview")).toContainText('"before"'); const sent=reviewer.waitForRequest(r=>r.url().endsWith(`/api/approvals/${action.id}`)&&r.method()==="POST"); await reviewer.getByRole("button",{name:"Approve & execute"}).click(); const proof=(await sent).postDataJSON().proof; await expect(reviewer.getByRole("dialog").locator(".badge")).toHaveText("Allowed");
++    const exported=await reviewer.request.get(frontend+`/api/evidence/${action.id}/export?format=json`); expect(exported.status()).toBe(200); const evidence=await exported.json(); expect(evidence.review.receipt.actorId).not.toBe(created.agent.ownerId); expect(evidence.execution.status).toBe("allowed");
++    const before=await (await fetch(backend+"/__fixture")).json(); expect(before.executions[1]).toBe(1);
++    const session=await (await reviewer.request.get(frontend+"/api/session")).json(); const replay=await reviewer.request.post(frontend+`/api/approvals/${action.id}`,{headers:{Origin:frontend,"X-AB-CSRF":session.csrfToken},data:{decision:"approve",proof}}); expect(replay.status()).toBe(409); expect((await (await fetch(backend+"/__fixture")).json()).executions[1]).toBe(1);
++  } finally {await context.close();}
++});

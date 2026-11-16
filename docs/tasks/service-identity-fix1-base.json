@@ -1,0 +1,156 @@
+{
+  "files": [
+    {
+      "path": "infra/local/control-db/001-control.sql",
+      "sha256": "6e6b63dae36cbb4a7fdab6ff5793e157d37a30eb5ae2f5f3f5c3943f8cd53557"
+    },
+    {
+      "path": "infra/local/control-db/002-accounts.sql",
+      "sha256": "8d115a19ccb523a679e1582206e50cc4e23e8877f2eac09011795d17fe1806e8"
+    },
+    {
+      "path": "infra/local/control-db/010-control-fixture.sh",
+      "sha256": "6666c7bc737db602df937756921cf7dacb799252129277eb10a666f149cad190"
+    },
+    {
+      "path": "server/adapters/fixture-http.ts",
+      "sha256": "f802a1f3abf7e349e6e1db13bf97c4d9007aa5a9ef4cfd1f117cf1598b0dc31f"
+    },
+    {
+      "path": "server/adapters/git-fixture.ts",
+      "sha256": "7d936caf6784a064bd983aba9405247eb4b4b532b4c011767f8349fef120ce62"
+    },
+    {
+      "path": "server/adapters/postgres-fixture.ts",
+      "sha256": "f6a4c54a9b20a18c4e6497744f72be22facde0622621d7fe5a2445d0506427ba"
+    },
+    {
+      "path": "server/adapters/preview.ts",
+      "sha256": "ef56c11d21106a56c2a23f8f90301a0ead1ea54fd71c3a48b1afc34681fd28c3"
+    },
+    {
+      "path": "server/app.ts",
+      "sha256": "ded005a2cbd6e0f7962daa5932c24fdb8a78405e76612cf38781c142ddecd930"
+    },
+    {
+      "path": "server/connectors.ts",
+      "sha256": "171d0907e6993d1229ec8ce5e7c054bf56bcc423296ea3fe1afa57fd81d1d152"
+    },
+    {
+      "path": "server/contracts.ts",
+      "sha256": "01c0749a05347fdd4ff2ae8a0c087d205801519741acd454b1b49c8b3b2f69d3"
+    },
+    {
+      "path": "server/control-experience.ts",
+      "sha256": "b742026f1fe029ac98214c3a46f7eade0f72c51d01a49d11cc59f1ca799feb60"
+    },
+    {
+      "path": "server/control-store.ts",
+      "sha256": "c82ea5624af0ce4cbd52907a9472e044bdc621ccc46222e787a62399ff0486ac"
+    },
+    {
+      "path": "server/fixture-target.ts",
+      "sha256": "7327b9a6da894abd78168e99f41980d9e53d1282de4213893fb3f8952100fe61"
+    },
+    {
+      "path": "server/gateway-bridge.ts",
+      "sha256": "2d7d488e190c8b8c7284d8114e28929d6057d7dec8ceb45a7b67ed82933160fd"
+    },
+    {
+      "path": "server/gateway-port.ts",
+      "sha256": "565e084c06a69660efba93adef9ad534a14d1ea6b6016861d11c626c73862023"
+    },
+    {
+      "path": "server/gateway.ts",
+      "sha256": "23328870a7bc8374bda891781a815d5e6e9d76b9b01c7829f047aa5c2181daf4"
+    },
+    {
+      "path": "server/index.ts",
+      "sha256": "6e491d82bb1de53e4733bef1b3709e1342e821dfdf3ccfa953dc6ac11a7c3568"
+    },
+    {
+      "path": "server/isolated.ts",
+      "sha256": "adcf632847e47678b37f8250880820f0b72e86bacf8dd9233587da550f900867"
+    },
+    {
+      "path": "server/mcp-config.ts",
+      "sha256": "2d7cc6afac348468f175f246dc767df6f5d6736dce4b6878f276e75467ac9368"
+    },
+    {
+      "path": "server/mcp-http.ts",
+      "sha256": "f152207f1c422d6bdcd75ca74977d1c5728239f726f7e29959cc82c0b65d47c3"
+    },
+    {
+      "path": "server/mcp.ts",
+      "sha256": "9e90783b953e9beeb4a061d3c57ce099ff8598a7ba1f67b0df3d7bb6e7309fdb"
+    },
+    {
+      "path": "server/policy/contracts.ts",
+      "sha256": "2777f1c45bd08a2434147de314e7d7032c84c9afe080a9b997d0f3f28d329424"
+    },
+    {
+      "path": "server/policy/opa-client.ts",
+      "sha256": "93fc746b9179328d585afdc75d01111d2b9e2cee94f9e9057d1a2fbd02eb1d08"
+    },
+    {
+      "path": "server/postgres-store.ts",
+      "sha256": "aa7fe5132d4622b0755932eb3d9c0d7017dada9ac41d501a9a7b8d0257077290"
+    },
+    {
+      "path": "server/product.ts",
+      "sha256": "fef1882b0bf4eb576b2625c588679fa8129d0b981b4190c2eb2b200049c3f0d5"
+    },
+    {
+      "path": "server/security/accounts-password.ts",
+      "sha256": "f46caadc5feef6a612ef07479441e4359aea38f7917a9bd0d65cfeaad2521b1c"
+    },
+    {
+      "path": "server/security/accounts-state.ts",
+      "sha256": "2345c46c7d3d982398351685bc2dbb47cc31fb508cc8fdf05907a65e75baf791"
+    },
+    {
+      "path": "server/security/accounts.ts",
+      "sha256": "bdf5ff6c5b29b628d77ffb218459a750578c83d47f53c64240d4a22f80b72986"
+    },
+    {
+      "path": "server/security/approval.ts",
+      "sha256": "a2854f6f4e3300615e6f991819f94161a33587fb40f3b60f9b6819475c339625"
+    },
+    {
+      "path": "server/security/limits.ts",
+      "sha256": "0ca595ceb86b6a36acb26ffcac68d1ed3a18c7fe834611e0bcd92f6210c1036c"
+    },
+    {
+      "path": "server/security/operators.ts",
+      "sha256": "9ffa03eec89deabec6c5bd115346b04e5e25813a4818ea34217bffc2c2c30b5c"
+    },
+    {
+      "path": "server/stage1.ts",
+      "sha256": "8dc7731796a890c2293438469da6d556e6a978409bac6a5c1e00d4477971f045"
+    },
+    {
+      "path": "server/storage-query.ts",
+      "sha256": "c3ba43bcf0d3fb75984ab1e00702a8ba476b3ecef10f2187df769551915fc49f"
+    },
+    {
+      "path": "server/store.ts",
+      "sha256": "fb057c1a407a4a8d7c5e7ae4de6977885d0cf4454e17a7fe83a0baf2c92942ea"
+    },
+    {
+      "path": "server/telemetry.ts",
+      "sha256": "ef2840b0393c4629df05a06ecd30cb249e72b9923072c318c2ec85bab6e5399b"
+    },
+    {
+      "path": "tests/enforcement/accounts-fixture.ts",
+      "sha256": "8713848319c1ed22e49cab7f118a32362c63549300cc7c9db65d951cd48a18c7"
+    },
+    {
+      "path": "tests/enforcement/accounts.test.ts",
+      "sha256": "f3eef0ad7e5c1825277ddea9d953af541e22c9f7f8de1fb29739ddefedfd5469"
+    },
+    {
+      "path": "tests/stage2/postgres-control.test.ts",
+      "sha256": "b0f564cb0a3c494dcb9ee3b72b332f248395053ad0842cec10ae664e69dab9ff"
+    }
+  ]
+}

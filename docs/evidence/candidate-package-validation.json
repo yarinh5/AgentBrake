@@ -1,0 +1,15 @@
+{
+  "result": "PASS_GATED_ARCHIVE_EXTRACTION_BUILD",
+  "at": "2026-11-16T19:56:08.260Z",
+  "sourceHash": "993f7cbf1a3a56dcb421f88368efa67dbbcf37809d0d45b9cdf54e0ab80287c7",
+  "archive": "F:\\project love\\AgentBrake\\.agentbrake-local\\releases\\agentbrake-0.3.0-rc.1-993f7cbf1a3a-f13bfa2f.tar.gz",
+  "archiveSha256": "7c5699836015816cb1ed24cb626b4a317442d18b4264ff29ed06005b59459ca4",
+  "extraction": "F:\\project love\\AgentBrake\\.agentbrake-local\\releases\\extracted-0915fb4e-67b8-4fdb-8f24-43e8e717598a",
+  "filesVerified": 216,
+  "exactInventory": true,
+  "credentialsAndRuntimeDataExcluded": true,
+  "build": "npm run build",
+  "buildExit": 0,
+  "dependencies": "Separate same-machine root/dashboard dependency junctions supplied after extraction; no downloads or package changes",
+  "scope": "Actual gated archive, fresh local extraction; not an independent clean machine"
+}

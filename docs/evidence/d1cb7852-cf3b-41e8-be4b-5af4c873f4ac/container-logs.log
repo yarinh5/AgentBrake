@@ -1,0 +1,65 @@
+mock-target-1  | (node:1) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+mock-target-1  | (Use `node --trace-warnings ...` to show where the warning was created)
+mock-target-1  | Synthetic target ready
+target-db-1    | The files belonging to this database system will be owned by user "postgres".
+target-db-1    | This user must also own the server process.
+target-db-1    | 
+target-db-1    | The database cluster will be initialized with locale "en_US.utf8".
+target-db-1    | The default database encoding has accordingly been set to "UTF8".
+target-db-1    | The default text search configuration will be set to "english".
+target-db-1    | 
+target-db-1    | Data page checksums are enabled.
+target-db-1    | 
+target-db-1    | fixing permissions on existing directory /var/lib/postgresql/data/pgdata ... ok
+target-db-1    | creating subdirectories ... ok
+target-db-1    | selecting dynamic shared memory implementation ... posix
+target-db-1    | selecting default "max_connections" ... 100
+target-db-1    | selecting default "shared_buffers" ... 128MB
+target-db-1    | selecting default time zone ... UTC
+target-db-1    | creating configuration files ... ok
+target-db-1    | running bootstrap script ... ok
+target-db-1    | sh: locale: not found
+target-db-1    | 2026-11-16 10:30:56.626 UTC [22] WARNING:  no usable system locales were found
+target-db-1    | performing post-bootstrap initialization ... ok
+target-db-1    | syncing data to disk ... ok
+target-db-1    | 
+target-db-1    | 
+target-db-1    | Success. You can now start the database server using:
+target-db-1    | 
+target-db-1    |     pg_ctl -D /var/lib/postgresql/data/pgdata -l logfile start
+target-db-1    | 
+target-db-1    | initdb: warning: enabling "trust" authentication for local connections
+target-db-1    | initdb: hint: You can change this by editing pg_hba.conf or using the option -A, or --auth-local and --auth-host, the next time you run initdb.
+target-db-1    | waiting for server to start....2026-11-16 10:30:57.239 UTC [28] LOG:  starting PostgreSQL 18.7 on x86_64-pc-linux-musl, compiled by gcc (Alpine 15.2.0) 15.2.0, 64-bit
+target-db-1    | 2026-11-16 10:30:57.239 UTC [28] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+target-db-1    | 2026-11-16 10:30:57.241 UTC [34] LOG:  database system was shut down at 2026-11-16 10:30:57 UTC
+target-db-1    | 2026-11-16 10:30:57.244 UTC [28] LOG:  database system is ready to accept connections
+target-db-1    |  done
+target-db-1    | server started
+target-db-1    | CREATE DATABASE
+target-db-1    | 
+target-db-1    | 
+target-db-1    | /usr/local/bin/docker-entrypoint.sh: ignoring /docker-entrypoint-initdb.d/*
+target-db-1    | 
+target-db-1    | waiting for server to shut down...2026-11-16 10:30:57.404 UTC [28] LOG:  received fast shutdown request
+target-db-1    | .2026-11-16 10:30:57.404 UTC [28] LOG:  aborting any active transactions
+target-db-1    | 2026-11-16 10:30:57.406 UTC [28] LOG:  background worker "logical replication launcher" (PID 37) exited with exit code 1
+target-db-1    | 2026-11-16 10:30:57.407 UTC [32] LOG:  shutting down
+target-db-1    | 2026-11-16 10:30:57.407 UTC [32] LOG:  checkpoint starting: shutdown immediate
+target-db-1    | 2026-11-16 10:30:57.414 UTC [32] LOG:  checkpoint complete: wrote 952 buffers (5.8%), wrote 3 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.007 s, sync=0.001 s, total=0.008 s; sync files=303, longest=0.001 s, average=0.000 s; distance=4437 kB, estimate=4437 kB; lsn=0/1BCDC08, redo lsn=0/1BCDC08
+target-db-1    | 2026-11-16 10:30:57.424 UTC [28] LOG:  database system is shut down
+target-db-1    |  done
+target-db-1    | server stopped
+target-db-1    | 
+target-db-1    | PostgreSQL init process complete; ready for start up.
+target-db-1    | 
+target-db-1    | 2026-11-16 10:30:57.535 UTC [1] LOG:  starting PostgreSQL 18.7 on x86_64-pc-linux-musl, compiled by gcc (Alpine 15.2.0) 15.2.0, 64-bit
+target-db-1    | 2026-11-16 10:30:57.535 UTC [1] LOG:  listening on IPv4 address "0.0.0.0", port 5432
+target-db-1    | 2026-11-16 10:30:57.535 UTC [1] LOG:  listening on IPv6 address "::", port 5432
+target-db-1    | 2026-11-16 10:30:57.535 UTC [1] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+target-db-1    | 2026-11-16 10:30:57.537 UTC [50] LOG:  database system was shut down at 2026-11-16 10:30:57 UTC
+target-db-1    | 2026-11-16 10:30:57.540 UTC [1] LOG:  database system is ready to accept connections
+gateway-1      | (node:1) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+gateway-1      | (Use `node --trace-warnings ...` to show where the warning was created)
+gateway-1      | responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+gateway-1      | Isolated AgentBrake gateway ready

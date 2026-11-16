@@ -1,0 +1,169 @@
+{
+  "runId": "38103dd3-a10f-4411-b425-e5386cf9ed6d",
+  "startedAt": "2026-11-16T10:28:34.327Z",
+  "project": "agentbrake-a-38103dd3",
+  "result": "FAIL",
+  "cases": [],
+  "commands": [
+    {
+      "label": "docker-preflight",
+      "command": [
+        "docker",
+        "version",
+        "--format",
+        "{{json .Server}}"
+      ],
+      "startedAt": "2026-11-16T10:28:34.329Z",
+      "exitCode": 0,
+      "timedOut": false,
+      "log": "docker-preflight.log"
+    },
+    {
+      "label": "desktop-version",
+      "command": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "(Get-Item 'C:\\Program Files\\Docker\\Docker\\Docker Desktop.exe').VersionInfo.ProductVersion"
+      ],
+      "startedAt": "2026-11-16T10:28:34.456Z",
+      "exitCode": 0,
+      "timedOut": false,
+      "log": "desktop-version.log"
+    },
+    {
+      "label": "compose-config",
+      "command": [
+        "docker",
+        "compose",
+        "--project-name",
+        "agentbrake-a-38103dd3",
+        "-f",
+        "infra/local/compose.yaml",
+        "config",
+        "--quiet"
+      ],
+      "startedAt": "2026-11-16T10:28:34.735Z",
+      "exitCode": 0,
+      "timedOut": false,
+      "log": "compose-config.log"
+    },
+    {
+      "label": "compose-up",
+      "command": [
+        "docker",
+        "compose",
+        "--project-name",
+        "agentbrake-a-38103dd3",
+        "-f",
+        "infra/local/compose.yaml",
+        "up",
+        "-d",
+        "--build",
+        "--wait",
+        "--wait-timeout",
+        "120"
+      ],
+      "startedAt": "2026-11-16T10:28:34.946Z",
+      "exitCode": 1,
+      "timedOut": false,
+      "log": "compose-up.log"
+    },
+    {
+      "label": "compose-down",
+      "command": [
+        "docker",
+        "compose",
+        "--project-name",
+        "agentbrake-a-38103dd3",
+        "-f",
+        "infra/local/compose.yaml",
+        "down",
+        "--volumes",
+        "--remove-orphans"
+      ],
+      "startedAt": "2026-11-16T10:29:44.368Z",
+      "exitCode": 0,
+      "timedOut": false,
+      "log": "compose-down.log"
+    }
+  ],
+  "limitations": [
+    "Synthetic local targets only. No host-admin or kernel-escape guarantee. PostgreSQL adapter implementation is a later stage."
+  ],
+  "engine": {
+    "Platform": {
+      "Name": "Docker Desktop 4.99.0 (245822)"
+    },
+    "Version": "29.9.3",
+    "ApiVersion": "1.56",
+    "MinAPIVersion": "1.40",
+    "Os": "linux",
+    "Arch": "amd64",
+    "Components": [
+      {
+        "Name": "Engine",
+        "Version": "29.9.3",
+        "Details": {
+          "ApiVersion": "1.56",
+          "Arch": "amd64",
+          "BuildTime": "Tue Nov  3 21:41:42 2026",
+          "Experimental": "false",
+          "GitCommit": "70efc0e",
+          "GoVersion": "go1.26.10",
+          "KernelVersion": "6.18.58.1-microsoft-standard-WSL2",
+          "MinAPIVersion": "1.40",
+          "Module": "github.com/moby/moby/v2",
+          "ModuleVersion": "v2.0.0+unknown",
+          "Os": "linux"
+        }
+      },
+      {
+        "Name": "containerd",
+        "Version": "v2.4.2",
+        "Details": {
+          "GitCommit": "b7a25261e029d68978bbf290df0a62fc819b3c51"
+        }
+      },
+      {
+        "Name": "runc",
+        "Version": "1.5.2",
+        "Details": {
+          "GitCommit": "v1.5.2-0-g29dd3dc2"
+        }
+      },
+      {
+        "Name": "docker-init",
+        "Version": "0.19.0",
+        "Details": {
+          "GitCommit": "de40ad0"
+        }
+      }
+    ],
+    "GitCommit": "70efc0e",
+    "GoVersion": "go1.26.10",
+    "KernelVersion": "6.18.58.1-microsoft-standard-WSL2",
+    "BuildTime": "2026-11-03T21:41:42.000000000+00:00"
+  },
+  "desktopVersion": "4.99.0.245822",
+  "images": {
+    "resolvedAt": "2026-11-16T10:17:10.426Z",
+    "images": {
+      "node": {
+        "tag": "library/node:22-bookworm-slim",
+        "image": "library/node@sha256:e9f565d32859f0cbfb52125eafe8be39390f24dac302dc3cdf566e8ba3ab21ee"
+      },
+      "postgres": {
+        "tag": "library/postgres:18-alpine",
+        "image": "library/postgres@sha256:b6972e1115a4ff8eba5d7f7d19184926d1e16d7d1136ae1e1a7ebf286da0f015"
+      },
+      "opa": {
+        "tag": "openpolicyagent/opa:1.22.4-static",
+        "image": "openpolicyagent/opa@sha256:12cecac5a174368f7d3f09d3a19d040ebe0c91d576e520335ae7a985a26e39d3"
+      }
+    }
+  },
+  "policyHash": "ba6af7bbabde5e210a132a4282eede1d23244bc46f61ced324e69ff210e653df",
+  "error": "compose-up failed (exit 1); see log",
+  "finishedAt": "2026-11-16T10:29:44.813Z"
+}

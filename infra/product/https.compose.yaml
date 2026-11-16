@@ -1,0 +1,22 @@
+# Applied by the candidate configurator. Base loopback publication is retained;
+# remote access requires an explicitly authorized private tunnel/VPN/host proxy.
+services:
+  ingress:
+    command: [node, infra/product/https-ingress.mjs]
+    environment:
+      AGENTBRAKE_PUBLIC_ORIGIN: ${AGENTBRAKE_PUBLIC_ORIGIN:?HTTPS origin required}
+    volumes:
+      - ${INSTALL_DIR}/tls-cert.pem:/run/secrets/tls-cert.pem:ro
+      - ${INSTALL_DIR}/tls-key.pem:/run/secrets/tls-key.pem:ro
+    healthcheck:
+      test: [CMD, node, -e, "const tls=require('node:tls');const fs=require('node:fs');const s=tls.connect({host:'127.0.0.1',port:3000,servername:new URL(process.env.AGENTBRAKE_PUBLIC_ORIGIN).hostname,ca:[...tls.rootCertificates,fs.readFileSync('/run/secrets/tls-cert.pem','utf8')]},()=>{s.end();process.exit(0)});s.on('error',()=>process.exit(1));s.setTimeout(2000,()=>process.exit(1))"]
+  dashboard:
+    environment:
+      AGENTBRAKE_PUBLIC_ORIGIN: ${AGENTBRAKE_PUBLIC_ORIGIN}
+    healthcheck:
+      # The pinned Node fetch implementation replaces a supplied Host header.
+      # HTTP request preserves the configured authority without relaxing origin checks.
+      test: [CMD, node, -e, "const r=require('node:http').get({hostname:'127.0.0.1',port:3000,path:'/api/health',headers:{Host:new URL(process.env.AGENTBRAKE_PUBLIC_ORIGIN).host}},s=>{s.resume();s.on('end',()=>process.exit(s.statusCode===200?0:1))});r.on('error',()=>process.exit(1));r.setTimeout(2000,()=>{r.destroy();process.exit(1)})"]
+  control-api:
+    environment:
+      AGENTBRAKE_SECURE_COOKIES: '1'

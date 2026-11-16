@@ -1,0 +1,142 @@
+UI fix1 scoped delta; no Git.
+
+--- base/src/components/AccountPanels.tsx
++++ fixed/src/components/AccountPanels.tsx
+@@ -30,41 +30,42 @@
+     {error && <div className="error" role="alert">{error}</div>}{notice && <p role="status">{notice}</p>}
+     {!account ? !error && <p role="status">Loading profile…</p> : <>
+       <form className="account-form" onSubmit={save}>
+         <label>Profile name<input value={name} maxLength={80} required onChange={e=>setName(e.target.value)} autoComplete="name" /></label>
+         <label>Email<input type="email" value={account.email} readOnly /></label>
+         <label>Role<input value={account.role} readOnly /></label>
+         <button className="button dark" disabled={busy}>Save profile</button>
+       </form>
+       <form className="account-form password-form" onSubmit={changePassword}><h3>Change password</h3><p>Use 15 to 128 characters. Changing your password signs out all your sessions. Sign in again afterward.</p>
+         <label>Current password<input type="password" value={current} required maxLength={128} autoComplete="current-password" onChange={e=>setCurrent(e.target.value)} /></label>
+         <label>New password<input type="password" value={password} required minLength={15} maxLength={128} autoComplete="new-password" onChange={e=>setPassword(e.target.value)} /></label>
+         <label>Confirm new password<input type="password" value={confirmation} required minLength={15} maxLength={128} autoComplete="new-password" onChange={e=>setConfirmation(e.target.value)} /></label>
+         <button className="button dark" disabled={busy}>Change password</button>
+       </form>
+     </>}
+   </div></section>;
+ }
+ 
+ function MemberCard({member,busy,change,recover}: {member:Account;busy:boolean;change:(id:string,patch:{role:Actor["role"];active:boolean})=>Promise<void>;recover:(id:string)=>void}) {
+   const [role,setRole]=useState(member.role),[active,setActive]=useState(member.active);
+-  useEffect(()=>{setRole(member.role);setActive(member.active);},[member]);
++  // Polls return fresh objects; only an actual authority change resets drafts.
++  useEffect(()=>{setRole(member.role);setActive(member.active);},[member.id,member.role,member.active]);
+   return <article className="panel member-card"><h3>{member.name}</h3><p>{member.email}</p><p>Current role: {member.role}</p><p>{member.active ? "Active" : "Disabled"}</p>
+     <form className="account-form" onSubmit={async e=>{e.preventDefault();await change(member.id,{role,active});setRole(member.role);setActive(member.active);}}>
+       <label>Member role<select value={role} onChange={e=>setRole(e.target.value as Actor["role"])}>{roles.map(value=><option key={value}>{value}</option>)}</select></label>
+       <label className="inline-check"><input type="checkbox" checked={active} onChange={e=>setActive(e.target.checked)} />Account active</label>
+       <button className="button secondary" disabled={busy}>Save member</button>
+     </form>
+     <button className="button secondary" disabled={busy} onClick={()=>recover(member.id)}>Issue recovery link</button>
+   </article>;
+ }
+ 
+ export function TeamPanel({revision}: {revision?:string}) {
+   const [team,setTeam]=useState<Team|null>(null),[email,setEmail]=useState(""),[role,setRole]=useState<Actor["role"]>("viewer");
+   const [error,setError]=useState(""),[notice,setNotice]=useState(""),[busy,setBusy]=useState(false);
+   const [secret,setSecret]=useState<{url:string;expiresAt:number;kind:"invite"|"reset"}|null>(null);
+   const [copyError,setCopyError]=useState("");
+   async function load(){const value:Team=await api("/team");setTeam(value);}
+   useEffect(()=>{let active=true;void api("/team").then(value=>{if(active)setTeam(value);}).catch(err=>{if(active)setError(message(err));});return()=>{active=false;};},[revision]);
+   async function run(operation:()=>Promise<void>) {setBusy(true);setError("");setNotice("");try{await operation();}catch(err){setError(message(err));}finally{setBusy(false);}}
+   function show(value:{token:string;expiresAt:number},kind:"invite"|"reset") {setCopyError("");setSecret({url:window.location.origin+window.location.pathname+`#${kind}=${encodeURIComponent(value.token)}`,expiresAt:value.expiresAt,kind});}
+   async function invite(e:FormEvent){e.preventDefault();await run(async()=>{const value=await api("/team/invitations",{email,role});show(value,"invite");setEmail("");await load();});}
+
+--- base/tests/product-ui/managed.spec.ts
++++ fixed/tests/product-ui/managed.spec.ts
+@@ -51,41 +51,90 @@
+ test("administrator invites viewer, changes role, disables session and preserves last administrator", async ({page,browser}) => {
+   await login(page);
+   const link = await invite(page,"viewer@fixture.test","viewer");
+   const context = await browser.newContext(), viewer = await context.newPage();
+   try {
+     await accept(viewer,link,"Fixture Viewer"); await expect(viewer.getByRole("heading",{name:"Security overview"})).toBeVisible();
+     await expect(viewer.getByRole("navigation").getByRole("button",{name:"Team",exact:true})).toHaveCount(0);
+     await expect(viewer.locator(".user-profile")).toContainText("viewer");
+     expect((await viewer.request.get(frontend+"/api/team")).status()).toBe(403);
+     await viewer.goto(frontend+"/#Team"); await expect(viewer.getByRole("heading",{name:"Workspace members"})).toHaveCount(0);
+     await team(page); const member=page.locator(".member-card").filter({has:page.getByRole("heading",{name:"Fixture Viewer",exact:true})});
+     await member.getByLabel("Member role").selectOption("operator"); await member.getByRole("button",{name:"Save member"}).click();
+     await expect(member.getByText("Current role: operator",{exact:true})).toBeVisible();
+     await viewer.getByRole("button",{name:"Refresh",exact:true}).click(); await expect(viewer.getByRole("heading",{name:"Sign in",exact:true})).toBeVisible();
+     await login(viewer,"viewer@fixture.test","synthetic-member-password"); await expect(viewer.getByRole("button",{name:"Create task identity"})).toBeVisible();
+     await member.getByLabel("Account active").uncheck(); await member.getByRole("button",{name:"Save member"}).click(); await expect(member.getByText("Disabled",{exact:true})).toBeVisible();
+     await viewer.getByRole("button",{name:"Refresh",exact:true}).click(); await expect(viewer.getByRole("heading",{name:"Sign in",exact:true})).toBeVisible();
+     const admin=page.locator(".member-card").filter({has:page.getByRole("heading",{name:"Workspace Admin",exact:true})});
+     await admin.getByLabel("Account active").uncheck(); await admin.getByRole("button",{name:"Save member"}).click(); await expect(page.locator(".error[role=alert]")).toContainText("last active administrator");
+     await expect(admin.getByText("Active",{exact:true})).toBeVisible();
++    await expect(admin.getByLabel("Account active")).toBeChecked();
++    await expect(admin.getByLabel("Member role")).toHaveValue("administrator");
+   } finally {await context.close();}
++});
++
++test("member drafts survive unchanged background polling and real authority changes reconcile", async ({ page }) => {
++  test.setTimeout(45_000);
++  await login(page);
++    // Reuse the synthetic member created above. Another public acceptance would
++    // exhaust the real shared credential-attempt budget in this fresh suite.
++    const loaded = page.waitForResponse(response => response.url().endsWith("/api/team") && response.request().method() === "GET");
++    await page.getByRole("navigation").getByRole("button", { name: "Team", exact: true }).click();
++    await (await loaded).finished();
++    const member = page.locator(".member-card").filter({ has: page.getByRole("heading", { name: "Fixture Viewer", exact: true }) });
++    await expect(member.getByText("Current role: operator", { exact: true })).toBeVisible();
++    await expect(member.getByText("Disabled", { exact: true })).toBeVisible();
++    const role = member.getByLabel("Member role"), active = member.getByLabel("Account active");
++    await role.selectOption("viewer");
++    await active.check();
++
++    // No Refresh button or mocked clock: the ordinary ten-second workspace
++    // timer must drive this real team read through the dashboard proxy.
++    const unchanged = await page.waitForResponse(response => response.url().endsWith("/api/team") && response.request().method() === "GET", { timeout: 15_000 });
++    expect(unchanged.status()).toBe(200);
++    await unchanged.finished();
++    await expect(role).toHaveValue("viewer");
++    await expect(active).toBeChecked();
++
++    const saved = page.waitForResponse(response => /\/api\/team\/[^/]+$/.test(response.url()) && response.request().method() === "PATCH");
++    await member.getByRole("button", { name: "Save member" }).click();
++    const response = await saved;
++    expect(response.request().postDataJSON()).toEqual({ role: "viewer", active: true });
++    expect(response.status()).toBe(200);
++    const account = await response.json();
++    const authoritative = await (await page.request.get("/api/team")).json();
++    expect(authoritative.members.find((value: { id: string }) => value.id === account.id)).toMatchObject({ role: "viewer", active: true });
++    await expect(member.getByText("Current role: viewer", { exact: true })).toBeVisible();
++    await expect(member.getByText("Active", { exact: true })).toBeVisible();
++    await expect(role).toHaveValue("viewer");
++    await expect(active).toBeChecked();
++
++    await role.selectOption("operator");
++    const session = await (await page.request.get("/api/session")).json();
++    const reconciled = page.waitForResponse(value => value.url().endsWith("/api/team") && value.request().method() === "GET", { timeout: 15_000 });
++    const changed = await page.request.patch(`/api/team/${account.id}`, { headers: { Origin: frontend, "X-AB-CSRF": session.csrfToken }, data: { role: "approver", active: false } });
++    expect(changed.status()).toBe(200);
++    await (await reconciled).finished();
++    await expect(member.getByText("Current role: approver", { exact: true })).toBeVisible();
++    await expect(role).toHaveValue("approver");
++    await expect(active).not.toBeChecked();
+ });
+ 
+ test("profile/password and administrator recovery use real one-time links and fresh login", async ({page,browser}) => {
+   await login(page); const link=await invite(page,"profile@fixture.test","operator"); const context=await browser.newContext(), member=await context.newPage();
+   const changed="synthetic-changed-password", recovered="synthetic-recovered-password";
+   try {
+     await accept(member,link,"Profile Member"); await expect(member.getByRole("heading",{name:"Security overview"})).toBeVisible();
+     await member.getByRole("button",{name:"Settings",exact:true}).click(); await member.getByLabel("Profile name").fill("Renamed Member"); await member.getByRole("button",{name:"Save profile"}).click(); await expect(member.getByRole("status")).toContainText("Profile saved");
+     await member.getByLabel("Current password").fill("synthetic-member-password"); await member.getByLabel("New password",{exact:true}).fill(changed); await member.getByLabel("Confirm new password").fill(changed); await member.getByRole("button",{name:"Change password"}).click(); await expect(member.getByRole("heading",{name:"Sign in",exact:true})).toBeVisible();
+     await member.getByLabel("Email",{exact:true}).fill("profile@fixture.test"); await member.getByLabel("Password",{exact:true}).fill("synthetic-member-password"); await member.getByRole("button",{name:"Sign in",exact:true}).click(); await expect(member.locator(".error[role=alert]")).toContainText("Invalid account credential");
+     await login(member,"profile@fixture.test",changed);
+     await team(page); const card=page.locator(".member-card").filter({has:page.getByRole("heading",{name:"Renamed Member",exact:true})}); await card.getByRole("button",{name:"Issue recovery link"}).click(); const recovery=await page.getByLabel("One-time link").inputValue(); await expect(page.getByText(/15 minutes/)).toBeVisible();
+     await member.goto(recovery); await expect(member.getByRole("heading",{name:"Reset password"})).toBeVisible(); expect(member.url()).toBe(frontend+"/");
+     await member.getByLabel("Password",{exact:true}).fill(recovered); await member.getByLabel("Confirm password").fill(recovered); await member.getByRole("button",{name:"Reset password",exact:true}).click(); await expect(member.getByRole("heading",{name:"Sign in",exact:true})).toBeVisible();
+     await login(member,"profile@fixture.test",recovered);
+     expect((await member.request.post(frontend+"/api/login",{headers:{Origin:frontend},data:{email:"profile@fixture.test",password:changed}})).status()).toBe(401);
+     await member.goto(recovery); await member.getByLabel("Password",{exact:true}).fill(recovered); await member.getByLabel("Confirm password").fill(recovered); await member.getByRole("button",{name:"Reset password",exact:true}).click(); await expect(member.locator(".error[role=alert]")).toContainText("fresh link");
+   } finally {await context.close();}
+ });
+ 

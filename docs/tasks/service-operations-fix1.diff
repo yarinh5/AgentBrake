@@ -1,0 +1,783 @@
+Operations fix1: scoped delta to reviewed source; baseline already includes root RED36MiB test. No Git.
+
+--- base/infra/product/volume-archive.mjs
++++ fixed/infra/product/volume-archive.mjs
+@@ -1,55 +1,58 @@
+ // Cold local-volume snapshots only. Never follow symlinks or restore over data.
+ import {
+   readdir,
+   lstat,
+   readFile,
+   mkdir,
+   writeFile,
+   chmod,
+   realpath,
+ } from "node:fs/promises";
+ import { join, relative, resolve, sep } from "node:path";
+ import { gzipSync, gunzipSync } from "node:zlib";
+ import { pathToFileURL } from "node:url";
+ const LIMIT = 256 * 1024 * 1024,
+   MAX_ENTRIES = 10000;
++// Shared with the Docker transport and encrypted package ceiling. The whole
++// package (including config and other volumes) must also fit this bound.
++export const SNAPSHOT_MAX_BYTES = 64 * 1024 * 1024;
+ const safePath = (path) =>
+   typeof path === "string" &&
+   path.length <= 1000 &&
+   path
+     .split("/")
+     .every((p) => p && p !== "." && p !== ".." && !/[\\:\x00-\x1f]/.test(p));
+ export function validateSnapshot(encoded) {
+   if (
+     typeof encoded !== "string" ||
+-    encoded.length > 48 * 1024 * 1024 ||
++    encoded.length > SNAPSHOT_MAX_BYTES ||
+     !/^[A-Za-z0-9+/]*={0,2}$/.test(encoded)
+   )
+     throw Error("Invalid volume snapshot");
+   let entries;
+   try {
+     entries = JSON.parse(
+       gunzipSync(Buffer.from(encoded, "base64"), {
+         maxOutputLength: 384 * 1024 * 1024,
+       }).toString("utf8"),
+     );
+   } catch {
+     throw Error("Invalid volume snapshot");
+   }
+   if (!Array.isArray(entries) || entries.length > MAX_ENTRIES)
+     throw Error("Invalid volume entries");
+   const paths = new Set(),
+     dirs = new Set();
+   let size = 0;
+   for (const item of entries) {
+     if (
+       !item ||
+       !safePath(item.path) ||
+       paths.has(item.path) ||
+       !["file", "directory"].includes(item.type) ||
+       !Number.isInteger(item.mode) ||
+       item.mode < 0 ||
+       item.mode > 0o777
+     )
+       throw Error("Unsafe volume entry");
+     const parent = item.path.split("/").slice(0, -1).join("/");
+@@ -80,78 +83,81 @@
+   let size = 0;
+   async function walk(dir) {
+     for (const name of (await readdir(dir)).sort()) {
+       const path = join(dir, name),
+         info = await lstat(path),
+         key = relative(root, path).split(sep).join("/");
+       if (
+         !safePath(key) ||
+         info.isSymbolicLink() ||
+         (!info.isFile() && !info.isDirectory())
+       )
+         throw Error("Unsupported volume entry");
+       if (entries.length >= MAX_ENTRIES)
+         throw Error("Volume entry limit exceeded");
+       if (info.isDirectory()) {
+         entries.push({ path: key, type: "directory", mode: info.mode & 0o777 });
+         await walk(path);
+       } else {
+         size += info.size;
+         if (size > LIMIT) throw Error("Volume size limit exceeded");
+         entries.push({
+           path: key,
+           type: "file",
+           mode: info.mode & 0o777,
+           data: (await readFile(path)).toString("base64"),
+         });
+       }
+     }
+   }
+   await walk(root);
+-  return gzipSync(JSON.stringify(entries)).toString("base64");
++  const encoded = gzipSync(JSON.stringify(entries)).toString("base64");
++  if (encoded.length > SNAPSHOT_MAX_BYTES)
++    throw Error("Volume snapshot size limit exceeded");
++  return encoded;
+ }
+ export async function restoreVolume(directory, encoded) {
+   const entries = validateSnapshot(encoded);
+   if (
+     (await lstat(directory)).isSymbolicLink() ||
+     (await readdir(directory)).length
+   )
+     throw Error("Restore requires an empty real volume");
+   const root = await realpath(directory);
+   for (const item of entries) {
+     const path = join(root, ...item.path.split("/"));
+     if (!path.startsWith(root + sep))
+       throw Error("Volume path escapes destination");
+     if (item.type === "directory") await mkdir(path, { mode: item.mode });
+     else
+       await writeFile(path, Buffer.from(item.data, "base64"), {
+         flag: "wx",
+         mode: item.mode,
+       });
+     await chmod(path, item.mode);
+   }
+   return { restored: entries.length };
+ }
+ if (
+   process.argv[1] &&
+   import.meta.url === pathToFileURL(resolve(process.argv[1])).href
+ ) {
+   try {
+     const [operation, directory] = process.argv.slice(2);
+     if (operation === "snapshot")
+       process.stdout.write(await snapshotVolume(directory));
+     else if (operation === "restore") {
+       let input = "";
+       for await (const chunk of process.stdin) {
+         input += chunk;
+-        if (input.length > 48 * 1024 * 1024)
++        if (input.length > SNAPSHOT_MAX_BYTES)
+           throw Error("Snapshot input limit exceeded");
+       }
+       process.stdout.write(
+         JSON.stringify(await restoreVolume(directory, input)),
+       );
+     } else throw Error("Unknown volume operation");
+   } catch (error) {
+     console.error(error.message);
+     process.exitCode = 1;
+   }
+ }
+
+--- base/scripts/backup-format.mjs
++++ fixed/scripts/backup-format.mjs
+@@ -1,47 +1,48 @@
+ import { createCipheriv, createDecipheriv, randomBytes } from "node:crypto";
++import { SNAPSHOT_MAX_BYTES } from "../infra/product/volume-archive.mjs";
+ const MAGIC = Buffer.from("AGENTBRAKE-BACKUP-1\n");
+-const LIMIT = 64 * 1024 * 1024;
++export const BACKUP_MAX_BYTES = SNAPSHOT_MAX_BYTES;
+ const checkKey = (key) => {
+   if (!Buffer.isBuffer(key) || key.length !== 32)
+     throw Error("Recovery key must be 32 bytes");
+ };
+ export function encryptBackup(value, key) {
+   checkKey(key);
+   const plaintext = Buffer.from(JSON.stringify(value));
+-  if (plaintext.length > LIMIT - 128) throw Error("Backup size limit exceeded");
++  if (plaintext.length > BACKUP_MAX_BYTES - 128) throw Error("Backup size limit exceeded");
+   const nonce = randomBytes(12),
+     cipher = createCipheriv("aes-256-gcm", key, nonce);
+   cipher.setAAD(MAGIC);
+   const encrypted = Buffer.concat([cipher.update(plaintext), cipher.final()]);
+   plaintext.fill(0);
+   return Buffer.concat([MAGIC, nonce, cipher.getAuthTag(), encrypted]);
+ }
+ export function decryptBackup(bytes, key) {
+   checkKey(key);
+-  if (bytes.length > LIMIT) throw Error("Backup size limit exceeded");
++  if (bytes.length > BACKUP_MAX_BYTES) throw Error("Backup size limit exceeded");
+   if (
+     bytes.length < MAGIC.length + 30 ||
+     !bytes.subarray(0, MAGIC.length).equals(MAGIC)
+   )
+     throw Error("Invalid backup envelope");
+   let plaintext;
+   try {
+     const offset = MAGIC.length;
+     const cipher = createDecipheriv(
+       "aes-256-gcm",
+       key,
+       bytes.subarray(offset, offset + 12),
+     );
+     cipher.setAAD(MAGIC);
+     cipher.setAuthTag(bytes.subarray(offset + 12, offset + 28));
+     plaintext = Buffer.concat([
+       cipher.update(bytes.subarray(offset + 28)),
+       cipher.final(),
+     ]);
+     return JSON.parse(plaintext.toString("utf8"));
+   } catch {
+     throw Error("Backup authentication failed");
+   } finally {
+     plaintext?.fill(0);
+   }
+ }
+
+--- base/scripts/product-maintenance.mjs
++++ fixed/scripts/product-maintenance.mjs
+@@ -1,51 +1,51 @@
+ import {
+   open,
+   readFile,
+   writeFile,
+   mkdir,
+   rm,
+   stat,
+   realpath,
+ } from "node:fs/promises";
+ import { resolve, dirname, join, sep } from "node:path";
+ import { randomBytes, randomUUID, createHash } from "node:crypto";
+ import { root } from "./opa-runtime.mjs";
+ import {
+   productConfig,
+   composeProduct,
+   dockerProduct,
+   prepareProduct,
+ } from "./product.mjs";
+ import { sourceManifest } from "./source-manifest.mjs";
+-import { encryptBackup, decryptBackup } from "./backup-format.mjs";
+-import { validateSnapshot } from "../infra/product/volume-archive.mjs";
++import { encryptBackup, decryptBackup, BACKUP_MAX_BYTES } from "./backup-format.mjs";
++import { validateSnapshot, SNAPSHOT_MAX_BYTES } from "../infra/product/volume-archive.mjs";
+ 
+ const requiredFiles = [
+   "session-key",
+   "binding-key",
+   "bridge-key",
+   "opa-token",
+   "target-token",
+   "observer-token",
+   "control-password",
+   "control-owner-password",
+   "postgres-bootstrap",
+   "target-read-password",
+   "target-write-password",
+   "operators.json",
+ ];
+ const volumeNames = ["control-data", "target-data", "git-data"];
+ const parseRows = (raw) =>
+   !raw.trim()
+     ? []
+     : raw.trim().startsWith("[")
+       ? JSON.parse(raw)
+       : raw
+           .trim()
+           .split("\n")
+           .map((s) => JSON.parse(s));
+ export async function installationStatus(config) {
+   return parseRows(
+     await composeProduct(
+       config,
+       ["--profile", "agent", "ps", "--all", "--format", "json"],
+@@ -117,61 +117,61 @@
+       "run",
+       "--rm",
+       "--network",
+       "none",
+       "--read-only",
+       "--cap-drop",
+       "ALL",
+       "--security-opt",
+       "no-new-privileges:true",
+       "--pids-limit",
+       "32",
+       "--memory",
+       "768m",
+       "--user",
+       name === "git-data" ? "1000:1000" : "70:70",
+       "--mount",
+       `type=volume,source=${volume},target=/volume${operation === "snapshot" ? ",readonly" : ""}`,
+       "--mount",
+       `type=bind,source=${helper},target=/tool/volume-archive.mjs,readonly`,
+       "--entrypoint",
+       "node",
+       ...(input === undefined ? [] : ["-i"]),
+       config.env.NODE_IMAGE,
+       "/tool/volume-archive.mjs",
+       operation,
+       "/volume",
+     ],
+     {
+       capture: true,
+       input,
+-      maxOutputBytes: 64 * 1024 * 1024,
++      maxOutputBytes: SNAPSHOT_MAX_BYTES,
+       timeoutMs: 180000,
+     },
+   );
+ }
+ export async function migrateProduct(config) {
+   await composeProduct(
+     config,
+     ["up", "-d", "--wait", "--wait-timeout", "120", "control-db", "target-db"],
+     { capture: true },
+   );
+   const sql = await readFile(
+     join(root, "infra/local/control-db/002-accounts.sql"),
+     "utf8",
+   );
+   const checksum = createHash("sha256").update(sql).digest("hex");
+   // The owner applies one idempotent forward migration under an advisory lock.
+   // A changed previously recorded migration is an explicit release error.
+   const body = sql
+     .replace(/^\\set ON_ERROR_STOP on\s*/, "")
+     .replace(/^BEGIN;\s*/, "")
+     .replace(/COMMIT;\s*$/, "");
+   const migration = `\\set ON_ERROR_STOP on\nBEGIN;\nSELECT pg_advisory_xact_lock(1478629042);\nCREATE TABLE IF NOT EXISTS schema_migrations (name text PRIMARY KEY, sha256 text NOT NULL, applied_at timestamptz NOT NULL DEFAULT now());\nREVOKE ALL ON schema_migrations FROM PUBLIC;\nDO $guard$ BEGIN IF EXISTS (SELECT 1 FROM schema_migrations WHERE name='002-accounts' AND sha256<>'${checksum}') THEN RAISE EXCEPTION 'Applied account migration checksum changed'; END IF; END $guard$;\n${body}\nINSERT INTO schema_migrations(name,sha256) VALUES ('002-accounts','${checksum}') ON CONFLICT(name) DO NOTHING;\nCOMMIT;\n`;
+   await composeProduct(
+     config,
+     [
+       "exec",
+       "-T",
+       "control-db",
+       "psql",
+       "--no-psqlrc",
+@@ -265,61 +265,61 @@
+       });
+     } finally {
+       key.fill(0);
+       if (running.length)
+         await composeProduct(
+           config,
+           [
+             "--profile",
+             "agent",
+             "start",
+             "--wait",
+             "--wait-timeout",
+             "180",
+             ...running,
+           ],
+           { capture: true },
+         );
+     }
+     return {
+       file: artifact,
+       keyFile,
+       maintenance: "completed",
+       sourceServicesResumed: running,
+     };
+   });
+ }
+ export async function inspectBackup(file, keyFile) {
+   const path = await safeLocalFile(file),
+     keyPath = await safeLocalFile(keyFile);
+   if (
+-    (await stat(path)).size > 64 * 1024 * 1024 ||
++    (await stat(path)).size > BACKUP_MAX_BYTES ||
+     (await stat(keyPath)).size !== 32
+   )
+     throw Error("Invalid backup or key size");
+   const key = await readFile(keyPath);
+   let value;
+   try {
+     value = decryptBackup(await readFile(path), key);
+   } finally {
+     key.fill(0);
+   }
+   if (
+     value?.format !== "agentbrake-cold-backup" ||
+     value.schema !== 1 ||
+     !/^[a-f0-9-]{36}$/.test(value.id) ||
+     !/^[a-f0-9-]{36}$/.test(value.installation?.id) ||
+     typeof value.postgresImage !== "string" ||
+     !value.files ||
+     !value.volumes
+   )
+     throw Error("Unsupported backup package");
+   if (
+     Object.keys(value.files).sort().join() !==
+       [...requiredFiles].sort().join() ||
+     Object.keys(value.volumes).sort().join() !== [...volumeNames].sort().join()
+   )
+     throw Error("Incomplete backup package");
+   for (const file of requiredFiles)
+     if (
+       typeof value.files[file] !== "string" ||
+       value.files[file].length > 100000
+@@ -353,87 +353,103 @@
+       "ps",
+       "-a",
+       "-q",
+       "--filter",
+       "label=com.docker.compose.project=" + project,
+     ],
+     { capture: true },
+   );
+   const volumes = await dockerProduct(
+     probe,
+     [
+       "volume",
+       "ls",
+       "-q",
+       "--filter",
+       "label=com.docker.compose.project=" + project,
+     ],
+     { capture: true },
+   );
+   const networks = await dockerProduct(
+     probe,
+     [
+       "network",
+       "ls",
+       "-q",
+       "--filter",
+       "label=com.docker.compose.project=" + project,
+     ],
+     { capture: true },
+   );
+-  if (collisions.trim() || volumes.trim() || networks.trim())
++  const namedVolumes = new Set(
++    (await dockerProduct(
++      probe,
++      ["volume", "ls", "-q", "--filter", "name=" + project + "_"],
++      { capture: true },
++    )).trim().split(/\r?\n/),
++  );
++  if (
++    collisions.trim() || volumes.trim() || networks.trim() ||
++    volumeNames.some((name) => namedVolumes.has(project + "_" + name))
++  )
+     throw Error(
+       "Restore requires a new project with no containers, volumes or networks",
+     );
+   const dir = join(root, ".agentbrake-local/product-" + name);
+   // A new directory is the overwrite guard. Never delete it automatically after failure.
+   await mkdir(dir, { mode: 0o700 });
+   for (const file of requiredFiles)
+     await writeFile(join(dir, file), Buffer.from(data.files[file], "base64"), {
+       mode: 0o600,
+       flag: "wx",
+     });
+   await writeFile(
+     join(dir, "installation.json"),
+     JSON.stringify({
+       ...data.installation,
+       name,
+       port,
+       restoredFrom: data.id,
+       restoredAt: new Date().toISOString(),
+     }),
+     { mode: 0o600, flag: "wx" },
+   );
+   const config = await productConfig(name);
+   return withMaintenance(config, async () => {
+     try {
+       await prepareProduct(config);
++      // Acquire volumes without running the metadata-changing initializer.
++      // Validate before starting it, including volumes created after preflight.
++      await composeProduct(config, ["create", "--no-deps", "volume-init"], {
++        capture: true,
++      });
++      for (const volume of volumeNames) await volumeInfo(config, volume);
+       await composeProduct(
+         config,
+         [
+           "up",
+           "--no-deps",
+           "--abort-on-container-exit",
+           "--exit-code-from",
+           "volume-init",
+           "volume-init",
+         ],
+         { capture: true },
+       );
+       for (const volume of volumeNames)
+         await volumeTransfer(config, volume, "restore", data.volumes[volume]);
+       await migrateProduct(config);
+       await composeProduct(config, ["build", "control-api"], { capture: true });
+       await composeProduct(
+         config,
+         [
+           "run",
+           "--rm",
+           "--no-deps",
+           "-T",
+           "control-api",
+           "node",
+           "--import",
+           "tsx",
+           "infra/product/recovery.ts",
+         ],
+         { capture: true, input: JSON.stringify({ backupId: data.id }) },
+
+--- base/scripts/verify-service.mjs
++++ fixed/scripts/verify-service.mjs
+@@ -1,47 +1,48 @@
+ import assert from "node:assert/strict";
+ import { randomUUID, randomBytes } from "node:crypto";
+ import { mkdir, readFile, writeFile, stat } from "node:fs/promises";
+ import { join } from "node:path";
+ import {
+   initializeProduct,
+   productConfig,
+   composeProduct,
+   dockerProduct,
+ } from "./product.mjs";
+ import {
+   startProduct,
+   backupProduct,
+   restoreProduct,
+   doctorProduct,
+ } from "./product-maintenance.mjs";
+ import { sourceManifest } from "./source-manifest.mjs";
++import { verifyVolumeCollisions } from "../tests/enforcement/service-volume-collision.mjs";
+ const runId = randomUUID(),
+   directory = join("docs/evidence", runId),
+   name = "verify-service-" + runId.slice(0, 8),
+   restoreName = "verify-restore-" + runId.slice(0, 8);
+ await mkdir(directory, { recursive: true });
+ const manifest = await sourceManifest();
+ await writeFile(
+   join(directory, "source-manifest.json"),
+   JSON.stringify(manifest, null, 2),
+ );
+ const report = {
+   runId,
+   sourceHash: manifest.sourceHash,
+   startedAt: new Date().toISOString(),
+   result: "NOT_RUN",
+   cases: [],
+   scope:
+     "Local synthetic service maintenance; encrypted cold snapshot, new-installation restore and authority suspension.",
+ };
+ const config = await initializeProduct(name, 4330);
+ let recovered, backup;
+ const credential = {
+   email: "owner-" + runId.slice(0, 8) + "@example.test",
+   password: "Service!" + randomBytes(24).toString("hex"),
+ };
+ const reviewerPassword = "Reviewer!" + randomBytes(24).toString("hex");
+ const record = (name, observed) => {
+   report.cases.push({ name, result: "PASS", observed });
+   console.log("PASS " + name);
+ };
+@@ -203,60 +204,63 @@
+   const targetBefore = await snapshot(config),
+     auditBefore = (await request(config, "/api/audit/export", session)).body;
+   assert.equal(auditBefore.valid, true);
+   backup = await backupProduct(config);
+   assert.ok((await stat(backup.file)).size > 100);
+   assert.equal((await doctorProduct(config)).http, "200");
+   await login(config);
+   const bytes = await readFile(backup.file);
+   assert.equal(bytes.includes(Buffer.from(token)), false);
+   record("encrypted consistent backup resumes original installation", {
+     bytes: bytes.length,
+     sourceResumed: true,
+   });
+   const wrongKey = join(config.dir, "wrong-test-recovery-key");
+   await writeFile(wrongKey, randomBytes(32), { mode: 0o600, flag: "wx" });
+   await assert.rejects(
+     restoreProduct(backup.file, wrongKey, restoreName, 4331),
+     /authentication failed/,
+   );
+   await assert.rejects(stat(join(config.dir, "..", "product-" + restoreName)), {
+     code: "ENOENT",
+   });
+   await assert.rejects(
+     restoreProduct(backup.file, backup.keyFile, config.name, 4331),
+     /new project|EEXIST/,
+   );
+   assert.deepEqual(await snapshot(config), targetBefore);
+   record("wrong key and existing destination rejected without damage", {
+     sourceTargetUnchanged: true,
+     newDestinationAbsent: true,
++  });
++  record("foreign exact-name volumes refused without content or metadata changes", {
++    cases: await verifyVolumeCollisions(config, backup),
+   });
+   const restored = await restoreProduct(
+     backup.file,
+     backup.keyFile,
+     restoreName,
+     4331,
+   );
+   recovered = await productConfig(restoreName);
+   const restoredSession = await login(recovered),
+     workspace = (await request(recovered, "/api/workspace", restoredSession))
+       .body;
+   assert.equal(workspace.paused, true);
+   assert.ok(workspace.agents.length > 0);
+   for (const a of workspace.agents) {
+     assert.equal(a.status, "paused");
+     if (a.grant) assert.equal(a.grant.revoked, true);
+   }
+   const restoredPending = workspace.actions.find(
+     (a) => a.id === pending.body.id,
+   );
+   assert.equal(restoredPending.status, "blocked");
+   assert.equal(restoredPending.rule, "recovery-suspension");
+   const audit = (await request(recovered, "/api/audit/export", restoredSession))
+     .body;
+   assert.equal(audit.valid, true);
+   assert.deepEqual(
+     audit.entries.slice(0, auditBefore.entries.length),
+     auditBefore.entries,
+   );
+   assert.deepEqual(await snapshot(recovered), targetBefore);
+
+--- base/tests/enforcement/volume-archive.test.mjs
++++ fixed/tests/enforcement/volume-archive.test.mjs
+@@ -1,55 +1,101 @@
+ import test from "node:test";
+ import assert from "node:assert/strict";
+ import {
+   mkdtemp,
+   mkdir,
+   writeFile,
+   readFile,
+   readdir,
+   rm,
+ } from "node:fs/promises";
+ import { resolve, join, dirname, basename } from "node:path";
+ import { gzipSync } from "node:zlib";
++import { spawn } from "node:child_process";
+ import { randomBytes } from 'node:crypto';
+ import { encryptBackup } from '../../scripts/backup-format.mjs';
++import { inspectBackup } from '../../scripts/product-maintenance.mjs';
+ import {
+   snapshotVolume,
+   restoreVolume,
+   validateSnapshot,
+ } from "../../infra/product/volume-archive.mjs";
+ test("cold volume roundtrip preserves binary data and refuses nonempty restore", async () => {
+   const dir = await mkdtemp(resolve(".agentbrake-local/archive-test-"));
+   try {
+     const source = join(dir, "source"),
+       target = join(dir, "target");
+     await mkdir(source);
+     await mkdir(target);
+     await mkdir(join(source, "nested"));
+     const bytes = randomBytes(36 * 1024 * 1024);
+     bytes[0] = 255;
+     await writeFile(join(source, "nested", "data"), bytes);
+     const encoded = await snapshotVolume(source);
++    assert.ok(encoded.length > 48 * 1024 * 1024);
+     assert.ok(encryptBackup({schema:1,volume:encoded},randomBytes(32)).length < 64 * 1024 * 1024);
+-    assert.deepEqual(await restoreVolume(target, encoded), { restored: 2 });
++    const key = randomBytes(32), keyFile = join(dir, "key"), backup = join(dir, "backup.abk");
++    await writeFile(keyFile, key);
++    const empty = gzipSync("[]").toString("base64");
++    await writeFile(backup, encryptBackup({
++      format: "agentbrake-cold-backup", schema: 1,
++      id: "11111111-1111-4111-8111-111111111111",
++      installation: { id: "22222222-2222-4222-8222-222222222222" },
++      postgresImage: "synthetic-postgres",
++      files: Object.fromEntries([
++        "session-key", "binding-key", "bridge-key", "opa-token", "target-token",
++        "observer-token", "control-password", "control-owner-password",
++        "postgres-bootstrap", "target-read-password", "target-write-password", "operators.json",
++      ].map((name) => [name, Buffer.from("synthetic").toString("base64")])),
++      volumes: { "control-data": encoded, "target-data": empty, "git-data": empty },
++    }, key));
++    const inspected = await inspectBackup(backup, keyFile);
++    assert.equal(inspected.volumes["control-data"], encoded);
++    // Exercise the actual helper stdin path used by Docker, above the old 48MiB bound.
++    const result = await new Promise((resolve, reject) => {
++      const child = spawn(process.execPath, ["infra/product/volume-archive.mjs", "restore", target], { windowsHide: true });
++      let output = "", errors = "";
++      child.stdout.on("data", (chunk) => { output += chunk; });
++      child.stderr.on("data", (chunk) => { errors += chunk; });
++      child.on("error", reject);
++      child.stdin.on("error", reject);
++      child.on("close", (code) => code === 0 ? resolve(JSON.parse(output)) : reject(Error(errors)));
++      child.stdin.end(encoded);
++    });
++    assert.deepEqual(result, { restored: 2 });
+     assert.deepEqual(await readFile(join(target, "nested", "data")), bytes);
+     await assert.rejects(restoreVolume(target, encoded), /empty real volume/);
+     for (const path of [
+       "../escape",
+       "/absolute",
+       "x/../../escape",
+       "C:/escape",
+       "x\\escape",
+     ]) {
+       const bad = gzipSync(
+         JSON.stringify([{ path, type: "file", mode: 384, data: "eA==" }]),
+       ).toString("base64");
+       assert.throws(() => validateSnapshot(bad), /Unsafe|parent/);
+       await assert.rejects(restoreVolume(source, bad), /Unsafe|parent/);
+     }
+-    assert.deepEqual((await readdir(dir)).sort(), ["source", "target"]);
++    const file = { path: "duplicate", type: "file", mode: 384, data: "eA==" };
++    assert.throws(() => validateSnapshot(gzipSync(JSON.stringify([file, file])).toString("base64")), /Unsafe volume entry/);
++    assert.throws(() => validateSnapshot(gzipSync(JSON.stringify([{ ...file, data: "eA=" }])).toString("base64")), /Invalid volume data/);
++    assert.deepEqual((await readdir(dir)).sort(), ["backup.abk", "key", "source", "target"]);
+   } finally {
+     assert.equal(dirname(resolve(dir)), resolve(".agentbrake-local"));
+     assert.match(basename(dir), /^archive-test-[a-zA-Z0-9]+$/);
+     await rm(dir, { recursive: true, force: true });
+   }
+ });
++
++test("snapshot writer refuses incompressible data above the shared package ceiling", async () => {
++  const dir = await mkdtemp(resolve(".agentbrake-local/archive-test-"));
++  try {
++    await writeFile(join(dir, "data"), randomBytes(50 * 1024 * 1024));
++    await assert.rejects(snapshotVolume(dir), /snapshot size limit/);
++  } finally {
++    assert.equal(dirname(resolve(dir)), resolve(".agentbrake-local"));
++    assert.match(basename(dir), /^archive-test-[a-zA-Z0-9]+$/);
++    await rm(dir, { recursive: true, force: true });
++  }
++});
+
+--- base/tests/enforcement/service-volume-collision.mjs
++++ fixed/tests/enforcement/service-volume-collision.mjs
+@@ -0,0 +1,65 @@
++// Real Docker regression, called by verify-service; all fixtures are disposable.
++import assert from "node:assert/strict";
++import { randomUUID } from "node:crypto";
++import { stat } from "node:fs/promises";
++import { join } from "node:path";
++import { dockerProduct } from "../../scripts/product.mjs";
++import { restoreProduct } from "../../scripts/product-maintenance.mjs";
++import { root } from "../../scripts/opa-runtime.mjs";
++
++export async function verifyVolumeCollisions(config, backup) {
++  const results = [];
++  const run = (args) => dockerProduct(config, args, { capture: true });
++  for (const suffix of ["control-data", "target-data", "git-data"]) {
++    const name = "verify-collision-" + randomUUID().slice(0, 8),
++      project = "agentbrake-product-" + name,
++      volume = project + "_" + suffix,
++      marker = "com.agentbrake.collision-test=" + name;
++    const inspect = async () => JSON.parse(await run([
++      "run", "--rm", "--network", "none", "--read-only", "--cap-drop", "ALL",
++      "--cap-add", "DAC_OVERRIDE", "--security-opt", "no-new-privileges:true",
++      "--mount", `type=volume,source=${volume},target=/fixture,readonly`,
++      config.env.NODE_IMAGE, "node", "-e",
++      "const fs=require('fs');const s=fs.statSync('/fixture');console.log(JSON.stringify({uid:s.uid,gid:s.gid,mode:s.mode&511,sentinel:fs.readFileSync('/fixture/sentinel','utf8')}));",
++    ]));
++    const existing = (await run(["volume", "ls", "-q", "--filter", "name=" + volume])).trim().split(/\r?\n/);
++    assert.ok(!existing.includes(volume), "Fixture volume must be new");
++    let owned = false;
++    try {
++      await run([
++        "volume", "create", "--label", marker,
++        // Exercise both absent and foreign Compose project labels.
++        ...(suffix === "control-data" ? [] : ["--label", "com.docker.compose.project=foreign-" + name]),
++        volume,
++      ]);
++      const [info] = JSON.parse(await run(["volume", "inspect", volume]));
++      assert.equal(info.Name, volume);
++      assert.equal(info.Labels?.["com.agentbrake.collision-test"], name);
++      owned = true;
++      await run([
++        "run", "--rm", "--network", "none", "--read-only", "--cap-drop", "ALL",
++        "--security-opt", "no-new-privileges:true",
++        "--mount", `type=volume,source=${volume},target=/fixture`,
++        config.env.NODE_IMAGE, "node", "-e",
++        "const fs=require('fs');fs.writeFileSync('/fixture/sentinel','synthetic collision sentinel');fs.chmodSync('/fixture',0o751);",
++      ]);
++      const before = await inspect();
++      assert.deepEqual(before, { uid: 0, gid: 0, mode: 0o751, sentinel: "synthetic collision sentinel" });
++      await assert.rejects(restoreProduct(backup.file, backup.keyFile, name, 4334), /new project/);
++      const after = await inspect();
++      assert.deepEqual(after, before, "Restore must preserve foreign volume content and metadata");
++      await assert.rejects(stat(join(root, ".agentbrake-local/product-" + name)), { code: "ENOENT" });
++      results.push({ suffix, labels: suffix === "control-data" ? "no Compose label" : "foreign Compose label", before, after, destinationAbsent: true });
++    } finally {
++      if (owned) {
++        const [info] = JSON.parse(await run(["volume", "inspect", volume]));
++        assert.equal(info.Name, volume);
++        assert.equal(info.Labels?.["com.agentbrake.collision-test"], name, "Only remove this test's volume");
++        await run(["volume", "rm", volume]);
++        const remaining = (await run(["volume", "ls", "-q", "--filter", "label=" + marker])).trim();
++        assert.equal(remaining, "");
++      }
++    }
++  }
++  return results;
++}

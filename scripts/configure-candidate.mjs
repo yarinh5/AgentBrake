@@ -1,0 +1,10 @@
+import { readFile } from 'node:fs/promises';
+import { productConfig, composeProduct } from './product.mjs';
+import { configureCandidate } from './candidate-config.mjs';
+const [name, file] = process.argv.slice(2);
+if (!name || !file) throw Error('Usage: node scripts/configure-candidate.mjs <dedicated-installation> <configuration-file>');
+const config = await productConfig(name);
+const existing = await composeProduct(config, ['ps', '--all', '--quiet'], { capture: true });
+if (existing.trim()) throw Error('Configure a fresh installation before starting its containers');
+await configureCandidate(config, JSON.parse(await readFile(file, 'utf8')));
+console.log('Dedicated candidate prepared; no service started and no external request sent.');

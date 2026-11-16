@@ -1,0 +1,143 @@
+ Container agentbrake-a-e62c56f7-verifier-run-1868937a9b34 Creating 
+ Container agentbrake-a-e62c56f7-verifier-run-1868937a9b34 Created 
+TAP version 13
+# Subtest: PostgreSQL control fixture
+    # Subtest: connection boundaries reject other databases, hosts, roles, and URI overrides
+    ok 1 - connection boundaries reject other databases, hosts, roles, and URI overrides
+      ---
+      duration_ms: 1.687799
+      type: 'test'
+      ...
+    # Subtest: separate store instances claim the same persisted action exactly once
+    ok 2 - separate store instances claim the same persisted action exactly once
+      ---
+      duration_ms: 22.490494
+      type: 'test'
+      ...
+    # Subtest: concurrent different actions cannot overspend the last grant call
+    ok 3 - concurrent different actions cannot overspend the last grant call
+      ---
+      duration_ms: 32.458792
+      type: 'test'
+      ...
+    # Subtest: fresh taint, revocation and pause are passed to reservation; stale grant patches retain consumption
+    ok 4 - fresh taint, revocation and pause are passed to reservation; stale grant patches retain consumption
+      ---
+      duration_ms: 33.575192
+      type: 'test'
+      ...
+    # Subtest: audit permission failure rolls back action, quota, taint, controls and revisions
+    ok 5 - audit permission failure rolls back action, quota, taint, controls and revisions
+      ---
+      duration_ms: 40.60699
+      type: 'test'
+      ...
+    # Subtest: policy document and its revision remain paired under concurrent updates
+    ok 6 - policy document and its revision remain paired under concurrent updates
+      ---
+      duration_ms: 23.907894
+      type: 'test'
+      ...
+    # Subtest: runtime cannot mutate audit history or create database objects
+    ok 7 - runtime cannot mutate audit history or create database objects
+      ---
+      duration_ms: 72.115882
+      type: 'test'
+      ...
+    # Subtest: approval rejection and reservation share a single atomic terminal transition
+    ok 8 - approval rejection and reservation share a single atomic terminal transition
+      ---
+      duration_ms: 44.987489
+      type: 'test'
+      ...
+    # Subtest: concurrent audit writers retain the exact serialized chain
+    ok 9 - concurrent audit writers retain the exact serialized chain
+      ---
+      duration_ms: 151.944162
+      type: 'test'
+      ...
+    # Subtest: reopen preserves state; only explicit exclusive reconciliation marks unfinished actions unknown
+    ok 10 - reopen preserves state; only explicit exclusive reconciliation marks unfinished actions unknown
+      ---
+      duration_ms: 66.341583
+      type: 'test'
+      ...
+    # Subtest: tampered audit content is detected and refuses startup before recovery
+    ok 11 - tampered audit content is detected and refuses startup before recovery
+      ---
+      duration_ms: 25.192794
+      type: 'test'
+      ...
+    1..11
+ok 1 - PostgreSQL control fixture
+  ---
+  duration_ms: 650.961038
+  type: 'test'
+  ...
+# Subtest: local adapter refuses remote, privileged, alternate-database and URL override configurations
+ok 2 - local adapter refuses remote, privileged, alternate-database and URL override configurations
+  ---
+  duration_ms: 1.4606
+  type: 'test'
+  ...
+# Subtest: local adapter rejects out-of-contract input before opening a database connection
+ok 3 - local adapter rejects out-of-contract input before opening a database connection
+  ---
+  duration_ms: 4.497799
+  type: 'test'
+  ...
+# Subtest: local adapter schema exposes only the approved customer template
+ok 4 - local adapter schema exposes only the approved customer template
+  ---
+  duration_ms: 0.9954
+  type: 'test'
+  ...
+# Subtest: PostgreSQL reviewed update has an atomic version condition and removes the unversioned writer entry point
+ok 5 - PostgreSQL reviewed update has an atomic version condition and removes the unversioned writer entry point
+  ---
+  duration_ms: 131.733967
+  type: 'test'
+  ...
+# Subtest: PostgreSQL target preserves state on denied operations and changes only the approved fixture row
+ok 6 - PostgreSQL target preserves state on denied operations and changes only the approved fixture row
+  ---
+  duration_ms: 65.490484
+  type: 'test'
+  ...
+# Subtest: PostgreSQL target roles deny broad writes, DDL, privilege escalation and program execution
+not ok 7 - PostgreSQL target roles deny broad writes, DDL, privilege escalation and program execution
+  ---
+  duration_ms: 81.94558
+  type: 'test'
+  location: '/app/tests/stage2/postgres-target.test.ts:1:7102'
+  failureType: 'testCodeFailure'
+  error: |-
+    The validation function is expected to return "true". Received false
+    
+    Caught error:
+    
+    error: permission denied for function agentbrake_update_customer
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  stack: |-
+    process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    async TestContext.<anonymous> (/app/tests/stage2/postgres-target.test.ts:176:5)
+    async Test.run (node:internal/test_runner/test:1054:7)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...
+# Subtest: PostgreSQL target default read-only mode and statement timeout are active on the server
+ok 8 - PostgreSQL target default read-only mode and statement timeout are active on the server
+  ---
+  duration_ms: 3034.175747
+  type: 'test'
+  ...
+1..8
+# tests 19
+# suites 0
+# pass 18
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 5111.160733
+

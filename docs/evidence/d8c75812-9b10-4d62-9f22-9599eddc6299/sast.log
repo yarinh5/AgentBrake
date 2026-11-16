@@ -1,0 +1,25 @@
+               
+               
+┌─────────────┐
+│ Scan Status │
+└─────────────┘
+  Scanning 83 files with 8 Code rules:
+                                                                                                                        
+  Language      Rules   Files          Origin   Rules                                                                   
+ ─────────────────────────────        ────────────────                                                                  
+  <multilang>       1      83          Custom       8                                                                   
+  ts                7      47                                                                                           
+  js                7      29                                                                                           
+                                                                                                                        
+                
+                
+┌──────────────┐
+│ Scan Summary │
+└──────────────┘
+✅ Scan completed successfully.
+ • Findings: 0 (0 blocking)
+ • Rules run: 8
+ • Targets scanned: 83
+ • Parsed lines: ~100.0%
+ • No ignore information available
+Ran 8 rules on 83 files: 0 findings.

@@ -1,0 +1,743 @@
+{
+  "runId": "bae95101-1123-4195-a883-4b622fb94b49",
+  "startedAt": "2026-11-16T10:50:11.043Z",
+  "project": "agentbrake-a-bae95101",
+  "sourceHash": "e05274ed5a366de771346a335930b812a2a0c733b56f815228bb6849885ef1f7",
+  "gitCommit": null,
+  "result": "FAIL",
+  "cases": [
+    {
+      "phase": "network",
+      "cases": [
+        {
+          "case": "target-http",
+          "tcpConnected": false,
+          "result": "PASS"
+        },
+        {
+          "case": "target-postgres",
+          "tcpConnected": false,
+          "result": "PASS"
+        },
+        {
+          "case": "control-postgres",
+          "tcpConnected": false,
+          "result": "PASS"
+        },
+        {
+          "case": "opa",
+          "tcpConnected": false,
+          "result": "PASS"
+        },
+        {
+          "case": "desktop-engine",
+          "tcpConnected": false,
+          "result": "PASS"
+        },
+        {
+          "case": "bridge-engine",
+          "tcpConnected": false,
+          "result": "PASS"
+        },
+        {
+          "case": "direct-curl",
+          "exitCode": 7,
+          "signal": null,
+          "result": "PASS"
+        },
+        {
+          "case": "direct-psql",
+          "exitCode": 2,
+          "signal": null,
+          "result": "PASS"
+        },
+        {
+          "case": "direct-git",
+          "exitCode": 128,
+          "signal": null,
+          "result": "PASS"
+        },
+        {
+          "case": "agent-cannot-administer",
+          "http": 401,
+          "result": "PASS"
+        }
+      ]
+    },
+    {
+      "phase": "denied",
+      "cases": [
+        {
+          "case": "outside-repo",
+          "http": 200,
+          "status": "blocked",
+          "correlationId": "3fee6b1c-9776-49da-a4b3-82a1ecfbee42",
+          "result": "PASS"
+        },
+        {
+          "case": "destructive-sql",
+          "http": 200,
+          "status": "blocked",
+          "correlationId": "9b494d4b-e000-41c1-b586-c8644b9c65f2",
+          "result": "PASS"
+        },
+        {
+          "case": "expired-grant",
+          "http": 200,
+          "status": "blocked",
+          "correlationId": "6145de6a-b152-4ccd-9a47-ccee8292b3fc",
+          "result": "PASS"
+        },
+        {
+          "case": "invalid-token",
+          "http": 401,
+          "status": "unauthenticated",
+          "correlationId": null,
+          "result": "PASS"
+        },
+        {
+          "case": "unknown-tool",
+          "http": 200,
+          "status": "blocked",
+          "correlationId": "da346868-11cb-43fd-ba02-9eeaca29880e",
+          "result": "PASS"
+        }
+      ]
+    },
+    {
+      "phase": "allowed",
+      "cases": [
+        {
+          "case": "mediated-mcp-read",
+          "status": "allowed",
+          "rows": 2,
+          "correlationId": "277c13c3-476c-4bd4-ba15-15acfaaad43a",
+          "result": "PASS"
+        }
+      ]
+    },
+    {
+      "phase": "pdp-down",
+      "cases": [
+        {
+          "case": "pdp-down",
+          "status": "blocked",
+          "rule": "pdp-unavailable",
+          "result": "PASS"
+        }
+      ]
+    }
+  ],
+  "commands": [
+    {
+      "label": "docker-preflight",
+      "command": [
+        "docker",
+        "version",
+        "--format",
+        "{{json .Server}}"
+      ],
+      "startedAt": "2026-11-16T10:50:11.044Z",
+      "exitCode": 0,
+      "timedOut": false,
+      "log": "docker-preflight.log"
+    },
+    {
+      "label": "desktop-version",
+      "command": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "(Get-Item 'C:\\Program Files\\Docker\\Docker\\Docker Desktop.exe').VersionInfo.ProductVersion"
+      ],
+      "startedAt": "2026-11-16T10:50:11.174Z",
+      "exitCode": 0,
+      "timedOut": false,
+      "log": "desktop-version.log"
+    },
+    {
+      "label": "compose-config",
+      "command": [
+        "docker",
+        "compose",
+        "--project-name",
+        "agentbrake-a-bae95101",
+        "-f",
+        "infra/local/compose.yaml",
+        "config",
+        "--quiet"
+      ],
+      "startedAt": "2026-11-16T10:50:11.467Z",
+      "exitCode": 0,
+      "timedOut": false,
+      "log": "compose-config.log"
+    },
+    {
+      "label": "compose-up",
+      "command": [
+        "docker",
+        "compose",
+        "--project-name",
+        "agentbrake-a-bae95101",
+        "-f",
+        "infra/local/compose.yaml",
+        "up",
+        "-d",
+        "--build",
+        "--wait",
+        "--wait-timeout",
+        "120"
+      ],
+      "startedAt": "2026-11-16T10:50:11.720Z",
+      "exitCode": 0,
+      "timedOut": false,
+      "log": "compose-up.log"
+    },
+    {
+      "label": "id-agent",
+      "command": [
+        "docker",
+        "compose",
+        "--project-name",
+        "agentbrake-a-bae95101",
+        "-f",
+        "infra/local/compose.yaml",
+        "ps",
+        "-q",
+        "agent"
+      ],
+      "startedAt": "2026-11-16T10:50:32.967Z",
+      "exitCode": 0,
+      "timedOut": false,
+      "log": "id-agent.log"
+    },
+    {
+      "label": "inspect-agent",
+      "command": [
+        "docker",
+        "inspect",
+        "5a9426937516490b2f9447043afa12f7d2e48b4a7ea8c0a8c57ae7107f61554a"
+      ],
+      "startedAt": "2026-11-16T10:50:33.209Z",
+      "exitCode": 0,
+      "timedOut": false,
+      "log": "inspect-agent.log"
+    },
+    {
+      "label": "id-mock-target",
+      "command": [
+        "docker",
+        "compose",
+        "--project-name",
+        "agentbrake-a-bae95101",
+        "-f",
+        "infra/local/compose.yaml",
+        "ps",
+        "-q",
+        "mock-target"
+      ],
+      "startedAt": "2026-11-16T10:50:33.366Z",
+      "exitCode": 0,
+      "timedOut": false,
+      "log": "id-mock-target.log"
+    },
+    {
+      "label": "inspect-mock-target",
+      "command": [
+        "docker",
+        "inspect",
+        "55731ea85cc14a958005eb0ad35b0706fd8988dd89a579514d151eb1725cdc88"
+      ],
+      "startedAt": "2026-11-16T10:50:33.602Z",
+      "exitCode": 0,
+      "timedOut": false,
+      "log": "inspect-mock-target.log"
+    },
+    {
+      "label": "id-target-db",
+      "command": [
+        "docker",
+        "compose",
+        "--project-name",
+        "agentbrake-a-bae95101",
+        "-f",
+        "infra/local/compose.yaml",
+        "ps",
+        "-q",
+        "target-db"
+      ],
+      "startedAt": "2026-11-16T10:50:33.700Z",
+      "exitCode": 0,
+      "timedOut": false,
+      "log": "id-target-db.log"
+    },
+    {
+      "label": "inspect-target-db",
+      "command": [
+        "docker",
+        "inspect",
+        "effbb3140bc39ec3d2997a3a92ba5f95286e9806a8750cef865ae1aaffc114f1"
+      ],
+      "startedAt": "2026-11-16T10:50:33.924Z",
+      "exitCode": 0,
+      "timedOut": false,
+      "log": "inspect-target-db.log"
+    },
+    {
+      "label": "id-control-db",
+      "command": [
+        "docker",
+        "compose",
+        "--project-name",
+        "agentbrake-a-bae95101",
+        "-f",
+        "infra/local/compose.yaml",
+        "ps",
+        "-q",
+        "control-db"
+      ],
+      "startedAt": "2026-11-16T10:50:34.017Z",
+      "exitCode": 0,
+      "timedOut": false,
+      "log": "id-control-db.log"
+    },
+    {
+      "label": "inspect-control-db",
+      "command": [
+        "docker",
+        "inspect",
+        "3136a23ad37f56391646eac9a5ae6109fca034b7c19f7ab4c8ed4e12d47c12eb"
+      ],
+      "startedAt": "2026-11-16T10:50:34.253Z",
+      "exitCode": 0,
+      "timedOut": false,
+      "log": "inspect-control-db.log"
+    },
+    {
+      "label": "id-opa",
+      "command": [
+        "docker",
+        "compose",
+        "--project-name",
+        "agentbrake-a-bae95101",
+        "-f",
+        "infra/local/compose.yaml",
+        "ps",
+        "-q",
+        "opa"
+      ],
+      "startedAt": "2026-11-16T10:50:34.356Z",
+      "exitCode": 0,
+      "timedOut": false,
+      "log": "id-opa.log"
+    },
+    {
+      "label": "inspect-opa",
+      "command": [
+        "docker",
+        "inspect",
+        "ba05e2fb98d9de5ef625cb179f0f8d1d29ddc31f22cbaf487a754bea9c2a95b5"
+      ],
+      "startedAt": "2026-11-16T10:50:34.640Z",
+      "exitCode": 0,
+      "timedOut": false,
+      "log": "inspect-opa.log"
+    },
+    {
+      "label": "id-gateway",
+      "command": [
+        "docker",
+        "compose",
+        "--project-name",
+        "agentbrake-a-bae95101",
+        "-f",
+        "infra/local/compose.yaml",
+        "ps",
+        "-q",
+        "gateway"
+      ],
+      "startedAt": "2026-11-16T10:50:34.732Z",
+      "exitCode": 0,
+      "timedOut": false,
+      "log": "id-gateway.log"
+    },
+    {
+      "label": "inspect-gateway",
+      "command": [
+        "docker",
+        "inspect",
+        "645b05339d55685e7815bbb6405d620911cb78db78ebec74174bf9b60094eae7"
+      ],
+      "startedAt": "2026-11-16T10:50:34.953Z",
+      "exitCode": 0,
+      "timedOut": false,
+      "log": "inspect-gateway.log"
+    },
+    {
+      "label": "inspect-agent-network",
+      "command": [
+        "docker",
+        "network",
+        "inspect",
+        "agentbrake-a-bae95101_agent"
+      ],
+      "startedAt": "2026-11-16T10:50:35.066Z",
+      "exitCode": 0,
+      "timedOut": false,
+      "log": "inspect-agent-network.log"
+    },
+    {
+      "label": "before-network",
+      "command": [
+        "docker",
+        "compose",
+        "--project-name",
+        "agentbrake-a-bae95101",
+        "-f",
+        "infra/local/compose.yaml",
+        "exec",
+        "-T",
+        "mock-target",
+        "node",
+        "--input-type=module",
+        "-e",
+        "import{readFile}from'node:fs/promises';const token=(await readFile('/run/secrets/observer-token','utf8')).trim();const response=await fetch('http://127.0.0.1:8080/snapshot',{headers:{Authorization:'Bearer '+token}});if(!response.ok)process.exit(1);console.log(await response.text())"
+      ],
+      "startedAt": "2026-11-16T10:50:35.155Z",
+      "exitCode": 0,
+      "timedOut": false,
+      "log": "before-network.log"
+    },
+    {
+      "label": "agent-network",
+      "command": [
+        "docker",
+        "compose",
+        "--project-name",
+        "agentbrake-a-bae95101",
+        "-f",
+        "infra/local/compose.yaml",
+        "exec",
+        "-T",
+        "agent",
+        "node",
+        "tests/isolation/agent.mjs",
+        "network",
+        "{\"target\":\"172.28.0.5\",\"postgres\":\"172.28.0.3\",\"control\":\"172.28.0.2\",\"opa\":\"172.28.0.4\",\"edgeGateway\":\"172.27.0.1\"}"
+      ],
+      "startedAt": "2026-11-16T10:50:35.554Z",
+      "exitCode": 0,
+      "timedOut": false,
+      "log": "agent-network.log"
+    },
+    {
+      "label": "after-network",
+      "command": [
+        "docker",
+        "compose",
+        "--project-name",
+        "agentbrake-a-bae95101",
+        "-f",
+        "infra/local/compose.yaml",
+        "exec",
+        "-T",
+        "mock-target",
+        "node",
+        "--input-type=module",
+        "-e",
+        "import{readFile}from'node:fs/promises';const token=(await readFile('/run/secrets/observer-token','utf8')).trim();const response=await fetch('http://127.0.0.1:8080/snapshot',{headers:{Authorization:'Bearer '+token}});if(!response.ok)process.exit(1);console.log(await response.text())"
+      ],
+      "startedAt": "2026-11-16T10:50:35.994Z",
+      "exitCode": 0,
+      "timedOut": false,
+      "log": "after-network.log"
+    },
+    {
+      "label": "agent-denied",
+      "command": [
+        "docker",
+        "compose",
+        "--project-name",
+        "agentbrake-a-bae95101",
+        "-f",
+        "infra/local/compose.yaml",
+        "exec",
+        "-T",
+        "agent",
+        "node",
+        "tests/isolation/agent.mjs",
+        "denied",
+        "{\"target\":\"172.28.0.5\",\"postgres\":\"172.28.0.3\",\"control\":\"172.28.0.2\",\"opa\":\"172.28.0.4\",\"edgeGateway\":\"172.27.0.1\"}"
+      ],
+      "startedAt": "2026-11-16T10:50:36.337Z",
+      "exitCode": 0,
+      "timedOut": false,
+      "log": "agent-denied.log"
+    },
+    {
+      "label": "after-denied",
+      "command": [
+        "docker",
+        "compose",
+        "--project-name",
+        "agentbrake-a-bae95101",
+        "-f",
+        "infra/local/compose.yaml",
+        "exec",
+        "-T",
+        "mock-target",
+        "node",
+        "--input-type=module",
+        "-e",
+        "import{readFile}from'node:fs/promises';const token=(await readFile('/run/secrets/observer-token','utf8')).trim();const response=await fetch('http://127.0.0.1:8080/snapshot',{headers:{Authorization:'Bearer '+token}});if(!response.ok)process.exit(1);console.log(await response.text())"
+      ],
+      "startedAt": "2026-11-16T10:50:36.821Z",
+      "exitCode": 0,
+      "timedOut": false,
+      "log": "after-denied.log"
+    },
+    {
+      "label": "agent-allowed",
+      "command": [
+        "docker",
+        "compose",
+        "--project-name",
+        "agentbrake-a-bae95101",
+        "-f",
+        "infra/local/compose.yaml",
+        "exec",
+        "-T",
+        "agent",
+        "node",
+        "tests/isolation/agent.mjs",
+        "allowed",
+        "{\"target\":\"172.28.0.5\",\"postgres\":\"172.28.0.3\",\"control\":\"172.28.0.2\",\"opa\":\"172.28.0.4\",\"edgeGateway\":\"172.27.0.1\"}"
+      ],
+      "startedAt": "2026-11-16T10:50:37.210Z",
+      "exitCode": 0,
+      "timedOut": false,
+      "log": "agent-allowed.log"
+    },
+    {
+      "label": "after-allowed",
+      "command": [
+        "docker",
+        "compose",
+        "--project-name",
+        "agentbrake-a-bae95101",
+        "-f",
+        "infra/local/compose.yaml",
+        "exec",
+        "-T",
+        "mock-target",
+        "node",
+        "--input-type=module",
+        "-e",
+        "import{readFile}from'node:fs/promises';const token=(await readFile('/run/secrets/observer-token','utf8')).trim();const response=await fetch('http://127.0.0.1:8080/snapshot',{headers:{Authorization:'Bearer '+token}});if(!response.ok)process.exit(1);console.log(await response.text())"
+      ],
+      "startedAt": "2026-11-16T10:50:37.884Z",
+      "exitCode": 0,
+      "timedOut": false,
+      "log": "after-allowed.log"
+    },
+    {
+      "label": "stop-opa",
+      "command": [
+        "docker",
+        "compose",
+        "--project-name",
+        "agentbrake-a-bae95101",
+        "-f",
+        "infra/local/compose.yaml",
+        "stop",
+        "opa"
+      ],
+      "startedAt": "2026-11-16T10:50:38.214Z",
+      "exitCode": 0,
+      "timedOut": false,
+      "log": "stop-opa.log"
+    },
+    {
+      "label": "agent-pdp-down",
+      "command": [
+        "docker",
+        "compose",
+        "--project-name",
+        "agentbrake-a-bae95101",
+        "-f",
+        "infra/local/compose.yaml",
+        "exec",
+        "-T",
+        "agent",
+        "node",
+        "tests/isolation/agent.mjs",
+        "pdp-down",
+        "{\"target\":\"172.28.0.5\",\"postgres\":\"172.28.0.3\",\"control\":\"172.28.0.2\",\"opa\":\"172.28.0.4\",\"edgeGateway\":\"172.27.0.1\"}"
+      ],
+      "startedAt": "2026-11-16T10:50:38.604Z",
+      "exitCode": 0,
+      "timedOut": false,
+      "log": "agent-pdp-down.log"
+    },
+    {
+      "label": "after-pdp-down",
+      "command": [
+        "docker",
+        "compose",
+        "--project-name",
+        "agentbrake-a-bae95101",
+        "-f",
+        "infra/local/compose.yaml",
+        "exec",
+        "-T",
+        "mock-target",
+        "node",
+        "--input-type=module",
+        "-e",
+        "import{readFile}from'node:fs/promises';const token=(await readFile('/run/secrets/observer-token','utf8')).trim();const response=await fetch('http://127.0.0.1:8080/snapshot',{headers:{Authorization:'Bearer '+token}});if(!response.ok)process.exit(1);console.log(await response.text())"
+      ],
+      "startedAt": "2026-11-16T10:50:38.959Z",
+      "exitCode": 1,
+      "timedOut": false,
+      "log": "after-pdp-down.log"
+    },
+    {
+      "label": "container-logs",
+      "command": [
+        "docker",
+        "compose",
+        "--project-name",
+        "agentbrake-a-bae95101",
+        "-f",
+        "infra/local/compose.yaml",
+        "logs",
+        "--no-color",
+        "--tail",
+        "100"
+      ],
+      "startedAt": "2026-11-16T10:50:39.294Z",
+      "exitCode": 0,
+      "timedOut": false,
+      "log": "container-logs.log"
+    },
+    {
+      "label": "compose-down",
+      "command": [
+        "docker",
+        "compose",
+        "--project-name",
+        "agentbrake-a-bae95101",
+        "-f",
+        "infra/local/compose.yaml",
+        "down",
+        "--volumes",
+        "--remove-orphans"
+      ],
+      "startedAt": "2026-11-16T10:50:39.562Z",
+      "exitCode": 0,
+      "timedOut": false,
+      "log": "compose-down.log"
+    }
+  ],
+  "limitations": [
+    "Synthetic local targets only. No host-admin or kernel-escape guarantee. Stage 2 target/control PostgreSQL and Git mock; no real GitHub or host-agent interception."
+  ],
+  "engine": {
+    "Platform": {
+      "Name": "Docker Desktop 4.99.0 (245822)"
+    },
+    "Version": "29.9.3",
+    "ApiVersion": "1.56",
+    "MinAPIVersion": "1.40",
+    "Os": "linux",
+    "Arch": "amd64",
+    "Components": [
+      {
+        "Name": "Engine",
+        "Version": "29.9.3",
+        "Details": {
+          "ApiVersion": "1.56",
+          "Arch": "amd64",
+          "BuildTime": "Tue Nov  3 21:41:42 2026",
+          "Experimental": "false",
+          "GitCommit": "70efc0e",
+          "GoVersion": "go1.26.10",
+          "KernelVersion": "6.18.58.1-microsoft-standard-WSL2",
+          "MinAPIVersion": "1.40",
+          "Module": "github.com/moby/moby/v2",
+          "ModuleVersion": "v2.0.0+unknown",
+          "Os": "linux"
+        }
+      },
+      {
+        "Name": "containerd",
+        "Version": "v2.4.2",
+        "Details": {
+          "GitCommit": "b7a25261e029d68978bbf290df0a62fc819b3c51"
+        }
+      },
+      {
+        "Name": "runc",
+        "Version": "1.5.2",
+        "Details": {
+          "GitCommit": "v1.5.2-0-g29dd3dc2"
+        }
+      },
+      {
+        "Name": "docker-init",
+        "Version": "0.19.0",
+        "Details": {
+          "GitCommit": "de40ad0"
+        }
+      }
+    ],
+    "GitCommit": "70efc0e",
+    "GoVersion": "go1.26.10",
+    "KernelVersion": "6.18.58.1-microsoft-standard-WSL2",
+    "BuildTime": "2026-11-03T21:41:42.000000000+00:00"
+  },
+  "desktopVersion": "4.99.0.245822",
+  "images": {
+    "resolvedAt": "2026-11-16T10:17:10.426Z",
+    "images": {
+      "node": {
+        "tag": "library/node:22-bookworm-slim",
+        "image": "library/node@sha256:e9f565d32859f0cbfb52125eafe8be39390f24dac302dc3cdf566e8ba3ab21ee"
+      },
+      "postgres": {
+        "tag": "library/postgres:18-alpine",
+        "image": "library/postgres@sha256:b6972e1115a4ff8eba5d7f7d19184926d1e16d7d1136ae1e1a7ebf286da0f015"
+      },
+      "opa": {
+        "tag": "openpolicyagent/opa:1.22.4-static",
+        "image": "openpolicyagent/opa@sha256:12cecac5a174368f7d3f09d3a19d040ebe0c91d576e520335ae7a985a26e39d3"
+      }
+    }
+  },
+  "policyHash": "9ac719fef979ee7b37c5c5ef3173621453782a0a02d432727391beeff1234d14",
+  "boundaries": {
+    "agentNetworks": [
+      "agentbrake-a-bae95101_agent"
+    ],
+    "agentUser": "1000:1000",
+    "capDrop": [
+      "ALL"
+    ],
+    "readonlyRoot": true,
+    "agentMounts": [
+      {
+        "destination": "/run/agent-credential.json",
+        "writable": false
+      }
+    ],
+    "imageIds": [
+      "sha256:284ef3f495dae1871d8bc9a51f681884c1407e50f377c15cd4465169d2774608",
+      "sha256:284ef3f495dae1871d8bc9a51f681884c1407e50f377c15cd4465169d2774608",
+      "sha256:0f6c51e48b3458e87ab43692e49c9dafc72ffe0a0dbde3fd8cdb6ab92d5c025e",
+      "sha256:327128c76b65ec10a3c071a6a24647c1fddc1af3232a9d7a8fd9f8dec040cdc1"
+    ],
+    "gatewayPorts": {}
+  },
+  "error": "after-pdp-down failed (exit 1); see log",
+  "finishedAt": "2026-11-16T10:50:44.260Z"
+}

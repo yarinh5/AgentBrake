@@ -1,0 +1,43 @@
+{
+  "runId": "28ad6692-6679-4b8c-a700-9508b6cc733c",
+  "sourceHash": "91fa06ce9243813f3ca4c9f94f9cbb4e1da9ced22e830003920092aee4818090",
+  "startedAt": "2026-11-16T12:38:47.103Z",
+  "installation": {
+    "name": "verify-cd1",
+    "id": "d23e02e9-9d8e-43ab-accc-a0fe031ff147",
+    "port": 4316
+  },
+  "result": "FAIL",
+  "cases": [
+    {
+      "name": "separate process topology, internal networks, credentials and loopback publication",
+      "result": "PASS",
+      "observed": {
+        "services": [
+          "agent",
+          "control-api",
+          "control-db",
+          "dashboard",
+          "gateway",
+          "ingress",
+          "mock-target",
+          "opa",
+          "target-db"
+        ],
+        "internalNetworks": 4,
+        "loopbackIngressNetworks": 1,
+        "deniedNetworkProbes": 14,
+        "agentSecrets": 0
+      }
+    }
+  ],
+  "scope": "Local persistent product install; synthetic PostgreSQL/Git, isolated test client. No real GitHub or hosted model. Native process-loss tests are separate evidence.",
+  "error": "Expected values to be strictly equal:\n+ actual - expected\n\n+ 'blocked'\n- 'allowed'\n",
+  "cleanup": {
+    "result": "PASS",
+    "containers": 0,
+    "volumes": 0,
+    "networks": 0
+  },
+  "finishedAt": "2026-11-16T12:39:57.000Z"
+}

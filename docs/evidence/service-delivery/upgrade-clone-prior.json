@@ -1,0 +1,17 @@
+{
+  "result": "PASS_OLD_SCHEMA_RESTORE_AND_FORWARD_MIGRATION",
+  "startedAt": "2026-11-16T14:40:11.954Z",
+  "name": "verify-upgrade-ff146049",
+  "sourceHash": "fa431798f8129e0c76b3cb4c4510c720234fdb244a24af7947f899fcef9e14e3",
+  "originalVersion": "0.1.0",
+  "observed": {
+    "actionsPreserved": 4,
+    "auditPrefixPreserved": 13,
+    "targetFingerprint": "2bf71f7d00f799cc49c9b81a7fd7e7408bb42f7381252c11c31e24300b89b5be",
+    "ownerSetupAvailable": true,
+    "accountMigrationChecksumVerified": true,
+    "sourceResumedUnchanged": true
+  },
+  "cleanup": "PASS",
+  "finishedAt": "2026-11-16T14:40:56.557Z"
+}

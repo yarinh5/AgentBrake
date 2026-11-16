@@ -1,0 +1,95 @@
+{
+  "result": "PASS_PRESERVED_LOCAL_UPGRADE",
+  "startedAt": "2026-11-16T20:46:46.042Z",
+  "sourceHash": "993f7cbf1a3a56dcb421f88368efa67dbbcf37809d0d45b9cdf54e0ab80287c7",
+  "oldVersion": "0.2.0",
+  "backup": {
+    "file": "F:\\project love\\AgentBrake\\.agentbrake-local\\backups\\local-a59e0a12-712c-4321-bc73-97bc9502112d.abk",
+    "keyFile": "F:\\project love\\AgentBrake\\.agentbrake-local\\product-local\\recovery-key",
+    "maintenance": "completed",
+    "sourceServicesResumed": [
+      "agent",
+      "control-api",
+      "control-db",
+      "dashboard",
+      "gateway",
+      "ingress",
+      "mock-target",
+      "opa",
+      "target-db"
+    ]
+  },
+  "backupRestoreAndMinimalUpgrade": "PASS",
+  "cloneCleanup": "PASS",
+  "finishedAt": "2026-11-16T20:50:22.960Z",
+  "version": "0.3.0-rc.1",
+  "runtimeProfile": "minimal-v1",
+  "url": "http://127.0.0.1:4318",
+  "actionsPreserved": 4,
+  "auditPrefixPreserved": 15,
+  "targetFingerprint": "2bf71f7d00f799cc49c9b81a7fd7e7408bb42f7381252c11c31e24300b89b5be",
+  "runtimeFilesMatched": 111,
+  "ownerSetup": "Awaiting user-chosen account",
+  "doctor": {
+    "schema": 1,
+    "at": "2026-11-16T20:50:22.591Z",
+    "installation": "local",
+    "url": "http://127.0.0.1:4318",
+    "sourceHash": "993f7cbf1a3a56dcb421f88368efa67dbbcf37809d0d45b9cdf54e0ab80287c7",
+    "services": [
+      {
+        "name": "agent",
+        "state": "running",
+        "health": "not-configured"
+      },
+      {
+        "name": "control-api",
+        "state": "running",
+        "health": "healthy"
+      },
+      {
+        "name": "control-db",
+        "state": "running",
+        "health": "healthy"
+      },
+      {
+        "name": "dashboard",
+        "state": "running",
+        "health": "healthy"
+      },
+      {
+        "name": "gateway",
+        "state": "running",
+        "health": "healthy"
+      },
+      {
+        "name": "ingress",
+        "state": "running",
+        "health": "healthy"
+      },
+      {
+        "name": "mock-target",
+        "state": "running",
+        "health": "healthy"
+      },
+      {
+        "name": "opa",
+        "state": "running",
+        "health": "not-configured"
+      },
+      {
+        "name": "target-db",
+        "state": "running",
+        "health": "healthy"
+      },
+      {
+        "name": "volume-init",
+        "state": "exited",
+        "health": "not-configured"
+      }
+    ],
+    "http": "200",
+    "scope": "Local private team installation; no target credentials or request contents included",
+    "nextSteps": []
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "result": "PASS_INSTALLED_V03_BROWSER",
+  "at": "2026-11-16T20:50:41.038Z",
+  "url": "http://127.0.0.1:4318",
+  "version": "0.3.0-rc.1",
+  "desktop": true,
+  "mobileNoOverflow": true,
+  "browserErrors": [],
+  "externalRequests": [],
+  "storage": {
+    "local": [],
+    "session": []
+  },
+  "ownerAccount": "User chooses account; no setup submitted"
+}

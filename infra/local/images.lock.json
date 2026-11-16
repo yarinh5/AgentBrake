@@ -1,0 +1,17 @@
+{
+  "resolvedAt": "2026-11-16T10:17:10.426Z",
+  "images": {
+    "node": {
+      "tag": "library/node:22-bookworm-slim",
+      "image": "library/node@sha256:e9f565d32859f0cbfb52125eafe8be39390f24dac302dc3cdf566e8ba3ab21ee"
+    },
+    "postgres": {
+      "tag": "library/postgres:18-alpine",
+      "image": "library/postgres@sha256:b6972e1115a4ff8eba5d7f7d19184926d1e16d7d1136ae1e1a7ebf286da0f015"
+    },
+    "opa": {
+      "tag": "openpolicyagent/opa:1.22.4-static",
+      "image": "openpolicyagent/opa@sha256:12cecac5a174368f7d3f09d3a19d040ebe0c91d576e520335ae7a985a26e39d3"
+    }
+  }
+}

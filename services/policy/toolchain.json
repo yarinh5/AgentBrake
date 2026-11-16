@@ -1,0 +1,7 @@
+{
+  "version": "1.22.4",
+  "assets": {
+    "win32-x64": { "name": "opa_windows_amd64.exe", "sha256": "4cd179b95041aa50c44241324da3becf35d0b28dca92bf10a07f32d002724d5e" },
+    "linux-x64": { "name": "opa_linux_amd64_static", "sha256": "35e3b352e715e80624ead6c89930d8585f6f7d94cdc409eb2a9fe36620dcccba" }
+  }
+}

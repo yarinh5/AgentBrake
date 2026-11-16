@@ -1,0 +1,1540 @@
+{
+  "runId": "c866eaf9-019c-4f5f-b5db-cb9c0a8c2007",
+  "startedAt": "2026-11-16T10:57:20.519Z",
+  "project": "agentbrake-a-c866eaf9",
+  "sourceHash": "8acfcc4d0763d00350b314edc20b848b91f493527e1a25baf92e6bcccc3c44fa",
+  "gitCommit": null,
+  "result": "PASS",
+  "cases": [
+    {
+      "phase": "network",
+      "cases": [
+        {
+          "case": "target-http",
+          "tcpConnected": false,
+          "result": "PASS"
+        },
+        {
+          "case": "target-postgres",
+          "tcpConnected": false,
+          "result": "PASS"
+        },
+        {
+          "case": "control-postgres",
+          "tcpConnected": false,
+          "result": "PASS"
+        },
+        {
+          "case": "opa",
+          "tcpConnected": false,
+          "result": "PASS"
+        },
+        {
+          "case": "desktop-engine",
+          "tcpConnected": false,
+          "result": "PASS"
+        },
+        {
+          "case": "bridge-engine",
+          "tcpConnected": false,
+          "result": "PASS"
+        },
+        {
+          "case": "direct-curl",
+          "exitCode": 7,
+          "signal": null,
+          "result": "PASS"
+        },
+        {
+          "case": "direct-psql",
+          "exitCode": 2,
+          "signal": null,
+          "result": "PASS"
+        },
+        {
+          "case": "direct-git",
+          "exitCode": 128,
+          "signal": null,
+          "result": "PASS"
+        },
+        {
+          "case": "agent-cannot-administer",
+          "http": 401,
+          "result": "PASS"
+        }
+      ]
+    },
+    {
+      "phase": "denied",
+      "cases": [
+        {
+          "case": "outside-repo",
+          "http": 200,
+          "status": "blocked",
+          "correlationId": "3d4a6f20-e206-4aef-a706-55d2e76fdd6e",
+          "result": "PASS"
+        },
+        {
+          "case": "destructive-sql",
+          "http": 200,
+          "status": "blocked",
+          "correlationId": "d786619e-b8c2-4e53-bb54-2feb1c420b7e",
+          "result": "PASS"
+        },
+        {
+          "case": "expired-grant",
+          "http": 200,
+          "status": "blocked",
+          "correlationId": "2afe4350-06ef-4e31-bd32-7b142279cf97",
+          "result": "PASS"
+        },
+        {
+          "case": "invalid-token",
+          "http": 401,
+          "status": "unauthenticated",
+          "correlationId": null,
+          "result": "PASS"
+        },
+        {
+          "case": "unknown-tool",
+          "http": 200,
+          "status": "blocked",
+          "correlationId": "61389be4-5d7b-4d18-ba5d-61fd203aa2fc",
+          "result": "PASS"
+        }
+      ]
+    },
+    {
+      "phase": "allowed",
+      "cases": [
+        {
+          "case": "mediated-mcp-read",
+          "status": "allowed",
+          "rows": 2,
+          "correlationId": "d3d8daef-d14f-45a4-979f-8718c4d24804",
+          "result": "PASS"
+        }
+      ]
+    },
+    {
+      "phase": "pdp-down",
+      "cases": [
+        {
+          "case": "pdp-down",
+          "status": "blocked",
+          "rule": "pdp-unavailable",
+          "result": "PASS"
+        }
+      ]
+    }
+  ],
+  "commands": [
+    {
+      "label": "docker-preflight",
+      "command": [
+        "docker",
+        "version",
+        "--format",
+        "{{json .Server}}"
+      ],
+      "startedAt": "2026-11-16T10:57:20.521Z",
+      "exitCode": 0,
+      "timedOut": false,
+      "log": "docker-preflight.log"
+    },
+    {
+      "label": "desktop-version",
+      "command": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "(Get-Item 'C:\\Program Files\\Docker\\Docker\\Docker Desktop.exe').VersionInfo.ProductVersion"
+      ],
+      "startedAt": "2026-11-16T10:57:20.648Z",
+      "exitCode": 0,
+      "timedOut": false,
+      "log": "desktop-version.log"
+    },
+    {
+      "label": "compose-config",
+      "command": [
+        "docker",
+        "compose",
+        "--project-name",
+        "agentbrake-a-c866eaf9",
+        "-f",
+        "infra/local/compose.yaml",
+        "config",
+        "--quiet"
+      ],
+      "startedAt": "2026-11-16T10:57:20.927Z",
+      "exitCode": 0,
+      "timedOut": false,
+      "log": "compose-config.log"
+    },
+    {
+      "label": "compose-up",
+      "command": [
+        "docker",
+        "compose",
+        "--project-name",
+        "agentbrake-a-c866eaf9",
+        "-f",
+        "infra/local/compose.yaml",
+        "up",
+        "-d",
+        "--build",
+        "--wait",
+        "--wait-timeout",
+        "120"
+      ],
+      "startedAt": "2026-11-16T10:57:21.139Z",
+      "exitCode": 0,
+      "timedOut": false,
+      "log": "compose-up.log"
+    },
+    {
+      "label": "id-agent",
+      "command": [
+        "docker",
+        "compose",
+        "--project-name",
+        "agentbrake-a-c866eaf9",
+        "-f",
+        "infra/local/compose.yaml",
+        "ps",
+        "-q",
+        "agent"
+      ],
+      "startedAt": "2026-11-16T10:57:42.692Z",
+      "exitCode": 0,
+      "timedOut": false,
+      "log": "id-agent.log"
+    },
+    {
+      "label": "inspect-agent",
+      "command": [
+        "docker",
+        "inspect",
+        "36ab0fab6426f21d8ffa517b8016877714ed343d949793a547325f566b3e072c"
+      ],
+      "startedAt": "2026-11-16T10:57:42.907Z",
+      "exitCode": 0,
+      "timedOut": false,
+      "log": "inspect-agent.log"
+    },
+    {
+      "label": "id-mock-target",
+      "command": [
+        "docker",
+        "compose",
+        "--project-name",
+        "agentbrake-a-c866eaf9",
+        "-f",
+        "infra/local/compose.yaml",
+        "ps",
+        "-q",
+        "mock-target"
+      ],
+      "startedAt": "2026-11-16T10:57:43.005Z",
+      "exitCode": 0,
+      "timedOut": false,
+      "log": "id-mock-target.log"
+    },
+    {
+      "label": "inspect-mock-target",
+      "command": [
+        "docker",
+        "inspect",
+        "1e382da0b037d5e66f907e2aef11ffe83b3a9067be659f1edecb383b44966eff"
+      ],
+      "startedAt": "2026-11-16T10:57:43.219Z",
+      "exitCode": 0,
+      "timedOut": false,
+      "log": "inspect-mock-target.log"
+    },
+    {
+      "label": "id-target-db",
+      "command": [
+        "docker",
+        "compose",
+        "--project-name",
+        "agentbrake-a-c866eaf9",
+        "-f",
+        "infra/local/compose.yaml",
+        "ps",
+        "-q",
+        "target-db"
+      ],
+      "startedAt": "2026-11-16T10:57:43.310Z",
+      "exitCode": 0,
+      "timedOut": false,
+      "log": "id-target-db.log"
+    },
+    {
+      "label": "inspect-target-db",
+      "command": [
+        "docker",
+        "inspect",
+        "2f48577dbe09d9af251c2af2e2555fe3449ab0cd450769625779140c71058805"
+      ],
+      "startedAt": "2026-11-16T10:57:43.528Z",
+      "exitCode": 0,
+      "timedOut": false,
+      "log": "inspect-target-db.log"
+    },
+    {
+      "label": "id-control-db",
+      "command": [
+        "docker",
+        "compose",
+        "--project-name",
+        "agentbrake-a-c866eaf9",
+        "-f",
+        "infra/local/compose.yaml",
+        "ps",
+        "-q",
+        "control-db"
+      ],
+      "startedAt": "2026-11-16T10:57:43.623Z",
+      "exitCode": 0,
+      "timedOut": false,
+      "log": "id-control-db.log"
+    },
+    {
+      "label": "inspect-control-db",
+      "command": [
+        "docker",
+        "inspect",
+        "bdf3b5fc2b319c66a67a682c481f39e9d80861a7ded1277959852c43331bd38b"
+      ],
+      "startedAt": "2026-11-16T10:57:43.842Z",
+      "exitCode": 0,
+      "timedOut": false,
+      "log": "inspect-control-db.log"
+    },
+    {
+      "label": "id-opa",
+      "command": [
+        "docker",
+        "compose",
+        "--project-name",
+        "agentbrake-a-c866eaf9",
+        "-f",
+        "infra/local/compose.yaml",
+        "ps",
+        "-q",
+        "opa"
+      ],
+      "startedAt": "2026-11-16T10:57:43.935Z",
+      "exitCode": 0,
+      "timedOut": false,
+      "log": "id-opa.log"
+    },
+    {
+      "label": "inspect-opa",
+      "command": [
+        "docker",
+        "inspect",
+        "b76779e560a12983fc241fdc13561bf11207df798481ce1eaf9aa39fa1662bf2"
+      ],
+      "startedAt": "2026-11-16T10:57:44.192Z",
+      "exitCode": 0,
+      "timedOut": false,
+      "log": "inspect-opa.log"
+    },
+    {
+      "label": "id-gateway",
+      "command": [
+        "docker",
+        "compose",
+        "--project-name",
+        "agentbrake-a-c866eaf9",
+        "-f",
+        "infra/local/compose.yaml",
+        "ps",
+        "-q",
+        "gateway"
+      ],
+      "startedAt": "2026-11-16T10:57:44.283Z",
+      "exitCode": 0,
+      "timedOut": false,
+      "log": "id-gateway.log"
+    },
+    {
+      "label": "inspect-gateway",
+      "command": [
+        "docker",
+        "inspect",
+        "a78da5e61f58aa103bb85ca420499e7a58d0092056bac10c8fad87caf6b673dc"
+      ],
+      "startedAt": "2026-11-16T10:57:44.497Z",
+      "exitCode": 0,
+      "timedOut": false,
+      "log": "inspect-gateway.log"
+    },
+    {
+      "label": "inspect-agent-network",
+      "command": [
+        "docker",
+        "network",
+        "inspect",
+        "agentbrake-a-c866eaf9_agent"
+      ],
+      "startedAt": "2026-11-16T10:57:44.585Z",
+      "exitCode": 0,
+      "timedOut": false,
+      "log": "inspect-agent-network.log"
+    },
+    {
+      "label": "before-network",
+      "command": [
+        "docker",
+        "compose",
+        "--project-name",
+        "agentbrake-a-c866eaf9",
+        "-f",
+        "infra/local/compose.yaml",
+        "exec",
+        "-T",
+        "mock-target",
+        "node",
+        "--input-type=module",
+        "-e",
+        "import{readFile}from'node:fs/promises';const token=(await readFile('/run/secrets/observer-token','utf8')).trim();const response=await fetch('http://127.0.0.1:8080/snapshot',{headers:{Authorization:'Bearer '+token}});if(!response.ok)process.exit(1);console.log(await response.text())"
+      ],
+      "startedAt": "2026-11-16T10:57:44.676Z",
+      "exitCode": 0,
+      "timedOut": false,
+      "log": "before-network.log"
+    },
+    {
+      "label": "agent-network",
+      "command": [
+        "docker",
+        "compose",
+        "--project-name",
+        "agentbrake-a-c866eaf9",
+        "-f",
+        "infra/local/compose.yaml",
+        "exec",
+        "-T",
+        "agent",
+        "node",
+        "tests/isolation/agent.mjs",
+        "network",
+        "{\"target\":\"172.27.0.5\",\"postgres\":\"172.27.0.4\",\"control\":\"172.27.0.2\",\"opa\":\"172.27.0.3\",\"edgeGateway\":\"172.28.0.1\"}"
+      ],
+      "startedAt": "2026-11-16T10:57:45.105Z",
+      "exitCode": 0,
+      "timedOut": false,
+      "log": "agent-network.log"
+    },
+    {
+      "label": "after-network",
+      "command": [
+        "docker",
+        "compose",
+        "--project-name",
+        "agentbrake-a-c866eaf9",
+        "-f",
+        "infra/local/compose.yaml",
+        "exec",
+        "-T",
+        "mock-target",
+        "node",
+        "--input-type=module",
+        "-e",
+        "import{readFile}from'node:fs/promises';const token=(await readFile('/run/secrets/observer-token','utf8')).trim();const response=await fetch('http://127.0.0.1:8080/snapshot',{headers:{Authorization:'Bearer '+token}});if(!response.ok)process.exit(1);console.log(await response.text())"
+      ],
+      "startedAt": "2026-11-16T10:57:45.520Z",
+      "exitCode": 0,
+      "timedOut": false,
+      "log": "after-network.log"
+    },
+    {
+      "label": "agent-denied",
+      "command": [
+        "docker",
+        "compose",
+        "--project-name",
+        "agentbrake-a-c866eaf9",
+        "-f",
+        "infra/local/compose.yaml",
+        "exec",
+        "-T",
+        "agent",
+        "node",
+        "tests/isolation/agent.mjs",
+        "denied",
+        "{\"target\":\"172.27.0.5\",\"postgres\":\"172.27.0.4\",\"control\":\"172.27.0.2\",\"opa\":\"172.27.0.3\",\"edgeGateway\":\"172.28.0.1\"}"
+      ],
+      "startedAt": "2026-11-16T10:57:45.853Z",
+      "exitCode": 0,
+      "timedOut": false,
+      "log": "agent-denied.log"
+    },
+    {
+      "label": "after-denied",
+      "command": [
+        "docker",
+        "compose",
+        "--project-name",
+        "agentbrake-a-c866eaf9",
+        "-f",
+        "infra/local/compose.yaml",
+        "exec",
+        "-T",
+        "mock-target",
+        "node",
+        "--input-type=module",
+        "-e",
+        "import{readFile}from'node:fs/promises';const token=(await readFile('/run/secrets/observer-token','utf8')).trim();const response=await fetch('http://127.0.0.1:8080/snapshot',{headers:{Authorization:'Bearer '+token}});if(!response.ok)process.exit(1);console.log(await response.text())"
+      ],
+      "startedAt": "2026-11-16T10:57:46.299Z",
+      "exitCode": 0,
+      "timedOut": false,
+      "log": "after-denied.log"
+    },
+    {
+      "label": "agent-allowed",
+      "command": [
+        "docker",
+        "compose",
+        "--project-name",
+        "agentbrake-a-c866eaf9",
+        "-f",
+        "infra/local/compose.yaml",
+        "exec",
+        "-T",
+        "agent",
+        "node",
+        "tests/isolation/agent.mjs",
+        "allowed",
+        "{\"target\":\"172.27.0.5\",\"postgres\":\"172.27.0.4\",\"control\":\"172.27.0.2\",\"opa\":\"172.27.0.3\",\"edgeGateway\":\"172.28.0.1\"}"
+      ],
+      "startedAt": "2026-11-16T10:57:46.626Z",
+      "exitCode": 0,
+      "timedOut": false,
+      "log": "agent-allowed.log"
+    },
+    {
+      "label": "after-allowed",
+      "command": [
+        "docker",
+        "compose",
+        "--project-name",
+        "agentbrake-a-c866eaf9",
+        "-f",
+        "infra/local/compose.yaml",
+        "exec",
+        "-T",
+        "mock-target",
+        "node",
+        "--input-type=module",
+        "-e",
+        "import{readFile}from'node:fs/promises';const token=(await readFile('/run/secrets/observer-token','utf8')).trim();const response=await fetch('http://127.0.0.1:8080/snapshot',{headers:{Authorization:'Bearer '+token}});if(!response.ok)process.exit(1);console.log(await response.text())"
+      ],
+      "startedAt": "2026-11-16T10:57:47.067Z",
+      "exitCode": 0,
+      "timedOut": false,
+      "log": "after-allowed.log"
+    },
+    {
+      "label": "stop-opa",
+      "command": [
+        "docker",
+        "compose",
+        "--project-name",
+        "agentbrake-a-c866eaf9",
+        "-f",
+        "infra/local/compose.yaml",
+        "stop",
+        "opa"
+      ],
+      "startedAt": "2026-11-16T10:57:47.407Z",
+      "exitCode": 0,
+      "timedOut": false,
+      "log": "stop-opa.log"
+    },
+    {
+      "label": "agent-pdp-down",
+      "command": [
+        "docker",
+        "compose",
+        "--project-name",
+        "agentbrake-a-c866eaf9",
+        "-f",
+        "infra/local/compose.yaml",
+        "exec",
+        "-T",
+        "agent",
+        "node",
+        "tests/isolation/agent.mjs",
+        "pdp-down",
+        "{\"target\":\"172.27.0.5\",\"postgres\":\"172.27.0.4\",\"control\":\"172.27.0.2\",\"opa\":\"172.27.0.3\",\"edgeGateway\":\"172.28.0.1\"}"
+      ],
+      "startedAt": "2026-11-16T10:57:47.803Z",
+      "exitCode": 0,
+      "timedOut": false,
+      "log": "agent-pdp-down.log"
+    },
+    {
+      "label": "after-pdp-down",
+      "command": [
+        "docker",
+        "compose",
+        "--project-name",
+        "agentbrake-a-c866eaf9",
+        "-f",
+        "infra/local/compose.yaml",
+        "exec",
+        "-T",
+        "mock-target",
+        "node",
+        "--input-type=module",
+        "-e",
+        "import{readFile}from'node:fs/promises';const token=(await readFile('/run/secrets/observer-token','utf8')).trim();const response=await fetch('http://127.0.0.1:8080/snapshot',{headers:{Authorization:'Bearer '+token}});if(!response.ok)process.exit(1);console.log(await response.text())"
+      ],
+      "startedAt": "2026-11-16T10:57:48.148Z",
+      "exitCode": 0,
+      "timedOut": false,
+      "log": "after-pdp-down.log"
+    },
+    {
+      "label": "restart-opa",
+      "command": [
+        "docker",
+        "compose",
+        "--project-name",
+        "agentbrake-a-c866eaf9",
+        "-f",
+        "infra/local/compose.yaml",
+        "start",
+        "opa"
+      ],
+      "startedAt": "2026-11-16T10:57:48.479Z",
+      "exitCode": 0,
+      "timedOut": false,
+      "log": "restart-opa.log"
+    },
+    {
+      "label": "stage2-workflow",
+      "command": [
+        "docker",
+        "compose",
+        "--project-name",
+        "agentbrake-a-c866eaf9",
+        "-f",
+        "infra/local/compose.yaml",
+        "run",
+        "--rm",
+        "--no-deps",
+        "verifier",
+        "node",
+        "tests/stage2/workflow.mjs"
+      ],
+      "startedAt": "2026-11-16T10:57:48.858Z",
+      "exitCode": 0,
+      "timedOut": false,
+      "log": "stage2-workflow.log"
+    },
+    {
+      "label": "stage2-postgres-tests",
+      "command": [
+        "docker",
+        "compose",
+        "--project-name",
+        "agentbrake-a-c866eaf9",
+        "-f",
+        "infra/local/compose.yaml",
+        "run",
+        "--rm",
+        "--no-deps",
+        "verifier",
+        "node",
+        "--import",
+        "tsx",
+        "--test",
+        "--test-concurrency=1",
+        "tests/stage2/postgres-target.test.ts",
+        "tests/stage2/postgres-control.test.ts"
+      ],
+      "startedAt": "2026-11-16T10:57:50.239Z",
+      "exitCode": 0,
+      "timedOut": false,
+      "log": "stage2-postgres-tests.log"
+    },
+    {
+      "label": "compose-down",
+      "command": [
+        "docker",
+        "compose",
+        "--project-name",
+        "agentbrake-a-c866eaf9",
+        "-f",
+        "infra/local/compose.yaml",
+        "down",
+        "--volumes",
+        "--remove-orphans"
+      ],
+      "startedAt": "2026-11-16T10:57:56.019Z",
+      "exitCode": 0,
+      "timedOut": false,
+      "log": "compose-down.log"
+    }
+  ],
+  "limitations": [
+    "Synthetic local targets only. No host-admin or kernel-escape guarantee. Stage 2 target/control PostgreSQL and Git mock; no real GitHub or host-agent interception."
+  ],
+  "engine": {
+    "Platform": {
+      "Name": "Docker Desktop 4.99.0 (245822)"
+    },
+    "Version": "29.9.3",
+    "ApiVersion": "1.56",
+    "MinAPIVersion": "1.40",
+    "Os": "linux",
+    "Arch": "amd64",
+    "Components": [
+      {
+        "Name": "Engine",
+        "Version": "29.9.3",
+        "Details": {
+          "ApiVersion": "1.56",
+          "Arch": "amd64",
+          "BuildTime": "Tue Nov  3 21:41:42 2026",
+          "Experimental": "false",
+          "GitCommit": "70efc0e",
+          "GoVersion": "go1.26.10",
+          "KernelVersion": "6.18.58.1-microsoft-standard-WSL2",
+          "MinAPIVersion": "1.40",
+          "Module": "github.com/moby/moby/v2",
+          "ModuleVersion": "v2.0.0+unknown",
+          "Os": "linux"
+        }
+      },
+      {
+        "Name": "containerd",
+        "Version": "v2.4.2",
+        "Details": {
+          "GitCommit": "b7a25261e029d68978bbf290df0a62fc819b3c51"
+        }
+      },
+      {
+        "Name": "runc",
+        "Version": "1.5.2",
+        "Details": {
+          "GitCommit": "v1.5.2-0-g29dd3dc2"
+        }
+      },
+      {
+        "Name": "docker-init",
+        "Version": "0.19.0",
+        "Details": {
+          "GitCommit": "de40ad0"
+        }
+      }
+    ],
+    "GitCommit": "70efc0e",
+    "GoVersion": "go1.26.10",
+    "KernelVersion": "6.18.58.1-microsoft-standard-WSL2",
+    "BuildTime": "2026-11-03T21:41:42.000000000+00:00"
+  },
+  "desktopVersion": "4.99.0.245822",
+  "images": {
+    "resolvedAt": "2026-11-16T10:17:10.426Z",
+    "images": {
+      "node": {
+        "tag": "library/node:22-bookworm-slim",
+        "image": "library/node@sha256:e9f565d32859f0cbfb52125eafe8be39390f24dac302dc3cdf566e8ba3ab21ee"
+      },
+      "postgres": {
+        "tag": "library/postgres:18-alpine",
+        "image": "library/postgres@sha256:b6972e1115a4ff8eba5d7f7d19184926d1e16d7d1136ae1e1a7ebf286da0f015"
+      },
+      "opa": {
+        "tag": "openpolicyagent/opa:1.22.4-static",
+        "image": "openpolicyagent/opa@sha256:12cecac5a174368f7d3f09d3a19d040ebe0c91d576e520335ae7a985a26e39d3"
+      }
+    }
+  },
+  "policyHash": "9ac719fef979ee7b37c5c5ef3173621453782a0a02d432727391beeff1234d14",
+  "boundaries": {
+    "agentNetworks": [
+      "agentbrake-a-c866eaf9_agent"
+    ],
+    "agentUser": "1000:1000",
+    "capDrop": [
+      "ALL"
+    ],
+    "readonlyRoot": true,
+    "agentMounts": [
+      {
+        "destination": "/run/agent-credential.json",
+        "writable": false
+      }
+    ],
+    "imageIds": [
+      "sha256:4625b7e1cab724825404029e18fa23e36a1c5e2e723fd779cb017bd986fbc691",
+      "sha256:4625b7e1cab724825404029e18fa23e36a1c5e2e723fd779cb017bd986fbc691",
+      "sha256:0f6c51e48b3458e87ab43692e49c9dafc72ffe0a0dbde3fd8cdb6ab92d5c025e",
+      "sha256:327128c76b65ec10a3c071a6a24647c1fddc1af3232a9d7a8fd9f8dec040cdc1"
+    ],
+    "gatewayPorts": {}
+  },
+  "proof": {
+    "before": {
+      "calls": 0,
+      "customers": {
+        "rows": [
+          {
+            "id": 1,
+            "name": "Acme Studio",
+            "plan": "Enterprise",
+            "status": "active",
+            "version": 0
+          },
+          {
+            "id": 2,
+            "name": "Orbit Labs",
+            "plan": "Growth",
+            "status": "active",
+            "version": 0
+          },
+          {
+            "id": 3,
+            "name": "Northstar",
+            "plan": "Enterprise",
+            "status": "active",
+            "version": 0
+          },
+          {
+            "id": 4,
+            "name": "Forma Design",
+            "plan": "Starter",
+            "status": "active",
+            "version": 0
+          }
+        ]
+      },
+      "schema": {
+        "tables": [
+          {
+            "schema": "public",
+            "name": "agentbrake_customers",
+            "columns": [
+              {
+                "name": "id",
+                "type": "integer"
+              },
+              {
+                "name": "name",
+                "type": "text"
+              },
+              {
+                "name": "plan",
+                "type": "text"
+              },
+              {
+                "name": "status",
+                "type": "text",
+                "values": [
+                  "active",
+                  "paused"
+                ]
+              },
+              {
+                "name": "version",
+                "type": "integer"
+              }
+            ]
+          }
+        ],
+        "maximumRows": 100
+      },
+      "git": {
+        "repository": {
+          "id": "fixture-repo-1",
+          "owner": "agentbrake",
+          "name": "sandbox",
+          "fullName": "agentbrake/sandbox",
+          "defaultBranch": "main",
+          "mock": true
+        },
+        "mainSha": "c475ad26aa5da86c5ca4b527baf5bfda6d0378e1",
+        "branches": [
+          {
+            "name": "main",
+            "sha": "c475ad26aa5da86c5ca4b527baf5bfda6d0378e1",
+            "protected": true
+          }
+        ],
+        "pullRequests": [],
+        "mutationCount": 0
+      }
+    },
+    "afterNetwork": {
+      "calls": 0,
+      "customers": {
+        "rows": [
+          {
+            "id": 1,
+            "name": "Acme Studio",
+            "plan": "Enterprise",
+            "status": "active",
+            "version": 0
+          },
+          {
+            "id": 2,
+            "name": "Orbit Labs",
+            "plan": "Growth",
+            "status": "active",
+            "version": 0
+          },
+          {
+            "id": 3,
+            "name": "Northstar",
+            "plan": "Enterprise",
+            "status": "active",
+            "version": 0
+          },
+          {
+            "id": 4,
+            "name": "Forma Design",
+            "plan": "Starter",
+            "status": "active",
+            "version": 0
+          }
+        ]
+      },
+      "schema": {
+        "tables": [
+          {
+            "schema": "public",
+            "name": "agentbrake_customers",
+            "columns": [
+              {
+                "name": "id",
+                "type": "integer"
+              },
+              {
+                "name": "name",
+                "type": "text"
+              },
+              {
+                "name": "plan",
+                "type": "text"
+              },
+              {
+                "name": "status",
+                "type": "text",
+                "values": [
+                  "active",
+                  "paused"
+                ]
+              },
+              {
+                "name": "version",
+                "type": "integer"
+              }
+            ]
+          }
+        ],
+        "maximumRows": 100
+      },
+      "git": {
+        "repository": {
+          "id": "fixture-repo-1",
+          "owner": "agentbrake",
+          "name": "sandbox",
+          "fullName": "agentbrake/sandbox",
+          "defaultBranch": "main",
+          "mock": true
+        },
+        "mainSha": "c475ad26aa5da86c5ca4b527baf5bfda6d0378e1",
+        "branches": [
+          {
+            "name": "main",
+            "sha": "c475ad26aa5da86c5ca4b527baf5bfda6d0378e1",
+            "protected": true
+          }
+        ],
+        "pullRequests": [],
+        "mutationCount": 0
+      }
+    },
+    "afterDenied": {
+      "calls": 0,
+      "customers": {
+        "rows": [
+          {
+            "id": 1,
+            "name": "Acme Studio",
+            "plan": "Enterprise",
+            "status": "active",
+            "version": 0
+          },
+          {
+            "id": 2,
+            "name": "Orbit Labs",
+            "plan": "Growth",
+            "status": "active",
+            "version": 0
+          },
+          {
+            "id": 3,
+            "name": "Northstar",
+            "plan": "Enterprise",
+            "status": "active",
+            "version": 0
+          },
+          {
+            "id": 4,
+            "name": "Forma Design",
+            "plan": "Starter",
+            "status": "active",
+            "version": 0
+          }
+        ]
+      },
+      "schema": {
+        "tables": [
+          {
+            "schema": "public",
+            "name": "agentbrake_customers",
+            "columns": [
+              {
+                "name": "id",
+                "type": "integer"
+              },
+              {
+                "name": "name",
+                "type": "text"
+              },
+              {
+                "name": "plan",
+                "type": "text"
+              },
+              {
+                "name": "status",
+                "type": "text",
+                "values": [
+                  "active",
+                  "paused"
+                ]
+              },
+              {
+                "name": "version",
+                "type": "integer"
+              }
+            ]
+          }
+        ],
+        "maximumRows": 100
+      },
+      "git": {
+        "repository": {
+          "id": "fixture-repo-1",
+          "owner": "agentbrake",
+          "name": "sandbox",
+          "fullName": "agentbrake/sandbox",
+          "defaultBranch": "main",
+          "mock": true
+        },
+        "mainSha": "c475ad26aa5da86c5ca4b527baf5bfda6d0378e1",
+        "branches": [
+          {
+            "name": "main",
+            "sha": "c475ad26aa5da86c5ca4b527baf5bfda6d0378e1",
+            "protected": true
+          }
+        ],
+        "pullRequests": [],
+        "mutationCount": 0
+      }
+    },
+    "afterAllowed": {
+      "calls": 1,
+      "customers": {
+        "rows": [
+          {
+            "id": 1,
+            "name": "Acme Studio",
+            "plan": "Enterprise",
+            "status": "active",
+            "version": 0
+          },
+          {
+            "id": 2,
+            "name": "Orbit Labs",
+            "plan": "Growth",
+            "status": "active",
+            "version": 0
+          },
+          {
+            "id": 3,
+            "name": "Northstar",
+            "plan": "Enterprise",
+            "status": "active",
+            "version": 0
+          },
+          {
+            "id": 4,
+            "name": "Forma Design",
+            "plan": "Starter",
+            "status": "active",
+            "version": 0
+          }
+        ]
+      },
+      "schema": {
+        "tables": [
+          {
+            "schema": "public",
+            "name": "agentbrake_customers",
+            "columns": [
+              {
+                "name": "id",
+                "type": "integer"
+              },
+              {
+                "name": "name",
+                "type": "text"
+              },
+              {
+                "name": "plan",
+                "type": "text"
+              },
+              {
+                "name": "status",
+                "type": "text",
+                "values": [
+                  "active",
+                  "paused"
+                ]
+              },
+              {
+                "name": "version",
+                "type": "integer"
+              }
+            ]
+          }
+        ],
+        "maximumRows": 100
+      },
+      "git": {
+        "repository": {
+          "id": "fixture-repo-1",
+          "owner": "agentbrake",
+          "name": "sandbox",
+          "fullName": "agentbrake/sandbox",
+          "defaultBranch": "main",
+          "mock": true
+        },
+        "mainSha": "c475ad26aa5da86c5ca4b527baf5bfda6d0378e1",
+        "branches": [
+          {
+            "name": "main",
+            "sha": "c475ad26aa5da86c5ca4b527baf5bfda6d0378e1",
+            "protected": true
+          }
+        ],
+        "pullRequests": [],
+        "mutationCount": 0
+      }
+    },
+    "afterPdp": {
+      "calls": 1,
+      "customers": {
+        "rows": [
+          {
+            "id": 1,
+            "name": "Acme Studio",
+            "plan": "Enterprise",
+            "status": "active",
+            "version": 0
+          },
+          {
+            "id": 2,
+            "name": "Orbit Labs",
+            "plan": "Growth",
+            "status": "active",
+            "version": 0
+          },
+          {
+            "id": 3,
+            "name": "Northstar",
+            "plan": "Enterprise",
+            "status": "active",
+            "version": 0
+          },
+          {
+            "id": 4,
+            "name": "Forma Design",
+            "plan": "Starter",
+            "status": "active",
+            "version": 0
+          }
+        ]
+      },
+      "schema": {
+        "tables": [
+          {
+            "schema": "public",
+            "name": "agentbrake_customers",
+            "columns": [
+              {
+                "name": "id",
+                "type": "integer"
+              },
+              {
+                "name": "name",
+                "type": "text"
+              },
+              {
+                "name": "plan",
+                "type": "text"
+              },
+              {
+                "name": "status",
+                "type": "text",
+                "values": [
+                  "active",
+                  "paused"
+                ]
+              },
+              {
+                "name": "version",
+                "type": "integer"
+              }
+            ]
+          }
+        ],
+        "maximumRows": 100
+      },
+      "git": {
+        "repository": {
+          "id": "fixture-repo-1",
+          "owner": "agentbrake",
+          "name": "sandbox",
+          "fullName": "agentbrake/sandbox",
+          "defaultBranch": "main",
+          "mock": true
+        },
+        "mainSha": "c475ad26aa5da86c5ca4b527baf5bfda6d0378e1",
+        "branches": [
+          {
+            "name": "main",
+            "sha": "c475ad26aa5da86c5ca4b527baf5bfda6d0378e1",
+            "protected": true
+          }
+        ],
+        "pullRequests": [],
+        "mutationCount": 0
+      }
+    },
+    "deniedUpstreamCalls": 0,
+    "allowedUpstreamCalls": 1,
+    "pdpOutageUpstreamCalls": 0,
+    "schemaHash": "d71fe5e3057faf92b61c31beedbc0739e7793d9978c17c29e27b65b8400614f1",
+    "stateBeforeHash": "e9fb66c7be77cb223f7f40cb44b004a51d3ce6b7aa20a79fdbc4feddc4f98ebf",
+    "stateAfterHash": "e9fb66c7be77cb223f7f40cb44b004a51d3ce6b7aa20a79fdbc4feddc4f98ebf"
+  },
+  "stage2": {
+    "result": "PASS",
+    "cases": [
+      {
+        "case": "trusted-local-repository",
+        "status": "allowed",
+        "correlationId": "9dc8db1d-b523-4367-8bdb-1b62306823e4",
+        "actionId": "2faef260-a2d9-4b02-a1e4-6392f05a73fe"
+      },
+      {
+        "case": "canonical-preview-no-mutation",
+        "status": "allowed",
+        "correlationId": "564f9edc-2ecc-4231-9490-d76c0bf58638",
+        "actionId": "c1f20060-51cd-4f9c-be3f-81d6cc65f32c",
+        "fingerprint": "eaf61e02d5bdb9d36dd7e41e99f35fd8bac623c81dfdeb76a5a9449b35de8c00"
+      },
+      {
+        "case": "forbidden-path-.github/workflows/ci.yml",
+        "status": "blocked",
+        "correlationId": "e262c12f-5f3d-44e5-8afb-fd4f44e88e82",
+        "actionId": "abf26f48-5fcb-47c2-97d4-6305ef7e24ce"
+      },
+      {
+        "case": "forbidden-path-.env",
+        "status": "blocked",
+        "correlationId": "a1febf0f-9203-4c92-a52d-a17e1ca6a47e",
+        "actionId": "80417c26-1ee2-4f43-9648-6f46d6b62ae6"
+      },
+      {
+        "case": "forbidden-path-src/../secrets.ts",
+        "status": "blocked",
+        "correlationId": "60320f36-5940-459a-b4b6-cdc876bd7c35",
+        "actionId": "d4e7e4cd-280b-4d37-b318-d208d7f622e3"
+      },
+      {
+        "case": "approved-feature-branch-once",
+        "status": "allowed",
+        "correlationId": "fa09ba77-1a17-4d38-b043-9980f78d868e",
+        "actionId": "cc7aa422-c8b5-46dd-81ac-fc34755227cc"
+      },
+      {
+        "case": "approved-pr-concurrent-consume-once",
+        "status": "allowed",
+        "correlationId": "b9951bea-7195-4a8c-9892-8315fa3da737",
+        "actionId": "0987f1e2-3ad8-47c4-9656-8b99035ef79c",
+        "mainUnchanged": true
+      },
+      {
+        "case": "policy-revision-withdraws-approval",
+        "status": "blocked",
+        "correlationId": "f4994219-bf4e-42af-b432-c59a8fdac340",
+        "actionId": "60638fc0-7bd8-4ace-8e71-6f9285988222"
+      },
+      {
+        "case": "revoked-task-no-dispatch",
+        "status": "blocked",
+        "correlationId": "6e8f96a0-98e0-466d-9ee5-5a7fbb646843",
+        "actionId": "fbe088ae-2db4-46ad-9975-cbcca58f0eff"
+      },
+      {
+        "case": "allowlisted-schema",
+        "status": "allowed",
+        "correlationId": "31f586e4-6383-4427-9bc1-e5310ea1dd03",
+        "actionId": "8459700f-4a12-44b3-884c-41f06c2579e3"
+      },
+      {
+        "case": "bounded-postgres-read",
+        "status": "allowed",
+        "correlationId": "97f082fd-9349-45b6-bdb5-e64d667ee602",
+        "actionId": "066cfa0d-cd7c-4ae2-977f-ede1903fab62"
+      },
+      {
+        "case": "raw-sql-no-dispatch",
+        "status": "blocked",
+        "correlationId": "8f8b75c5-9034-4c35-b77d-5d496f16a121",
+        "actionId": "fc0dcc4f-46f2-4f1e-95b5-68beb4b59637"
+      },
+      {
+        "case": "tainted-git-write-no-dispatch",
+        "status": "blocked",
+        "correlationId": "e13bb44b-870f-4f24-aeef-5447cc495244",
+        "actionId": "082cc299-aee5-4cf4-af93-86740c58e52e"
+      },
+      {
+        "case": "approved-one-row-write",
+        "status": "allowed",
+        "correlationId": "12c22ce2-48f8-4506-b229-39092151aea3",
+        "actionId": "3521e87c-0e17-4dcd-a726-9e87cd477280",
+        "changedRows": 1
+      }
+    ],
+    "proof": {
+      "before": {
+        "calls": 2,
+        "customers": {
+          "rows": [
+            {
+              "id": 1,
+              "name": "Acme Studio",
+              "plan": "Enterprise",
+              "status": "active",
+              "version": 0
+            },
+            {
+              "id": 2,
+              "name": "Orbit Labs",
+              "plan": "Growth",
+              "status": "active",
+              "version": 0
+            },
+            {
+              "id": 3,
+              "name": "Northstar",
+              "plan": "Enterprise",
+              "status": "active",
+              "version": 0
+            },
+            {
+              "id": 4,
+              "name": "Forma Design",
+              "plan": "Starter",
+              "status": "active",
+              "version": 0
+            }
+          ]
+        },
+        "schema": {
+          "tables": [
+            {
+              "schema": "public",
+              "name": "agentbrake_customers",
+              "columns": [
+                {
+                  "name": "id",
+                  "type": "integer"
+                },
+                {
+                  "name": "name",
+                  "type": "text"
+                },
+                {
+                  "name": "plan",
+                  "type": "text"
+                },
+                {
+                  "name": "status",
+                  "type": "text",
+                  "values": [
+                    "active",
+                    "paused"
+                  ]
+                },
+                {
+                  "name": "version",
+                  "type": "integer"
+                }
+              ]
+            }
+          ],
+          "maximumRows": 100
+        },
+        "git": {
+          "repository": {
+            "id": "fixture-repo-1",
+            "owner": "agentbrake",
+            "name": "sandbox",
+            "fullName": "agentbrake/sandbox",
+            "defaultBranch": "main",
+            "mock": true
+          },
+          "mainSha": "c475ad26aa5da86c5ca4b527baf5bfda6d0378e1",
+          "branches": [
+            {
+              "name": "main",
+              "sha": "c475ad26aa5da86c5ca4b527baf5bfda6d0378e1",
+              "protected": true
+            }
+          ],
+          "pullRequests": [],
+          "mutationCount": 0
+        }
+      },
+      "after": {
+        "calls": 8,
+        "customers": {
+          "rows": [
+            {
+              "id": 1,
+              "name": "Acme Studio",
+              "plan": "Enterprise",
+              "status": "active",
+              "version": 0
+            },
+            {
+              "id": 2,
+              "name": "Orbit Labs",
+              "plan": "Growth",
+              "status": "paused",
+              "version": 1
+            },
+            {
+              "id": 3,
+              "name": "Northstar",
+              "plan": "Enterprise",
+              "status": "active",
+              "version": 0
+            },
+            {
+              "id": 4,
+              "name": "Forma Design",
+              "plan": "Starter",
+              "status": "active",
+              "version": 0
+            }
+          ]
+        },
+        "schema": {
+          "tables": [
+            {
+              "schema": "public",
+              "name": "agentbrake_customers",
+              "columns": [
+                {
+                  "name": "id",
+                  "type": "integer"
+                },
+                {
+                  "name": "name",
+                  "type": "text"
+                },
+                {
+                  "name": "plan",
+                  "type": "text"
+                },
+                {
+                  "name": "status",
+                  "type": "text",
+                  "values": [
+                    "active",
+                    "paused"
+                  ]
+                },
+                {
+                  "name": "version",
+                  "type": "integer"
+                }
+              ]
+            }
+          ],
+          "maximumRows": 100
+        },
+        "git": {
+          "repository": {
+            "id": "fixture-repo-1",
+            "owner": "agentbrake",
+            "name": "sandbox",
+            "fullName": "agentbrake/sandbox",
+            "defaultBranch": "main",
+            "mock": true
+          },
+          "mainSha": "c475ad26aa5da86c5ca4b527baf5bfda6d0378e1",
+          "branches": [
+            {
+              "name": "agentbrake/workflow-proof",
+              "sha": "2980b3b3e12662b56182ea30ebdd16eda7615c1c",
+              "protected": false
+            },
+            {
+              "name": "main",
+              "sha": "c475ad26aa5da86c5ca4b527baf5bfda6d0378e1",
+              "protected": true
+            }
+          ],
+          "pullRequests": [
+            {
+              "number": 1,
+              "id": "fixture-pr-1",
+              "title": "Approved fixture change",
+              "body": "",
+              "base": "main",
+              "head": "agentbrake/workflow-proof",
+              "headSha": "2980b3b3e12662b56182ea30ebdd16eda7615c1c",
+              "state": "open",
+              "mock": true
+            }
+          ],
+          "mutationCount": 2
+        }
+      },
+      "auditValid": true,
+      "auditEntries": 64
+    },
+    "scope": "Local MCP/REST gateway, separate PostgreSQL control/target and actual local Git with mock PR. No GitHub App or actual Codex client."
+  },
+  "environmentHash": "70c57a3e762557dc2fd0b8b5062c985fcbda9ccc29e34439502ac068661c6fdf",
+  "finishedAt": "2026-11-16T10:58:00.484Z"
+}

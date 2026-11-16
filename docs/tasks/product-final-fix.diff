@@ -1,0 +1,1646 @@
+Final review fix delta
+Baseline ed21d6ae1f9043b4e2fb0575c2a75395d9d9aa10397e3c3813052c5aa77ba79b
+Current f257840c3f5196b19cdbfdec33059789826b862a682026159a6e39a2cb22887f
+
+FILE scripts/compose-environment.mjs
+NEW FILE
+// Compose's Docker config directory does not control dotenv discovery. Apply
+// this at the child-process boundary in every local Compose launcher.
+export function composeEnvironment(inherited) {
+  const selectors = new Set([
+    "COMPOSE_ENV_FILES",
+    "COMPOSE_DISABLE_ENV_FILE",
+    "COMPOSE_FILE",
+    "COMPOSE_PROFILES",
+  ]);
+  return {
+    ...Object.fromEntries(
+      Object.entries(inherited).filter(
+        ([key]) => !selectors.has(key.toUpperCase()),
+      ),
+    ),
+    COMPOSE_DISABLE_ENV_FILE: "true",
+  };
+}
+
+FILE scripts/product.mjs
+diff --git "a/.agentbrake-local\\final-fix-base\\scripts\\product.mjs" b/scripts/product.mjs
+index fd4cbd6..c3f2f2c 100644
+--- "a/.agentbrake-local\\final-fix-base\\scripts\\product.mjs"
++++ b/scripts/product.mjs
+@@ -1,13 +1,14 @@
+ import { readFile, writeFile, mkdir } from "node:fs/promises";
+ import { spawn } from "node:child_process";
+ import { randomBytes, randomUUID, createHash } from "node:crypto";
+ import { join, resolve, dirname } from "node:path";
+ import { fileURLToPath, pathToFileURL } from "node:url";
++import { composeEnvironment } from "./compose-environment.mjs";
+ const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
+ export async function productConfig(name = "local") {
+   if (!/^[a-z][a-z0-9-]{0,31}$/.test(name))
+     throw Error(
+       "Installation name must be 1-32 lower-case letters, digits or hyphens",
+     );
+   const dir = join(root, ".agentbrake-local", "product-" + name);
+   const config = JSON.parse(
+@@ -155,17 +156,17 @@ export async function dockerProduct(
+       ? ["--host", "npipe:////./pipe/docker_engine"]
+       : []),
+   ];
+   return new Promise((resolveResult, reject) => {
+     let output = "",
+       errorOutput = "";
+     const child = spawn("docker", [...prefix, ...args], {
+       cwd: root,
+-      env: config.env,
++      env: composeEnvironment(config.env),
+       windowsHide: true,
+       stdio: [
+         input === undefined ? "ignore" : "pipe",
+         capture ? "pipe" : "inherit",
+         capture ? "pipe" : "inherit",
+       ],
+     });
+     const timer = setTimeout(() => {
+
+FILE scripts/test.mjs
+diff --git "a/.agentbrake-local\\final-fix-base\\scripts\\test.mjs" b/scripts/test.mjs
+index 15ce1fb..bfb5ee7 100644
+--- "a/.agentbrake-local\\final-fix-base\\scripts\\test.mjs"
++++ b/scripts/test.mjs
+@@ -18,17 +18,21 @@ const rego = await run(opaPath, ["test", "services/policy", "-v"]);
+ if (rego) process.exit(rego);
+ const opa = await startOpa();
+ try {
+   const files = [];
+   async function walk(path) {
+     for (const entry of await readdir(path, { withFileTypes: true })) {
+       const target = join(path, entry.name);
+       if (entry.isDirectory() && entry.name !== "browser") await walk(target);
+-      else if (entry.name.endsWith(".test.ts") && entry.name !== "postgres-control.test.ts") files.push(target);
++      else if (
++        /\.test\.(?:ts|mjs)$/.test(entry.name) &&
++        entry.name !== "postgres-control.test.ts"
++      )
++        files.push(target);
+     }
+   }
+   await walk(join(root, "tests"));
+   process.exitCode = await run(
+     process.execPath,
+     ["--import", "tsx", "--test", "--test-concurrency=1", ...files],
+     { OPA_URL: opa.url, OPA_TOKEN: opa.token },
+   );
+
+FILE scripts/verify-isolation.mjs
+diff --git "a/.agentbrake-local\\final-fix-base\\scripts\\verify-isolation.mjs" b/scripts/verify-isolation.mjs
+index 0514da5..c554019 100644
+--- "a/.agentbrake-local\\final-fix-base\\scripts\\verify-isolation.mjs"
++++ b/scripts/verify-isolation.mjs
+@@ -1,15 +1,16 @@
+ import { spawn } from "node:child_process";
+ import { readFile, writeFile, mkdir, rm, readdir } from "node:fs/promises";
+ import { randomBytes, randomUUID, createHash } from "node:crypto";
+ import { join, resolve, sep } from "node:path";
+ import { root } from "./opa-runtime.mjs";
+ import { sourceManifest } from "./source-manifest.mjs";
+ import { verifyModelCache } from "./verify-model-cache.mjs";
++import { composeEnvironment } from "./compose-environment.mjs";
+ const milestoneB = process.argv.includes("--milestone-b");
+ const codexLock = milestoneB
+   ? JSON.parse(
+       await readFile(join(root, "infra/local/codex.lock.json"), "utf8"),
+     )
+   : null;
+ const dockerConfig = join(root, ".agentbrake-local/docker-public");
+ await mkdir(dockerConfig, { recursive: true });
+@@ -56,17 +57,17 @@ async function run(label, command, args, timeoutMs = 60000) {
+         ? ["--host", "npipe:////./pipe/docker_engine"]
+         : []),
+       ...args,
+     ];
+   const startedAt = new Date().toISOString();
+   const code = await new Promise((resolve) => {
+     const child = spawn(command, args, {
+       cwd: root,
+-      env,
++      env: composeEnvironment(env),
+       windowsHide: true,
+       stdio: ["ignore", "pipe", "pipe"],
+     });
+     const timer = setTimeout(() => {
+       timedOut = true;
+       child.kill();
+     }, timeoutMs);
+     child.stdout.on("data", (d) => (output += d));
+
+FILE scripts/verify-product.mjs
+diff --git "a/.agentbrake-local\\final-fix-base\\scripts\\verify-product.mjs" b/scripts/verify-product.mjs
+index 0ab8fe0..c7c6bbc 100644
+--- "a/.agentbrake-local\\final-fix-base\\scripts\\verify-product.mjs"
++++ b/scripts/verify-product.mjs
+@@ -170,17 +170,18 @@ try {
+       "--wait",
+       "--wait-timeout",
+       "180",
+     ],
+     { timeoutMs: 300000 },
+   );
+   let admin = await login("administrator"),
+     reviewer = await login("approver"),
+-    viewer = await login("viewer");
++    viewer = await login("viewer"),
++    operator = await login("operator");
+   await step(
+     "separate process topology, internal networks, credentials and loopback publication",
+     async () => {
+       const ids = (
+         await composeProduct(config, ["ps", "-q"], { capture: true })
+       )
+         .trim()
+         .split(/\s+/);
+@@ -423,33 +424,63 @@ try {
+   assert.equal(prReview.action.preview.kind, "git-change");
+   const waiting = (
+     await submit(token, "database_update", { id: 2, status: "paused" })
+   ).body;
+   assert.equal(waiting.status, "pending");
+   const waitingProof = (await request("/api/approvals/" + waiting.id, reviewer))
+     .body.proof;
+   const beforeRestart = await snapshot();
++  const beforeRestartAudit = (await request("/api/audit/export", viewer)).body;
++  assert.equal(beforeRestartAudit.valid, true);
++  const creationAudit = beforeRestartAudit.entries.find(
++    (row) =>
++      row.data.type === "agent.created" &&
++      row.data.details.agentId === agent.id,
++  );
++  assert.deepEqual(creationAudit.data.details.actor, {
++    actorId: "administrator",
++    tenant: "local",
++  });
++  assert.equal(
++    creationAudit.data.details.correlationId,
++    made.headers.get("x-correlation-id"),
++  );
+   await compose("stop-persistent", ["--profile", "agent", "down"]);
+   await compose("restart-persistent", [
+     "--profile",
+     "agent",
+     "up",
+     "-d",
+     "--wait",
+     "--wait-timeout",
+     "180",
+   ]);
+   admin = await login("administrator");
+   reviewer = await login("approver");
+   viewer = await login("viewer");
++  operator = await login("operator");
+   await step(
+     "full installation restart preserves DB, Git branch, audit and pending review proofs",
+     async () => {
+       const after = await snapshot();
++      const audit = (await request("/api/audit/export", viewer)).body;
++      assert.equal(audit.valid, true);
++      assert.deepEqual(audit.entries, beforeRestartAudit.entries);
++      const csvResponse = await fetch(base + "/api/audit/export?format=csv", {
++        headers: viewer,
++        signal: AbortSignal.timeout(15000),
++      });
++      assert.equal(csvResponse.status, 200);
++      const csv = await csvResponse.text();
++      assert.ok(
++        csv.includes("administrator") &&
++          csv.includes("tenant") &&
++          csv.includes(creationAudit.data.details.correlationId),
++      );
+       assert.deepEqual(after.customers, beforeRestart.customers);
+       assert.deepEqual(after.git, beforeRestart.git);
+       assert.deepEqual(
+         (await request("/api/approvals/" + waiting.id, reviewer)).body.proof,
+         waitingProof,
+       );
+       assert.deepEqual(
+         (await request("/api/approvals/" + pr.id, reviewer)).body.proof,
+@@ -467,16 +498,18 @@ try {
+         (await request("/api/workspace", viewer)).body.auditValid,
+         true,
+       );
+       return {
+         pendingProofsPreserved: 2,
+         mainUnchanged: true,
+         mockPRs: 1,
+         auditValid: true,
++        trustedActorPreserved: true,
++        csvActorPreserved: true,
+       };
+     },
+   );
+   await step(
+     "policy change, task revoke and stop withdraw pending authority with no execution",
+     async () => {
+       let before = await snapshot();
+       assert.equal(
+@@ -506,35 +539,60 @@ try {
+         {
+           reads: "allow",
+           databaseWrites: "approval",
+           githubWrites: "approval",
+         },
+         "PUT",
+       );
+       assert.equal(
+-        (await request("/api/agents/" + agent.id + "/grant/revoke", admin, {}))
+-          .status,
++        (
++          await request(
++            "/api/agents/" + agent.id + "/grant/revoke",
++            operator,
++            {},
++          )
++        ).status,
+         200,
+       );
+       result = await submit(token, "database_read", { limit: 1 });
+       assert.equal(result.body.status, "blocked");
+       assert.deepEqual(await snapshot(), before);
+       await request("/api/control", admin, { paused: true });
+       const stopped = await request("/api/demo", admin, {
+         scenario: "safe-read",
+       });
+       assert.equal(stopped.body.actions[0].status, "blocked");
+       assert.deepEqual(await snapshot(), before);
+       await request("/api/control", admin, { paused: false });
++      const audit = (await request("/api/audit/export", viewer)).body;
++      const revoke = audit.entries.findLast(
++        (row) =>
++          row.data.type === "grant.revoked" &&
++          row.data.details.agentId === agent.id,
++      );
++      assert.deepEqual(revoke.data.details.actor, {
++        actorId: "operator",
++        tenant: "local",
++      });
++      for (const row of audit.entries.filter((row) =>
++        ["control.changed", "policy.changed"].includes(row.data.type),
++      )) {
++        assert.deepEqual(row.data.details.actor, {
++          actorId: "administrator",
++          tenant: "local",
++        });
++        assert.match(row.data.details.correlationId, /^[a-f0-9-]{36}$/);
++      }
+       return {
+         policyDenial: true,
+         revocationDenial: true,
+         emergencyStopDenial: true,
+         executionCalls: 0,
++        crossOwnerRevoker: "operator",
+       };
+     },
+   );
+   await step(
+     "PDP outage fails closed through the product Gateway",
+     async () => {
+       await compose("pdp-stop", ["stop", "opa"]);
+       try {
+
+FILE scripts/verify-stage1.mjs
+diff --git "a/.agentbrake-local\\final-fix-base\\scripts\\verify-stage1.mjs" b/scripts/verify-stage1.mjs
+index 8617dca..0b263d9 100644
+--- "a/.agentbrake-local\\final-fix-base\\scripts\\verify-stage1.mjs"
++++ b/scripts/verify-stage1.mjs
+@@ -69,17 +69,17 @@ async function run(label, command, args) {
+ try {
+   await run("rego", opaPath, ["test", "services/policy", "-v"]);
+   const tests = [];
+   async function collect(path) {
+     for (const entry of await readdir(path, { withFileTypes: true })) {
+       if (entry.isDirectory() && entry.name !== "browser")
+         await collect(join(path, entry.name));
+       else if (
+-        entry.name.endsWith(".test.ts") &&
++        /\.test\.(?:ts|mjs)$/.test(entry.name) &&
+         entry.name !== "postgres-control.test.ts"
+       )
+         tests.push(relative(root, join(path, entry.name)));
+     }
+   }
+   await collect(join(root, "tests"));
+   await run("node-tests", process.execPath, [
+     "--import",
+
+FILE server/app.ts
+diff --git "a/.agentbrake-local\\final-fix-base\\server\\app.ts" b/server/app.ts
+index bd48d7c..9817487 100644
+--- "a/.agentbrake-local\\final-fix-base\\server\\app.ts"
++++ b/server/app.ts
+@@ -5,17 +5,17 @@ import { resolve } from "node:path";
+ import { Store } from "./store.js";
+ import { Connectors, type ConnectionConfig } from "./connectors.js";
+ import { Gateway } from "./gateway.js";
+ import { HttpError, policiesSchema, toolSchemas } from "./contracts.js";
+ import { OpaEvaluator } from "./policy/opa-client.js";
+ import type { PolicyEvaluator } from "./policy/contracts.js";
+ import { mountMcp } from "./mcp-http.js";
+ 
+-import type { ControlStore } from "./control-store.js";
++import type { AuditContext, ControlStore } from "./control-store.js";
+ import { POLICY_VERSION, type TaskGrant } from "./policy/contracts.js";
+ import {
+   LocalOperators,
+   type OperatorCredential,
+   type OperatorRole,
+   type OperatorIdentity,
+ } from "./security/operators.js";
+ import { reviewProofSchema } from "./security/approval.js";
+@@ -164,16 +164,24 @@ export function createApp<
+       } catch (error) {
+         next(error);
+       }
+     };
+   const admin = access(),
+     manage = access("administrator", "operator"),
+     configure = access("administrator"),
+     approve = access("administrator", "approver");
++  const auditContext = (res: express.Response): AuditContext => {
++    const actor = res.locals.actor as OperatorIdentity;
++    return {
++      actorId: actor.id,
++      tenant: actor.tenant,
++      correlationId: res.locals.correlationId,
++    };
++  };
+   app.get("/api/session", admin, (_req, res) =>
+     res.json({
+       actor: res.locals.actor,
+       csrfToken: res.locals.csrfToken,
+       teamMode: identities.team,
+     }),
+   );
+   app.post("/api/logout", admin, async (req, res) => {
+@@ -250,34 +258,38 @@ export function createApp<
+           .array(z.enum(Object.keys(toolSchemas) as [string, ...string[]]))
+           .min(1)
+           .max(Object.keys(toolSchemas).length),
+         resources: z.array(z.string().min(1).max(120)).min(1).max(10),
+         sandbox: z.boolean().default(false),
+       })
+       .strict()
+       .parse(req.body);
+-    const created = await store.createAgent({
+-      ...input,
+-      ownerId: (res.locals.actor as OperatorIdentity).id,
+-    });
++    const created = await store.createAgent(
++      {
++        ...input,
++        ownerId: (res.locals.actor as OperatorIdentity).id,
++      },
++      auditContext(res),
++    );
+     notify();
+     res.status(201).json(created);
+   });
+   app.patch("/api/agents/:id", manage, async (req, res) => {
+     const { status } = z
+       .object({ status: z.enum(["active", "paused"]) })
+       .strict()
+       .parse(req.body);
+     const agent = await store.agent(z.string().parse(req.params.id));
+     if (!agent) throw new HttpError(404, "Agent not found");
+     const updated = await store.changeAgent(
+       agent.id,
+       { status },
+       "agent." + status,
++      auditContext(res),
+     );
+     notify();
+     res.json(updated);
+   });
+   app.post("/api/agents/:id/grant", manage, async (req, res) => {
+     const task = z
+       .object({
+         actions: z
+@@ -320,39 +332,46 @@ export function createApp<
+         agent.tokenExpiresAt!,
+       ),
+       revoked: false,
+       policy_version: POLICY_VERSION,
+       max_calls: task.maxCalls,
+       used_calls: 0,
+       max_rows: task.maxRows,
+     };
+-    await store.changeAgent(agent.id, { grant }, "grant.issued");
++    await store.changeAgent(
++      agent.id,
++      { grant },
++      "grant.issued",
++      auditContext(res),
++    );
+     notify();
+     res.status(201).json(grant);
+   });
+   app.post("/api/agents/:id/grant/revoke", manage, async (req, res) => {
+     const agent = await store.agent(String(req.params.id));
+     if (!agent?.grant) throw new HttpError(404, "Task grant not found");
+     await store.changeAgent(
+       agent.id,
+       { grant: { ...agent.grant, revoked: true } },
+       "grant.revoked",
++      auditContext(res),
+     );
+     notify();
+     res.json({ ok: true });
+   });
+   app.put("/api/policies", configure, async (req, res) => {
+-    await store.setPolicies(policiesSchema.parse(req.body));
++    await store.setPolicies(policiesSchema.parse(req.body), auditContext(res));
+     notify();
+     res.json({ ok: true });
+   });
+   app.post("/api/control", configure, async (req, res) => {
+     await store.setPaused(
+       z.object({ paused: z.boolean() }).strict().parse(req.body).paused,
++      auditContext(res),
+     );
+     notify();
+     res.json({ ok: true });
+   });
+   app.get("/api/approvals/:id", admin, async (req, res) =>
+     res.json(await gateway.review(String(req.params.id))),
+   );
+   app.post("/api/approvals/:id", approve, async (req, res) => {
+@@ -384,23 +403,26 @@ export function createApp<
+       demos = await Promise.all(
+         [
+           "Atlas · coding agent",
+           "Scout · research agent",
+           "Relay · operations",
+         ].map(
+           async (name) =>
+             (
+-              await store.createAgent({
+-                name,
+-                tools: Object.keys(toolSchemas),
+-                resources: ["customers", "agentbrake/sandbox"],
+-                sandbox: true,
+-                ownerId: (res.locals.actor as OperatorIdentity).id,
+-              })
++              await store.createAgent(
++                {
++                  name,
++                  tools: Object.keys(toolSchemas),
++                  resources: ["customers", "agentbrake/sandbox"],
++                  sandbox: true,
++                  ownerId: (res.locals.actor as OperatorIdentity).id,
++                },
++                auditContext(res),
++              )
+             ).agent,
+         ),
+       );
+     }
+     const submit = (agentId: string, tool: string, args: object) =>
+       gateway.submit(agentId, {
+         requestId: randomUUID(),
+         tool,
+
+FILE server/control-experience.ts
+diff --git "a/.agentbrake-local\\final-fix-base\\server\\control-experience.ts" b/server/control-experience.ts
+index ebc3fda..28dd5f0 100644
+--- "a/.agentbrake-local\\final-fix-base\\server\\control-experience.ts"
++++ b/server/control-experience.ts
+@@ -250,23 +250,30 @@ export function mountControlExperience(
+         a.name === name &&
+         a.ownerId === owner &&
+         a.status === "active" &&
+         !a.grant?.revoked &&
+         (a.grant?.expires_at_ms ?? 0) > Date.now(),
+     );
+     if (!agent)
+       agent = (
+-        await store.createAgent({
+-          name,
+-          tools,
+-          resources: ["customers", "agentbrake/sandbox"],
+-          sandbox: true,
+-          ownerId: owner,
+-        })
++        await store.createAgent(
++          {
++            name,
++            tools,
++            resources: ["customers", "agentbrake/sandbox"],
++            sandbox: true,
++            ownerId: owner,
++          },
++          {
++            actorId: res.locals.actor.id,
++            tenant: res.locals.actor.tenant,
++            correlationId: res.locals.correlationId,
++          },
++        )
+       ).agent;
+     const submit = (tool: string, args: object) =>
+       gateway.submit(agent!.id, {
+         requestId: randomUUID(),
+         tool,
+         arguments: args,
+       });
+     const actions: ActionRecord[] = [];
+
+FILE server/control-store.ts
+diff --git "a/.agentbrake-local\\final-fix-base\\server\\control-store.ts" b/server/control-store.ts
+index c66a0d7..38fba7d 100644
+--- "a/.agentbrake-local\\final-fix-base\\server\\control-store.ts"
++++ b/server/control-store.ts
+@@ -1,11 +1,23 @@
+ import type { ActionRecord, Agent, Policies } from "./contracts.js";
+ import type { TaskGrant } from "./policy/contracts.js";
+ export type Awaitable<T> = T | Promise<T>;
++// A control handler supplies only authenticated attribution, never a session.
++export type AuditContext = {
++  actorId: string;
++  tenant: string;
++  correlationId?: string;
++};
++export const auditDetails = (context?: AuditContext) => ({
++  actor: context
++    ? { actorId: context.actorId, tenant: context.tenant }
++    : { source: "internal" as const },
++  ...(context?.correlationId ? { correlationId: context.correlationId } : {}),
++});
+ export type Settings = {
+   paused: boolean;
+   policies: Policies;
+   revision: number;
+ };
+ export type AgentInput = Pick<
+   Agent,
+   "name" | "tools" | "resources" | "sandbox"
+@@ -24,32 +36,34 @@ export type ActivityQuery = {
+   from?: string;
+   to?: string;
+   offset: number;
+   limit: number;
+ };
+ export type AuditQuery = { limit: number; offset?: number; actionId?: string };
+ export interface ControlStore {
+   settings(): Awaitable<Settings>;
+-  setPaused(paused: boolean): Awaitable<void>;
+-  setPolicies(policies: Policies): Awaitable<void>;
++  setPaused(paused: boolean, context?: AuditContext): Awaitable<void>;
++  setPolicies(policies: Policies, context?: AuditContext): Awaitable<void>;
+   agents(): Awaitable<Agent[]>;
+   agent(id: string): Awaitable<Agent | undefined>;
+   authenticate(token: string): Awaitable<Agent | undefined>;
+-  createAgent(input: AgentInput): Awaitable<{ agent: Agent; token: string }>;
++  createAgent(
++    input: AgentInput,
++    context?: AuditContext,
++  ): Awaitable<{ agent: Agent; token: string }>;
+   saveAgent(agent: Agent): Awaitable<void>;
+   changeAgent(
+     id: string,
+     patch: { status?: Agent["status"]; grant?: TaskGrant },
+     event: string,
++    context?: AuditContext,
+   ): Awaitable<Agent | undefined>;
+   actions(): Awaitable<ActionRecord[]>;
+-  actionsPage(
+-    query: ActivityQuery,
+-  ): Awaitable<{
++  actionsPage(query: ActivityQuery): Awaitable<{
+     items: ActionRecord[];
+     total: number;
+     offset: number;
+     limit: number;
+   }>;
+   policyHistory(
+     limit?: number,
+   ): Awaitable<{ version: number; policies: Policies }[]>;
+
+FILE server/postgres-store.ts
+diff --git "a/.agentbrake-local\\final-fix-base\\server\\postgres-store.ts" b/server/postgres-store.ts
+index a8eadae..fa32380 100644
+--- "a/.agentbrake-local\\final-fix-base\\server\\postgres-store.ts"
++++ b/server/postgres-store.ts
+@@ -5,20 +5,22 @@ import type { ActivityQuery, AuditQuery } from "./control-store.js";
+ import {
+   HttpError,
+   type ActionRecord,
+   type Agent,
+   type Policies,
+ } from "./contracts.js";
+ import type {
+   AgentInput,
++  AuditContext,
+   ControlStore,
+   ReservationCheck,
+   Settings,
+ } from "./control-store.js";
++import { auditDetails } from "./control-store.js";
+ import {
+   AUDIENCE,
+   POLICY_VERSION,
+   type TaskGrant,
+ } from "./policy/contracts.js";
+ 
+ const hash = (value: string) =>
+   createHash("sha256").update(value).digest("hex");
+@@ -144,37 +146,43 @@ export class PostgresStore implements ControlStore {
+       revision: Number(rows[0].revision),
+     };
+   }
+ 
+   settings(): Promise<Settings> {
+     return this.readSettings(this.pool);
+   }
+ 
+-  async setPaused(paused: boolean): Promise<void> {
++  async setPaused(paused: boolean, context?: AuditContext): Promise<void> {
+     await this.transaction(async (client) => {
+       await this.readSettings(client, true);
+       await client.query("UPDATE settings SET paused=$1 WHERE id=1", [paused]);
+-      await this.appendAudit(client, "control.changed", { paused });
++      await this.appendAudit(client, "control.changed", {
++        paused,
++        ...auditDetails(context),
++      });
+     });
+   }
+ 
+-  async setPolicies(policies: Policies): Promise<void> {
++  async setPolicies(policies: Policies, context?: AuditContext): Promise<void> {
+     await this.transaction(async (client) => {
+       await this.readSettings(client, true);
+       const serialized = JSON.stringify(policies);
+       const { rows } = await client.query(
+         "INSERT INTO policy_revisions(policies) VALUES ($1) RETURNING version",
+         [serialized],
+       );
+       await client.query(
+         "UPDATE settings SET policies=$1, revision=$2 WHERE id=1",
+         [serialized, rows[0].version],
+       );
+-      await this.appendAudit(client, "policy.changed", policies);
++      await this.appendAudit(client, "policy.changed", {
++        ...policies,
++        ...auditDetails(context),
++      });
+     });
+   }
+ 
+   async agents(): Promise<Agent[]> {
+     const { rows } = await this.pool.query(
+       "SELECT data FROM agents ORDER BY created_order",
+     );
+     return rows.map((row) => JSON.parse(row.data));
+@@ -234,16 +242,17 @@ export class PostgresStore implements ControlStore {
+     return agent?.tokenAudience === AUDIENCE &&
+       (agent.tokenExpiresAt ?? 0) > Date.now()
+       ? agent
+       : undefined;
+   }
+ 
+   async createAgent(
+     input: AgentInput,
++    context?: AuditContext,
+   ): Promise<{ agent: Agent; token: string }> {
+     const token = "ab_" + randomBytes(32).toString("hex");
+     const agent: Agent = {
+       ...input,
+       id: randomUUID(),
+       status: "active",
+       tainted: false,
+       createdAt: new Date().toISOString(),
+@@ -268,32 +277,39 @@ export class PostgresStore implements ControlStore {
+     await this.transaction(async (client) => {
+       await client.query(
+         "INSERT INTO agents(id,token_hash,data) VALUES ($1,$2,$3)",
+         [agent.id, hash(token), JSON.stringify(agent)],
+       );
+       await this.appendAudit(client, "agent.created", {
+         agentId: agent.id,
+         name: agent.name,
++        ...auditDetails(
++          context ??
++            (input.ownerId
++              ? { actorId: input.ownerId, tenant: "local" }
++              : undefined),
++        ),
+       });
+     });
+     return { agent, token };
+   }
+ 
+   async saveAgent(agent: Agent): Promise<void> {
+     await this.pool.query("UPDATE agents SET data=$1 WHERE id=$2", [
+       JSON.stringify(agent),
+       agent.id,
+     ]);
+   }
+ 
+   async changeAgent(
+     id: string,
+     patch: { status?: Agent["status"]; grant?: TaskGrant },
+     event: string,
++    context?: AuditContext,
+   ): Promise<Agent | undefined> {
+     return this.transaction(async (client) => {
+       const { rows } = await client.query(
+         "SELECT data FROM agents WHERE id=$1 FOR UPDATE",
+         [id],
+       );
+       if (!rows[0]) return undefined;
+       const current: Agent = JSON.parse(rows[0].data);
+@@ -310,16 +326,17 @@ export class PostgresStore implements ControlStore {
+       await client.query("UPDATE agents SET data=$1 WHERE id=$2", [
+         JSON.stringify(current),
+         id,
+       ]);
+       await this.appendAudit(client, event, {
+         agentId: id,
+         status: current.status,
+         grantId: current.grant?.id,
++        ...auditDetails(context),
+       });
+       return current;
+     });
+   }
+ 
+   async actions(): Promise<ActionRecord[]> {
+     const { rows } = await this.pool.query(
+       "SELECT data FROM actions ORDER BY created_order DESC",
+@@ -460,16 +477,17 @@ export class PostgresStore implements ControlStore {
+         rule: action.rule,
+         reason: action.reason,
+         approvalReceipt: action.approvalReceipt,
+       };
+       await this.writeAction(client, blocked);
+       await this.appendAudit(client, "approval.blocked", {
+         actionId: action.id,
+         rule: action.rule,
++        ...auditDetails(blocked.approvalReceipt),
+       });
+       return blocked;
+     });
+     Object.assign(action, next);
+   }
+   private async appendAudit(
+     client: PoolClient,
+     type: string,
+
+FILE server/store.ts
+diff --git "a/.agentbrake-local\\final-fix-base\\server\\store.ts" b/server/store.ts
+index 707d283..ac3b54b 100644
+--- "a/.agentbrake-local\\final-fix-base\\server\\store.ts"
++++ b/server/store.ts
+@@ -3,19 +3,21 @@ import { createHash, randomBytes, randomUUID } from "node:crypto";
+ import {
+   HttpError,
+   type ActionRecord,
+   type Agent,
+   type Policies,
+ } from "./contracts.js";
+ import type {
+   AgentInput,
++  AuditContext,
+   ControlStore,
+   ReservationCheck,
+ } from "./control-store.js";
++import { auditDetails } from "./control-store.js";
+ import type { TaskGrant } from "./policy/contracts.js";
+ import { AUDIENCE, POLICY_VERSION } from "./policy/contracts.js";
+ import { activityWhere } from "./storage-query.js";
+ import type { ActivityQuery, AuditQuery } from "./control-store.js";
+ export const digest = (value: string) =>
+   createHash("sha256").update(value).digest("hex");
+ export function canonical(value: unknown): string {
+   if (value === null || typeof value !== "object") return JSON.stringify(value);
+@@ -70,29 +72,29 @@ export class Store implements ControlStore {
+       policies: JSON.parse(row.policies as string),
+       revision: Number(
+         this.db
+           .prepare("SELECT MAX(version) AS version FROM policy_revisions")
+           .get()!.version,
+       ),
+     };
+   }
+-  setPaused(paused: boolean) {
++  setPaused(paused: boolean, context?: AuditContext) {
+     this.db
+       .prepare("UPDATE settings SET paused=? WHERE id=1")
+       .run(Number(paused));
+-    this.audit("control.changed", { paused });
++    this.audit("control.changed", { paused, ...auditDetails(context) });
+   }
+-  setPolicies(policies: Policies) {
++  setPolicies(policies: Policies, context?: AuditContext) {
+     this.db.exec("BEGIN IMMEDIATE");
+     try {
+       this.db
+         .prepare("UPDATE settings SET policies=? WHERE id=1")
+         .run(JSON.stringify(policies));
+-      this.audit("policy.changed", policies);
++      this.audit("policy.changed", { ...policies, ...auditDetails(context) });
+       this.db
+         .prepare("INSERT INTO policy_revisions(policies) VALUES (?)")
+         .run(JSON.stringify(policies));
+       this.db.exec("COMMIT");
+     } catch (error) {
+       this.db.exec("ROLLBACK");
+       throw error;
+     }
+@@ -154,17 +156,17 @@ export class Store implements ControlStore {
+     const agent: Agent | undefined = row
+       ? JSON.parse(row.data as string)
+       : undefined;
+     return agent?.tokenAudience === AUDIENCE &&
+       (agent.tokenExpiresAt ?? 0) > Date.now()
+       ? agent
+       : undefined;
+   }
+-  createAgent(input: AgentInput) {
++  createAgent(input: AgentInput, context?: AuditContext) {
+     const token = "ab_" + randomBytes(32).toString("hex");
+     const agent: Agent = {
+       ...input,
+       id: randomUUID(),
+       status: "active",
+       tainted: false,
+       createdAt: new Date().toISOString(),
+     };
+@@ -183,28 +185,38 @@ export class Store implements ControlStore {
+       policy_version: POLICY_VERSION,
+       max_calls: 1000,
+       used_calls: 0,
+       max_rows: 100,
+     };
+     this.db
+       .prepare("INSERT INTO agents VALUES (?,?,?)")
+       .run(agent.id, digest(token), JSON.stringify(agent));
+-    this.audit("agent.created", { agentId: agent.id, name: agent.name });
++    this.audit("agent.created", {
++      agentId: agent.id,
++      name: agent.name,
++      ...auditDetails(
++        context ??
++          (input.ownerId
++            ? { actorId: input.ownerId, tenant: "local" }
++            : undefined),
++      ),
++    });
+     return { agent, token };
+   }
+   saveAgent(agent: Agent) {
+     this.db
+       .prepare("UPDATE agents SET data=? WHERE id=?")
+       .run(JSON.stringify(agent), agent.id);
+   }
+   changeAgent(
+     id: string,
+     patch: { status?: Agent["status"]; grant?: TaskGrant },
+     event: string,
++    context?: AuditContext,
+   ) {
+     this.db.exec("BEGIN IMMEDIATE");
+     try {
+       const agent = this.agent(id);
+       if (agent) {
+         if (patch.grant?.id === agent.grant?.id && patch.grant && agent.grant)
+           patch = {
+             ...patch,
+@@ -213,17 +225,21 @@ export class Store implements ControlStore {
+               used_calls: Math.max(
+                 agent.grant.used_calls,
+                 patch.grant.used_calls,
+               ),
+             },
+           };
+         Object.assign(agent, patch);
+         this.saveAgent(agent);
+-        this.audit(event, { agentId: id, grantId: agent.grant?.id });
++        this.audit(event, {
++          agentId: id,
++          grantId: agent.grant?.id,
++          ...auditDetails(context),
++        });
+       }
+       this.db.exec("COMMIT");
+       return agent;
+     } catch (error) {
+       this.db.exec("ROLLBACK");
+       throw error;
+     }
+   }
+@@ -271,17 +287,21 @@ export class Store implements ControlStore {
+       const next = {
+         ...persisted,
+         status: "blocked" as const,
+         rule: a.rule,
+         reason: a.reason,
+         approvalReceipt: a.approvalReceipt,
+       };
+       this.saveAction(next);
+-      this.audit("approval.blocked", { actionId: a.id, rule: a.rule });
++      this.audit("approval.blocked", {
++        actionId: a.id,
++        rule: a.rule,
++        ...auditDetails(next.approvalReceipt),
++      });
+       this.db.exec("COMMIT");
+       Object.assign(a, next);
+     } catch (error) {
+       this.db.exec("ROLLBACK");
+       throw error;
+     }
+   }
+   reserve(a: ActionRecord, check: ReservationCheck) {
+
+FILE tests/enforcement/compose-environment.test.mjs
+NEW FILE
+import test from "node:test";
+import assert from "node:assert/strict";
+import { mkdtemp, writeFile, rm } from "node:fs/promises";
+import { resolve, join, dirname, basename } from "node:path";
+import { composeProduct } from "../../scripts/product.mjs";
+import { composeEnvironment } from "../../scripts/compose-environment.mjs";
+import { spawnSync } from "node:child_process";
+import { mkdir } from "node:fs/promises";
+
+async function cleanup(dir) {
+  assert.equal(dirname(resolve(dir)), resolve(".agentbrake-local"));
+  assert.match(basename(dir), /^env-contract-[a-zA-Z0-9]+$/);
+  await rm(dir, { recursive: true, force: true });
+}
+
+test("actual product Compose launcher ignores inherited synthetic envfile selectors", async () => {
+  const dir = await mkdtemp(resolve(".agentbrake-local/env-contract-"));
+  try {
+    const selected = join(dir, "selected.env");
+    await writeFile(selected, 'INVALID="unterminated');
+    const env = {
+      ...process.env,
+      COMPOSE_PROJECT_NAME: "agentbrake-env-contract",
+      INSTALLATION_ID: "synthetic-env-contract",
+      INSTALL_DIR: dir.replaceAll("\\", "/"),
+      DASHBOARD_PORT: "4327",
+      NODE_IMAGE: "node:22",
+      POSTGRES_IMAGE: "postgres:17",
+      OPA_IMAGE: "openpolicyagent/opa:1",
+      COMPOSE_ENV_FILES: selected,
+      COMPOSE_DISABLE_ENV_FILE: "false",
+    };
+    for (const name of [
+      "RESULT_RETENTION_HOURS",
+      "LOG_MAX_SIZE",
+      "LOG_MAX_FILES",
+    ])
+      delete env[name];
+    const config = { project: "agentbrake-env-contract", env };
+    const parsed = JSON.parse(
+      await composeProduct(config, ["config", "--format", "json"], {
+        capture: true,
+      }),
+    );
+    assert.equal(parsed.name, config.project);
+    assert.equal(
+      parsed.services.gateway.environment.RESULT_RETENTION_HOURS,
+      "24",
+    );
+    assert.equal(parsed.services.gateway.logging.options["max-size"], "10m");
+    assert.equal(parsed.services.gateway.logging.options["max-file"], "3");
+    config.env = {
+      ...env,
+      RESULT_RETENTION_HOURS: "48",
+      LOG_MAX_SIZE: "7m",
+      LOG_MAX_FILES: "2",
+    };
+    const intentional = JSON.parse(
+      await composeProduct(config, ["config", "--format", "json"], {
+        capture: true,
+      }),
+    );
+    assert.equal(
+      intentional.services.gateway.environment.RESULT_RETENTION_HOURS,
+      "48",
+    );
+    assert.equal(
+      intentional.services.gateway.logging.options["max-size"],
+      "7m",
+    );
+    assert.equal(intentional.services.gateway.logging.options["max-file"], "2");
+  } catch (error) {
+    throw new Error(error.errorOutput ?? error.message, { cause: error });
+  } finally {
+    await cleanup(dir);
+  }
+});
+
+test("shared verifier/product environment ignores default .env and preserves explicit inputs in real Compose config", async () => {
+  const dir = await mkdtemp(resolve(".agentbrake-local/env-contract-"));
+  try {
+    const dockerConfig = join(dir, "docker-public");
+    await mkdir(dockerConfig);
+    const composeFile = join(dir, "compose.yaml");
+    await writeFile(
+      composeFile,
+      "services:\n  canary:\n    image: node:22\n    environment:\n      CANARY: ${CANARY:-isolated}\n      RESULT_RETENTION_HOURS: ${RESULT_RETENTION_HOURS:-24}\n      LOG_MAX_SIZE: ${LOG_MAX_SIZE:-10m}\n      LOG_MAX_FILES: ${LOG_MAX_FILES:-3}\n",
+    );
+    const env = { ...process.env, COMPOSE_DISABLE_ENV_FILE: "false" };
+    for (const key of Object.keys(env))
+      if (
+        /^(COMPOSE_ENV_FILES|COMPOSE_FILE|COMPOSE_PROFILES|CANARY|RESULT_RETENTION_HOURS|LOG_MAX_SIZE|LOG_MAX_FILES)$/i.test(
+          key,
+        )
+      )
+        delete env[key];
+    const args = [
+      "--config",
+      dockerConfig,
+      ...(process.platform === "win32"
+        ? ["--host", "npipe:////./pipe/docker_engine"]
+        : []),
+      "compose",
+      "-p",
+      "agentbrake-env-contract",
+      "-f",
+      composeFile,
+      "config",
+      "--format",
+      "json",
+    ];
+    const run = (childEnv) =>
+      spawnSync("docker", args, {
+        cwd: dir,
+        env: childEnv,
+        encoding: "utf8",
+        windowsHide: true,
+        timeout: 15000,
+      });
+    await writeFile(
+      join(dir, ".env"),
+      "CANARY=unrelated-fixture-canary\nRESULT_RETENTION_HOURS=876\nLOG_MAX_SIZE=91m\nLOG_MAX_FILES=87\n",
+    );
+    const ordinary = run(env);
+    assert.equal(ordinary.status, 0, ordinary.stderr);
+    assert.equal(
+      JSON.parse(ordinary.stdout).services.canary.environment.CANARY,
+      "unrelated-fixture-canary",
+      "Probe must demonstrate discovery would occur without isolation",
+    );
+    const isolated = run(composeEnvironment(env));
+    assert.equal(isolated.status, 0, isolated.stderr);
+    assert.deepEqual(JSON.parse(isolated.stdout).services.canary.environment, {
+      CANARY: "isolated",
+      RESULT_RETENTION_HOURS: "24",
+      LOG_MAX_SIZE: "10m",
+      LOG_MAX_FILES: "3",
+    });
+    await writeFile(join(dir, ".env"), 'INVALID="unterminated');
+    assert.notEqual(
+      run(env).status,
+      0,
+      "Malformed synthetic default file must make an unintended read observable",
+    );
+    const intentional = run(
+      composeEnvironment({
+        ...env,
+        COMPOSE_ENV_FILES: join(dir, ".env"),
+        RESULT_RETENTION_HOURS: "48",
+        LOG_MAX_SIZE: "7m",
+        LOG_MAX_FILES: "2",
+      }),
+    );
+    assert.equal(intentional.status, 0, intentional.stderr);
+    assert.deepEqual(
+      JSON.parse(intentional.stdout).services.canary.environment,
+      {
+        CANARY: "isolated",
+        RESULT_RETENTION_HOURS: "48",
+        LOG_MAX_SIZE: "7m",
+        LOG_MAX_FILES: "2",
+      },
+    );
+  } finally {
+    await cleanup(dir);
+  }
+});
+
+FILE tests/enforcement/control-audit-fixture.ts
+NEW FILE
+import assert from "node:assert/strict";
+import { createApp } from "../../server/app.js";
+import type { ControlStore } from "../../server/control-store.js";
+
+const operators = [
+  {
+    id: "audit-alice",
+    name: "Alice",
+    tenant: "local",
+    role: "administrator",
+    key: "fixture-audit-alice-key-000000000000000",
+  },
+  {
+    id: "audit-bob",
+    name: "Bob",
+    tenant: "local",
+    role: "operator",
+    key: "fixture-audit-bob-key-00000000000000000",
+  },
+  {
+    id: "audit-viewer",
+    name: "Viewer",
+    tenant: "local",
+    role: "viewer",
+    key: "fixture-audit-viewer-key-0000000000000",
+  },
+] as const;
+const mutations = new Set([
+  "agent.created",
+  "agent.paused",
+  "agent.active",
+  "grant.issued",
+  "grant.revoked",
+  "control.changed",
+  "policy.changed",
+]);
+export async function assertControlAudit(store: ControlStore) {
+  const system = createApp({
+    store,
+    databasePath: ":memory:",
+    adminKey: "fixture-audit-binding-key-000000000000",
+    operators: [...operators],
+  });
+  let dispatches = 0;
+  system.gateway.connectors.execute = async () => {
+    dispatches++;
+    throw Error("Control mutations must not dispatch");
+  };
+  const server = system.app.listen(0, "127.0.0.1");
+  await new Promise<void>((r) => server.once("listening", r));
+  const base =
+    "http://127.0.0.1:" + (server.address() as { port: number }).port;
+  const secrets: string[] = operators.map((o) => o.key);
+  const correlations: string[] = [];
+  const request = async (
+    path: string,
+    headers: Record<string, string>,
+    body?: unknown,
+    method = body === undefined ? "GET" : "POST",
+  ) => {
+    const r = await fetch(base + path, {
+      method,
+      headers: { "Content-Type": "application/json", ...headers },
+      ...(body === undefined ? {} : { body: JSON.stringify(body) }),
+    });
+    const text = await r.text();
+    if (r.ok && method !== "GET" && path !== "/api/login")
+      correlations.push(r.headers.get("x-correlation-id")!);
+    return {
+      status: r.status,
+      text,
+      headers: r.headers,
+      body: r.headers.get("content-type")?.includes("application/json")
+        ? JSON.parse(text)
+        : undefined,
+    };
+  };
+  const login = async (index: number) => {
+    const r = await request("/api/login", {}, { key: operators[index].key });
+    assert.equal(r.status, 200);
+    const cookie = r.headers.get("set-cookie")!.split(";")[0];
+    secrets.push(cookie.slice("ab_session=".length), r.body.csrfToken);
+    return { Cookie: cookie, "X-AB-CSRF": r.body.csrfToken as string };
+  };
+  const before = (await store.auditTrail()).length;
+  try {
+    const alice = await login(0),
+      bob = await login(1),
+      viewer = await login(2);
+    const made = await request("/api/agents", alice, {
+      name: "Human audit fixture",
+      tools: ["database_read"],
+      resources: ["customers"],
+      sandbox: true,
+    });
+    assert.equal(made.status, 201);
+    secrets.push(made.body.token);
+    const id = made.body.agent.id,
+      path = "/api/agents/" + id;
+    const events = async () =>
+      (await store.auditTrail())
+        .slice(before)
+        .map((r) => JSON.parse(r.data))
+        .filter((e) => mutations.has(e.type));
+    const snapshot = async () => ({
+      settings: await store.settings(),
+      agents: await store.agents(),
+      events: await events(),
+    });
+    const initial = await snapshot();
+    for (const [url, auth, body, method, expected] of [
+      ["/api/control", { Cookie: alice.Cookie }, { paused: true }, "POST", 403],
+      [
+        "/api/policies",
+        bob,
+        { reads: "deny", databaseWrites: "deny", githubWrites: "deny" },
+        "PUT",
+        403,
+      ],
+      [path, viewer, { status: "paused" }, "PATCH", 403],
+      [path + "/grant/revoke", { Cookie: bob.Cookie }, {}, "POST", 403],
+      [
+        path,
+        alice,
+        { status: "paused", actorId: "forged-human" },
+        "PATCH",
+        400,
+      ],
+    ] as const) {
+      assert.equal((await request(url, auth, body, method)).status, expected);
+      assert.deepEqual(await snapshot(), initial);
+    }
+    assert.equal(
+      (await request(path, bob, { status: "paused" }, "PATCH")).status,
+      200,
+    );
+    assert.equal(
+      (await request(path, alice, { status: "active" }, "PATCH")).status,
+      200,
+    );
+    assert.equal(
+      (
+        await request(path + "/grant", alice, {
+          actions: ["database_read"],
+          resources: ["customers"],
+          environments: ["sandbox"],
+          expiresInSeconds: 120,
+          maxCalls: 5,
+          maxRows: 2,
+        })
+      ).status,
+      201,
+    );
+    assert.equal(
+      (
+        await request(
+          path + "/grant/revoke",
+          {
+            ...bob,
+            "X-AB-Actor": "forged-human",
+            "X-AB-Actor-ID": "audit-alice",
+            "X-Correlation-ID": "forged-correlation",
+          },
+          {},
+        )
+      ).status,
+      200,
+    );
+    for (const paused of [true, false])
+      assert.equal(
+        (await request("/api/control", alice, { paused })).status,
+        200,
+      );
+    assert.equal(
+      (
+        await request(
+          "/api/policies",
+          alice,
+          {
+            reads: "deny",
+            databaseWrites: "approval",
+            githubWrites: "approval",
+          },
+          "PUT",
+        )
+      ).status,
+      200,
+    );
+    const audit = await events();
+    assert.deepEqual(
+      audit.map((e) => [e.type, e.details.actor]),
+      [
+        ["agent.created", { actorId: "audit-alice", tenant: "local" }],
+        ["agent.paused", { actorId: "audit-bob", tenant: "local" }],
+        ["agent.active", { actorId: "audit-alice", tenant: "local" }],
+        ["grant.issued", { actorId: "audit-alice", tenant: "local" }],
+        ["grant.revoked", { actorId: "audit-bob", tenant: "local" }],
+        ["control.changed", { actorId: "audit-alice", tenant: "local" }],
+        ["control.changed", { actorId: "audit-alice", tenant: "local" }],
+        ["policy.changed", { actorId: "audit-alice", tenant: "local" }],
+      ],
+    );
+    assert.deepEqual(
+      audit.map((e) => e.details.correlationId),
+      correlations,
+    );
+    assert.ok(correlations.every((id) => /^[a-f0-9-]{36}$/.test(id)));
+    assert.equal((await store.agent(id))!.grant!.human_owner, "audit-alice");
+    for (const format of ["json", "csv"]) {
+      const exported = await request(
+        "/api/audit/export?format=" + format,
+        viewer,
+      );
+      assert.equal(exported.status, 200);
+      for (const actor of ["audit-alice", "audit-bob"])
+        assert.ok(exported.text.includes(actor));
+      assert.ok(exported.text.includes("tenant"));
+      assert.ok(!exported.text.includes("forged-human"));
+      for (const secret of secrets)
+        assert.ok(
+          !exported.text.includes(secret),
+          "Export must exclude fixture credential/session/CSRF",
+        );
+      if (format === "json") {
+        assert.equal(exported.body.valid, true);
+        const relevant = exported.body.entries
+          .slice(before)
+          .filter((r: any) => mutations.has(r.data.type));
+        assert.deepEqual(
+          relevant.map((r: any) => r.data.details.actor),
+          audit.map((e) => e.details.actor),
+        );
+      }
+    }
+    assert.equal(dispatches, 0);
+    return { id, audit };
+  } finally {
+    server.closeAllConnections();
+    await new Promise<void>((r, reject) =>
+      server.close((error) => (error ? reject(error) : r())),
+    );
+    await system.close();
+  }
+}
+
+FILE tests/enforcement/control-audit.test.ts
+NEW FILE
+import test from "node:test";
+import assert from "node:assert/strict";
+import { Store } from "../../server/store.js";
+import { assertControlAudit } from "./control-audit-fixture.js";
+
+test("real team control mutations retain the authenticated human and export no credentials", async () => {
+  const store = new Store(":memory:");
+  await assertControlAudit(store);
+});
+
+test("internal fixture calls are not attributed to an invented human; trusted owner creation remains explicit", () => {
+  const store = new Store(":memory:");
+  try {
+    store.setPaused(true);
+    store.createAgent({
+      name: "Fixture owned",
+      tools: ["database_read"],
+      resources: ["customers"],
+      sandbox: true,
+      ownerId: "fixture-owner",
+    });
+    const events = store.auditTrail().map((r) => JSON.parse(r.data));
+    assert.deepEqual(events[0].details.actor, { source: "internal" });
+    assert.deepEqual(events[1].details.actor, {
+      actorId: "fixture-owner",
+      tenant: "local",
+    });
+  } finally {
+    store.close();
+  }
+});
+
+FILE tests/enforcement/control-experience.test.ts
+diff --git "a/.agentbrake-local\\final-fix-base\\tests\\enforcement\\control-experience.test.ts" b/tests/enforcement/control-experience.test.ts
+index 9db58e0..c57af74 100644
+--- "a/.agentbrake-local\\final-fix-base\\tests\\enforcement\\control-experience.test.ts"
++++ b/tests/enforcement/control-experience.test.ts
+@@ -161,17 +161,34 @@ test("Demo Lab submits safe read and blocked SQL through the Gateway with real o
+     let calls = 0;
+     const execute = f.s.gateway.connectors.execute.bind(f.s.gateway.connectors);
+     f.s.gateway.connectors.execute = async (a) => {
+       calls++;
+       return execute(a);
+     };
+     let r = await f.request("/api/demo", { scenario: "safe-read" });
+     assert.equal(r.status, 200);
+-    assert.equal((await r.json()).actions[0].status, "allowed");
++    const demo = await r.json();
++    assert.equal(demo.actions[0].status, "allowed");
++    const creation = f.s.store
++      .auditTrail()
++      .map((row) => JSON.parse(row.data))
++      .find(
++        (event) =>
++          event.type === "agent.created" &&
++          event.details.agentId === demo.actions[0].agentId,
++      );
++    assert.deepEqual(creation.details.actor, {
++      actorId: "local-administrator",
++      tenant: "local",
++    });
++    assert.equal(
++      creation.details.correlationId,
++      r.headers.get("x-correlation-id"),
++    );
+     assert.equal(calls, 1);
+     r = await f.request("/api/demo", { scenario: "blocked-sql" });
+     assert.equal(r.status, 200);
+     assert.equal((await r.json()).actions[0].status, "blocked");
+     assert.equal(calls, 1);
+     assert.equal(
+       (await f.request("/api/demo", { scenario: "arbitrary" })).status,
+       400,
+
+FILE tests/enforcement/team-approvals.test.ts
+diff --git "a/.agentbrake-local\\final-fix-base\\tests\\enforcement\\team-approvals.test.ts" b/tests/enforcement/team-approvals.test.ts
+index bd9f835..98b9ed4 100644
+--- "a/.agentbrake-local\\final-fix-base\\tests\\enforcement\\team-approvals.test.ts"
++++ b/tests/enforcement/team-approvals.test.ts
+@@ -263,8 +263,40 @@ test("team roles and tenant checks protect control/audit; logout revokes the ses
+     assert.equal(
+       (await f.request("/api/audit/export", f.reviewer)).status,
+       401,
+     );
+   } finally {
+     await f.close();
+   }
+ });
++
++test("human rejection audit retains the authenticated reviewer receipt without dispatch", async () => {
++  const f = await fixture();
++  try {
++    const path = "/api/approvals/" + f.pending.id;
++    const review = await f.request(path, f.reviewer);
++    const rejected = await f.request(path, f.reviewer, {
++      decision: "reject",
++      proof: review.body.proof,
++    });
++    assert.equal(rejected.status, 200);
++    assert.equal(rejected.body.status, "blocked");
++    assert.equal(f.calls(), 0);
++    const event = f.system.store
++      .auditTrail()
++      .map((r) => JSON.parse(r.data))
++      .find(
++        (e) =>
++          e.type === "approval.blocked" && e.details.actionId === f.pending.id,
++      );
++    assert.deepEqual(event.details.actor, {
++      actorId: "reviewer",
++      tenant: "local",
++    });
++    assert.deepEqual(
++      f.system.store.db.prepare("SELECT * FROM customers WHERE id=1").get(),
++      f.before,
++    );
++  } finally {
++    await f.close();
++  }
++});
+
+FILE tests/stage2/postgres-control.test.ts
+diff --git "a/.agentbrake-local\\final-fix-base\\tests\\stage2\\postgres-control.test.ts" b/tests/stage2/postgres-control.test.ts
+index e9456b4..39590c1 100644
+--- "a/.agentbrake-local\\final-fix-base\\tests\\stage2\\postgres-control.test.ts"
++++ b/tests/stage2/postgres-control.test.ts
+@@ -2,16 +2,17 @@ import { test } from "node:test";
+ import assert from "node:assert/strict";
+ import { readFileSync } from "node:fs";
+ import { createHash, randomUUID } from "node:crypto";
+ import pg from "pg";
+ import { PostgresStore } from "../../server/postgres-store.js";
+ import type { ActionRecord, Agent } from "../../server/contracts.js";
+ import type { ReservationCheck } from "../../server/control-store.js";
+ import { POLICY_VERSION } from "../../server/policy/contracts.js";
++import { assertControlAudit } from "../enforcement/control-audit-fixture.js";
+ 
+ // This file is deliberately excluded from the native suite. Its dedicated run
+ // must fail, rather than silently skip, if the isolated fixture is not selected.
+ const fixtureUrl = (user: string, secret: string) =>
+   `postgresql://${user}:${encodeURIComponent(readFileSync(secret, "utf8").trim())}@control-db:5432/agentbrake_control_fixture`;
+ const input = {
+   name: "PostgreSQL control fixture",
+   tools: ["database_read", "database_update", "github_create_issue"],
+@@ -77,16 +78,49 @@ test("PostgreSQL control fixture", async (t) => {
+     ),
+   });
+   const first = await PostgresStore.open(url);
+   const second = await PostgresStore.open(url);
+   const runtime = new pg.Pool({ connectionString: url });
+   try {
+     await first.setPaused(false);
+ 
++    await t.test(
++      "real team API actor attribution survives PostgreSQL reopen and exports",
++      async () => {
++        const initial = await first.settings();
++        const apiStore = await PostgresStore.open(url);
++        const { id, audit } = await assertControlAudit(apiStore);
++        const reopened = await PostgresStore.open(url);
++        try {
++          const persisted = (await reopened.auditTrail()).map((row) =>
++            JSON.parse(row.data),
++          );
++          for (const expected of audit)
++            assert.ok(
++              persisted.some(
++                (event) => JSON.stringify(event) === JSON.stringify(expected),
++              ),
++            );
++          assert.equal(
++            (await reopened.agent(id))!.grant!.human_owner,
++            "audit-alice",
++          );
++          assert.equal((await reopened.agent(id))!.grant!.revoked, true);
++          assert.equal(await reopened.verifyAudit(), true);
++        } finally {
++          await reopened.setPolicies(initial.policies, {
++            actorId: "fixture-cleanup",
++            tenant: "local",
++          });
++          await reopened.close();
++        }
++      },
++    );
++
+     await t.test(
+       "paged activity, policy history and payload retention preserve pending review and audit",
+       async () => {
+         const { agent } = await first.createAgent({
+           ...input,
+           ownerId: "fixture-owner",
+         });
+         const old = {
+@@ -260,41 +294,61 @@ test("PostgreSQL control fixture", async (t) => {
+     await t.test(
+       "audit permission failure rolls back action, quota, taint, controls and revisions",
+       async () => {
+         const { agent } = await first.createAgent(input);
+         const record = action(agent);
+         await first.insertAction(record);
+         const settings = await first.settings();
+         const beforeAgents = (await first.agents()).length;
++        const beforeAudit = await first.auditTrail();
++        const beforeHistory = await first.policyHistory();
++        const actor = { actorId: "fixture-rollback-operator", tenant: "local" };
+         await owner.query("REVOKE INSERT ON audit FROM control_runtime");
+         try {
+           await assert.rejects(
+             first.reserve(record, check),
+             (error: any) => error.code === "42501",
+           );
+           assert.equal(record.status, "queued");
+           assert.equal((await first.action(record.id))!.status, "queued");
+           assert.equal((await first.agent(agent.id))!.grant!.used_calls, 0);
+           assert.equal((await first.agent(agent.id))!.tainted, false);
+-          await assert.rejects(first.setPaused(true));
++          await assert.rejects(first.setPaused(true, actor));
+           await assert.rejects(
+-            first.setPolicies({
+-              reads: "deny",
+-              databaseWrites: "deny",
+-              githubWrites: "deny",
+-            }),
++            first.setPolicies(
++              {
++                reads: "deny",
++                databaseWrites: "deny",
++                githubWrites: "deny",
++              },
++              actor,
++            ),
+           );
+           await assert.rejects(
+-            first.changeAgent(agent.id, { status: "paused" }, "agent.changed"),
++            first.changeAgent(
++              agent.id,
++              { status: "paused" },
++              "agent.changed",
++              actor,
++            ),
+           );
+-          await assert.rejects(first.createAgent(input));
++          for (const [event, grant] of [
++            ["grant.revoked", { ...agent.grant!, revoked: true }],
++            ["grant.issued", { ...agent.grant!, id: randomUUID() }],
++          ] as const)
++            await assert.rejects(
++              first.changeAgent(agent.id, { grant }, event, actor),
++            );
++          await assert.rejects(first.createAgent(input, actor));
+           assert.deepEqual(await first.settings(), settings);
+-          assert.equal((await first.agent(agent.id))!.status, "active");
++          assert.deepEqual(await first.agent(agent.id), agent);
+           assert.equal((await first.agents()).length, beforeAgents);
++          assert.deepEqual(await first.auditTrail(), beforeAudit);
++          assert.deepEqual(await first.policyHistory(), beforeHistory);
+         } finally {
+           await owner.query("GRANT INSERT ON audit TO control_runtime");
+         }
+         assert.equal(await first.reserve(record, check), true);
+       },
+     );
+ 
+     await t.test(

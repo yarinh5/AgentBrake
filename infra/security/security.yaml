@@ -1,0 +1,63 @@
+rules:
+  - id: agentbrake-no-dynamic-code
+    languages: [typescript, javascript]
+    severity: ERROR
+    message: Dynamic code execution must not accept agent or browser input.
+    pattern-either:
+      - pattern: eval(...)
+      - pattern: new Function(...)
+  - id: agentbrake-no-shell-option
+    languages: [typescript, javascript]
+    severity: ERROR
+    message: Spawn must use argv with shell disabled.
+    pattern: '{..., shell: true, ...}'
+  - id: agentbrake-no-raw-html
+    languages: [typescript, javascript]
+    severity: ERROR
+    message: Render agent-controlled content as escaped text.
+    pattern: <$TAG ... dangerouslySetInnerHTML={$VALUE} ... />
+  - id: agentbrake-no-disabled-tls
+    languages: [typescript, javascript]
+    severity: ERROR
+    message: TLS certificate validation must remain enabled.
+    pattern-either:
+      - pattern: '{..., rejectUnauthorized: false, ...}'
+      - pattern: process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
+  - id: agentbrake-no-browser-secret-storage
+    languages: [typescript, javascript]
+    severity: ERROR
+    message: Session, bearer and CSRF credentials must not persist in browser storage.
+    patterns:
+      - pattern-either:
+          - pattern: localStorage.setItem($KEY, $VALUE)
+          - pattern: sessionStorage.setItem($KEY, $VALUE)
+      - metavariable-regex:
+          metavariable: $KEY
+          regex: (?i).*(token|secret|key|session|password).*
+  - id: agentbrake-no-request-log
+    languages: [typescript, javascript]
+    severity: ERROR
+    message: Request bodies, cookies, auth headers and raw request objects must not be logged.
+    pattern-either:
+      - pattern: console.$METHOD(..., $REQ.headers, ...)
+      - pattern: console.$METHOD(..., $REQ.body, ...)
+      - pattern: console.$METHOD(..., $REQ.headers.authorization, ...)
+  - id: agentbrake-request-sql
+    languages: [typescript, javascript]
+    severity: ERROR
+    message: Raw HTTP input must not reach a SQL command; use fixed templates and bound parameters.
+    mode: taint
+    pattern-sources:
+      - pattern: $REQ.body.$FIELD
+      - pattern: $REQ.query.$FIELD
+      - pattern: $REQ.params.$FIELD
+    pattern-sinks:
+      - patterns:
+          - pattern: $DB.query($SQL, ...)
+          - focus-metavariable: $SQL
+      - pattern: $DB.exec($SQL)
+  - id: agentbrake-credential-literal
+    languages: [generic]
+    severity: ERROR
+    message: Credential-shaped source literal requires removal and investigation.
+    pattern-regex: '(?:gh[pousr]_[A-Za-z0-9]{30,}|github_pat_[A-Za-z0-9_]{30,}|AKIA[A-Z0-9]{16}|sk-[A-Za-z0-9]{32,})'

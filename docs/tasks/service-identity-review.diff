@@ -1,0 +1,1090 @@
+Identity task scoped delta from a37811a74bc93ace334a58bb51577a195dd9985fcd16aca66b1e4d669d058bdd
+
+FILE infra/local/control-db/002-accounts.sql
+NEW
+\set ON_ERROR_STOP on
+BEGIN;
+CREATE TABLE IF NOT EXISTS identity_state (
+  id SMALLINT PRIMARY KEY CHECK (id=1),
+  data TEXT NOT NULL
+);
+INSERT INTO identity_state(id,data)
+VALUES (1,'{"initialized":false,"accounts":[],"invitations":[],"recoveries":[]}')
+ON CONFLICT (id) DO NOTHING;
+REVOKE ALL ON identity_state FROM PUBLIC;
+GRANT SELECT, UPDATE ON identity_state TO control_runtime;
+COMMIT;
+
+FILE infra/local/control-db/010-control-fixture.sh
+diff --git "a/.agentbrake-local\\service-base\\infra\\local\\control-db\\010-control-fixture.sh" b/infra/local/control-db/010-control-fixture.sh
+index a77c029..0c32988 100644
+--- "a/.agentbrake-local\\service-base\\infra\\local\\control-db\\010-control-fixture.sh"
++++ b/infra/local/control-db/010-control-fixture.sh
+@@ -14,8 +14,10 @@ BEGIN
+     RAISE EXCEPTION 'The isolated control runtime password file is empty';
+   END IF;
+   EXECUTE format('CREATE ROLE control_runtime LOGIN PASSWORD %L NOSUPERUSER NOCREATEDB NOCREATEROLE NOINHERIT NOREPLICATION NOBYPASSRLS', fixture_password);
+ END
+ $bootstrap$;
+ SQL
+ psql --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" --set=ON_ERROR_STOP=1 \
+   --file=/opt/agentbrake-control/001-control.sql
++psql --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" --set=ON_ERROR_STOP=1 \
++  --file=/opt/agentbrake-control/002-accounts.sql
+
+FILE server/app.ts
+diff --git "a/.agentbrake-local\\service-base\\server\\app.ts" b/server/app.ts
+index 9817487..939a07e 100644
+--- "a/.agentbrake-local\\service-base\\server\\app.ts"
++++ b/server/app.ts
+@@ -17,27 +17,29 @@ import {
+   type OperatorCredential,
+   type OperatorRole,
+   type OperatorIdentity,
+ } from "./security/operators.js";
+ import { reviewProofSchema } from "./security/approval.js";
+ import { mountControlExperience } from "./control-experience.js";
+ import type { GatewayPort } from "./gateway-port.js";
+ import type { LocalTelemetry } from "./telemetry.js";
++import { ManagedAccounts } from "./security/accounts.js";
+ export function createApp<
+   S extends ControlStore = Store,
+   G extends GatewayPort = Gateway,
+ >(options: {
+   store?: S;
+   databasePath: string;
+   adminKey: string;
+   connections?: ConnectionConfig;
+   policy?: PolicyEvaluator;
+   allowedHosts?: string[];
+   operators?: OperatorCredential[];
++  managedAccounts?: boolean;
+   surface?: "combined" | "control" | "gateway";
+   gateway?: G;
+   telemetry?: LocalTelemetry;
+   mcp?: { url: string; bearer_token_env_var: string };
+ }) {
+   if (options.adminKey.length < 24)
+     throw new Error("ADMIN_KEY must contain at least 24 characters");
+   const store = (options.store ?? new Store(options.databasePath)) as S;
+@@ -59,17 +61,23 @@ export function createApp<
+   const gateway = (options.gateway ??
+     new Gateway(
+       store,
+       connectors,
+       notify,
+       options.policy ?? new OpaEvaluator(),
+     )) as G;
+   const app = express();
+-  const identities = new LocalOperators(options.adminKey, options.operators);
++  const legacyIdentities = new LocalOperators(options.adminKey, options.operators);
++  if (options.managedAccounts && options.surface === "gateway")
++    throw Error("Gateway cannot enable managed accounts");
++  const accounts = options.managedAccounts
++    ? new ManagedAccounts(store, legacyIdentities)
++    : undefined;
++  const identities = accounts ?? legacyIdentities;
+   let loginAttempts: number[] = [];
+   app.disable("x-powered-by");
+   app.use((req, res, next) => {
+     res.locals.correlationId = randomUUID();
+     res.setHeader("X-Correlation-ID", res.locals.correlationId);
+     const host = req.headers.host || "";
+     const hostname = /^([a-zA-Z0-9.-]+)(?::[0-9]+)?$/
+       .exec(host)?.[1]
+@@ -113,58 +121,58 @@ export function createApp<
+       : mountMcp(app, store, gateway);
+   app.get("/api/health", (_req, res) =>
+     res.json({ status: "ok", version: "0.1.0" }),
+   );
+   app.post("/api/login", async (req, res) => {
+     loginAttempts = loginAttempts.filter((t) => t > Date.now() - 60_000);
+     if (loginAttempts.length >= 15)
+       throw new HttpError(429, "Too many attempts. Try again in one minute.");
+-    const key = z
+-      .object({ key: z.string().max(200) })
+-      .strict()
+-      .safeParse(req.body);
+-    if (!key.success) {
+-      loginAttempts.push(Date.now());
+-      throw new HttpError(401, "Invalid workspace key");
+-    }
+     let session;
+     try {
+-      session = identities.login(key.data.key);
++      if (accounts) session = await accounts.login(req.body);
++      else {
++        const key = z.object({key:z.string().max(200)}).strict().safeParse(req.body);
++        if (!key.success) throw new HttpError(401,"Invalid workspace key");
++        session = legacyIdentities.login(key.data.key);
++      }
+     } catch (error) {
+       loginAttempts.push(Date.now());
+       throw error;
+     }
+     res.setHeader(
+       "Set-Cookie",
+       `ab_session=${session.token}; HttpOnly; SameSite=Strict; Path=/api; Max-Age=28800`,
+     );
+     res.json({
+       ok: true,
+       actor: session.actor,
+       csrfToken: session.csrfToken,
+       teamMode: identities.team,
++      authMode: session.authMode,
+     });
+   });
+   const access =
+     (...roles: OperatorRole[]): express.RequestHandler =>
+-    (req, res, next) => {
++    async (req, res, next) => {
+       try {
+-        const session = identities.authenticate(req.headers.cookie);
++        const session = await identities.authenticate(req.headers.cookie);
+         if (
+           req.headers["x-ab-tenant"] &&
+           req.headers["x-ab-tenant"] !== "local"
+         )
+           throw new HttpError(403, "Tenant access denied");
+         if (roles.length && !roles.includes(session.actor.role))
+           throw new HttpError(403, "Operator role does not permit this action");
+         if (!["GET", "HEAD", "OPTIONS"].includes(req.method))
+           identities.checkCsrf(session, req.headers["x-ab-csrf"]);
+         res.locals.actor = session.actor;
+         res.locals.csrfToken = session.csrfToken;
++        res.locals.session = session;
++        res.locals.authMode = session.authMode;
+         next();
+       } catch (error) {
+         next(error);
+       }
+     };
+   const admin = access(),
+     manage = access("administrator", "operator"),
+     configure = access("administrator"),
+@@ -177,26 +185,65 @@ export function createApp<
+       correlationId: res.locals.correlationId,
+     };
+   };
+   app.get("/api/session", admin, (_req, res) =>
+     res.json({
+       actor: res.locals.actor,
+       csrfToken: res.locals.csrfToken,
+       teamMode: identities.team,
++      authMode: res.locals.authMode,
+     }),
+   );
+   app.post("/api/logout", admin, async (req, res) => {
+     identities.logout(req.headers.cookie);
+     res.setHeader(
+       "Set-Cookie",
+       "ab_session=; HttpOnly; SameSite=Strict; Path=/api; Max-Age=0",
+     );
+     res.json({ ok: true });
+   });
++  const managed = () => {
++    if (!accounts) throw new HttpError(409,"Managed accounts are disabled in compatibility mode");
++    return accounts;
++  };
++  const accountSession = (res: express.Response, session: Awaited<ReturnType<ManagedAccounts["setup"]>>) => {
++    res.setHeader("Set-Cookie",`ab_session=${session.token}; HttpOnly; SameSite=Strict; Path=/api; Max-Age=28800`);
++    res.json({ok:true,actor:session.actor,csrfToken:session.csrfToken,teamMode:true,authMode:"account"});
++  };
++  const credentialAttempt = () => {
++    loginAttempts = loginAttempts.filter(t=>t>Date.now()-60_000);
++    if(loginAttempts.length>=15) throw new HttpError(429,"Too many attempts. Try again in one minute.");
++    loginAttempts.push(Date.now());
++  };
++  app.get("/api/setup", async (_req,res)=>res.json(accounts ? await accounts.status() : {managed:false,initialized:false}));
++  app.post("/api/setup",async(req,res)=>{
++    credentialAttempt();
++    accountSession(res,await managed().setup(req.body));
++  });
++  app.post("/api/invitations/accept",async(req,res)=>{
++    credentialAttempt();
++    accountSession(res,await managed().accept(req.body));
++  });
++  app.post("/api/password/reset",async(req,res)=>{
++    credentialAttempt();
++    await managed().reset(req.body);res.json({ok:true});
++  });
++  app.get("/api/profile",admin,async(_req,res)=>res.json({account:await managed().profile(res.locals.session)}));
++  app.patch("/api/profile",admin,async(req,res)=>res.json({account:await managed().rename(res.locals.session,req.body)}));
++  app.post("/api/password/change",admin,async(req,res)=>{
++    await managed().changePassword(res.locals.session,req.body);
++    identities.logout(req.headers.cookie);
++    res.setHeader("Set-Cookie","ab_session=; HttpOnly; SameSite=Strict; Path=/api; Max-Age=0");res.json({ok:true});
++  });
++  app.get("/api/team",configure,async(_req,res)=>res.json(await managed().teamMembers(res.locals.session)));
++  app.post("/api/team/invitations",configure,async(req,res)=>res.status(201).json(await managed().invite(res.locals.session,req.body)));
++  app.delete("/api/team/invitations/:id",configure,async(req,res)=>{await managed().revoke(res.locals.session,String(req.params.id));res.json({ok:true});});
++  app.patch("/api/team/:id",configure,async(req,res)=>res.json(await managed().changeMember(res.locals.session,String(req.params.id),req.body)));
++  app.post("/api/team/:id/recovery",configure,async(req,res)=>res.json(await managed().recovery(res.locals.session,String(req.params.id),req.body)));
+   app.post("/api/actions", async (req, res) => {
+     const auth = req.headers.authorization;
+     const agent = auth?.startsWith("Bearer ")
+       ? await store.authenticate(auth.slice(7))
+       : undefined;
+     if (!agent) throw new HttpError(401, "Valid agent bearer token required");
+     res.json(await gateway.submit(agent.id, req.body));
+   });
+
+FILE server/control-store.ts
+diff --git "a/.agentbrake-local\\service-base\\server\\control-store.ts" b/server/control-store.ts
+index 38fba7d..2de518b 100644
+--- "a/.agentbrake-local\\service-base\\server\\control-store.ts"
++++ b/server/control-store.ts
+@@ -1,10 +1,11 @@
+ import type { ActionRecord, Agent, Policies } from "./contracts.js";
+ import type { TaskGrant } from "./policy/contracts.js";
++import type { IdentityState, IdentityChange } from "./security/accounts-state.js";
+ export type Awaitable<T> = T | Promise<T>;
+ // A control handler supplies only authenticated attribution, never a session.
+ export type AuditContext = {
+   actorId: string;
+   tenant: string;
+   correlationId?: string;
+ };
+ export const auditDetails = (context?: AuditContext) => ({
+@@ -35,16 +36,18 @@ export type ActivityQuery = {
+   resource?: string;
+   from?: string;
+   to?: string;
+   offset: number;
+   limit: number;
+ };
+ export type AuditQuery = { limit: number; offset?: number; actionId?: string };
+ export interface ControlStore {
++  identityState(): Awaitable<IdentityState>;
++  changeIdentity<T>(change: IdentityChange<T>): Awaitable<T>;
+   settings(): Awaitable<Settings>;
+   setPaused(paused: boolean, context?: AuditContext): Awaitable<void>;
+   setPolicies(policies: Policies, context?: AuditContext): Awaitable<void>;
+   agents(): Awaitable<Agent[]>;
+   agent(id: string): Awaitable<Agent | undefined>;
+   authenticate(token: string): Awaitable<Agent | undefined>;
+   createAgent(
+     input: AgentInput,
+
+FILE server/postgres-store.ts
+diff --git "a/.agentbrake-local\\service-base\\server\\postgres-store.ts" b/server/postgres-store.ts
+index fa32380..be861dd 100644
+--- "a/.agentbrake-local\\service-base\\server\\postgres-store.ts"
++++ b/server/postgres-store.ts
+@@ -1,11 +1,12 @@
+ import { createHash, randomBytes, randomUUID } from "node:crypto";
+ import pg, { type PoolClient } from "pg";
+ import { activityWhere } from "./storage-query.js";
++import type { IdentityState, IdentityChange } from "./security/accounts-state.js";
+ import type { ActivityQuery, AuditQuery } from "./control-store.js";
+ import {
+   HttpError,
+   type ActionRecord,
+   type Agent,
+   type Policies,
+ } from "./contracts.js";
+ import type {
+@@ -66,16 +67,33 @@ function connection(url: string): pg.PoolConfig {
+     statement_timeout: 15_000,
+     application_name: "agentbrake-control-fixture",
+   };
+ }
+ 
+ export class PostgresStore implements ControlStore {
+   private constructor(private pool: pg.Pool) {}
+ 
++  async identityState(): Promise<IdentityState> {
++    const {rows} = await this.pool.query("SELECT data FROM identity_state WHERE id=1");
++    if (!rows[0]) throw Error("Identity state is unavailable; apply the owner-run accounts migration");
++    return JSON.parse(rows[0].data);
++  }
++  async changeIdentity<T>(change: IdentityChange<T>): Promise<T> {
++    return this.transaction(async client => {
++      const {rows} = await client.query("SELECT data FROM identity_state WHERE id=1 FOR UPDATE");
++      if (!rows[0]) throw Error("Identity state is unavailable; apply the owner-run accounts migration");
++      const state: IdentityState = JSON.parse(rows[0].data);
++      const {result, audit} = change(state);
++      await client.query("UPDATE identity_state SET data=$1 WHERE id=1", [JSON.stringify(state)]);
++      await this.appendAudit(client, audit.type, audit.details);
++      return result;
++    });
++  }
++
+   static async open(
+     url: string,
+     options: { reconcile?: boolean } = {},
+   ): Promise<PostgresStore> {
+     const store = new PostgresStore(new pg.Pool(connection(url)));
+     try {
+       const { rows } = await store.pool.query(`SELECT current_user AS name,
+         r.rolsuper, r.rolbypassrls, r.rolcreaterole, r.rolcreatedb,
+
+FILE server/product.ts
+diff --git "a/.agentbrake-local\\service-base\\server\\product.ts" b/server/product.ts
+index 3aa7311..0de5dff 100644
+--- "a/.agentbrake-local\\service-base\\server\\product.ts"
++++ b/server/product.ts
+@@ -95,16 +95,17 @@ if (role === "gateway") {
+     surface: "control",
+     telemetry,
+     mcp: {
+       url: "http://gateway:4313/mcp",
+       bearer_token_env_var: "AGENTBRAKE_TOKEN",
+     },
+     adminKey: await secret("session-key"),
+     operators,
++    managedAccounts: true,
+     allowedHosts: ["control-api"],
+     gateway: new RemoteGateway("http://gateway-control:4315", bridgeKey),
+   });
+   const server = system.app.listen(4314, "0.0.0.0");
+   const close = async () => {
+     server.closeAllConnections();
+     server.close();
+     await system.close();
+
+FILE server/security/accounts-password.ts
+NEW
+import { randomBytes, scrypt, timingSafeEqual } from "node:crypto";
+import { HttpError } from "../contracts.js";
+export const passwordParameters = Object.freeze({ N: 131072, r: 8, p: 1, maxmem: 192 * 1024 * 1024 });
+let active = 0;
+// One process-wide bound covers verification and creation across app instances.
+// Reject excess work instead of keeping an unbounded queue of passwords in memory.
+async function derive(password: string, salt: string): Promise<Buffer> {
+    if (active >= 2)
+        throw new HttpError(429, "Password service is busy. Try again shortly.");
+    active++;
+    try {
+        return await new Promise<Buffer>((resolve, reject) => scrypt(password, salt, 64, passwordParameters, (error, key) => error ? reject(error) : resolve(key)));
+    }
+    finally {
+        active--;
+    }
+}
+export async function hashPassword(password: string) {
+    const salt = randomBytes(16).toString("hex");
+    const hash = (await derive(password, salt)).toString("hex");
+    return { salt, hash };
+}
+export async function verifyPassword(password: string, credential: {
+    salt: string;
+    hash: string;
+}) {
+    const key = await derive(password, credential.salt);
+    const expected = Buffer.from(credential.hash, "hex");
+    return key.length === expected.length && timingSafeEqual(key, expected);
+}
+
+FILE server/security/accounts-state.ts
+NEW
+import type { OperatorIdentity } from "./operators.js";
+export type Account = OperatorIdentity & {
+    email: string;
+    active: boolean;
+    revision: number;
+    passwordHash: {
+        salt: string;
+        hash: string;
+    };
+};
+export type Invitation = {
+    id: string;
+    email: string;
+    role: OperatorIdentity["role"];
+    tokenHash: string;
+    expiresAt: number;
+};
+export type IdentityState = {
+    initialized: boolean;
+    accounts: Account[];
+    invitations: Invitation[];
+    recoveries: {
+        accountId: string;
+        tokenHash: string;
+        expiresAt: number;
+    }[];
+};
+export const emptyIdentity = (): IdentityState => ({ initialized: false, accounts: [], invitations: [], recoveries: [] });
+// Synchronous callback runs under the database identity lock. Never do KDF or I/O here.
+export type IdentityChange<T> = (state: IdentityState) => {
+    result: T;
+    audit: {
+        type: string;
+        details: {
+            actorId: string;
+            targetId: string;
+            reason: string;
+        };
+    };
+};
+
+FILE server/security/accounts.ts
+NEW
+import { randomBytes, randomUUID, timingSafeEqual } from "node:crypto";
+import { z } from "zod";
+import { HttpError } from "../contracts.js";
+import type { ControlStore } from "../control-store.js";
+import { digest } from "../store.js";
+import { LocalOperators, type OperatorSession } from "./operators.js";
+import type { Account, IdentityState } from "./accounts-state.js";
+import { hashPassword, verifyPassword } from "./accounts-password.js";
+export const accountSchemas = {
+    email: z.string().trim().toLowerCase().max(254).email(),
+    password: z.string().min(15).max(128),
+    name: z.string().trim().min(1).max(80),
+    role: z.enum(["administrator", "operator", "approver", "viewer"]),
+    token: z.string().max(200),
+};
+export const safeAccount = ({ id, name, email, role, tenant, active }: Account) => ({ id, name, email, role, tenant, active });
+const actorOf = ({ id, name, role, tenant }: Account) => ({ id, name, role, tenant });
+const invalidToken = () => new HttpError(400, "Invalid or expired token");
+const event = (type: string, actorId: string, targetId: string, reason: string) => ({ type: "identity." + type, details: { actorId, targetId, reason } });
+export class ManagedAccounts {
+    readonly team = true;
+    constructor(private store: ControlStore, private legacy: LocalOperators) { }
+    async status() { return { managed: true, initialized: (await this.store.identityState()).initialized }; }
+    private account(state: IdentityState, session: OperatorSession, admin = false) {
+        const account = state.accounts.find(a => a.id === session.actor.id);
+        if (session.authMode !== "account" || !account?.active || account.revision !== session.revision)
+            throw new HttpError(401, "Account sign-in required");
+        if (admin && account.role !== "administrator")
+            throw new HttpError(403, "Administrator access required");
+        return account;
+    }
+    private session(account: Account) { return this.legacy.issue(actorOf(account), "account", account.revision); }
+    async authenticate(cookie?: string) {
+        const session = this.legacy.authenticate(cookie);
+        const state = await this.store.identityState();
+        if (!state.initialized) {
+            if (session.authMode !== "key")
+                throw new HttpError(401, "Operator sign-in required");
+            return session;
+        }
+        const account = this.account(state, session);
+        return { ...session, actor: actorOf(account) };
+    }
+    checkCsrf(session: OperatorSession, token: unknown) {
+        // Managed mode always requires CSRF, even when no operators array was supplied.
+        if (typeof token !== "string" || !timingSafeEqual(Buffer.from(digest(token)), Buffer.from(digest(session.csrfToken))))
+            throw new HttpError(403, "Session verification required");
+    }
+    logout(cookie?: string) { this.legacy.logout(cookie); }
+    async login(input: unknown) {
+        const state = await this.store.identityState();
+        if (!state.initialized) {
+            const key = z.object({ key: z.string().max(200) }).strict().safeParse(input);
+            if (!key.success)
+                throw new HttpError(401, "Invalid operator credential");
+            return this.legacy.login(key.data.key);
+        }
+        const body = z.object({ email: accountSchemas.email, password: accountSchemas.password }).strict().safeParse(input);
+        if (!body.success)
+            throw new HttpError(401, "Invalid account credential");
+        const found = state.accounts.find(a => a.email === body.data.email && a.active);
+        // Unknown emails still perform the same bounded asynchronous KDF.
+        const credential = found?.passwordHash ?? { salt: "0".repeat(32), hash: "0".repeat(128) };
+        const valid = await verifyPassword(body.data.password, credential);
+        if (!found || !valid)
+            throw new HttpError(401, "Invalid account credential");
+        const current = (await this.store.identityState()).accounts.find(a => a.id === found.id);
+        if (!current?.active || current.revision !== found.revision)
+            throw new HttpError(401, "Invalid account credential");
+        return this.session(current);
+    }
+    async setup(input: unknown) {
+        const body = z.object({ key: z.string().max(200), name: accountSchemas.name, email: accountSchemas.email, password: accountSchemas.password }).strict().parse(input);
+        if ((await this.store.identityState()).initialized)
+            throw new HttpError(409, "Workspace accounts are already initialized");
+        const actor = this.legacy.credential(body.key);
+        if (actor.role !== "administrator")
+            throw new HttpError(401, "Invalid bootstrap credential");
+        const passwordHash = await hashPassword(body.password);
+        const account = await this.store.changeIdentity(state => {
+            if (state.initialized)
+                throw new HttpError(409, "Workspace accounts are already initialized");
+            const account: Account = { id: actor.id, name: body.name, email: body.email, role: "administrator", tenant: "local", active: true, revision: 1, passwordHash };
+            state.initialized = true;
+            state.accounts.push(account);
+            return { result: account, audit: event("initialized", actor.id, account.id, "administrator-bootstrap") };
+        });
+        return this.session(account);
+    }
+    async profile(session: OperatorSession) { return safeAccount(this.account(await this.store.identityState(), session)); }
+    async rename(session: OperatorSession, input: unknown) {
+        const { name } = z.object({ name: accountSchemas.name }).strict().parse(input);
+        return this.store.changeIdentity(state => {
+            const a = this.account(state, session);
+            a.name = name;
+            return { result: safeAccount(a), audit: event("profile-changed", a.id, a.id, "name-changed") };
+        });
+    }
+    async teamMembers(session: OperatorSession) {
+        const state = await this.store.identityState();
+        this.account(state, session, true);
+        return { members: state.accounts.map(safeAccount), invitations: state.invitations.filter(i => i.expiresAt > Date.now()).map(({ id, email, role, expiresAt }) => ({ id, email, role, expiresAt })) };
+    }
+    async invite(session: OperatorSession, input: unknown) {
+        const { email, role } = z.object({ email: accountSchemas.email, role: accountSchemas.role }).strict().parse(input);
+        const token = randomBytes(32).toString("hex"), id = randomUUID(), expiresAt = Date.now() + 24 * 3600000;
+        return this.store.changeIdentity(state => {
+            const a = this.account(state, session, true);
+            state.invitations = state.invitations.filter(i => i.expiresAt > Date.now());
+            if (state.accounts.some(a => a.email === email) || state.invitations.some(i => i.email === email))
+                throw new HttpError(409, "Email already has an account or invitation");
+            if (state.accounts.length >= 256 || state.invitations.length >= 100)
+                throw new HttpError(409, "Account or invitation limit reached");
+            state.invitations.push({ id, email, role, tokenHash: digest(token), expiresAt });
+            return { result: { id, token, email, role, expiresAt }, audit: event("invited", a.id, id, "invitation-created") };
+        });
+    }
+    async revoke(session: OperatorSession, id: string) {
+        await this.store.changeIdentity(state => {
+            const a = this.account(state, session, true);
+            if (!state.invitations.some(i => i.id === id)) throw new HttpError(404, "Invitation not found");
+            state.invitations = state.invitations.filter(i => i.id !== id);
+            return { result: undefined, audit: event("invitation-revoked", a.id, id, "invitation-revoked") };
+        });
+    }
+    async accept(input: unknown) {
+        const body = z.object({ token: accountSchemas.token, name: accountSchemas.name, password: accountSchemas.password }).strict().parse(input);
+        const tokenHash = digest(body.token);
+        const preliminary = await this.store.identityState();
+        if (!preliminary.initialized || !preliminary.invitations.some(i => i.tokenHash === tokenHash && i.expiresAt > Date.now()))
+            throw invalidToken();
+        const passwordHash = await hashPassword(body.password);
+        const account = await this.store.changeIdentity(state => {
+            const i = state.invitations.find(i => i.tokenHash === tokenHash && i.expiresAt > Date.now());
+            if (!state.initialized || !i)
+                throw invalidToken();
+            if (state.accounts.length >= 256 || state.accounts.some(a => a.email === i.email))
+                throw new HttpError(409, "Account limit or duplicate email");
+            const a: Account = { id: randomUUID(), name: body.name, email: i.email, role: i.role, tenant: "local", active: true, revision: 1, passwordHash };
+            state.accounts.push(a);
+            state.invitations = state.invitations.filter(inv => inv.id !== i.id);
+            return { result: a, audit: event("invitation-accepted", a.id, a.id, "invitation-accepted") };
+        });
+        return this.session(account);
+    }
+    async changeMember(session: OperatorSession, id: string, input: unknown) {
+        const patch = z.object({ role: accountSchemas.role.optional(), active: z.boolean().optional() }).strict().refine(p => Object.keys(p).length > 0).parse(input);
+        return this.store.changeIdentity(state => {
+            const actor = this.account(state, session, true), a = state.accounts.find(a => a.id === id);
+            if (!a)
+                throw new HttpError(404, "Account not found");
+            Object.assign(a, patch);
+            if (!state.accounts.some(a => a.active && a.role === "administrator"))
+                throw new HttpError(409, "The last active administrator must remain enabled");
+            a.revision++;
+            return { result: safeAccount(a), audit: event("member-changed", actor.id, a.id, "authority-changed") };
+        });
+    }
+    async recovery(session: OperatorSession, id: string, input: unknown) {
+        z.object({}).strict().parse(input);
+        const token = randomBytes(32).toString("hex"), expiresAt = Date.now() + 15 * 60000;
+        return this.store.changeIdentity(state => {
+            const actor = this.account(state, session, true), a = state.accounts.find(a => a.id === id);
+            if (!a)
+                throw new HttpError(404, "Account not found");
+            state.recoveries = state.recoveries.filter(r => r.accountId !== id && r.expiresAt > Date.now());
+            state.recoveries.push({ accountId: id, tokenHash: digest(token), expiresAt });
+            return { result: { token, expiresAt }, audit: event("recovery-issued", actor.id, id, "administrator-recovery") };
+        });
+    }
+    async changePassword(session: OperatorSession, input: unknown) {
+        const body = z.object({ currentPassword: accountSchemas.password, password: accountSchemas.password }).strict().parse(input);
+        const account = this.account(await this.store.identityState(), session);
+        if (!await verifyPassword(body.currentPassword, account.passwordHash))
+            throw new HttpError(401, "Invalid current password");
+        const passwordHash = await hashPassword(body.password);
+        await this.store.changeIdentity(state => {
+            const a = this.account(state, session);
+            a.passwordHash = passwordHash;
+            a.revision++;
+            state.recoveries = state.recoveries.filter(r => r.accountId !== a.id);
+            return { result: undefined, audit: event("password-changed", a.id, a.id, "current-password-verified") };
+        });
+    }
+    async reset(input: unknown) {
+        const body = z.object({ token: accountSchemas.token, password: accountSchemas.password }).strict().parse(input);
+        const tokenHash = digest(body.token);
+        if (!(await this.store.identityState()).recoveries.some(r => r.tokenHash === tokenHash && r.expiresAt > Date.now()))
+            throw invalidToken();
+        const passwordHash = await hashPassword(body.password);
+        await this.store.changeIdentity(state => {
+            const recovery = state.recoveries.find(r => r.tokenHash === tokenHash && r.expiresAt > Date.now());
+            const a = state.accounts.find(a => a.id === recovery?.accountId);
+            if (!a || !recovery)
+                throw invalidToken();
+            a.passwordHash = passwordHash;
+            a.revision++;
+            state.recoveries = state.recoveries.filter(r => r.accountId !== a.id);
+            return { result: undefined, audit: event("password-reset", a.id, a.id, "recovery-token-consumed") };
+        });
+    }
+}
+
+FILE server/security/operators.ts
+diff --git "a/.agentbrake-local\\service-base\\server\\security\\operators.ts" b/server/security/operators.ts
+index 267d32e..1aac206 100644
+--- "a/.agentbrake-local\\service-base\\server\\security\\operators.ts"
++++ b/server/security/operators.ts
+@@ -17,24 +17,26 @@ const operatorSchema = z
+     name: z.string().min(1).max(80),
+     tenant: z.string().regex(/^[a-zA-Z0-9_-]{1,64}$/),
+     role: z.enum(["administrator", "operator", "approver", "viewer"]),
+     key: z.string().min(24).max(200),
+   })
+   .strict();
+ const equal = (a: string, b: string) =>
+   timingSafeEqual(Buffer.from(digest(a)), Buffer.from(digest(b)));
+-type Session = {
++export type OperatorSession = {
+   actor: OperatorIdentity;
+   expiresAt: number;
+   csrfToken: string;
++  authMode?: "key" | "account";
++  revision?: number;
+ };
+ export class LocalOperators {
+   private identities: { actor: OperatorIdentity; keyHash: string }[];
+-  private sessions = new Map<string, Session>();
++  private sessions = new Map<string, OperatorSession>();
+   readonly team: boolean;
+   constructor(adminKey: string, configured?: OperatorCredential[]) {
+     this.team = configured !== undefined;
+     const operators = z
+       .array(operatorSchema)
+       .min(1)
+       .max(32)
+       .parse(
+@@ -57,31 +59,39 @@ export class LocalOperators {
+       !operators.some((o) => o.tenant === "local" && o.role === "administrator")
+     )
+       throw Error("A local administrator is required");
+     this.identities = operators.map(({ key, ...actor }) => ({
+       actor,
+       keyHash: digest(key),
+     }));
+   }
+-  login(key: string) {
++  credential(key: string) {
+     const hashed = digest(key);
+     const matched = this.identities.find((o) => equal(o.keyHash, hashed));
+     if (!matched) throw new HttpError(401, "Invalid operator credential");
+     if (matched.actor.tenant !== "local")
+       throw new HttpError(403, "Tenant access denied");
++    return matched.actor;
++  }
++  login(key: string) {
++    return this.issue(this.credential(key), "key");
++  }
++  issue(actor: OperatorIdentity, authMode: "key" | "account", revision?: number) {
+     for (const [id, session] of this.sessions)
+       if (session.expiresAt <= Date.now()) this.sessions.delete(id);
+     if (this.sessions.size >= 256)
+       throw new HttpError(429, "Session limit reached");
+     const token = randomBytes(32).toString("hex");
+     const session = {
+-      actor: matched.actor,
++      actor,
+       expiresAt: Date.now() + 8 * 3600_000,
+       csrfToken: randomBytes(32).toString("hex"),
++      authMode,
++      revision,
+     };
+     this.sessions.set(digest(token), session);
+     return { token, ...session };
+   }
+   authenticate(cookie?: string) {
+     const token = cookie
+       ?.split(";")
+       .map((x) => x.trim())
+@@ -91,17 +101,17 @@ export class LocalOperators {
+     if (
+       !session ||
+       session.expiresAt <= Date.now() ||
+       session.actor.tenant !== "local"
+     )
+       throw new HttpError(401, "Operator sign-in required");
+     return session;
+   }
+-  checkCsrf(session: Session, token: unknown) {
++  checkCsrf(session: OperatorSession, token: unknown) {
+     if (
+       this.team &&
+       (typeof token !== "string" || !equal(session.csrfToken, token))
+     )
+       throw new HttpError(403, "Session verification required");
+   }
+   logout(cookie?: string) {
+     const token = cookie
+
+FILE server/store.ts
+diff --git "a/.agentbrake-local\\service-base\\server\\store.ts" b/server/store.ts
+index ac3b54b..0b84c95 100644
+--- "a/.agentbrake-local\\service-base\\server\\store.ts"
++++ b/server/store.ts
+@@ -12,16 +12,17 @@ import type {
+   ControlStore,
+   ReservationCheck,
+ } from "./control-store.js";
+ import { auditDetails } from "./control-store.js";
+ import type { TaskGrant } from "./policy/contracts.js";
+ import { AUDIENCE, POLICY_VERSION } from "./policy/contracts.js";
+ import { activityWhere } from "./storage-query.js";
+ import type { ActivityQuery, AuditQuery } from "./control-store.js";
++import type { IdentityState, IdentityChange } from "./security/accounts-state.js";
+ export const digest = (value: string) =>
+   createHash("sha256").update(value).digest("hex");
+ export function canonical(value: unknown): string {
+   if (value === null || typeof value !== "object") return JSON.stringify(value);
+   if (Array.isArray(value)) return "[" + value.map(canonical).join(",") + "]";
+   return (
+     "{" +
+     Object.keys(value)
+@@ -44,32 +45,53 @@ export class Store implements ControlStore {
+       .exec(`PRAGMA journal_mode=WAL; PRAGMA foreign_keys=ON; PRAGMA busy_timeout=5000;
+       CREATE TABLE IF NOT EXISTS settings (id INTEGER PRIMARY KEY CHECK(id=1), paused INTEGER NOT NULL, policies TEXT NOT NULL);
+       INSERT OR IGNORE INTO settings VALUES (1,0,'{"reads":"allow","databaseWrites":"approval","githubWrites":"approval"}');
+       CREATE TABLE IF NOT EXISTS policy_revisions (version INTEGER PRIMARY KEY AUTOINCREMENT, policies TEXT NOT NULL);
+       INSERT INTO policy_revisions(policies) SELECT policies FROM settings WHERE NOT EXISTS (SELECT 1 FROM policy_revisions);
+       CREATE TABLE IF NOT EXISTS agents (id TEXT PRIMARY KEY, token_hash TEXT UNIQUE NOT NULL, data TEXT NOT NULL);
+       CREATE TABLE IF NOT EXISTS actions (id TEXT PRIMARY KEY, agent_id TEXT NOT NULL, request_id TEXT NOT NULL, status TEXT NOT NULL, data TEXT NOT NULL, UNIQUE(agent_id,request_id));
+       CREATE TABLE IF NOT EXISTS audit (seq INTEGER PRIMARY KEY AUTOINCREMENT, data TEXT NOT NULL, previous_hash TEXT NOT NULL, hash TEXT NOT NULL);
++      CREATE TABLE IF NOT EXISTS identity_state (id INTEGER PRIMARY KEY CHECK(id=1), data TEXT NOT NULL);
++      INSERT OR IGNORE INTO identity_state VALUES (1,'{"initialized":false,"accounts":[],"invitations":[],"recoveries":[]}');
+       CREATE TRIGGER IF NOT EXISTS audit_no_update BEFORE UPDATE ON audit BEGIN SELECT RAISE(ABORT,'audit is append-only'); END;
+       CREATE TRIGGER IF NOT EXISTS audit_no_delete BEFORE DELETE ON audit BEGIN SELECT RAISE(ABORT,'audit is append-only'); END;
+       CREATE TABLE IF NOT EXISTS customers (id INTEGER PRIMARY KEY, name TEXT NOT NULL, plan TEXT NOT NULL, status TEXT NOT NULL, version INTEGER NOT NULL DEFAULT 0);
+       INSERT OR IGNORE INTO customers VALUES (1,'Acme Studio','Enterprise','active',0),(2,'Orbit Labs','Growth','active',0),(3,'Northstar','Enterprise','active',0),(4,'Forma Design','Starter','active',0);
+       CREATE TABLE IF NOT EXISTS sandbox_issues (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL, body TEXT NOT NULL);
+     `);
+     for (const action of this.actions().filter(
+       (a) => a.status === "executing" || a.status === "queued",
+     )) {
+       action.status = "unknown";
+       action.reason =
+         "Server restarted during execution. Reconcile the destination before retrying with a new request ID.";
+       this.saveAction(action);
+       this.audit("execution.unknown", { actionId: action.id });
+     }
+   }
++  identityState(): IdentityState {
++    const row = this.db.prepare("SELECT data FROM identity_state WHERE id=1").get();
++    if (!row) throw Error("Identity state is unavailable");
++    return JSON.parse(row.data as string);
++  }
++  changeIdentity<T>(change: IdentityChange<T>): T {
++    this.db.exec("BEGIN IMMEDIATE");
++    try {
++      const state = this.identityState();
++      const {result, audit} = change(state);
++      this.db.prepare("UPDATE identity_state SET data=? WHERE id=1").run(JSON.stringify(state));
++      this.audit(audit.type, audit.details);
++      this.db.exec("COMMIT");
++      return result;
++    } catch(error) {
++      this.db.exec("ROLLBACK");
++      throw error;
++    }
++  }
+   settings(): { paused: boolean; policies: Policies; revision: number } {
+     const row = this.db.prepare("SELECT * FROM settings WHERE id=1").get()!;
+     return {
+       paused: Boolean(row.paused),
+       policies: JSON.parse(row.policies as string),
+       revision: Number(
+         this.db
+           .prepare("SELECT MAX(version) AS version FROM policy_revisions")
+
+FILE tests/enforcement/accounts-fixture.ts
+NEW
+import assert from "node:assert/strict";
+import { createApp } from "../../server/app.js";
+import type { ControlStore } from "../../server/control-store.js";
+export const key = "fixture-generated-admin-key-000000000000000";
+export const password = "Fixture password one 47!";
+export const nextPassword = "Fixture password two 93!";
+const operators = [{ id: "administrator", name: "Owner", tenant: "local", role: "administrator" as const, key }, { id: "viewer-key", name: "Viewer", tenant: "local", role: "viewer" as const, key: "fixture-old-viewer-key-00000000000000000" }];
+export async function accountApi(store: ControlStore, managedAccounts = true) {
+    const system = createApp({ store, databasePath: ":memory:", adminKey: "fixture-binding-key-00000000000000000000", operators, managedAccounts });
+    const server = system.app.listen(0, "127.0.0.1");
+    await new Promise<void>(r => server.once("listening", r));
+    const base = "http://127.0.0.1:" + (server.address() as {
+        port: number;
+    }).port;
+    const request = async (path: string, body?: unknown, session?: any, method = body === undefined ? "GET" : "POST") => {
+        const response = await fetch(base + path, { method, headers: { "Content-Type": "application/json", ...(session ? { Cookie: session.cookie, "X-AB-CSRF": session.csrfToken } : {}) }, ...(body === undefined ? {} : { body: JSON.stringify(body) }) });
+        const data = await response.json();
+        return { status: response.status, ...data, cookie: response.headers.get("set-cookie")?.split(";")[0] };
+    };
+    return { request, close: async () => { server.closeAllConnections(); await new Promise<void>((r, j) => server.close(e => e ? j(e) : r())); await system.close(); } };
+}
+export async function exerciseAccounts(store: ControlStore) {
+    const f = await accountApi(store);
+    const r = f.request;
+    const secrets: string[] = [key, password, nextPassword];
+    try {
+        assert.deepEqual(await r("/api/setup"), { status: 200, managed: true, initialized: false, cookie: undefined });
+        const old = await r("/api/login", { key: operators[1].key });
+        assert.equal(old.status, 200);
+        const setup = { key, name: "Owner", email: " OWNER@EXAMPLE.TEST ", password };
+        assert.equal((await r("/api/setup", { ...setup, key: operators[1].key })).status, 401);
+        assert.equal((await r("/api/setup", { ...setup, role: "administrator" })).status, 400);
+        assert.equal((await r("/api/setup", { ...setup, password: "short" })).status, 400);
+        const owner = await r("/api/setup", setup);
+        assert.equal(owner.status, 200);
+        assert.equal(owner.actor.id, "administrator");
+        assert.equal(owner.authMode, "account");
+        assert.equal((await r("/api/setup", setup)).status, 409);
+        assert.equal((await r("/api/login", { key })).status, 401);
+        assert.equal((await r("/api/session", undefined, old)).status, 401);
+        assert.equal((await r("/api/team", undefined, { ...owner, csrfToken: "" })).status, 200);
+        assert.equal((await r("/api/register", { email: "public@example.test", password })).status, 404);
+        assert.equal((await r("/api/team/invitations", { email: "a@example.test", role: "viewer" }, { ...owner, csrfToken: "wrong" })).status, 403);
+        assert.equal((await r("/api/team/invitations", { email: "a@example.test", role: "viewer", tenant: "other" }, owner)).status, 400);
+        const invite = async (email: string, role: string) => { const i = await r("/api/team/invitations", { email, role }, owner); assert.equal(i.status, 201); secrets.push(i.token); return i; };
+        const i = await invite("viewer@example.test", "viewer");
+        assert.equal((await r("/api/invitations/accept", { token: i.token, name: "Reader", password, role: "administrator" })).status, 400);
+        const viewer = await r("/api/invitations/accept", { token: i.token, name: "Reader", password });
+        assert.equal(viewer.status, 200);
+        assert.equal((await r("/api/invitations/accept", { token: i.token, name: "Replay", password })).status, 400);
+        assert.equal((await r("/api/team", undefined, viewer)).status, 403);
+        assert.equal((await r("/api/team/invitations", { email: "VIEWER@example.test", role: "administrator" }, owner)).status, 409);
+        assert.equal((await r("/api/team/" + viewer.actor.id, { active: false }, owner, "PATCH")).status, 200);
+        assert.equal((await r("/api/session", undefined, viewer)).status, 401);
+        assert.equal((await r("/api/login", { email: "viewer@example.test", password })).status, 401);
+        await r("/api/team/" + viewer.actor.id, { active: true }, owner, "PATCH");
+        const operatorInvite = await invite("operator@example.test", "operator");
+        const operator = await r("/api/invitations/accept", { token: operatorInvite.token, name: "Operator", password });
+        assert.equal((await r("/api/team", undefined, operator)).status, 403);
+        assert.equal((await r("/api/team/administrator", { active: false }, owner, "PATCH")).status, 409);
+        assert.equal((await r("/api/team/administrator", { role: "viewer" }, owner, "PATCH")).status, 409);
+        assert.equal((await r("/api/team/administrator", {}, owner, "PATCH")).status, 400);
+        const before = await store.identityState();
+        const parallelOwner = await r("/api/login", { email: "owner@example.test", password });
+        assert.equal(parallelOwner.status, 200);
+        assert.equal((await r("/api/password/change", { currentPassword: "wrong current password", password: nextPassword }, owner)).status, 401);
+        assert.deepEqual(await store.identityState(), before);
+        assert.equal((await r("/api/profile", { name: "Renamed" }, owner, "PATCH")).status, 200);
+        assert.equal((await r("/api/profile", undefined, owner)).account.name, "Renamed");
+        assert.equal((await r("/api/password/change", { currentPassword: password, password: nextPassword }, owner)).status, 200);
+        assert.equal((await r("/api/session", undefined, owner)).status, 401);
+        assert.equal((await r("/api/session", undefined, parallelOwner)).status, 401);
+        const owner2 = await r("/api/login", { email: "owner@example.test", password: nextPassword });
+        assert.equal(owner2.status, 200);
+        const recovery = await r("/api/team/" + operator.actor.id + "/recovery", {}, owner2);
+        assert.equal(recovery.status, 200);
+        secrets.push(recovery.token);
+        assert.equal((await r("/api/password/reset", { token: recovery.token, password: nextPassword })).status, 200);
+        assert.equal((await r("/api/password/reset", { token: recovery.token, password })).status, 400);
+        assert.equal((await r("/api/session", undefined, operator)).status, 401);
+        const rev = await r("/api/team/invitations", { email: "revoke@example.test", role: "viewer" }, owner2);
+        secrets.push(rev.token);
+        assert.equal((await r("/api/team/invitations/" + rev.id, undefined, owner2, "DELETE")).status, 200);
+        assert.equal((await r("/api/invitations/accept", { token: rev.token, name: "Revoked", password })).status, 400);
+        const adminInvite = await r("/api/team/invitations", { email: "admin2@example.test", role: "administrator" }, owner2);
+        secrets.push(adminInvite.token);
+        const admin2 = await r("/api/invitations/accept", { token: adminInvite.token, name: "Second admin", password });
+        assert.equal(admin2.status, 200);
+        const competing = await Promise.all([r("/api/team/administrator", { role: "viewer" }, owner2, "PATCH"), r("/api/team/" + admin2.actor.id, { active: false }, admin2, "PATCH")]);
+        assert.equal(competing.filter(v => v.status === 200).length, 1);
+        assert.ok(competing.every(v => [200, 409].includes(v.status)));
+        assert.equal((await store.identityState()).accounts.filter(a => a.active && a.role === "administrator").length, 1);
+        const remaining = (await store.identityState()).accounts.find(a => a.active && a.role === "administrator")!;
+        const stale = remaining.id === "administrator" ? admin2 : owner2;
+        assert.equal((await r("/api/session", undefined, stale)).status, 401);
+        const current = await r("/api/login", { email: remaining.email, password: remaining.id === "administrator" ? nextPassword : password });
+        const safe = JSON.stringify([await r("/api/team", undefined, current), await r("/api/profile", undefined, current), await r("/api/audit/export", undefined, current), await store.auditTrail()]);
+        for (const secret of secrets)
+            assert.ok(!safe.includes(secret));
+        const persisted = JSON.stringify(await store.identityState());
+        for (const secret of secrets) assert.ok(!persisted.includes(secret));
+        for (const account of (await store.identityState()).accounts) {
+            assert.ok(!safe.includes(account.passwordHash.hash));
+            assert.ok(!safe.includes(account.passwordHash.salt));
+        }
+        assert.ok(!safe.includes("passwordHash"));
+        assert.ok(!safe.includes("salt"));
+        assert.equal(await store.verifyAudit(), true);
+        return { email: remaining.email, password: remaining.id === "administrator" ? nextPassword : password };
+    }
+    finally {
+        await f.close();
+    }
+}
+
+FILE tests/enforcement/accounts.test.ts
+NEW
+import test from "node:test";
+import assert from "node:assert/strict";
+import { Store } from "../../server/store.js";
+import { mkdtempSync, rmSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { accountApi, exerciseAccounts, key, password, nextPassword } from "./accounts-fixture.js";
+test("managed identities enforce actual HTTP authority, credentials, tokens and revisions", async () => { await exerciseAccounts(new Store(":memory:")); });
+test("account restart keeps managed key lockout and accounts", async () => {
+    const dir = mkdtempSync(join(tmpdir(), "agentbrake-account-"));
+    const path = join(dir, "control.db");
+    try {
+        const login = await exerciseAccounts(new Store(path));
+        const f = await accountApi(new Store(path));
+        try {
+            assert.equal((await f.request("/api/setup")).initialized, true);
+            assert.equal((await f.request("/api/login", { key })).status, 401);
+            assert.equal((await f.request("/api/login", login)).status, 200);
+        }
+        finally {
+            await f.close();
+        }
+    }
+    finally {
+        rmSync(dir, { recursive: true, force: true });
+    }
+});
+test("identity and audit rollback together on audit insert failure", async () => {
+    const store = new Store(":memory:");
+    const f = await accountApi(store);
+    try {
+        const before = await store.identityState();
+        const audit = store.auditTrail();
+        store.db.exec("CREATE TRIGGER fixture_audit_failure BEFORE INSERT ON audit BEGIN SELECT RAISE(ABORT,'fixture unavailable'); END");
+        assert.equal((await f.request("/api/setup", { key, name: "Owner", email: "owner@example.test", password })).status, 503);
+        assert.deepEqual(await store.identityState(), before);
+        assert.deepEqual(store.auditTrail(), audit);
+        store.db.exec("DROP TRIGGER fixture_audit_failure");
+        const owner = await f.request("/api/setup", { key, name: "Owner", email: "owner@example.test", password });
+        const initialized = await store.identityState();
+        const history = store.auditTrail();
+        store.db.exec("CREATE TRIGGER fixture_audit_failure BEFORE INSERT ON audit BEGIN SELECT RAISE(ABORT,'fixture unavailable'); END");
+        assert.equal((await f.request("/api/profile", { name: "Must rollback" }, owner, "PATCH")).status, 503);
+        assert.deepEqual(await store.identityState(), initialized);
+        assert.deepEqual(store.auditTrail(), history);
+    }
+    finally {
+        await f.close();
+    }
+});
+test("explicit compatibility mode rejects managed account methods", async () => { const f = await accountApi(new Store(":memory:"), false); try {
+    assert.equal((await f.request("/api/setup")).managed, false);
+    assert.equal((await f.request("/api/setup", { key, name: "Owner", email: "owner@example.test", password })).status, 409);
+    const s = await f.request("/api/login", { key });
+    assert.equal(s.status, 200);
+    assert.equal((await f.request("/api/profile", undefined, s)).status, 409);
+}
+finally {
+    await f.close();
+} });
+test("invitation and recovery expiration are checked by actual public HTTP endpoints", async () => {
+    const store = new Store(":memory:");
+    const f = await accountApi(store);
+    try {
+        const owner = await f.request("/api/setup", { key, name: "Owner", email: "owner@example.test", password });
+        const invitation = await f.request("/api/team/invitations", { email: "expired@example.test", role: "viewer" }, owner);
+        assert.equal(invitation.expiresAt - Date.now() > 23 * 3600000, true);
+        const recovery = await f.request("/api/team/administrator/recovery", {}, owner);
+        assert.equal(recovery.expiresAt - Date.now() > 14 * 60000, true);
+        await store.changeIdentity(state => {
+            state.invitations[0].expiresAt = Date.now() - 1;
+            state.recoveries[0].expiresAt = Date.now() - 1;
+            return { result: undefined, audit: { type: "fixture.expire", details: { actorId: "fixture", targetId: "fixture", reason: "expiry-clock-boundary" } } };
+        });
+        const before = await store.identityState();
+        const badInvite = await f.request("/api/invitations/accept", { token: invitation.token, name: "Expired", password });
+        const badReset = await f.request("/api/password/reset", { token: recovery.token, password: nextPassword });
+        assert.equal(badInvite.status, 400);
+        assert.equal(badReset.status, 400);
+        assert.equal(badInvite.error, badReset.error);
+        assert.deepEqual(await store.identityState(), before);
+        assert.equal((await f.request("/api/session", undefined, owner)).status, 200);
+    }
+    finally {
+        await f.close();
+    }
+});
+test("production asynchronous scrypt is salted, bounded to two and does not block the event loop", async () => {
+    const { hashPassword, verifyPassword, passwordParameters } = await import("../../server/security/accounts-password.js");
+    assert.deepEqual(passwordParameters, { N: 131072, r: 8, p: 1, maxmem: 192 * 1024 * 1024 });
+    let timerRan = false;
+    const timer = new Promise<void>(resolve => setTimeout(() => { timerRan = true; resolve(); }, 0));
+    let finished = false;
+    const first = hashPassword(password).then(value => { finished = true; return value; }), second = hashPassword(password);
+    await assert.rejects(hashPassword(password), (e: any) => e.status === 429);
+    await timer;
+    assert.equal(finished, false);
+    const [a, b] = await Promise.all([first, second]);
+    await timer;
+    assert.equal(timerRan, true);
+    assert.ok(a.salt.length >= 32);
+    assert.notEqual(a.salt, b.salt);
+    assert.notEqual(a.hash, b.hash);
+    assert.equal(await verifyPassword(password, a), true);
+    assert.equal(await verifyPassword(nextPassword, a), false);
+});
+
+FILE tests/stage2/postgres-control.test.ts
+diff --git "a/.agentbrake-local\\service-base\\tests\\stage2\\postgres-control.test.ts" b/tests/stage2/postgres-control.test.ts
+index 39590c1..2c26cbd 100644
+--- "a/.agentbrake-local\\service-base\\tests\\stage2\\postgres-control.test.ts"
++++ b/tests/stage2/postgres-control.test.ts
+@@ -3,16 +3,17 @@ import assert from "node:assert/strict";
+ import { readFileSync } from "node:fs";
+ import { createHash, randomUUID } from "node:crypto";
+ import pg from "pg";
+ import { PostgresStore } from "../../server/postgres-store.js";
+ import type { ActionRecord, Agent } from "../../server/contracts.js";
+ import type { ReservationCheck } from "../../server/control-store.js";
+ import { POLICY_VERSION } from "../../server/policy/contracts.js";
+ import { assertControlAudit } from "../enforcement/control-audit-fixture.js";
++import { accountApi, exerciseAccounts, key } from "../enforcement/accounts-fixture.js";
+ 
+ // This file is deliberately excluded from the native suite. Its dedicated run
+ // must fail, rather than silently skip, if the isolated fixture is not selected.
+ const fixtureUrl = (user: string, secret: string) =>
+   `postgresql://${user}:${encodeURIComponent(readFileSync(secret, "utf8").trim())}@control-db:5432/agentbrake_control_fixture`;
+ const input = {
+   name: "PostgreSQL control fixture",
+   tools: ["database_read", "database_update", "github_create_issue"],
+@@ -78,16 +79,40 @@ test("PostgreSQL control fixture", async (t) => {
+     ),
+   });
+   const first = await PostgresStore.open(url);
+   const second = await PostgresStore.open(url);
+   const runtime = new pg.Pool({ connectionString: url });
+   try {
+     await first.setPaused(false);
+ 
++    await t.test("managed account HTTP workflow, persistence and audit rollback use the real PostgreSQL store", async () => {
++      // Fixture volumes are ephemeral; a managed bootstrap must only happen once.
++      const credentials = await exerciseAccounts(await PostgresStore.open(url));
++      const reopened = await PostgresStore.open(url);
++      const api = await accountApi(reopened);
++      try {
++        assert.equal((await api.request("/api/setup")).initialized, true);
++        assert.equal((await api.request("/api/login", {key})).status, 401);
++        const session = await api.request("/api/login", credentials);
++        assert.equal(session.status, 200);
++        const state = await reopened.identityState();
++        const audit = await reopened.auditTrail();
++        await owner.query("REVOKE INSERT ON audit FROM control_runtime");
++        try {
++          assert.equal((await api.request("/api/profile", {name:"Must rollback"}, session, "PATCH")).status, 503);
++          assert.deepEqual(await reopened.identityState(), state);
++          assert.deepEqual(await reopened.auditTrail(), audit);
++        } finally {
++          await owner.query("GRANT INSERT ON audit TO control_runtime");
++        }
++        assert.equal(await reopened.verifyAudit(), true);
++      } finally { await api.close(); }
++    });
++
+     await t.test(
+       "real team API actor attribution survives PostgreSQL reopen and exports",
+       async () => {
+         const initial = await first.settings();
+         const apiStore = await PostgresStore.open(url);
+         const { id, audit } = await assertControlAudit(apiStore);
+         const reopened = await PostgresStore.open(url);
+         try {

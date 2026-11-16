@@ -1,0 +1,98 @@
+{
+  "runId": "184ba8b4-a4cc-4530-814f-01ed7c6d5647",
+  "startedAt": "2026-11-16T14:52:28.443Z",
+  "finishedAt": "2026-11-16T14:56:53.915Z",
+  "gitCommit": null,
+  "gitReason": "Workspace is not a Git repository; no commit fabricated.",
+  "sourceHash": "d036bd48e5521a477fb407cf71a8692aee31b7275da0d170fa76e64ca2f66700",
+  "policyHash": "9ac719fef979ee7b37c5c5ef3173621453782a0a02d432727391beeff1234d14",
+  "environment": {
+    "platform": "win32",
+    "architecture": "x64",
+    "node": "v22.13.0",
+    "opa": "1.22.4",
+    "packageLockHash": "8747383e2aec7ccca95af34f02a8b251b663537468700830c984d0bfe297c31f"
+  },
+  "environmentHash": "af2eac7303cc23dd2eae621295fd69cbd8c799e1af875ceb069a4a85b2c360b5",
+  "commands": [
+    {
+      "label": "rego",
+      "command": ".tools\\opa.exe test services/policy -v",
+      "startedAt": "2026-11-16T14:52:28.903Z",
+      "finishedAt": "2026-11-16T14:52:28.984Z",
+      "exitCode": 0,
+      "result": "PASS",
+      "log": "rego.log"
+    },
+    {
+      "label": "node-tests",
+      "command": "C:\\Program Files\\nodejs\\node.exe --import tsx --test --test-concurrency=1 tests\\enforcement\\accounts.test.ts tests\\enforcement\\approval-preview.test.ts tests\\enforcement\\backup-format.test.mjs tests\\enforcement\\benchmark-metrics.test.ts tests\\enforcement\\compose-environment.test.mjs tests\\enforcement\\control-audit.test.ts tests\\enforcement\\control-experience.test.ts tests\\enforcement\\core.test.ts tests\\enforcement\\gateway-bridge.test.ts tests\\enforcement\\mcp-local-config.test.ts tests\\enforcement\\mcp-protocol.test.ts tests\\enforcement\\product-recovery.test.mjs tests\\enforcement\\remote-fixture.test.ts tests\\enforcement\\rest-audit.test.ts tests\\enforcement\\retention.test.ts tests\\enforcement\\review-regressions.test.ts tests\\enforcement\\source-package.test.mjs tests\\enforcement\\stage2-races.test.ts tests\\enforcement\\task-grants.test.ts tests\\enforcement\\team-approvals.test.ts tests\\enforcement\\telemetry.test.ts tests\\enforcement\\transport-restart.test.ts tests\\enforcement\\volume-archive.test.mjs tests\\failure-cases.test.ts tests\\gateway.test.ts tests\\mcp.test.ts tests\\policy\\pdp.test.ts tests\\product-ui\\proxy.test.ts tests\\stage2\\git-fixture.test.ts tests\\stage2\\postgres-target.test.ts",
+      "startedAt": "2026-11-16T14:52:28.986Z",
+      "finishedAt": "2026-11-16T14:55:01.290Z",
+      "exitCode": 0,
+      "result": "PASS",
+      "log": "node-tests.log"
+    },
+    {
+      "label": "typecheck",
+      "command": "C:\\Program Files\\nodejs\\node.exe node_modules/typescript/bin/tsc --noEmit",
+      "startedAt": "2026-11-16T14:55:01.291Z",
+      "finishedAt": "2026-11-16T14:55:06.434Z",
+      "exitCode": 0,
+      "result": "PASS",
+      "log": "typecheck.log"
+    },
+    {
+      "label": "build",
+      "command": "C:\\Program Files\\nodejs\\node.exe node_modules/vite/bin/vite.js build",
+      "startedAt": "2026-11-16T14:55:06.434Z",
+      "finishedAt": "2026-11-16T14:55:09.595Z",
+      "exitCode": 0,
+      "result": "PASS",
+      "log": "build.log"
+    },
+    {
+      "label": "dashboard-build",
+      "command": "C:\\Program Files\\nodejs\\node.exe scripts/build-dashboard.mjs",
+      "startedAt": "2026-11-16T14:55:09.595Z",
+      "finishedAt": "2026-11-16T14:55:36.026Z",
+      "exitCode": 0,
+      "result": "PASS",
+      "log": "dashboard-build.log"
+    },
+    {
+      "label": "browser",
+      "command": "C:\\Program Files\\nodejs\\node.exe tests/product-ui/run.mjs",
+      "startedAt": "2026-11-16T14:55:36.027Z",
+      "finishedAt": "2026-11-16T14:56:52.922Z",
+      "exitCode": 0,
+      "result": "PASS",
+      "log": "browser.log"
+    },
+    {
+      "label": "upstream-proof",
+      "command": "C:\\Program Files\\nodejs\\node.exe --import tsx tests/evidence-scenarios.ts F:\\project love\\AgentBrake\\docs\\evidence\\184ba8b4-a4cc-4530-814f-01ed7c6d5647\\upstream-proof.json",
+      "startedAt": "2026-11-16T14:56:52.922Z",
+      "finishedAt": "2026-11-16T14:56:53.791Z",
+      "exitCode": 0,
+      "result": "PASS",
+      "log": "upstream-proof.log"
+    },
+    {
+      "label": "docker-preflight",
+      "command": "docker --config F:\\project love\\AgentBrake\\.agentbrake-local\\docker-public --host npipe:////./pipe/docker_engine version --format {{json .Server}}",
+      "startedAt": "2026-11-16T14:56:53.791Z",
+      "finishedAt": "2026-11-16T14:56:53.914Z",
+      "exitCode": 0,
+      "result": "PASS",
+      "log": "docker-preflight.log"
+    }
+  ],
+  "scope": "Authenticated native OPA; loopback HTTP/MCP; counted synthetic SQLite/repository fixture adapters. No external GitHub or PostgreSQL calls.",
+  "isolation": {
+    "T20": "NOT RUN",
+    "reason": "Run verify:isolation separately; native tests do not prove container isolation."
+  },
+  "milestoneA": "See separate native+isolation milestone evidence",
+  "result": "PASS_SCOPED"
+}

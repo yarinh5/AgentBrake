@@ -1,0 +1,25 @@
+{
+  "reason": "Compose profile omitted by historical verifier; explicitly cleaned only these recorded AgentBrake runs",
+  "result": "PASS",
+  "records": [
+    {
+      "networksRemoved": 2,
+      "remaining": 0,
+      "containersRemoved": 2,
+      "project": "agentbrake-a-48e21003"
+    },
+    {
+      "networksRemoved": 2,
+      "remaining": 0,
+      "containersRemoved": 2,
+      "project": "agentbrake-a-916de6a4"
+    },
+    {
+      "networksRemoved": 2,
+      "remaining": 0,
+      "containersRemoved": 2,
+      "project": "agentbrake-a-a5a58932"
+    }
+  ],
+  "at": "2026-11-16T11:35:44.2388319Z"
+}

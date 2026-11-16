@@ -1,0 +1,259 @@
+name: ${COMPOSE_PROJECT_NAME:?Use scripts/product.mjs}
+x-runtime: &runtime
+  image: ${COMPOSE_PROJECT_NAME}-runtime
+  build:
+    context: ../..
+    dockerfile: ${RUNTIME_DOCKERFILE:-infra/local/Dockerfile}
+    args: { NODE_IMAGE: "${NODE_IMAGE:?Pinned node image required}" }
+  user: "1000:1000"
+  read_only: true
+  cap_drop: [ALL]
+  security_opt: [no-new-privileges:true]
+  pids_limit: 128
+  mem_limit: 512m
+  tmpfs: ["/tmp:size=64m,mode=1777"]
+  labels: { com.agentbrake.product: "${INSTALLATION_ID}" }
+  logging:
+    driver: json-file
+    options:
+      { max-size: "${LOG_MAX_SIZE:-10m}", max-file: "${LOG_MAX_FILES:-3}" }
+services:
+  ingress:
+    <<: *runtime
+    command: [node, infra/product/ingress.mjs]
+    networks: [loopback-ingress, dashboard]
+    ports: ["127.0.0.1:${DASHBOARD_PORT}:3000"]
+    depends_on: { dashboard: { condition: service_healthy } }
+    healthcheck:
+      test:
+        [
+          CMD,
+          node,
+          -e,
+          "fetch('http://127.0.0.1:3000/api/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))",
+        ]
+      interval: 3s
+      timeout: 3s
+      retries: 30
+  volume-init:
+    image: ${NODE_IMAGE}
+    user: "0:0"
+    read_only: true
+    cap_drop: [ALL]
+    cap_add: [CHOWN, DAC_OVERRIDE, FOWNER]
+    security_opt: [no-new-privileges:true]
+    network_mode: none
+    command:
+      [
+        sh,
+        -c,
+        "chown 70:70 /control /target && chmod 700 /control /target && chown 1000:1000 /git && chmod 700 /git",
+      ]
+    volumes: [control-data:/control, target-data:/target, git-data:/git]
+    labels: { com.agentbrake.product: "${INSTALLATION_ID}" }
+  dashboard:
+    image: ${COMPOSE_PROJECT_NAME}-dashboard
+    build:
+      context: ../..
+      dockerfile: apps/dashboard/Dockerfile
+      args: { NODE_IMAGE: "${NODE_IMAGE}" }
+    user: "1000:1000"
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    pids_limit: 128
+    mem_limit: 512m
+    tmpfs: ["/tmp:size=64m,mode=1777"]
+    environment:
+      AGENTBRAKE_CONTROL_URL: http://control-api:4314
+      NEXT_TELEMETRY_DISABLED: "1"
+      PORT: "3000"
+      HOSTNAME: 0.0.0.0
+    networks: [dashboard]
+    depends_on: { control-api: { condition: service_healthy } }
+    healthcheck:
+      test:
+        [
+          CMD,
+          node,
+          -e,
+          "fetch('http://127.0.0.1:3000/api/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))",
+        ]
+      interval: 3s
+      timeout: 3s
+      retries: 40
+    labels: { com.agentbrake.product: "${INSTALLATION_ID}" }
+  control-api:
+    <<: *runtime
+    command: [node, --import, tsx, server/product.ts]
+    environment: { AGENTBRAKE_PRODUCT: "1", AGENTBRAKE_ROLE: control }
+    networks: [dashboard, control]
+    volumes:
+      - ${INSTALL_DIR}/operators.json:/run/secrets/operators.json:ro
+      - ${INSTALL_DIR}/session-key:/run/secrets/session-key:ro
+      - ${INSTALL_DIR}/bridge-key:/run/secrets/bridge-key:ro
+      - ${INSTALL_DIR}/control-password:/run/secrets/control-password:ro
+    depends_on: { gateway: { condition: service_healthy } }
+    healthcheck:
+      test: [CMD, node, -e, "fetch('http://127.0.0.1:4314/api/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 3s
+      timeout: 2s
+      retries: 30
+  gateway:
+    <<: *runtime
+    command: [node, --import, tsx, server/product.ts]
+    environment:
+      {
+        AGENTBRAKE_PRODUCT: "1",
+        AGENTBRAKE_ROLE: gateway,
+        RESULT_RETENTION_HOURS: "${RESULT_RETENTION_HOURS:-24}",
+      }
+    networks:
+      agent: {}
+      protected: {}
+      control: { aliases: [gateway-control] }
+    volumes:
+      - ${INSTALL_DIR}/binding-key:/run/secrets/binding-key:ro
+      - ${INSTALL_DIR}/bridge-key:/run/secrets/bridge-key:ro
+      - ${INSTALL_DIR}/opa-token:/run/secrets/opa-token:ro
+      - ${INSTALL_DIR}/target-token:/run/secrets/target-token:ro
+      - ${INSTALL_DIR}/control-password:/run/secrets/control-password:ro
+    depends_on:
+      control-db: { condition: service_healthy }
+      mock-target: { condition: service_healthy }
+      opa: { condition: service_started }
+    healthcheck:
+      test: [CMD, node, -e, "fetch('http://127.0.0.1:4313/api/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 3s
+      timeout: 2s
+      retries: 40
+  mock-target:
+    <<: *runtime
+    command: [node, --import, tsx, infra/local/mock-target.ts]
+    environment:
+      {
+        AGENTBRAKE_PRODUCT: "1",
+        AGENTBRAKE_INSTALLATION_ID: "${INSTALLATION_ID}",
+      }
+    networks: [protected]
+    volumes:
+      - git-data:/var/lib/agentbrake/git
+      - ${INSTALL_DIR}/target-token:/run/secrets/target-token:ro
+      - ${INSTALL_DIR}/observer-token:/run/secrets/observer-token:ro
+      - ${INSTALL_DIR}/target-read-password:/run/secrets/target-read-password:ro
+      - ${INSTALL_DIR}/target-write-password:/run/secrets/target-write-password:ro
+    depends_on:
+      volume-init: { condition: service_completed_successfully }
+      target-db: { condition: service_healthy }
+    healthcheck:
+      test: [CMD, node, -e, "fetch('http://127.0.0.1:8080/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 3s
+      timeout: 2s
+      retries: 30
+  opa:
+    image: ${OPA_IMAGE}
+    user: "1000:1000"
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    mem_limit: 256m
+    pids_limit: 64
+    command:
+      [
+        run,
+        --server,
+        --addr=0.0.0.0:8181,
+        --authentication=token,
+        --authorization=basic,
+        --log-level=error,
+        /policy/agentbrake.rego,
+        /policy/authz.rego,
+        /run/secrets/auth.json,
+      ]
+    networks: [protected]
+    volumes:
+      - ../../services/policy/agentbrake.rego:/policy/agentbrake.rego:ro
+      - ../../services/policy/authz.rego:/policy/authz.rego:ro
+      - ${INSTALL_DIR}/opa-auth.json:/run/secrets/auth.json:ro
+    labels: { com.agentbrake.product: "${INSTALLATION_ID}" }
+  control-db:
+    image: ${POSTGRES_IMAGE}
+    user: postgres
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    pids_limit: 128
+    mem_limit: 384m
+    environment:
+      {
+        POSTGRES_DB: agentbrake_control_fixture,
+        POSTGRES_USER: control_owner,
+        POSTGRES_PASSWORD_FILE: /run/secrets/bootstrap-password,
+        PGDATA: /var/lib/postgresql/data/pgdata,
+      }
+    networks: [control]
+    volumes:
+      - control-data:/var/lib/postgresql/data
+      - ${INSTALL_DIR}/control-owner-password:/run/secrets/bootstrap-password:ro
+      - ${INSTALL_DIR}/control-password:/run/secrets/control-password:ro
+      - ../local/control-db/010-control-fixture.sh:/docker-entrypoint-initdb.d/010-control-fixture.sh:ro
+      - ../local/control-db/001-control.sql:/opt/agentbrake-control/001-control.sql:ro
+      - ../local/control-db/002-accounts.sql:/opt/agentbrake-control/002-accounts.sql:ro
+    tmpfs:
+      ["/var/run/postgresql:uid=70,gid=70,mode=0770", "/tmp:size=32m,mode=1777"]
+    depends_on: { volume-init: { condition: service_completed_successfully } }
+    healthcheck:
+      test: [CMD, pg_isready, -U, control_owner, -d, agentbrake_control_fixture]
+      interval: 3s
+      timeout: 2s
+      retries: 40
+    labels: { com.agentbrake.product: "${INSTALLATION_ID}" }
+  target-db:
+    image: ${POSTGRES_IMAGE}
+    user: postgres
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    pids_limit: 128
+    mem_limit: 384m
+    environment:
+      {
+        POSTGRES_DB: agentbrake_target_fixture,
+        POSTGRES_USER: fixture_owner,
+        POSTGRES_PASSWORD_FILE: /run/secrets/bootstrap-password,
+        PGDATA: /var/lib/postgresql/data/pgdata,
+      }
+    networks: [protected]
+    volumes:
+      - target-data:/var/lib/postgresql/data
+      - ${INSTALL_DIR}/postgres-bootstrap:/run/secrets/bootstrap-password:ro
+      - ${INSTALL_DIR}/target-read-password:/run/secrets/target-read-password:ro
+      - ${INSTALL_DIR}/target-write-password:/run/secrets/target-write-password:ro
+      - ../local/target-db/010-target-fixture.sh:/docker-entrypoint-initdb.d/010-target-fixture.sh:ro
+      - ../local/target-db/001-fixture.sql:/opt/agentbrake-target/001-fixture.sql:ro
+      - ../local/target-db/002-reviewed-update.sql:/opt/agentbrake-target/002-reviewed-update.sql:ro
+    tmpfs:
+      ["/var/run/postgresql:uid=70,gid=70,mode=0770", "/tmp:size=32m,mode=1777"]
+    depends_on: { volume-init: { condition: service_completed_successfully } }
+    healthcheck:
+      test: [CMD, pg_isready, -U, fixture_owner, -d, agentbrake_target_fixture]
+      interval: 3s
+      timeout: 2s
+      retries: 40
+    labels: { com.agentbrake.product: "${INSTALLATION_ID}" }
+  agent:
+    <<: *runtime
+    profiles: [agent]
+    command: [node, -e, "setInterval(()=>{},60000)"]
+    networks: [agent]
+    depends_on: { gateway: { condition: service_healthy } }
+networks:
+  loopback-ingress: {}
+  dashboard: { internal: true }
+  control: { internal: true }
+  protected: { internal: true }
+  agent: { internal: true }
+volumes:
+  control-data: { labels: { com.agentbrake.product: "${INSTALLATION_ID}" } }
+  target-data: { labels: { com.agentbrake.product: "${INSTALLATION_ID}" } }
+  git-data: { labels: { com.agentbrake.product: "${INSTALLATION_ID}" } }

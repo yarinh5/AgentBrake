@@ -1,0 +1,1038 @@
+{
+  "runId": "04a1a0e8-b953-4d9a-9774-1a6abaf828fe",
+  "startedAt": "2026-11-16T10:32:28.244Z",
+  "project": "agentbrake-a-04a1a0e8",
+  "sourceHash": "c5b6e3be7b7d3fe2082eec289eb4d867f51034de997e321c4245a1463180009a",
+  "gitCommit": null,
+  "result": "PASS",
+  "cases": [
+    {
+      "phase": "network",
+      "cases": [
+        {
+          "case": "target-http",
+          "tcpConnected": false,
+          "result": "PASS"
+        },
+        {
+          "case": "target-postgres",
+          "tcpConnected": false,
+          "result": "PASS"
+        },
+        {
+          "case": "opa",
+          "tcpConnected": false,
+          "result": "PASS"
+        },
+        {
+          "case": "desktop-engine",
+          "tcpConnected": false,
+          "result": "PASS"
+        },
+        {
+          "case": "bridge-engine",
+          "tcpConnected": false,
+          "result": "PASS"
+        },
+        {
+          "case": "direct-curl",
+          "exitCode": 7,
+          "signal": null,
+          "result": "PASS"
+        },
+        {
+          "case": "direct-psql",
+          "exitCode": 2,
+          "signal": null,
+          "result": "PASS"
+        },
+        {
+          "case": "direct-git",
+          "exitCode": 128,
+          "signal": null,
+          "result": "PASS"
+        },
+        {
+          "case": "agent-cannot-administer",
+          "http": 401,
+          "result": "PASS"
+        }
+      ]
+    },
+    {
+      "phase": "denied",
+      "cases": [
+        {
+          "case": "outside-repo",
+          "http": 200,
+          "status": "blocked",
+          "correlationId": "d0ebe587-9d52-44d8-82f1-94b41caf56e7",
+          "result": "PASS"
+        },
+        {
+          "case": "destructive-sql",
+          "http": 200,
+          "status": "blocked",
+          "correlationId": "d3ee46e0-9894-46f7-843e-850c4c80cff0",
+          "result": "PASS"
+        },
+        {
+          "case": "expired-grant",
+          "http": 200,
+          "status": "blocked",
+          "correlationId": "03311f9b-b91a-4d82-a857-beda385fa620",
+          "result": "PASS"
+        },
+        {
+          "case": "invalid-token",
+          "http": 401,
+          "status": "unauthenticated",
+          "correlationId": null,
+          "result": "PASS"
+        },
+        {
+          "case": "unknown-tool",
+          "http": 200,
+          "status": "blocked",
+          "correlationId": "b5187d4c-61e5-44d9-898f-227b78f2800b",
+          "result": "PASS"
+        }
+      ]
+    },
+    {
+      "phase": "allowed",
+      "cases": [
+        {
+          "case": "mediated-mcp-read",
+          "status": "allowed",
+          "rows": 2,
+          "correlationId": "6117fb2e-9f63-4519-a516-489e4d27922f",
+          "result": "PASS"
+        }
+      ]
+    },
+    {
+      "phase": "pdp-down",
+      "cases": [
+        {
+          "case": "pdp-down",
+          "status": "blocked",
+          "rule": "pdp-unavailable",
+          "result": "PASS"
+        }
+      ]
+    }
+  ],
+  "commands": [
+    {
+      "label": "docker-preflight",
+      "command": [
+        "docker",
+        "version",
+        "--format",
+        "{{json .Server}}"
+      ],
+      "startedAt": "2026-11-16T10:32:28.246Z",
+      "exitCode": 0,
+      "timedOut": false,
+      "log": "docker-preflight.log"
+    },
+    {
+      "label": "desktop-version",
+      "command": [
+        "powershell.exe",
+        "-NoProfile",
+        "-Command",
+        "(Get-Item 'C:\\Program Files\\Docker\\Docker\\Docker Desktop.exe').VersionInfo.ProductVersion"
+      ],
+      "startedAt": "2026-11-16T10:32:28.386Z",
+      "exitCode": 0,
+      "timedOut": false,
+      "log": "desktop-version.log"
+    },
+    {
+      "label": "compose-config",
+      "command": [
+        "docker",
+        "compose",
+        "--project-name",
+        "agentbrake-a-04a1a0e8",
+        "-f",
+        "infra/local/compose.yaml",
+        "config",
+        "--quiet"
+      ],
+      "startedAt": "2026-11-16T10:32:28.676Z",
+      "exitCode": 0,
+      "timedOut": false,
+      "log": "compose-config.log"
+    },
+    {
+      "label": "compose-up",
+      "command": [
+        "docker",
+        "compose",
+        "--project-name",
+        "agentbrake-a-04a1a0e8",
+        "-f",
+        "infra/local/compose.yaml",
+        "up",
+        "-d",
+        "--build",
+        "--wait",
+        "--wait-timeout",
+        "120"
+      ],
+      "startedAt": "2026-11-16T10:32:28.881Z",
+      "exitCode": 0,
+      "timedOut": false,
+      "log": "compose-up.log"
+    },
+    {
+      "label": "id-agent",
+      "command": [
+        "docker",
+        "compose",
+        "--project-name",
+        "agentbrake-a-04a1a0e8",
+        "-f",
+        "infra/local/compose.yaml",
+        "ps",
+        "-q",
+        "agent"
+      ],
+      "startedAt": "2026-11-16T10:32:43.143Z",
+      "exitCode": 0,
+      "timedOut": false,
+      "log": "id-agent.log"
+    },
+    {
+      "label": "inspect-agent",
+      "command": [
+        "docker",
+        "inspect",
+        "ef55a021dc005dae804e29e3afba398693ce86cf961059e3ebe547c42f1735b1"
+      ],
+      "startedAt": "2026-11-16T10:32:43.347Z",
+      "exitCode": 0,
+      "timedOut": false,
+      "log": "inspect-agent.log"
+    },
+    {
+      "label": "id-mock-target",
+      "command": [
+        "docker",
+        "compose",
+        "--project-name",
+        "agentbrake-a-04a1a0e8",
+        "-f",
+        "infra/local/compose.yaml",
+        "ps",
+        "-q",
+        "mock-target"
+      ],
+      "startedAt": "2026-11-16T10:32:43.436Z",
+      "exitCode": 0,
+      "timedOut": false,
+      "log": "id-mock-target.log"
+    },
+    {
+      "label": "inspect-mock-target",
+      "command": [
+        "docker",
+        "inspect",
+        "c1177001036643326a436e188a21a18993f5e8e51f9db53e965aec08eb49ada4"
+      ],
+      "startedAt": "2026-11-16T10:32:43.652Z",
+      "exitCode": 0,
+      "timedOut": false,
+      "log": "inspect-mock-target.log"
+    },
+    {
+      "label": "id-target-db",
+      "command": [
+        "docker",
+        "compose",
+        "--project-name",
+        "agentbrake-a-04a1a0e8",
+        "-f",
+        "infra/local/compose.yaml",
+        "ps",
+        "-q",
+        "target-db"
+      ],
+      "startedAt": "2026-11-16T10:32:43.742Z",
+      "exitCode": 0,
+      "timedOut": false,
+      "log": "id-target-db.log"
+    },
+    {
+      "label": "inspect-target-db",
+      "command": [
+        "docker",
+        "inspect",
+        "509f267c9718f96d8683af449fa34ecf65b51ac1e0f5ffb47a1fc88b0d9a3c2e"
+      ],
+      "startedAt": "2026-11-16T10:32:43.948Z",
+      "exitCode": 0,
+      "timedOut": false,
+      "log": "inspect-target-db.log"
+    },
+    {
+      "label": "id-opa",
+      "command": [
+        "docker",
+        "compose",
+        "--project-name",
+        "agentbrake-a-04a1a0e8",
+        "-f",
+        "infra/local/compose.yaml",
+        "ps",
+        "-q",
+        "opa"
+      ],
+      "startedAt": "2026-11-16T10:32:44.038Z",
+      "exitCode": 0,
+      "timedOut": false,
+      "log": "id-opa.log"
+    },
+    {
+      "label": "inspect-opa",
+      "command": [
+        "docker",
+        "inspect",
+        "1da5b3d6750c254286d71bce0ee26f385010d95d7206b93ecde16c5084a0cc68"
+      ],
+      "startedAt": "2026-11-16T10:32:44.246Z",
+      "exitCode": 0,
+      "timedOut": false,
+      "log": "inspect-opa.log"
+    },
+    {
+      "label": "id-gateway",
+      "command": [
+        "docker",
+        "compose",
+        "--project-name",
+        "agentbrake-a-04a1a0e8",
+        "-f",
+        "infra/local/compose.yaml",
+        "ps",
+        "-q",
+        "gateway"
+      ],
+      "startedAt": "2026-11-16T10:32:44.338Z",
+      "exitCode": 0,
+      "timedOut": false,
+      "log": "id-gateway.log"
+    },
+    {
+      "label": "inspect-gateway",
+      "command": [
+        "docker",
+        "inspect",
+        "0433b0e860c87cb057d1d95599bec35179474eda5b2fb50786a62733e40e4b4e"
+      ],
+      "startedAt": "2026-11-16T10:32:47.544Z",
+      "exitCode": 0,
+      "timedOut": false,
+      "log": "inspect-gateway.log"
+    },
+    {
+      "label": "inspect-agent-network",
+      "command": [
+        "docker",
+        "network",
+        "inspect",
+        "agentbrake-a-04a1a0e8_agent"
+      ],
+      "startedAt": "2026-11-16T10:32:50.639Z",
+      "exitCode": 0,
+      "timedOut": false,
+      "log": "inspect-agent-network.log"
+    },
+    {
+      "label": "before-network",
+      "command": [
+        "docker",
+        "compose",
+        "--project-name",
+        "agentbrake-a-04a1a0e8",
+        "-f",
+        "infra/local/compose.yaml",
+        "exec",
+        "-T",
+        "mock-target",
+        "node",
+        "--input-type=module",
+        "-e",
+        "import{readFile}from'node:fs/promises';const token=(await readFile('/run/secrets/observer-token','utf8')).trim();const response=await fetch('http://127.0.0.1:8080/snapshot',{headers:{Authorization:'Bearer '+token}});if(!response.ok)process.exit(1);console.log(await response.text())"
+      ],
+      "startedAt": "2026-11-16T10:32:50.728Z",
+      "exitCode": 0,
+      "timedOut": false,
+      "log": "before-network.log"
+    },
+    {
+      "label": "agent-network",
+      "command": [
+        "docker",
+        "compose",
+        "--project-name",
+        "agentbrake-a-04a1a0e8",
+        "-f",
+        "infra/local/compose.yaml",
+        "exec",
+        "-T",
+        "agent",
+        "node",
+        "tests/isolation/agent.mjs",
+        "network",
+        "{\"target\":\"172.28.0.3\",\"postgres\":\"172.28.0.2\",\"opa\":\"172.28.0.4\",\"edgeGateway\":\"172.27.0.1\"}"
+      ],
+      "startedAt": "2026-11-16T10:32:51.117Z",
+      "exitCode": 0,
+      "timedOut": false,
+      "log": "agent-network.log"
+    },
+    {
+      "label": "after-network",
+      "command": [
+        "docker",
+        "compose",
+        "--project-name",
+        "agentbrake-a-04a1a0e8",
+        "-f",
+        "infra/local/compose.yaml",
+        "exec",
+        "-T",
+        "mock-target",
+        "node",
+        "--input-type=module",
+        "-e",
+        "import{readFile}from'node:fs/promises';const token=(await readFile('/run/secrets/observer-token','utf8')).trim();const response=await fetch('http://127.0.0.1:8080/snapshot',{headers:{Authorization:'Bearer '+token}});if(!response.ok)process.exit(1);console.log(await response.text())"
+      ],
+      "startedAt": "2026-11-16T10:32:51.498Z",
+      "exitCode": 0,
+      "timedOut": false,
+      "log": "after-network.log"
+    },
+    {
+      "label": "agent-denied",
+      "command": [
+        "docker",
+        "compose",
+        "--project-name",
+        "agentbrake-a-04a1a0e8",
+        "-f",
+        "infra/local/compose.yaml",
+        "exec",
+        "-T",
+        "agent",
+        "node",
+        "tests/isolation/agent.mjs",
+        "denied",
+        "{\"target\":\"172.28.0.3\",\"postgres\":\"172.28.0.2\",\"opa\":\"172.28.0.4\",\"edgeGateway\":\"172.27.0.1\"}"
+      ],
+      "startedAt": "2026-11-16T10:32:51.851Z",
+      "exitCode": 0,
+      "timedOut": false,
+      "log": "agent-denied.log"
+    },
+    {
+      "label": "after-denied",
+      "command": [
+        "docker",
+        "compose",
+        "--project-name",
+        "agentbrake-a-04a1a0e8",
+        "-f",
+        "infra/local/compose.yaml",
+        "exec",
+        "-T",
+        "mock-target",
+        "node",
+        "--input-type=module",
+        "-e",
+        "import{readFile}from'node:fs/promises';const token=(await readFile('/run/secrets/observer-token','utf8')).trim();const response=await fetch('http://127.0.0.1:8080/snapshot',{headers:{Authorization:'Bearer '+token}});if(!response.ok)process.exit(1);console.log(await response.text())"
+      ],
+      "startedAt": "2026-11-16T10:32:52.283Z",
+      "exitCode": 0,
+      "timedOut": false,
+      "log": "after-denied.log"
+    },
+    {
+      "label": "agent-allowed",
+      "command": [
+        "docker",
+        "compose",
+        "--project-name",
+        "agentbrake-a-04a1a0e8",
+        "-f",
+        "infra/local/compose.yaml",
+        "exec",
+        "-T",
+        "agent",
+        "node",
+        "tests/isolation/agent.mjs",
+        "allowed",
+        "{\"target\":\"172.28.0.3\",\"postgres\":\"172.28.0.2\",\"opa\":\"172.28.0.4\",\"edgeGateway\":\"172.27.0.1\"}"
+      ],
+      "startedAt": "2026-11-16T10:32:52.614Z",
+      "exitCode": 0,
+      "timedOut": false,
+      "log": "agent-allowed.log"
+    },
+    {
+      "label": "after-allowed",
+      "command": [
+        "docker",
+        "compose",
+        "--project-name",
+        "agentbrake-a-04a1a0e8",
+        "-f",
+        "infra/local/compose.yaml",
+        "exec",
+        "-T",
+        "mock-target",
+        "node",
+        "--input-type=module",
+        "-e",
+        "import{readFile}from'node:fs/promises';const token=(await readFile('/run/secrets/observer-token','utf8')).trim();const response=await fetch('http://127.0.0.1:8080/snapshot',{headers:{Authorization:'Bearer '+token}});if(!response.ok)process.exit(1);console.log(await response.text())"
+      ],
+      "startedAt": "2026-11-16T10:32:53.029Z",
+      "exitCode": 0,
+      "timedOut": false,
+      "log": "after-allowed.log"
+    },
+    {
+      "label": "stop-opa",
+      "command": [
+        "docker",
+        "compose",
+        "--project-name",
+        "agentbrake-a-04a1a0e8",
+        "-f",
+        "infra/local/compose.yaml",
+        "stop",
+        "opa"
+      ],
+      "startedAt": "2026-11-16T10:32:53.345Z",
+      "exitCode": 0,
+      "timedOut": false,
+      "log": "stop-opa.log"
+    },
+    {
+      "label": "agent-pdp-down",
+      "command": [
+        "docker",
+        "compose",
+        "--project-name",
+        "agentbrake-a-04a1a0e8",
+        "-f",
+        "infra/local/compose.yaml",
+        "exec",
+        "-T",
+        "agent",
+        "node",
+        "tests/isolation/agent.mjs",
+        "pdp-down",
+        "{\"target\":\"172.28.0.3\",\"postgres\":\"172.28.0.2\",\"opa\":\"172.28.0.4\",\"edgeGateway\":\"172.27.0.1\"}"
+      ],
+      "startedAt": "2026-11-16T10:32:53.723Z",
+      "exitCode": 0,
+      "timedOut": false,
+      "log": "agent-pdp-down.log"
+    },
+    {
+      "label": "after-pdp-down",
+      "command": [
+        "docker",
+        "compose",
+        "--project-name",
+        "agentbrake-a-04a1a0e8",
+        "-f",
+        "infra/local/compose.yaml",
+        "exec",
+        "-T",
+        "mock-target",
+        "node",
+        "--input-type=module",
+        "-e",
+        "import{readFile}from'node:fs/promises';const token=(await readFile('/run/secrets/observer-token','utf8')).trim();const response=await fetch('http://127.0.0.1:8080/snapshot',{headers:{Authorization:'Bearer '+token}});if(!response.ok)process.exit(1);console.log(await response.text())"
+      ],
+      "startedAt": "2026-11-16T10:32:54.066Z",
+      "exitCode": 0,
+      "timedOut": false,
+      "log": "after-pdp-down.log"
+    },
+    {
+      "label": "compose-down",
+      "command": [
+        "docker",
+        "compose",
+        "--project-name",
+        "agentbrake-a-04a1a0e8",
+        "-f",
+        "infra/local/compose.yaml",
+        "down",
+        "--volumes",
+        "--remove-orphans"
+      ],
+      "startedAt": "2026-11-16T10:32:54.394Z",
+      "exitCode": 0,
+      "timedOut": false,
+      "log": "compose-down.log"
+    }
+  ],
+  "limitations": [
+    "Synthetic local targets only. No host-admin or kernel-escape guarantee. PostgreSQL adapter implementation is a later stage."
+  ],
+  "engine": {
+    "Platform": {
+      "Name": "Docker Desktop 4.99.0 (245822)"
+    },
+    "Version": "29.9.3",
+    "ApiVersion": "1.56",
+    "MinAPIVersion": "1.40",
+    "Os": "linux",
+    "Arch": "amd64",
+    "Components": [
+      {
+        "Name": "Engine",
+        "Version": "29.9.3",
+        "Details": {
+          "ApiVersion": "1.56",
+          "Arch": "amd64",
+          "BuildTime": "Tue Nov  3 21:41:42 2026",
+          "Experimental": "false",
+          "GitCommit": "70efc0e",
+          "GoVersion": "go1.26.10",
+          "KernelVersion": "6.18.58.1-microsoft-standard-WSL2",
+          "MinAPIVersion": "1.40",
+          "Module": "github.com/moby/moby/v2",
+          "ModuleVersion": "v2.0.0+unknown",
+          "Os": "linux"
+        }
+      },
+      {
+        "Name": "containerd",
+        "Version": "v2.4.2",
+        "Details": {
+          "GitCommit": "b7a25261e029d68978bbf290df0a62fc819b3c51"
+        }
+      },
+      {
+        "Name": "runc",
+        "Version": "1.5.2",
+        "Details": {
+          "GitCommit": "v1.5.2-0-g29dd3dc2"
+        }
+      },
+      {
+        "Name": "docker-init",
+        "Version": "0.19.0",
+        "Details": {
+          "GitCommit": "de40ad0"
+        }
+      }
+    ],
+    "GitCommit": "70efc0e",
+    "GoVersion": "go1.26.10",
+    "KernelVersion": "6.18.58.1-microsoft-standard-WSL2",
+    "BuildTime": "2026-11-03T21:41:42.000000000+00:00"
+  },
+  "desktopVersion": "4.99.0.245822",
+  "images": {
+    "resolvedAt": "2026-11-16T10:17:10.426Z",
+    "images": {
+      "node": {
+        "tag": "library/node:22-bookworm-slim",
+        "image": "library/node@sha256:e9f565d32859f0cbfb52125eafe8be39390f24dac302dc3cdf566e8ba3ab21ee"
+      },
+      "postgres": {
+        "tag": "library/postgres:18-alpine",
+        "image": "library/postgres@sha256:b6972e1115a4ff8eba5d7f7d19184926d1e16d7d1136ae1e1a7ebf286da0f015"
+      },
+      "opa": {
+        "tag": "openpolicyagent/opa:1.22.4-static",
+        "image": "openpolicyagent/opa@sha256:12cecac5a174368f7d3f09d3a19d040ebe0c91d576e520335ae7a985a26e39d3"
+      }
+    }
+  },
+  "policyHash": "ba6af7bbabde5e210a132a4282eede1d23244bc46f61ced324e69ff210e653df",
+  "boundaries": {
+    "agentNetworks": [
+      "agentbrake-a-04a1a0e8_agent"
+    ],
+    "agentUser": "1000:1000",
+    "capDrop": [
+      "ALL"
+    ],
+    "readonlyRoot": true,
+    "agentMounts": [
+      {
+        "destination": "/run/agent-credential.json",
+        "writable": false
+      }
+    ],
+    "imageIds": [
+      "sha256:c6820d2046854882084f0b0f307b41f6b1381d0aa3daf47b9fb52deeca84baea",
+      "sha256:c6820d2046854882084f0b0f307b41f6b1381d0aa3daf47b9fb52deeca84baea",
+      "sha256:0f6c51e48b3458e87ab43692e49c9dafc72ffe0a0dbde3fd8cdb6ab92d5c025e",
+      "sha256:327128c76b65ec10a3c071a6a24647c1fddc1af3232a9d7a8fd9f8dec040cdc1"
+    ],
+    "gatewayPorts": {
+      "4313/tcp": []
+    }
+  },
+  "proof": {
+    "before": {
+      "calls": 0,
+      "customers": [
+        {
+          "id": 1,
+          "name": "Acme Studio",
+          "plan": "Enterprise",
+          "status": "active",
+          "version": 0
+        },
+        {
+          "id": 2,
+          "name": "Orbit Labs",
+          "plan": "Growth",
+          "status": "active",
+          "version": 0
+        },
+        {
+          "id": 3,
+          "name": "Northstar",
+          "plan": "Enterprise",
+          "status": "active",
+          "version": 0
+        },
+        {
+          "id": 4,
+          "name": "Forma Design",
+          "plan": "Starter",
+          "status": "active",
+          "version": 0
+        }
+      ],
+      "issues": [],
+      "schema": [
+        {
+          "name": "actions",
+          "sql": "CREATE TABLE actions (id TEXT PRIMARY KEY, agent_id TEXT NOT NULL, request_id TEXT NOT NULL, status TEXT NOT NULL, data TEXT NOT NULL, UNIQUE(agent_id,request_id))"
+        },
+        {
+          "name": "agents",
+          "sql": "CREATE TABLE agents (id TEXT PRIMARY KEY, token_hash TEXT UNIQUE NOT NULL, data TEXT NOT NULL)"
+        },
+        {
+          "name": "audit",
+          "sql": "CREATE TABLE audit (seq INTEGER PRIMARY KEY AUTOINCREMENT, data TEXT NOT NULL, previous_hash TEXT NOT NULL, hash TEXT NOT NULL)"
+        },
+        {
+          "name": "customers",
+          "sql": "CREATE TABLE customers (id INTEGER PRIMARY KEY, name TEXT NOT NULL, plan TEXT NOT NULL, status TEXT NOT NULL, version INTEGER NOT NULL DEFAULT 0)"
+        },
+        {
+          "name": "policy_revisions",
+          "sql": "CREATE TABLE policy_revisions (version INTEGER PRIMARY KEY AUTOINCREMENT, policies TEXT NOT NULL)"
+        },
+        {
+          "name": "sandbox_issues",
+          "sql": "CREATE TABLE sandbox_issues (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL, body TEXT NOT NULL)"
+        },
+        {
+          "name": "settings",
+          "sql": "CREATE TABLE settings (id INTEGER PRIMARY KEY CHECK(id=1), paused INTEGER NOT NULL, policies TEXT NOT NULL)"
+        },
+        {
+          "name": "sqlite_sequence",
+          "sql": "CREATE TABLE sqlite_sequence(name,seq)"
+        }
+      ]
+    },
+    "afterNetwork": {
+      "calls": 0,
+      "customers": [
+        {
+          "id": 1,
+          "name": "Acme Studio",
+          "plan": "Enterprise",
+          "status": "active",
+          "version": 0
+        },
+        {
+          "id": 2,
+          "name": "Orbit Labs",
+          "plan": "Growth",
+          "status": "active",
+          "version": 0
+        },
+        {
+          "id": 3,
+          "name": "Northstar",
+          "plan": "Enterprise",
+          "status": "active",
+          "version": 0
+        },
+        {
+          "id": 4,
+          "name": "Forma Design",
+          "plan": "Starter",
+          "status": "active",
+          "version": 0
+        }
+      ],
+      "issues": [],
+      "schema": [
+        {
+          "name": "actions",
+          "sql": "CREATE TABLE actions (id TEXT PRIMARY KEY, agent_id TEXT NOT NULL, request_id TEXT NOT NULL, status TEXT NOT NULL, data TEXT NOT NULL, UNIQUE(agent_id,request_id))"
+        },
+        {
+          "name": "agents",
+          "sql": "CREATE TABLE agents (id TEXT PRIMARY KEY, token_hash TEXT UNIQUE NOT NULL, data TEXT NOT NULL)"
+        },
+        {
+          "name": "audit",
+          "sql": "CREATE TABLE audit (seq INTEGER PRIMARY KEY AUTOINCREMENT, data TEXT NOT NULL, previous_hash TEXT NOT NULL, hash TEXT NOT NULL)"
+        },
+        {
+          "name": "customers",
+          "sql": "CREATE TABLE customers (id INTEGER PRIMARY KEY, name TEXT NOT NULL, plan TEXT NOT NULL, status TEXT NOT NULL, version INTEGER NOT NULL DEFAULT 0)"
+        },
+        {
+          "name": "policy_revisions",
+          "sql": "CREATE TABLE policy_revisions (version INTEGER PRIMARY KEY AUTOINCREMENT, policies TEXT NOT NULL)"
+        },
+        {
+          "name": "sandbox_issues",
+          "sql": "CREATE TABLE sandbox_issues (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL, body TEXT NOT NULL)"
+        },
+        {
+          "name": "settings",
+          "sql": "CREATE TABLE settings (id INTEGER PRIMARY KEY CHECK(id=1), paused INTEGER NOT NULL, policies TEXT NOT NULL)"
+        },
+        {
+          "name": "sqlite_sequence",
+          "sql": "CREATE TABLE sqlite_sequence(name,seq)"
+        }
+      ]
+    },
+    "afterDenied": {
+      "calls": 0,
+      "customers": [
+        {
+          "id": 1,
+          "name": "Acme Studio",
+          "plan": "Enterprise",
+          "status": "active",
+          "version": 0
+        },
+        {
+          "id": 2,
+          "name": "Orbit Labs",
+          "plan": "Growth",
+          "status": "active",
+          "version": 0
+        },
+        {
+          "id": 3,
+          "name": "Northstar",
+          "plan": "Enterprise",
+          "status": "active",
+          "version": 0
+        },
+        {
+          "id": 4,
+          "name": "Forma Design",
+          "plan": "Starter",
+          "status": "active",
+          "version": 0
+        }
+      ],
+      "issues": [],
+      "schema": [
+        {
+          "name": "actions",
+          "sql": "CREATE TABLE actions (id TEXT PRIMARY KEY, agent_id TEXT NOT NULL, request_id TEXT NOT NULL, status TEXT NOT NULL, data TEXT NOT NULL, UNIQUE(agent_id,request_id))"
+        },
+        {
+          "name": "agents",
+          "sql": "CREATE TABLE agents (id TEXT PRIMARY KEY, token_hash TEXT UNIQUE NOT NULL, data TEXT NOT NULL)"
+        },
+        {
+          "name": "audit",
+          "sql": "CREATE TABLE audit (seq INTEGER PRIMARY KEY AUTOINCREMENT, data TEXT NOT NULL, previous_hash TEXT NOT NULL, hash TEXT NOT NULL)"
+        },
+        {
+          "name": "customers",
+          "sql": "CREATE TABLE customers (id INTEGER PRIMARY KEY, name TEXT NOT NULL, plan TEXT NOT NULL, status TEXT NOT NULL, version INTEGER NOT NULL DEFAULT 0)"
+        },
+        {
+          "name": "policy_revisions",
+          "sql": "CREATE TABLE policy_revisions (version INTEGER PRIMARY KEY AUTOINCREMENT, policies TEXT NOT NULL)"
+        },
+        {
+          "name": "sandbox_issues",
+          "sql": "CREATE TABLE sandbox_issues (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL, body TEXT NOT NULL)"
+        },
+        {
+          "name": "settings",
+          "sql": "CREATE TABLE settings (id INTEGER PRIMARY KEY CHECK(id=1), paused INTEGER NOT NULL, policies TEXT NOT NULL)"
+        },
+        {
+          "name": "sqlite_sequence",
+          "sql": "CREATE TABLE sqlite_sequence(name,seq)"
+        }
+      ]
+    },
+    "afterAllowed": {
+      "calls": 1,
+      "customers": [
+        {
+          "id": 1,
+          "name": "Acme Studio",
+          "plan": "Enterprise",
+          "status": "active",
+          "version": 0
+        },
+        {
+          "id": 2,
+          "name": "Orbit Labs",
+          "plan": "Growth",
+          "status": "active",
+          "version": 0
+        },
+        {
+          "id": 3,
+          "name": "Northstar",
+          "plan": "Enterprise",
+          "status": "active",
+          "version": 0
+        },
+        {
+          "id": 4,
+          "name": "Forma Design",
+          "plan": "Starter",
+          "status": "active",
+          "version": 0
+        }
+      ],
+      "issues": [],
+      "schema": [
+        {
+          "name": "actions",
+          "sql": "CREATE TABLE actions (id TEXT PRIMARY KEY, agent_id TEXT NOT NULL, request_id TEXT NOT NULL, status TEXT NOT NULL, data TEXT NOT NULL, UNIQUE(agent_id,request_id))"
+        },
+        {
+          "name": "agents",
+          "sql": "CREATE TABLE agents (id TEXT PRIMARY KEY, token_hash TEXT UNIQUE NOT NULL, data TEXT NOT NULL)"
+        },
+        {
+          "name": "audit",
+          "sql": "CREATE TABLE audit (seq INTEGER PRIMARY KEY AUTOINCREMENT, data TEXT NOT NULL, previous_hash TEXT NOT NULL, hash TEXT NOT NULL)"
+        },
+        {
+          "name": "customers",
+          "sql": "CREATE TABLE customers (id INTEGER PRIMARY KEY, name TEXT NOT NULL, plan TEXT NOT NULL, status TEXT NOT NULL, version INTEGER NOT NULL DEFAULT 0)"
+        },
+        {
+          "name": "policy_revisions",
+          "sql": "CREATE TABLE policy_revisions (version INTEGER PRIMARY KEY AUTOINCREMENT, policies TEXT NOT NULL)"
+        },
+        {
+          "name": "sandbox_issues",
+          "sql": "CREATE TABLE sandbox_issues (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL, body TEXT NOT NULL)"
+        },
+        {
+          "name": "settings",
+          "sql": "CREATE TABLE settings (id INTEGER PRIMARY KEY CHECK(id=1), paused INTEGER NOT NULL, policies TEXT NOT NULL)"
+        },
+        {
+          "name": "sqlite_sequence",
+          "sql": "CREATE TABLE sqlite_sequence(name,seq)"
+        }
+      ]
+    },
+    "afterPdp": {
+      "calls": 1,
+      "customers": [
+        {
+          "id": 1,
+          "name": "Acme Studio",
+          "plan": "Enterprise",
+          "status": "active",
+          "version": 0
+        },
+        {
+          "id": 2,
+          "name": "Orbit Labs",
+          "plan": "Growth",
+          "status": "active",
+          "version": 0
+        },
+        {
+          "id": 3,
+          "name": "Northstar",
+          "plan": "Enterprise",
+          "status": "active",
+          "version": 0
+        },
+        {
+          "id": 4,
+          "name": "Forma Design",
+          "plan": "Starter",
+          "status": "active",
+          "version": 0
+        }
+      ],
+      "issues": [],
+      "schema": [
+        {
+          "name": "actions",
+          "sql": "CREATE TABLE actions (id TEXT PRIMARY KEY, agent_id TEXT NOT NULL, request_id TEXT NOT NULL, status TEXT NOT NULL, data TEXT NOT NULL, UNIQUE(agent_id,request_id))"
+        },
+        {
+          "name": "agents",
+          "sql": "CREATE TABLE agents (id TEXT PRIMARY KEY, token_hash TEXT UNIQUE NOT NULL, data TEXT NOT NULL)"
+        },
+        {
+          "name": "audit",
+          "sql": "CREATE TABLE audit (seq INTEGER PRIMARY KEY AUTOINCREMENT, data TEXT NOT NULL, previous_hash TEXT NOT NULL, hash TEXT NOT NULL)"
+        },
+        {
+          "name": "customers",
+          "sql": "CREATE TABLE customers (id INTEGER PRIMARY KEY, name TEXT NOT NULL, plan TEXT NOT NULL, status TEXT NOT NULL, version INTEGER NOT NULL DEFAULT 0)"
+        },
+        {
+          "name": "policy_revisions",
+          "sql": "CREATE TABLE policy_revisions (version INTEGER PRIMARY KEY AUTOINCREMENT, policies TEXT NOT NULL)"
+        },
+        {
+          "name": "sandbox_issues",
+          "sql": "CREATE TABLE sandbox_issues (id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT NOT NULL, body TEXT NOT NULL)"
+        },
+        {
+          "name": "settings",
+          "sql": "CREATE TABLE settings (id INTEGER PRIMARY KEY CHECK(id=1), paused INTEGER NOT NULL, policies TEXT NOT NULL)"
+        },
+        {
+          "name": "sqlite_sequence",
+          "sql": "CREATE TABLE sqlite_sequence(name,seq)"
+        }
+      ]
+    },
+    "deniedUpstreamCalls": 0,
+    "allowedUpstreamCalls": 1,
+    "pdpOutageUpstreamCalls": 0,
+    "schemaHash": "8e54d3ca4c58de14d67d5ba4e2b61357e838c744be7862f890e6508e9730d05e",
+    "stateBeforeHash": "783af55c7d16f6bab0fdd4aca612a77f04781b1f15c58ca76d42659039996e6a",
+    "stateAfterHash": "783af55c7d16f6bab0fdd4aca612a77f04781b1f15c58ca76d42659039996e6a"
+  },
+  "finishedAt": "2026-11-16T10:32:58.442Z"
+}

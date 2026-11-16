@@ -1,0 +1,150 @@
+ Image agentbrake-a-7e334645-runtime Building 
+ Image agentbrake-a-7e334645-runtime Building 
+ Image agentbrake-a-7e334645-runtime Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 1.90kB 0.0s done
+#1 DONE 0.0s
+
+#2 [agent internal] load build definition from Dockerfile
+#2 transferring dockerfile: 443B done
+#2 WARN: InvalidDefaultArgInFrom: Default value for ARG ${NODE_IMAGE} results in empty or invalid base image name (line 2)
+#2 WARN: InvalidDefaultArgInFrom: Default value for ARG ${NODE_IMAGE} results in empty or invalid base image name (line 2)
+#2 WARN: InvalidDefaultArgInFrom: Default value for ARG ${NODE_IMAGE} results in empty or invalid base image name (line 2)
+#2 DONE 0.0s
+
+#3 [gateway internal] load metadata for docker.io/library/node@sha256:e9f565d32859f0cbfb52125eafe8be39390f24dac302dc3cdf566e8ba3ab21ee
+#3 DONE 0.0s
+
+#4 [agent internal] load .dockerignore
+#4 transferring context: 289B done
+#4 DONE 0.0s
+
+#5 [mock-target  1/10] FROM docker.io/library/node@sha256:e9f565d32859f0cbfb52125eafe8be39390f24dac302dc3cdf566e8ba3ab21ee
+#5 DONE 0.0s
+
+#6 [mock-target internal] load build context
+#6 transferring context: 180.42kB 0.0s done
+#6 DONE 0.1s
+
+#7 [agent  2/10] RUN apt-get update && apt-get install -y --no-install-recommends curl git postgresql-client ca-certificates && rm -rf /var/lib/apt/lists/*
+#7 CACHED
+
+#8 [agent  3/10] WORKDIR /app
+#8 CACHED
+
+#9 [agent  4/10] COPY package.json package-lock.json ./
+#9 CACHED
+
+#10 [agent  5/10] RUN npm ci
+#10 CACHED
+
+#7 [gateway  2/10] RUN apt-get update && apt-get install -y --no-install-recommends curl git postgresql-client ca-certificates && rm -rf /var/lib/apt/lists/*
+#7 CACHED
+
+#8 [gateway  3/10] WORKDIR /app
+#8 CACHED
+
+#9 [gateway  4/10] COPY package.json package-lock.json ./
+#9 CACHED
+
+#11 [gateway  6/10] COPY server ./server
+#11 DONE 0.0s
+
+#12 [agent  7/10] COPY services ./services
+#12 DONE 0.0s
+
+#13 [gateway  8/10] COPY tests ./tests
+#13 DONE 0.1s
+
+#13 [agent  8/10] COPY tests ./tests
+#13 DONE 0.1s
+
+#14 [gateway  9/10] COPY scripts ./scripts
+#14 DONE 0.0s
+
+#15 [gateway 10/10] COPY infra ./infra
+#15 DONE 0.0s
+
+#16 [gateway] exporting to image
+#16 exporting layers
+#16 exporting layers 0.1s done
+#16 writing image sha256:8a32609e915888d2dce2343587cf02e5c85549fe62db423936ff4d74dd7f0e57
+#16 writing image sha256:8a32609e915888d2dce2343587cf02e5c85549fe62db423936ff4d74dd7f0e57 0.0s done
+#16 naming to docker.io/library/agentbrake-a-7e334645-runtime 0.0s done
+#16 DONE 0.2s
+
+#17 [mock-target] exporting to image
+#17 exporting layers 0.1s done
+#17 writing image sha256:6a31d698480571112e51261cd99619924d94dacfcfa3cec0a932b7418edce193 0.0s done
+#17 naming to docker.io/library/agentbrake-a-7e334645-runtime 0.0s done
+#17 DONE 0.2s
+
+#18 [agent] exporting to image
+#18 exporting layers 0.1s done
+#18 writing image sha256:6fc14b845b6b12278c382fa1f6bcbef31ab7b23a51812f4b250a35cb3d7a82eb 0.0s done
+#18 naming to docker.io/library/agentbrake-a-7e334645-runtime 0.0s done
+#18 DONE 0.2s
+
+#19 [gateway] resolving provenance for metadata file
+#19 DONE 0.0s
+
+#20 [agent] resolving provenance for metadata file
+#20 DONE 0.0s
+
+#21 [mock-target] resolving provenance for metadata file
+#21 DONE 0.0s
+ Image agentbrake-a-7e334645-runtime Built 
+ Image agentbrake-a-7e334645-runtime Built 
+ Image agentbrake-a-7e334645-runtime Built 
+ Network agentbrake-a-7e334645_protected Creating 
+ Network agentbrake-a-7e334645_agent Creating 
+ Network agentbrake-a-7e334645_protected Creating 
+ Network agentbrake-a-7e334645_agent Creating 
+ Network agentbrake-a-7e334645_protected Created 
+ Network agentbrake-a-7e334645_protected Created 
+ Container agentbrake-a-7e334645-target-db-1 Creating 
+ Container agentbrake-a-7e334645-opa-1 Creating 
+ Container agentbrake-a-7e334645-control-db-1 Creating 
+ Network agentbrake-a-7e334645_agent Created 
+ Network agentbrake-a-7e334645_agent Created 
+ Container agentbrake-a-7e334645-opa-1 Created 
+ Container agentbrake-a-7e334645-control-db-1 Created 
+ Container agentbrake-a-7e334645-target-db-1 Created 
+ Container agentbrake-a-7e334645-mock-target-1 Creating 
+ Container agentbrake-a-7e334645-mock-target-1 Created 
+ Container agentbrake-a-7e334645-gateway-1 Creating 
+ Container agentbrake-a-7e334645-gateway-1 Created 
+ Container agentbrake-a-7e334645-agent-1 Creating 
+ Container agentbrake-a-7e334645-agent-1 Created 
+ Container agentbrake-a-7e334645-target-db-1 Starting 
+ Container agentbrake-a-7e334645-opa-1 Starting 
+ Container agentbrake-a-7e334645-control-db-1 Starting 
+ Container agentbrake-a-7e334645-target-db-1 Started 
+ Container agentbrake-a-7e334645-target-db-1 Waiting 
+ Container agentbrake-a-7e334645-opa-1 Started 
+ Container agentbrake-a-7e334645-control-db-1 Started 
+ Container agentbrake-a-7e334645-control-db-1 Waiting 
+ Container agentbrake-a-7e334645-target-db-1 Healthy 
+ Container agentbrake-a-7e334645-mock-target-1 Starting 
+ Container agentbrake-a-7e334645-mock-target-1 Started 
+ Container agentbrake-a-7e334645-mock-target-1 Waiting 
+ Container agentbrake-a-7e334645-control-db-1 Healthy 
+ Container agentbrake-a-7e334645-mock-target-1 Healthy 
+ Container agentbrake-a-7e334645-gateway-1 Starting 
+ Container agentbrake-a-7e334645-gateway-1 Started 
+ Container agentbrake-a-7e334645-gateway-1 Waiting 
+ Container agentbrake-a-7e334645-gateway-1 Healthy 
+ Container agentbrake-a-7e334645-agent-1 Starting 
+ Container agentbrake-a-7e334645-agent-1 Started 
+ Container agentbrake-a-7e334645-gateway-1 Waiting 
+ Container agentbrake-a-7e334645-control-db-1 Waiting 
+ Container agentbrake-a-7e334645-target-db-1 Waiting 
+ Container agentbrake-a-7e334645-mock-target-1 Waiting 
+ Container agentbrake-a-7e334645-opa-1 Waiting 
+ Container agentbrake-a-7e334645-agent-1 Waiting 
+ Container agentbrake-a-7e334645-opa-1 Healthy 
+ Container agentbrake-a-7e334645-gateway-1 Healthy 
+ Container agentbrake-a-7e334645-target-db-1 Healthy 
+ Container agentbrake-a-7e334645-agent-1 Healthy 
+ Container agentbrake-a-7e334645-control-db-1 Healthy 
+ Container agentbrake-a-7e334645-mock-target-1 Healthy 
