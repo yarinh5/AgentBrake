@@ -16,6 +16,7 @@ const scenario = process.argv[2];
 assert.ok(["build-failure", "recovery-failure", "success", "minimal-success", "minimal-image-mismatch", "unknown-profile", "ordinary-start"].includes(scenario));
 const name = "verify-recovery-" + randomUUID().slice(0, 8);
 const dir = join(root, ".agentbrake-local", "product-" + name);
+await mkdir(join(root, '.agentbrake-local'), { recursive: true, mode: 0o700 });
 const scratch = await mkdtemp(join(root, ".agentbrake-local/recovery-test-"));
 const barrier = join(dir, "recovery-incomplete.json");
 const installationId = randomUUID();

@@ -7,6 +7,7 @@ import { sourceManifest } from "./source-manifest.mjs";
 import { verifyModelCache } from "./verify-model-cache.mjs";
 import { composeEnvironment } from "./compose-environment.mjs";
 import { failureDiagnostics } from "./ci-failure-diagnostics.mjs";
+import { prepareFixtureAccess } from "./fixture-file-access.mjs";
 const milestoneB = process.argv.includes("--milestone-b");
 const codexLock = milestoneB
   ? JSON.parse(
@@ -222,6 +223,10 @@ try {
       codexLock.model.registryManifestSha256,
     );
   }
+  report.fixtureAccess = await prepareFixtureAccess(runDir,
+    [...Object.keys(secrets), 'opa-auth.json'],
+    ['agent-credential.json', ...(milestoneB ? ['codex-credential.json'] : [])]);
+  env.FIXTURE_GID = report.fixtureAccess.group;
   await compose("compose-config", ["config", "--quiet"]);
   console.log("Building and starting the isolated AgentBrake fixture project…");
   attemptedUp = true;

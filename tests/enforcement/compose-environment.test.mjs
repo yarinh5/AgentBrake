@@ -6,6 +6,7 @@ import { composeProduct } from "../../scripts/product.mjs";
 import { composeEnvironment } from "../../scripts/compose-environment.mjs";
 import { spawnSync } from "node:child_process";
 import { mkdir } from "node:fs/promises";
+await mkdir(resolve('.agentbrake-local'), { recursive: true, mode: 0o700 });
 
 async function cleanup(dir) {
   assert.equal(dirname(resolve(dir)), resolve(".agentbrake-local"));

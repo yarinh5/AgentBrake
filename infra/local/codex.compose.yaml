@@ -41,6 +41,7 @@ services:
         RUNTIME_IMAGE: ${COMPOSE_PROJECT_NAME}-runtime
         CODEX_VERSION: ${CODEX_VERSION}
     user: "1000:1000"
+    group_add: ["${FIXTURE_GID:-1000}"]
     read_only: true
     cap_drop: [ALL]
     security_opt: [no-new-privileges:true]

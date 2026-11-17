@@ -7,6 +7,7 @@ x-runtime: &runtime
     args:
       NODE_IMAGE: ${NODE_IMAGE:?Resolve pinned images first}
   user: "1000:1000"
+  group_add: ["${FIXTURE_GID:-1000}"]
   read_only: true
   cap_drop: [ALL]
   security_opt: [no-new-privileges:true]
@@ -58,6 +59,7 @@ services:
   opa:
     image: ${OPA_IMAGE:?Resolve pinned images first}
     user: "1000:1000"
+    group_add: ["${FIXTURE_GID:-1000}"]
     read_only: true
     cap_drop: [ALL]
     security_opt: [no-new-privileges:true]
@@ -83,6 +85,7 @@ services:
   target-db:
     image: ${POSTGRES_IMAGE:?Resolve pinned images first}
     user: postgres
+    group_add: ["${FIXTURE_GID:-1000}"]
     read_only: true
     cap_drop: [ALL]
     security_opt: [no-new-privileges:true]
@@ -113,6 +116,7 @@ services:
   control-db:
     image: ${POSTGRES_IMAGE:?Resolve pinned images first}
     user: postgres
+    group_add: ["${FIXTURE_GID:-1000}"]
     read_only: true
     cap_drop: [ALL]
     security_opt: [no-new-privileges:true]
