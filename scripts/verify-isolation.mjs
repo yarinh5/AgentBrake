@@ -6,6 +6,7 @@ import { root } from "./opa-runtime.mjs";
 import { sourceManifest } from "./source-manifest.mjs";
 import { verifyModelCache } from "./verify-model-cache.mjs";
 import { composeEnvironment } from "./compose-environment.mjs";
+import { failureDiagnostics } from "./ci-failure-diagnostics.mjs";
 const milestoneB = process.argv.includes("--milestone-b");
 const codexLock = milestoneB
   ? JSON.parse(
@@ -83,6 +84,7 @@ async function run(label, command, args, timeoutMs = 60000) {
     });
   });
   output = redact(output);
+  if (code || label === "container-logs") { const diagnostic = failureDiagnostics(label, output); if (diagnostic) console.log(JSON.stringify(diagnostic)); }
   await writeFile(join(evidence, label + ".log"), output);
   report.commands.push({
     label,
