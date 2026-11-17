@@ -1704,6 +1704,13 @@ function EvidencePage({
           <div className="evidence-detail">
             <Badge status={evidence.execution.status} />
             <h3>Execution observation: {evidence.execution.observation}</h3>
+            <p>Result disclosure: {evidence.execution.resultDisclosure ?? "unrecorded"}</p>
+            {evidence.execution.resultDisclosure === "withheld" && (
+              <p role="alert">Tool output was withheld after execution. This does not undo the action. Do not resubmit; reconcile target state if needed.</p>
+            )}
+            {evidence.execution.outcome === "not-applied" && (
+              <p>The adapter reported that the reviewed target changed and no mutation was applied. The request was dispatched.</p>
+            )}
             <p>
               {evidence.execution.observation === "unverified" ||
               evidence.execution.status === "unknown"

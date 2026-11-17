@@ -1,0 +1,130 @@
+{
+  "runId": "59e33f73-a75d-4715-9d71-243d0445d712",
+  "at": "2026-11-16T23:16:12.657Z",
+  "sourceHash": "b9c07645e95dca1369636c9fc38a7ed3f777dc15b2a4004b9032f9566a00e60d",
+  "status": "LOCAL_VALIDATION_COMPLETE_EXTERNAL_PILOT_GATES_OPEN",
+  "localRelease": {
+    "result": "LOCAL_MVP_VERIFIED_EXTERNAL_GATES_OPEN",
+    "native": "58b5ddb0-dc82-4ad6-95a0-7ff78aae0d64",
+    "isolation": "e882aded-0f23-4aa3-9d83-dd8bf307f854",
+    "product": "655f88c5-002f-431b-9454-978f519da459",
+    "service": "e2a3c40c-02f1-4dc9-b500-edbbc8fbdeee",
+    "candidate": "d25a1f0d-5322-4206-b78c-903bdbf2ad7f",
+    "security": "620911c0-5091-48c4-acb3-5c36e0ebfc83"
+  },
+  "imageScan": {
+    "result": "PASS_IMAGE_SCAN",
+    "runId": "79d390f7-5d29-4dbc-a318-1fdb67601378",
+    "images": [
+      {
+        "name": "runtime",
+        "imageId": "sha256:b0bf1949d14c21be57b042fc4f7a7323077c9ef840ddfc588eeb0f34398479c3",
+        "reference": "agentbrake-product-verify-candidate-d25a1f0d-runtime",
+        "total": 0,
+        "highCritical": []
+      },
+      {
+        "name": "dashboard",
+        "imageId": "sha256:4f81b4279ec6e4aa8e62e8f0dcf8b8fa554a7e53f72878dba904811c7a838590",
+        "reference": "agentbrake-product-verify-candidate-d25a1f0d-dashboard",
+        "total": 0,
+        "highCritical": []
+      },
+      {
+        "name": "postgres",
+        "imageId": "sha256:1afd5502a82b24f4f7510043f666aeb8308ac2a13f0ecec4373f72540cfbe07d",
+        "reference": "agentbrake-postgres:18-193f481f609ba4086c53",
+        "total": 0,
+        "highCritical": []
+      },
+      {
+        "name": "opa",
+        "imageId": "sha256:656eb9984f7491cdcb8da049f759d7012098a5db4a187f51a4f0f2ec6ae6366c",
+        "reference": "agentbrake-opa:1.22.4-3f9e5f443c6e97aa147e",
+        "total": 0,
+        "highCritical": []
+      }
+    ]
+  },
+  "production": {
+    "result": "BLOCKED",
+    "gates": [
+      {
+        "id": "local-release",
+        "description": "Full local release gate for the exact source revision",
+        "status": "PASS"
+      },
+      {
+        "id": "https-candidate",
+        "description": "Actual local TLS, installed UI and agent network boundary",
+        "status": "PASS"
+      },
+      {
+        "id": "container-vulnerabilities",
+        "description": "Offline scan of built runtime/dashboard and pinned PostgreSQL/OPA images",
+        "status": "PASS"
+      },
+      {
+        "id": "live-github",
+        "status": "NOT_OBTAINED",
+        "description": "Named disposable repository, selected-repository GitHub App and real approved/denied workflow evidence"
+      },
+      {
+        "id": "clean-host",
+        "status": "NOT_OBTAINED",
+        "description": "Independent clean Linux host installation, certificate validation, backup restore and isolation proof"
+      },
+      {
+        "id": "human-security-review",
+        "status": "NOT_OBTAINED",
+        "description": "Independent human review of this revision, threat boundaries and acceptance evidence; critical/high findings resolved"
+      },
+      {
+        "id": "deployment-authorization",
+        "status": "NOT_OBTAINED",
+        "description": "Named host/account, DNS/TLS, private access path and explicit deployment/budget approval"
+      },
+      {
+        "id": "operations-owner",
+        "status": "NOT_OBTAINED",
+        "description": "Named incident/patch owner, external encrypted backup destination and tested restore/revocation procedure"
+      }
+    ]
+  },
+  "regression": {
+    "cause": "post-dispatch output filtering and TargetChangedError conflated with prevented actions",
+    "red": "four execution tests failed; actual fixture mutation precedes blocked response",
+    "correction": "separate policyEffect, executionOutcome, resultDisclosure; replay and withheld payload retained safely; post-dispatch no-mutation response is failed/not-applied",
+    "consumers": [
+      "HTTP/stdio MCP and status lookup",
+      "Evidence UI and JSON/CSV",
+      "benchmark usability vs effect accounting"
+    ],
+    "historicalRecords": "unchanged; unverified when old blocked/secret-output",
+    "finalResults": "See native/browser final revision reports"
+  },
+  "review": {
+    "type": "fresh agent read-only review, not independent human",
+    "critical": 0,
+    "important": 2,
+    "importantDisposition": "CSV fields and benchmark accounting fixed with failing-then-passing regressions",
+    "minor": "referenced model preparation document included in archive inventory"
+  },
+  "prepared": [
+    "GitHub sandbox GH01-08 runbook",
+    "read-only CI gates with no deploy",
+    "clean Linux installation and restore kit",
+    "Enterprise gap matrix",
+    "pilot scope/data/measurement and stop conditions"
+  ],
+  "notRun": [
+    "hosted CI and branch protection",
+    "independent clean Linux machine",
+    "live GitHub",
+    "external human AppSec review",
+    "customer interviews or paid pilots"
+  ],
+  "installedService": "product-local unchanged on previous 993f7cbf1a3a build; no upgrade/deploy in this task",
+  "limits": "Local fixtures and scoped tested attacks only. No production/real target/paid infrastructure. Historical or offline evidence is not live acceptance.",
+  "directory": "docs/evidence/59e33f73-a75d-4715-9d71-243d0445d712"
+}

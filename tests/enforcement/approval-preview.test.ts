@@ -106,7 +106,8 @@ test("target compare-and-set rejects a race after final preview with no overwrit
       return execute(a);
     };
     const result = await s.gateway.approve(action.id, true);
-    assert.equal(result.status, "blocked");
+    assert.equal(result.status, "failed");
+    assert.equal(result.executionOutcome, "not-applied");
     assert.equal(result.rule, "target-changed");
     assert.deepEqual(
       {

@@ -1,5 +1,9 @@
 # AgentBrake threat model — Stage 1
 
+Current validation addendum (2026-11-17): the stage register below is historical. Current scope and explicit exclusions are in ENFORCEMENT_BOUNDARIES.md and KNOWN_LIMITATIONS.md. Team approvals and the opt-in GitHub App sandbox adapter now exist; the App has only offline-contract/local-network proof, not live-target acceptance. No unrestricted host-agent enforcement or Enterprise certification has been added.
+
+R16 Important — post-dispatch evidence ambiguity: secret-like output previously changed a completed adapter call to blocked; a dispatched CAS rejection also used blocked. The commercial validation revision separates policyEffect, executionOutcome and resultDisclosure, keeps uncertain writes unknown and never retries the same action. Successful output withholding is not prevention or rollback. Historical ambiguous records remain unverified. Regression scenarios include independently observed fixture mutation, no sensitive output in persistence/export, same-ID replay, HTTP/stdio status, UI and benchmark interpretation. Fresh result references are in PLAN_COMMERCIAL_READINESS.md/SECURITY_EVIDENCE.md; source presence is not a passing test claim.
+
 Date: 2026-11-16. Scope: local supported tool calls through the PEP. Attacker controls an agent, its arguments, untrusted file/issue content and optional MCP metadata; attacker may possess a stolen agent bearer token. Administrator/host OS/OPA policy sources are trusted in this stage. No assertion of production readiness.
 
 ## Execution boundaries

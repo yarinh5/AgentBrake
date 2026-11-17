@@ -89,6 +89,12 @@ export function metrics(observations) {
     approvalRequired: observations.reduce((n, x) => n + x.approvals, 0),
   };
 }
+// Task usability is distinct from whether an upstream mutation took place.
+export function classifyAction(action) {
+  if (action.status === "allowed") return action.resultDisclosure === "withheld" ? "withheld" : "completed";
+  if (action.status === "blocked") return classifyBlocked(action.rule);
+  return "operational";
+}
 // Only known policy refusals count as false blocks. Unknown/PDP/contract errors
 // remain non-policy failures, so infrastructure failure cannot pass the gate.
 export function classifyBlocked(rule) {

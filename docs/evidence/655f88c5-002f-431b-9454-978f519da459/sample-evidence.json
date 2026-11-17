@@ -1,0 +1,200 @@
+{
+  "schemaVersion": 1,
+  "action": {
+    "id": "314374f5-04cf-461c-84f4-84e7638b7d86",
+    "agentId": "2c9bbb4d-4e1a-47eb-9f54-9bb7c57ef0b6",
+    "requestId": "24d09c6f-e983-4852-b64f-2133cc4a726c",
+    "tool": "database_update",
+    "destination": "a177c0900ddca4c89cfe0c924af89b8807c64b581bcb5d69b2354ed4827960c0",
+    "correlationId": "7ae78dfa-fb18-4a0a-b10a-cc195b827b6a",
+    "grantId": "59e76804-591d-4a47-a122-d51e4418e16d",
+    "grantFingerprint": "7063892a499e7c843cd698d77efe3ebacf6a06e8603f2fb64e4fcefdac1e876c",
+    "policyRevision": 1,
+    "policyDecisionId": "d8f85865-eabb-48e3-a102-48159b6d9ab5",
+    "policyVersion": "stage2.v1",
+    "policyHash": "9ac719fef979ee7b37c5c5ef3173621453782a0a02d432727391beeff1234d14",
+    "policyEffect": "REQUIRE_APPROVAL",
+    "arguments": {
+      "id": 1,
+      "status": "paused"
+    },
+    "status": "allowed",
+    "rule": "database-writes",
+    "reason": "Executed through the enforced gateway.",
+    "resource": "customers",
+    "sandbox": true,
+    "createdAt": "2026-11-16T23:08:18.400Z",
+    "expiresAt": "2026-11-16T23:23:18.400Z",
+    "durationMs": 7.47,
+    "preview": {
+      "kind": "database-update",
+      "summary": "Change one fixture customer status",
+      "details": {
+        "template": "customer-status-v1",
+        "before": {
+          "id": 1,
+          "status": "active",
+          "version": 0
+        },
+        "after": {
+          "id": 1,
+          "status": "paused",
+          "version": 1
+        },
+        "maximumRows": 1
+      }
+    },
+    "review": {
+      "nonce": "[REDACTED]",
+      "fingerprint": "2653288ed4395ebd763864200373258b45ca8ebc5334b964116c6b99daf7e44a"
+    },
+    "approvalReceipt": {
+      "actorId": "approver",
+      "tenant": "local",
+      "decision": "approve",
+      "at": "2026-11-16T23:08:19.540Z",
+      "proof": {
+        "nonce": "[REDACTED]",
+        "fingerprint": "2653288ed4395ebd763864200373258b45ca8ebc5334b964116c6b99daf7e44a"
+      }
+    },
+    "executionOutcome": "adapter-reported",
+    "resultDisclosure": "released"
+  },
+  "decision": {
+    "id": "d8f85865-eabb-48e3-a102-48159b6d9ab5",
+    "policyHash": "9ac719fef979ee7b37c5c5ef3173621453782a0a02d432727391beeff1234d14",
+    "version": "stage2.v1",
+    "revision": 1,
+    "effect": "REQUIRE_APPROVAL",
+    "reason": "Executed through the enforced gateway."
+  },
+  "review": {
+    "fingerprint": "2653288ed4395ebd763864200373258b45ca8ebc5334b964116c6b99daf7e44a",
+    "receipt": {
+      "actorId": "approver",
+      "tenant": "local",
+      "decision": "approve",
+      "at": "2026-11-16T23:08:19.540Z",
+      "proof": {
+        "nonce": "[REDACTED]",
+        "fingerprint": "2653288ed4395ebd763864200373258b45ca8ebc5334b964116c6b99daf7e44a"
+      }
+    },
+    "preview": {
+      "kind": "database-update",
+      "summary": "Change one fixture customer status",
+      "details": {
+        "template": "customer-status-v1",
+        "before": {
+          "id": 1,
+          "status": "active",
+          "version": 0
+        },
+        "after": {
+          "id": 1,
+          "status": "paused",
+          "version": 1
+        },
+        "maximumRows": 1
+      }
+    }
+  },
+  "execution": {
+    "status": "allowed",
+    "observation": "adapter-reported",
+    "outcome": "adapter-reported",
+    "resultDisclosure": "released",
+    "resultRetained": true,
+    "summary": {
+      "id": 1,
+      "status": "paused",
+      "version": 1
+    },
+    "correlationId": "7ae78dfa-fb18-4a0a-b10a-cc195b827b6a"
+  },
+  "audit": {
+    "valid": true,
+    "redacted": true,
+    "entries": [
+      {
+        "seq": 7,
+        "data": {
+          "type": "action.pending",
+          "details": {
+            "actionId": "314374f5-04cf-461c-84f4-84e7638b7d86",
+            "agentId": "2c9bbb4d-4e1a-47eb-9f54-9bb7c57ef0b6",
+            "tool": "database_update",
+            "rule": "database-writes",
+            "correlationId": "7ae78dfa-fb18-4a0a-b10a-cc195b827b6a",
+            "grantId": "59e76804-591d-4a47-a122-d51e4418e16d",
+            "decisionId": "81f89281-e640-486e-a1ab-c5be4916043f",
+            "policyHash": "9ac719fef979ee7b37c5c5ef3173621453782a0a02d432727391beeff1234d14",
+            "policyRevision": 1,
+            "effect": "REQUIRE_APPROVAL"
+          },
+          "at": "2026-11-16T23:08:18.413Z"
+        },
+        "previous_hash": "1aa6f853ff04b909cde89a165a351ab9cb7a0aea56b43793a8cb44c7c4179cbf",
+        "hash": "0a118119d39db7ab601cef137414140eb879501ae6175d88d85ecf3bb200bea0"
+      },
+      {
+        "seq": 12,
+        "data": {
+          "type": "approval.granted",
+          "details": {
+            "actionId": "314374f5-04cf-461c-84f4-84e7638b7d86",
+            "actor": "approver",
+            "fingerprint": "2653288ed4395ebd763864200373258b45ca8ebc5334b964116c6b99daf7e44a"
+          },
+          "at": "2026-11-16T23:08:19.560Z"
+        },
+        "previous_hash": "89aac740f129bd423e82bc4b04bdc137c87fbaf4f36f83894c487d6ee26720fe",
+        "hash": "2d42fc378fb9469af77cf53749cba5f9e1ea1816bef5ab5b075160e5aca30748"
+      },
+      {
+        "seq": 13,
+        "data": {
+          "type": "execution.started",
+          "details": {
+            "actionId": "314374f5-04cf-461c-84f4-84e7638b7d86",
+            "approverId": "approver"
+          },
+          "at": "2026-11-16T23:08:19.568Z"
+        },
+        "previous_hash": "2d42fc378fb9469af77cf53749cba5f9e1ea1816bef5ab5b075160e5aca30748",
+        "hash": "caab7af8aa3b76cbdbdb99dd102258bd9ae6258f195821d64872f831ed226e33"
+      },
+      {
+        "seq": 14,
+        "data": {
+          "type": "approval.granted",
+          "details": {
+            "actionId": "314374f5-04cf-461c-84f4-84e7638b7d86",
+            "actor": "approver",
+            "fingerprint": "2653288ed4395ebd763864200373258b45ca8ebc5334b964116c6b99daf7e44a"
+          },
+          "at": "2026-11-16T23:08:19.583Z"
+        },
+        "previous_hash": "caab7af8aa3b76cbdbdb99dd102258bd9ae6258f195821d64872f831ed226e33",
+        "hash": "72f2774fef362b23b96f5e4b02fd098b8dde9e322c88504a5ec63f6c4f93ab20"
+      },
+      {
+        "seq": 16,
+        "data": {
+          "type": "execution.allowed",
+          "details": {
+            "actionId": "314374f5-04cf-461c-84f4-84e7638b7d86",
+            "outcome": "adapter-reported",
+            "resultDisclosure": "released"
+          },
+          "at": "2026-11-16T23:08:19.624Z"
+        },
+        "previous_hash": "bc9774ae35c49e67a475191c558553004a436ceee8135836fc8838edeb53bdc0",
+        "hash": "0c29dd1b4587de17dbb24cb2cb090f9f4a9666e8c46fe45cc9118e1c0f6fff4d"
+      }
+    ],
+    "verification": "Hash chain checked against stored records before redaction; this filtered redacted export is not an independent full-chain proof."
+  },
+  "coverage": "Local synthetic fixture. Adapter response is not independent target verification. UNKNOWN requires target reconciliation; never retry automatically."
+}

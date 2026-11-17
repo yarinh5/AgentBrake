@@ -106,6 +106,9 @@ export type Evidence = {
   execution: {
     status: string;
     observation: "adapter-reported" | "not-dispatched" | "unverified";
+    outcome?: "adapter-reported" | "not-applied" | "failed" | "unknown" | "unverified" | "not-dispatched";
+    resultDisclosure?: "released" | "withheld" | "unavailable" | "unrecorded";
+    resultRetained?: boolean;
     summary?: object;
     correlationId: string;
   };

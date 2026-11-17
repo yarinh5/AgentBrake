@@ -2,7 +2,7 @@
 
 Status: **not production accepted**. Follow PLAN_PRODUCTION.md and the exact-source reports; no customer or external-review evidence has been fabricated.
 
-Local candidate0.3.0-rc.1 passed the full release gate and four-service-image scan on source993f7cbf1a3a56dcb421f88368efa67dbbcf37809d0d45b9cdf54e0ab80287c7. The machine-readable evidence/production-readiness.json correctly remains BLOCKED with three local gates PASS and five external gates NOT_OBTAINED. Product-local was subsequently upgraded to v0.3.0-rc.1/minimal-v1 with preserved data; this candidate has not been deployed externally.
+Installed baseline0.3.0-rc.1 passed its original full release/image gate on source993f7cbf1a3a56dcb421f88368efa67dbbcf37809d0d45b9cdf54e0ab80287c7. Product-local remains on that build with preserved data; the commercial-validation source revision is separate and has not been deployed. Current local acceptance is defined by the matching sourceHash in evidence/local-release.json, container-scan.json and production-readiness.json, with the scoped report in evidence/commercial-readiness.json. Five external gates remain NOT_OBTAINED. See PLAN_COMMERCIAL_READINESS.md, GITHUB_SANDBOX_VALIDATION.md, CLEAN_LINUX_VALIDATION.md and PILOT_READINESS.md; preparing these documents or CI does not close external gates.
 
 | Gate | Locally prepared | External input needed |
 |---|---|---|

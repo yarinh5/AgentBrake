@@ -2,7 +2,14 @@ import test from "node:test";
 import assert from "node:assert/strict";
 // @ts-expect-error Small shared ESM fixture module is intentionally not a TS library.
 import * as corpus from "../milestone-b/corpus.mjs";
-const { metrics, legitimate, classifyBlocked } = corpus;
+const { metrics, legitimate, classifyBlocked, classifyAction } = corpus;
+test("post-execution withheld output is a usability block, not completion or prevented mutation", () => {
+  assert.equal(classifyAction({ status: "allowed", resultDisclosure: "withheld" }), "withheld");
+  assert.equal(classifyAction({ status: "allowed", resultDisclosure: "released" }), "completed");
+  assert.equal(classifyAction({ status: "blocked", rule: "secret-protection" }), "policy");
+  assert.equal(classifyAction({ status: "unknown", resultDisclosure: "unavailable" }), "operational");
+  assert.equal(classifyAction({ status: "failed", executionOutcome: "not-applied" }), "operational");
+});
 test("benchmark denominators separate policy blocks, approvals, baseline and transport failures", () => {
   const result = metrics([
     {

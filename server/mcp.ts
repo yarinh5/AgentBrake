@@ -28,7 +28,7 @@ async function request(path: string, body?: unknown) {
     return {
       content: [{ type: "text" as const, text: JSON.stringify(data) }],
       isError:
-        !response.ok || ["blocked", "failed", "unknown"].includes(data.status),
+        !response.ok || data.resultDisclosure === "withheld" || ["blocked", "failed", "unknown"].includes(data.status),
     };
   } catch {
     return {

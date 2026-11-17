@@ -115,6 +115,9 @@ test("evidence separates adapter observation from UNKNOWN and exports redacted J
     assert.equal(evidence.execution.observation, "adapter-reported");
     assert.equal(evidence.execution.summary.rowCount, 1);
     assert.equal(evidence.audit.valid, true);
+    const exported = await (await f.request("/api/evidence/" + allowed.id + "/export?format=csv")).text();
+    for (const field of ["executionOutcome", "resultDisclosure", "resultRetained"]) assert.ok(exported.split("\n")[0].includes(field));
+    assert.ok(exported.includes("released"));
     assert.equal(
       (await (await f.request("/api/evidence/" + pending.id)).json()).execution
         .observation,

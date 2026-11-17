@@ -17,3 +17,5 @@
 
 External deployment, paid services, real-system access and material requirement changes still require explicit user approval.
 
+Commercial validation revision (2026-11-17): output withholding is now separate from execution (executionOutcome/resultDisclosure). A completed adapter call with withheld output is not a prevented action; post-dispatch TargetChangedError is failed/not-applied, not blocked. Historical blocked/secret-output records are left intact and unverified. The installed local service remains the previously verified 0.3.0-rc.1 build until a separately verified upgrade. CI is prepared locally but hosted execution/branch protection are not obtained. See PILOT_READINESS.md, ENFORCEMENT_BOUNDARIES.md, ENTERPRISE_GAP_ANALYSIS.md and PLAN_COMMERCIAL_READINESS.md for current scope and evidence; prior reports do not certify changed source.
+

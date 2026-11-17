@@ -35,6 +35,8 @@ test("result retention removes old payloads without deleting audit, pending proo
       1,
     );
     assert.equal(s.store.action(result.id)!.result, undefined);
+    assert.equal(s.store.action(result.id)!.executionOutcome, "adapter-reported");
+    assert.equal(s.store.action(result.id)!.resultDisclosure, "released", "retention does not rewrite the historical release policy");
     assert.ok(s.store.action(result.id)!.resultPurgedAt);
     assert.deepEqual(s.store.action(pending.id), reviewed);
     assert.deepEqual(s.store.auditTrail(), audit);

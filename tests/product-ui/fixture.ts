@@ -30,7 +30,7 @@ async function close() {
 }
 try {
   opa = await startOpa(); git = await GitFixtureAdapter.create(join(temporary, "repository.git"));
-  const rows = [{ id: 1, status: "active", version: 0 }, { id: 2, status: "active", version: 0 }, { id: 3, status: "active", version: 0 }];
+  const rows = [{ id: 1, status: "active", version: 0 }, { id: 2, status: "active", version: 0 }, { id: 3, status: "active", version: 0 }, { id: 4, status: "active", version: 0 }];
   const executions: Record<number, number> = {};
   const adapter = git;
   target = createServer(async (req, res) => {
@@ -47,6 +47,7 @@ try {
       // Actual committed target mutation with an actual lost response: Gateway
       // transport times out and records UNKNOWN. No fabricated API status.
       if (row.id === 2) return;
+      if (row.id === 4) { res.end(JSON.stringify({ ...row, note: "ghp_" + "Z".repeat(32) })); return; }
       res.end(JSON.stringify(row));
     } catch { res.writeHead(400).end(JSON.stringify({ error: "Fixture operation failed" })); }
   });

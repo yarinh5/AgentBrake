@@ -97,7 +97,7 @@ export async function actionEvidence(store: ControlStore, id: string) {
   const observation =
     a.status === "unknown"
       ? "unverified"
-      : a.status === "allowed"
+      : a.status === "allowed" || a.executionOutcome === "not-applied"
         ? "adapter-reported"
         : dispatched
           ? "unverified"
@@ -147,6 +147,9 @@ export async function actionEvidence(store: ControlStore, id: string) {
     execution: {
       status: a.status,
       observation,
+      outcome: a.executionOutcome ?? (dispatched ? "unverified" : "not-dispatched"),
+      resultDisclosure: a.resultDisclosure ?? (a.rule === "secret-output" ? "withheld" : "unrecorded"),
+      resultRetained: a.result !== undefined,
       summary,
       correlationId: a.correlationId,
     },
@@ -189,6 +192,9 @@ export function mountControlExperience(
             "status",
             "reason",
             "observation",
+            "executionOutcome",
+            "resultDisclosure",
+            "resultRetained",
             "policyHash",
             "approver",
             "fingerprint",
@@ -199,6 +205,9 @@ export function mountControlExperience(
             evidence.action.status,
             evidence.action.reason,
             evidence.execution.observation,
+            evidence.execution.outcome,
+            evidence.execution.resultDisclosure,
+            evidence.execution.resultRetained,
             evidence.decision.policyHash,
             evidence.review.receipt?.actorId,
             evidence.review.fingerprint,

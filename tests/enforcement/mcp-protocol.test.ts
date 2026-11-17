@@ -9,6 +9,30 @@ const meta = {
   "io.modelcontextprotocol/protocolVersion": modern,
   "io.modelcontextprotocol/clientCapabilities": {},
 };
+test("MCP withholds sensitive output while retaining execution outcome and replay identity", async () => {
+  const s = await fixture();
+  try {
+    const execute = s.gateway.connectors.execute.bind(s.gateway.connectors);
+    const secret = "ghp_" + "Z".repeat(32);
+    s.gateway.connectors.execute = async a => ({ ...(await execute(a) as object), note: secret });
+    const requestId = randomUUID();
+    for (let i = 0; i < 2; i++) {
+      const r = await s.send(s.call("database_read", { requestId, limit: 1 }));
+      assert.equal(r.status, 200);
+      assert.equal(r.data.result.isError, true, "withheld payload must not be treated as usable tool data");
+      const a = JSON.parse(r.data.result.content[0].text);
+      assert.equal(a.status, "allowed");
+      assert.equal(a.executionOutcome, "adapter-reported");
+      assert.equal(a.resultDisclosure, "withheld");
+      assert.equal(a.result, undefined);
+      assert.match(a.reason, /Do not resubmit/);
+      assert.equal(JSON.stringify(r.data).includes(secret), false);
+      const status = await s.send(s.call("action_status", { id: a.id }));
+      assert.equal(status.data.result.isError, true, "status lookup must preserve withheld tool result semantics");
+    }
+    assert.equal(s.calls(), 1);
+  } finally { await s.stop(); }
+});
 async function fixture() {
   const s = createApp({
     databasePath: ":memory:",

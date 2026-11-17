@@ -29,6 +29,7 @@ export async function sourceManifest() {
   }
   for (const location of [
     "server",
+    ".github",
     "src",
     "apps/dashboard",
     "services",

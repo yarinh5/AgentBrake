@@ -1,5 +1,7 @@
 # AgentBrake
 
+עדכון אימות מסחרי (17.11.2026): בקוד המקור הופרדו תוצאת הביצוע וסינון הפלט, ונוספו תצורת CI וערכות אימות לפיילוט. [תוכנית ותוצאות](docs/PLAN_COMMERCIAL_READINESS.md), [גבולות האכיפה](docs/ENFORCEMENT_BOUNDARIES.md), [התקנת Linux נקייה](docs/CLEAN_LINUX_VALIDATION.md), [פערי Enterprise](docs/ENTERPRISE_GAP_ANALYSIS.md), [מוכנות לפיילוט](docs/PILOT_READINESS.md). ההתקנה `product-local` נשארה על הבנייה הקודמת; תיקוני המקור אינם שדרוג אוטומטי שלה. אין אישור Production או פיילוט חיצוני.
+
 מערכת מקומית לאכיפת פעולות סוכני פיתוח לפני ביצוע: MCP Gateway, מנוע OPA/Rego נפרד, אישור של משתמש אחר, PostgreSQL נפרד לבקרה וליעד, Git מקומי וממשק Next.js.
 
 כוללת משימות והרשאות מוגבלות, preview אמיתי, חסימת שינוי לאחר בדיקה, אישור חד־פעמי, audit ויצוא ראיות. כתיבה שתוצאתה אינה ידועה מסומנת **UNKNOWN** ואינה מורצת שוב אוטומטית. הנתונים סינתטיים; GitHub App חי ו־Production אינם מופעלים.

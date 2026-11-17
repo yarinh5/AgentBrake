@@ -1,0 +1,10 @@
+{
+  "at": "2026-11-16T23:17:01.605Z",
+  "result": "PASS_ARCHIVE_INTEGRITY",
+  "sourceHash": "b9c07645e95dca1369636c9fc38a7ed3f777dc15b2a4004b9032f9566a00e60d",
+  "archive": "F:\\project love\\AgentBrake\\.agentbrake-local\\releases\\agentbrake-0.3.0-rc.1-b9c07645e95d-06b90c60.tar.gz",
+  "sha256": "9b75fc7d75f86a23346ff06c582f9d7eec9f084520a772758d3dca76336629ed",
+  "files": 227,
+  "directory": "F:\\project love\\AgentBrake\\.agentbrake-local\\releases\\commercial-extracted-ae8cc57e-bd27-4ee8-84a8-803d1f861f45",
+  "scope": "Exact archive checksum, safe paths, extracted per-file hashes and current source coverage; not an independent Linux install or package-origin signature."
+}

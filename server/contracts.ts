@@ -145,6 +145,10 @@ export type ActionRecord = {
   expiresAt: string;
   durationMs: number;
   result?: unknown;
+  // Additive persisted metadata. Absent on historical/pre-dispatch records.
+  // Adapter acknowledgement is not independent target-state verification.
+  executionOutcome?: "adapter-reported" | "not-applied" | "failed" | "unknown";
+  resultDisclosure?: "released" | "withheld" | "unavailable";
   resultPurgedAt?: string;
   review?: ReviewProof;
   approvalReceipt?: ApprovalReceipt;

@@ -639,22 +639,27 @@ export class Gateway {
     this.notify();
     try {
       const result = await this.connectors.execute(record);
+      record.status = "allowed";
+      record.executionOutcome = "adapter-reported";
       if (secretPattern.test(JSON.stringify(result))) {
-        record.status = "blocked";
-        record.rule = "secret-output";
-        record.reason = "Credential-like tool output was withheld.";
+        record.resultDisclosure = "withheld";
+        delete record.result;
+        record.reason = "The adapter reported execution; credential-like output was withheld. This does not undo the action. Do not resubmit; reconcile target state if needed.";
       } else {
-        record.status = "allowed";
+        record.resultDisclosure = "released";
         record.result = result;
         record.reason = "Executed through the enforced gateway.";
       }
     } catch (error) {
       record.status =
         error instanceof TargetChangedError
-          ? "blocked"
+          ? "failed"
           : readTools.has(record.tool)
             ? "failed"
             : "unknown";
+      record.executionOutcome = error instanceof TargetChangedError
+        ? "not-applied" : record.status === "unknown" ? "unknown" : "failed";
+      record.resultDisclosure = "unavailable";
       if (error instanceof TargetChangedError) record.rule = "target-changed";
       record.reason =
         error instanceof TargetChangedError
@@ -666,6 +671,8 @@ export class Gateway {
     await this.store.saveAction(record);
     await this.store.audit("execution." + record.status, {
       actionId: record.id,
+      outcome: record.executionOutcome,
+      resultDisclosure: record.resultDisclosure,
     });
     this.notify();
     return record;

@@ -62,7 +62,7 @@ export function mountMcp(app: Express, store: ControlStore, gateway: GatewayPort
                 content: [
                   { type: "text" as const, text: JSON.stringify(action) },
                 ],
-                isError: ["blocked", "failed", "unknown"].includes(
+                isError: action.resultDisclosure === "withheld" || ["blocked", "failed", "unknown"].includes(
                   action.status,
                 ),
               };
@@ -96,6 +96,7 @@ export function mountMcp(app: Express, store: ControlStore, gateway: GatewayPort
           const action = await gateway.actionForAgent(agent.id, id);
           return {
             content: [{ type: "text" as const, text: JSON.stringify(action) }],
+            isError: action.resultDisclosure === "withheld" || ["blocked", "failed", "unknown"].includes(action.status),
           };
         },
       );

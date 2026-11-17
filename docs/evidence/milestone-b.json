@@ -1,15 +1,15 @@
 {
   "result": "PASS_BOUNDED",
   "stage": "Milestone B",
-  "startedAt": "2026-11-16T19:38:29.782Z",
-  "finishedAt": "2026-11-16T19:45:23.242Z",
-  "sourceHash": "993f7cbf1a3a56dcb421f88368efa67dbbcf37809d0d45b9cdf54e0ab80287c7",
+  "startedAt": "2026-11-16T22:59:10.834Z",
+  "finishedAt": "2026-11-16T23:06:46.209Z",
+  "sourceHash": "b9c07645e95dca1369636c9fc38a7ed3f777dc15b2a4004b9032f9566a00e60d",
   "gitCommit": null,
-  "nativeRun": "86b5c520-e5b3-4499-a521-bd7578847131",
-  "isolationRun": "532d21d4-8a32-428d-be7a-f5fabfe11224",
+  "nativeRun": "58b5ddb0-dc82-4ad6-95a0-7ff78aae0d64",
+  "isolationRun": "e882aded-0f23-4aa3-9d83-dd8bf307f854",
   "nativeTests": {
-    "tests": 175,
-    "pass": 171,
+    "tests": 182,
+    "pass": 178,
     "fail": 0,
     "skipped": 4
   },
@@ -35,8 +35,8 @@
     "completionVsBaseline": 0.9230769230769231,
     "falseBlockRate": 0.07692307692307693,
     "approvalRequired": 12,
-    "authorizationP50Ms": 4.75,
-    "authorizationP95Ms": 6.26,
+    "authorizationP50Ms": 5,
+    "authorizationP95Ms": 9.39,
     "corpusHash": "6d5c6529807d270e0cb3eb0e0e8c6ce16ca854d8d1d98f5e6dec0bd76ad77289"
   },
   "codex": {
@@ -73,7 +73,7 @@
     "replayedReads": 2,
     "forbiddenReplayRule": "task-scope"
   },
-  "environmentHash": "45c7d08080ab3f2fc99c9db333bed2711bf7abf791caaf97344d16a19a6509e3",
+  "environmentHash": "3c75786be10397a05494ee8663383630c8ba2145d52d3ec5d072727c73ecdf77",
   "cleanup": {
     "result": "PASS",
     "remaining": {

@@ -1,6 +1,6 @@
 {
   "result": "BLOCKED",
-  "sourceHash": "993f7cbf1a3a56dcb421f88368efa67dbbcf37809d0d45b9cdf54e0ab80287c7",
+  "sourceHash": "b9c07645e95dca1369636c9fc38a7ed3f777dc15b2a4004b9032f9566a00e60d",
   "gates": [
     {
       "id": "local-release",
@@ -44,5 +44,5 @@
     }
   ],
   "limitation": "External gates require actual separately reviewed evidence. This command has no flag to relabel an offline fixture as live or approve deployment.",
-  "at": "2026-11-16T19:55:44.864Z"
+  "at": "2026-11-16T23:16:12.434Z"
 }

@@ -1,0 +1,3 @@
+src/ProductApp.tsx(1707,55): error TS2339: Property 'resultDisclosure' does not exist on type '{ status: string; observation: "adapter-reported" | "not-dispatched" | "unverified"; summary?: object | undefined; correlationId: string; }'.
+src/ProductApp.tsx(1708,33): error TS2339: Property 'resultDisclosure' does not exist on type '{ status: string; observation: "adapter-reported" | "not-dispatched" | "unverified"; summary?: object | undefined; correlationId: string; }'.
+src/ProductApp.tsx(1711,33): error TS2339: Property 'outcome' does not exist on type '{ status: string; observation: "adapter-reported" | "not-dispatched" | "unverified"; summary?: object | undefined; correlationId: string; }'.

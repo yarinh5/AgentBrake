@@ -91,6 +91,21 @@ test("stale one-time review displays conflict and refreshes status without retry
   expect(requests).toHaveLength(1); await expect(page.getByRole("button", { name: "Approve & execute" })).toHaveCount(0);
 });
 
+test("actual committed mutation with withheld output is shown separately from a blocked action", async ({ page }) => {
+  const fixture = await pending("operator", 4); const before = await state();
+  await signIn(page, "approver"); await openAction(page, fixture.action.id);
+  await page.getByRole("button", { name: "Approve & execute" }).click();
+  await expect(page.getByRole("dialog").locator(".badge")).toHaveText("Allowed");
+  await page.getByRole("button", { name: "Close dialog" }).click();
+  await page.getByRole("button", { name: "Evidence", exact: true }).click();
+  await page.getByLabel("Recorded action").selectOption(fixture.action.id);
+  await expect(page.getByText("Execution observation: adapter-reported")).toBeVisible();
+  await expect(page.getByText("Result disclosure: withheld")).toBeVisible();
+  await expect(page.locator(".evidence-detail").getByRole("alert")).toContainText("Do not resubmit");
+  expect((await state()).executions[4]).toBe((before.executions[4] ?? 0) + 1);
+  expect(await page.locator("body").textContent()).not.toContain("ghp_" + "Z".repeat(32));
+});
+
 test("actual lost response after target commit displays UNKNOWN and never offers retry", async ({ page }) => {
   const fixture = await pending("operator", 2); const before = await state();
   await signIn(page, "approver"); await openAction(page, fixture.action.id); await page.getByRole("button", { name: "Approve & execute" }).click();

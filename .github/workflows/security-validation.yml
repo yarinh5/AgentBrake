@@ -1,0 +1,134 @@
+{
+  "name": "Security validation",
+  "on": {
+    "push": {},
+    "pull_request": {},
+    "workflow_dispatch": {}
+  },
+  "permissions": {
+    "contents": "read"
+  },
+  "concurrency": {
+    "group": "security-${{ github.workflow }}-${{ github.ref }}",
+    "cancel-in-progress": true
+  },
+  "env": {
+    "NEXT_TELEMETRY_DISABLED": "1"
+  },
+  "jobs": {
+    "native": {
+      "runs-on": "ubuntu-24.04",
+      "timeout-minutes": 25,
+      "steps": [
+        {
+          "uses": "actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683",
+          "with": {
+            "persist-credentials": false
+          }
+        },
+        {
+          "uses": "actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020",
+          "with": {
+            "node-version": "22.13.0"
+          }
+        },
+        {
+          "run": "npm ci --ignore-scripts"
+        },
+        {
+          "run": "npm ci --ignore-scripts --prefix apps/dashboard"
+        },
+        {
+          "run": "npm run setup:policy"
+        },
+        {
+          "run": "node node_modules/@playwright/test/cli.js install --with-deps chromium"
+        },
+        {
+          "run": "npm run verify:stage1"
+        },
+        {
+          "uses": "actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+          "if": "always()",
+          "with": {
+            "name": "native-${{ github.run_id }}-${{ github.run_attempt }}",
+            "path": "docs/evidence/*/summary.json\ndocs/evidence/*/source-manifest.json",
+            "retention-days": 14,
+            "if-no-files-found": "error"
+          }
+        }
+      ]
+    },
+    "security": {
+      "runs-on": "ubuntu-24.04",
+      "timeout-minutes": 20,
+      "steps": [
+        {
+          "uses": "actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683",
+          "with": {
+            "persist-credentials": false
+          }
+        },
+        {
+          "uses": "actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020",
+          "with": {
+            "node-version": "22.13.0"
+          }
+        },
+        {
+          "run": "npm ci --ignore-scripts"
+        },
+        {
+          "run": "npm ci --ignore-scripts --prefix apps/dashboard"
+        },
+        {
+          "run": "npm run verify:security"
+        },
+        {
+          "uses": "actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+          "if": "always()",
+          "with": {
+            "name": "security-${{ github.run_id }}-${{ github.run_attempt }}",
+            "path": "docs/evidence/*/security-summary.json\ndocs/evidence/*/*-sbom.json\ndocs/evidence/*/*-audit.json",
+            "retention-days": 14,
+            "if-no-files-found": "error"
+          }
+        }
+      ]
+    },
+    "isolation": {
+      "runs-on": "ubuntu-24.04",
+      "timeout-minutes": 35,
+      "steps": [
+        {
+          "uses": "actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683",
+          "with": {
+            "persist-credentials": false
+          }
+        },
+        {
+          "uses": "actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020",
+          "with": {
+            "node-version": "22.13.0"
+          }
+        },
+        {
+          "run": "npm ci --ignore-scripts"
+        },
+        {
+          "run": "npm run verify:isolation"
+        },
+        {
+          "uses": "actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
+          "if": "always()",
+          "with": {
+            "name": "isolation-${{ github.run_id }}-${{ github.run_attempt }}",
+            "path": "docs/evidence/*/isolation-summary.json",
+            "retention-days": 14,
+            "if-no-files-found": "error"
+          }
+        }
+      ]
+    }
+  }
+}

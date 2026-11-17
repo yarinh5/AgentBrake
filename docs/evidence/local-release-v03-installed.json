@@ -1,0 +1,381 @@
+{
+  "result": "LOCAL_MVP_VERIFIED_EXTERNAL_GATES_OPEN",
+  "startedAt": "2026-11-16T19:38:29.724Z",
+  "finishedAt": "2026-11-16T19:52:23.732Z",
+  "sourceHash": "993f7cbf1a3a56dcb421f88368efa67dbbcf37809d0d45b9cdf54e0ab80287c7",
+  "gitCommit": null,
+  "milestoneC": "PASS_LOCAL",
+  "milestoneD": "LOCAL_ENGINEERING_VERIFIED_EXTERNAL_SIGNOFF_PENDING",
+  "baseline": {
+    "result": "PASS_BOUNDED",
+    "stage": "Milestone B",
+    "startedAt": "2026-11-16T19:38:29.782Z",
+    "finishedAt": "2026-11-16T19:45:23.242Z",
+    "sourceHash": "993f7cbf1a3a56dcb421f88368efa67dbbcf37809d0d45b9cdf54e0ab80287c7",
+    "gitCommit": null,
+    "nativeRun": "86b5c520-e5b3-4499-a521-bd7578847131",
+    "isolationRun": "532d21d4-8a32-428d-be7a-f5fabfe11224",
+    "nativeTests": {
+      "tests": 175,
+      "pass": 171,
+      "fail": 0,
+      "skipped": 4
+    },
+    "postgresTests": {
+      "tests": 22,
+      "pass": 22,
+      "fail": 0,
+      "skipped": 0
+    },
+    "workflowCases": 14,
+    "gitContainerTests": {
+      "tests": 16,
+      "pass": 16,
+      "fail": 0,
+      "skipped": 0
+    },
+    "benchmark": {
+      "total": 26,
+      "baselineSucceeded": 26,
+      "completed": 24,
+      "falseBlocks": 2,
+      "nonPolicyFailures": 0,
+      "completionVsBaseline": 0.9230769230769231,
+      "falseBlockRate": 0.07692307692307693,
+      "approvalRequired": 12,
+      "authorizationP50Ms": 4.75,
+      "authorizationP95Ms": 6.26,
+      "corpusHash": "6d5c6529807d270e0cb3eb0e0e8c6ce16ca854d8d1d98f5e6dec0bd76ad77289"
+    },
+    "codex": {
+      "version": "codex-cli 0.169.0",
+      "binarySha256": "b452ca20f838a8855a88a41050ee4a694033fff4ea3ecdad5633e6e0e8d13f2b",
+      "model": [
+        {
+          "name": "qwen3:4b-instruct",
+          "model": "qwen3:4b-instruct",
+          "modified_at": "2026-11-16T11:18:30.6952146Z",
+          "size": 2497293803,
+          "digest": "0edcdef34593eac1aa2be9c7d06c432dcf81945adca5eca2f27662c18f168ba0",
+          "details": {
+            "parent_model": "",
+            "format": "gguf",
+            "family": "qwen3",
+            "families": [
+              "qwen3"
+            ],
+            "parameter_size": "4.0B",
+            "quantization_level": "Q4_K_M",
+            "context_length": 262144,
+            "embedding_length": 2560,
+            "runner": "ggml"
+          },
+          "capabilities": [
+            "tools",
+            "thinking",
+            "completion"
+          ]
+        }
+      ],
+      "actualActions": 2,
+      "replayedReads": 2,
+      "forbiddenReplayRule": "task-scope"
+    },
+    "environmentHash": "45c7d08080ab3f2fc99c9db333bed2711bf7abf791caaf97344d16a19a6509e3",
+    "cleanup": {
+      "result": "PASS",
+      "remaining": {
+        "containers": 0,
+        "networks": 0,
+        "volumes": 0
+      }
+    },
+    "credentialScan": {
+      "result": "PASS",
+      "files": 49,
+      "knownSyntheticSecrets": 12,
+      "contaminated": [],
+      "scope": "Exact known fixture credentials; operator separately scans issued credentials. Not a universal DLP scan."
+    },
+    "scope": "Local official Codex CLI with actual Qwen inference, gateway/MCP/OPA, synthetic PostgreSQL/Git mock PR, injection replay and curated test-client benchmark. No hosted OpenAI model or live GitHub; not production or statistical model reliability."
+  },
+  "productRun": "b4906a2a-38e0-4d74-ad41-67b358f62f01",
+  "service": {
+    "runId": "c0810502-0b66-4abf-8108-1d2b9c66ff66",
+    "result": "PASS_LOCAL_SERVICE",
+    "cases": [
+      {
+        "name": "managed owner bootstrap and invited reviewer work through installed proxy",
+        "result": "PASS",
+        "observed": {
+          "legacyKeysDenied": true,
+          "reviewerRole": "approver",
+          "reviewerTeamAccessDenied": true
+        }
+      },
+      {
+        "name": "installed browser account, team and settings workflow",
+        "result": "PASS",
+        "observed": {
+          "accountLogin": true,
+          "persistedReviewerVisible": true,
+          "profileVisible": true,
+          "signedOut": true,
+          "browserErrors": 0,
+          "externalRequests": 0,
+          "credentialStorage": {
+            "local": [],
+            "session": []
+          }
+        }
+      },
+      {
+        "name": "encrypted consistent backup resumes original installation",
+        "result": "PASS",
+        "observed": {
+          "bytes": 25970473,
+          "sourceResumed": true
+        }
+      },
+      {
+        "name": "oversized backup fails without publishing and resumes source",
+        "result": "PASS",
+        "observed": {
+          "rejectedOversizedSnapshot": true,
+          "artifactNotPublished": true,
+          "sourceResumed": true
+        }
+      },
+      {
+        "name": "wrong key and existing destination rejected without damage",
+        "result": "PASS",
+        "observed": {
+          "sourceTargetUnchanged": true,
+          "newDestinationAbsent": true
+        }
+      },
+      {
+        "name": "foreign exact-name volumes refused without content or metadata changes",
+        "result": "PASS",
+        "observed": {
+          "cases": [
+            {
+              "suffix": "control-data",
+              "labels": "no Compose label",
+              "before": {
+                "uid": 0,
+                "gid": 0,
+                "mode": 489,
+                "sentinel": "synthetic collision sentinel"
+              },
+              "after": {
+                "uid": 0,
+                "gid": 0,
+                "mode": 489,
+                "sentinel": "synthetic collision sentinel"
+              },
+              "destinationAbsent": true
+            },
+            {
+              "suffix": "target-data",
+              "labels": "foreign Compose label",
+              "before": {
+                "uid": 0,
+                "gid": 0,
+                "mode": 489,
+                "sentinel": "synthetic collision sentinel"
+              },
+              "after": {
+                "uid": 0,
+                "gid": 0,
+                "mode": 489,
+                "sentinel": "synthetic collision sentinel"
+              },
+              "destinationAbsent": true
+            },
+            {
+              "suffix": "git-data",
+              "labels": "foreign Compose label",
+              "before": {
+                "uid": 0,
+                "gid": 0,
+                "mode": 489,
+                "sentinel": "synthetic collision sentinel"
+              },
+              "after": {
+                "uid": 0,
+                "gid": 0,
+                "mode": 489,
+                "sentinel": "synthetic collision sentinel"
+              },
+              "destinationAbsent": true
+            }
+          ]
+        }
+      },
+      {
+        "name": "full restore preserves target and audit but suspends old authority",
+        "result": "PASS",
+        "observed": {
+          "agentId": "de0abeb4-ebfb-4f85-9644-165a308bcd65",
+          "oldTokenDenied": true,
+          "pendingBlocked": true,
+          "auditPrefixPreserved": true,
+          "paused": true,
+          "accountsPreserved": true,
+          "invitationAndRecoveryTokensInvalidated": true
+        }
+      }
+    ],
+    "cleanup": [
+      {
+        "project": "agentbrake-product-verify-restore-c0810502",
+        "result": "PASS",
+        "containers": 0,
+        "volumes": 0,
+        "networks": 0
+      },
+      {
+        "project": "agentbrake-product-verify-service-c0810502",
+        "result": "PASS",
+        "containers": 0,
+        "volumes": 0,
+        "networks": 0
+      }
+    ]
+  },
+  "securityRun": "9ed97394-5f98-4b6d-aa37-2f556aacbc83",
+  "candidateRun": "ec851b7a-6c2f-4311-8310-c64883ffbfdb",
+  "productCases": [
+    {
+      "name": "separate process topology, internal networks, credentials and loopback publication",
+      "result": "PASS",
+      "observed": {
+        "services": [
+          "agent",
+          "control-api",
+          "control-db",
+          "dashboard",
+          "gateway",
+          "ingress",
+          "mock-target",
+          "opa",
+          "target-db"
+        ],
+        "internalNetworks": 4,
+        "loopbackIngressNetworks": 1,
+        "deniedNetworkProbes": 14,
+        "agentSecrets": 0
+      }
+    },
+    {
+      "name": "permitted read succeeds and rejected SQL has zero upstream execution and unchanged target",
+      "result": "PASS",
+      "observed": {
+        "readCalls": 1,
+        "deniedCalls": 0,
+        "denialRule": "invalid-arguments"
+      }
+    },
+    {
+      "name": "preview, CSRF, role, no-self-review and exact fingerprint gate the real DB write",
+      "result": "PASS",
+      "observed": {
+        "deniedAttempts": 4,
+        "deniedCalls": 0,
+        "concurrentStatuses": [
+          200,
+          409
+        ],
+        "mutations": 1
+      }
+    },
+    {
+      "name": "PostgreSQL activity/history and honest evidence export",
+      "result": "PASS",
+      "observed": {
+        "filteredTotal": 2,
+        "actor": "approver",
+        "auditValid": true,
+        "observation": "adapter-reported"
+      }
+    },
+    {
+      "name": "full installation restart preserves DB, Git branch, audit and pending review proofs",
+      "result": "PASS",
+      "observed": {
+        "pendingProofsPreserved": 2,
+        "mainUnchanged": true,
+        "mockPRs": 1,
+        "auditValid": true,
+        "trustedActorPreserved": true,
+        "csvActorPreserved": true
+      }
+    },
+    {
+      "name": "policy change, task revoke and stop withdraw pending authority with no execution",
+      "result": "PASS",
+      "observed": {
+        "policyDenial": true,
+        "revocationDenial": true,
+        "emergencyStopDenial": true,
+        "executionCalls": 0,
+        "crossOwnerRevoker": "operator"
+      }
+    },
+    {
+      "name": "PDP outage fails closed through the product Gateway",
+      "result": "PASS",
+      "observed": {
+        "status": "blocked",
+        "rule": "pdp-timeout",
+        "calls": 0
+      }
+    },
+    {
+      "name": "persistent mock PR survives target process restart",
+      "result": "PASS",
+      "observed": {
+        "mockPRs": 1
+      }
+    }
+  ],
+  "security": {
+    "scanner": "1.184.0",
+    "sast": {
+      "rules": 8,
+      "findings": 0,
+      "scanned": 103
+    },
+    "root": {
+      "components": 263,
+      "vulnerabilities": {
+        "info": 0,
+        "low": 0,
+        "moderate": 0,
+        "high": 0,
+        "critical": 0,
+        "total": 0
+      }
+    },
+    "dashboard": {
+      "components": 61,
+      "vulnerabilities": {
+        "info": 0,
+        "low": 0,
+        "moderate": 0,
+        "high": 0,
+        "critical": 0,
+        "total": 0
+      }
+    }
+  },
+  "externalGates": {
+    "independentCleanMachine": "NOT_RUN",
+    "externalHumanSecuritySignoff": "NOT_OBTAINED",
+    "liveGitHubApp": "OPT_IN_OFFLINE_CONTRACTS_VERIFIED_LIVE_NOT_RUN",
+    "productionDeployment": "NOT_AUTHORIZED_NOT_RUN",
+    "marketInterviews": "NOT_RUN"
+  },
+  "scope": "Local synthetic service and HTTPS/GitHub-App candidate contract verification only; no paid inference, real target credentials or external deployment. Actual Codex uses local Qwen in the separate isolated verification profile."
+}

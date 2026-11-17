@@ -69,3 +69,15 @@ S01–S08 close only when the final release/package records match current source
 | P08 | Image scan binds to actual exercised image ID, no stale-source readiness | image-evidence.test.mjs, readiness.test.mjs, verify-images.mjs and verify-production.mjs |
 
 P01–P08 are local acceptance only when final source hashes/results match. External production approval requires the separate gates in PRODUCTION_READINESS.md, including live integration, clean host and a human reviewer. No offline test or agent reviewer can close them.
+# Commercial validation additions (2026-11-17)
+
+| Case | Contract and executable proof | Acceptance scope |
+|---|---|---|
+| CR01 | tests/enforcement/execution-outcome.test.ts: real fixture mutation/read + sensitive output, persisted outcome/disclosure, audit redaction, same-ID and approval replay | Local SQLite fixture + real OPA; independent row observation in test |
+| CR02 | tests/enforcement/approval-preview.test.ts: CAS race after preview => failed/not-applied; timeout => unknown | Dispatch is not mislabeled pre-execution prevention |
+| CR03 | tests/enforcement/mcp-protocol.test.ts and tests/mcp.test.ts: HTTP/stdio tool result and action_status preserve withheld execution | Real transports, no live GitHub |
+| CR04 | tests/product-ui/workflows.spec.ts: actual HTTP target mutation + withheld response shows separate disclosure and no resubmit guidance | Actual Next/browser fixture; run result recorded in release evidence |
+| CR05 | tests/production/ci-contract.test.mjs + source-package.test.mjs | Workflow contract and package inclusion; hosted CI NOT RUN |
+
+Commands/results for these cases are in PLAN_COMMERCIAL_READINESS.md and SECURITY_EVIDENCE.md. New test presence alone does not mean PASS. GH01–08 live cases remain NOT RUN in GITHUB_SANDBOX_VALIDATION.md; independent Linux T29 remains open.
+

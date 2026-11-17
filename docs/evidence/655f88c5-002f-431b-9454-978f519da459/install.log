@@ -1,0 +1,263 @@
+#1 [internal] load local bake definitions
+#1 reading from stdin 5.70kB 0.0s done
+#1 DONE 0.0s
+
+#2 [opa internal] load build definition from Opa.Dockerfile
+#2 transferring dockerfile: 918B done
+#2 DONE 0.0s
+
+#3 [control-db internal] load build definition from Postgres.Dockerfile
+#3 transferring dockerfile: 316B done
+#3 WARN: InvalidDefaultArgInFrom: Default value for ARG ${POSTGRES_BASE_IMAGE} results in empty or invalid base image name (line 2)
+#3 WARN: InvalidDefaultArgInFrom: Default value for ARG ${POSTGRES_BASE_IMAGE} results in empty or invalid base image name (line 2)
+#3 DONE 0.0s
+
+#4 [opa internal] load metadata for docker.io/library/golang@sha256:70bd7ddea8b6cbe5d6943cde279d6b67feb10cc924fb9100d1d8757c1575b280
+#4 DONE 0.0s
+
+#5 [mock-target internal] load build definition from Dockerfile
+#5 transferring dockerfile: 568B done
+#5 WARN: InvalidDefaultArgInFrom: Default value for ARG ${NODE_IMAGE} results in empty or invalid base image name (line 2)
+#5 WARN: InvalidDefaultArgInFrom: Default value for ARG ${NODE_IMAGE} results in empty or invalid base image name (line 2)
+#5 WARN: InvalidDefaultArgInFrom: Default value for ARG ${NODE_IMAGE} results in empty or invalid base image name (line 2)
+#5 WARN: InvalidDefaultArgInFrom: Default value for ARG ${NODE_IMAGE} results in empty or invalid base image name (line 2)
+#5 WARN: InvalidDefaultArgInFrom: Default value for ARG ${NODE_IMAGE} results in empty or invalid base image name (line 2)
+#5 DONE 0.0s
+
+#6 [control-db internal] load metadata for docker.io/library/postgres@sha256:b6972e1115a4ff8eba5d7f7d19184926d1e16d7d1136ae1e1a7ebf286da0f015
+#6 DONE 0.0s
+
+#7 [dashboard internal] load build definition from Dockerfile
+#7 transferring dockerfile: 1.37kB 0.0s done
+#7 DONE 0.0s
+
+#8 [dashboard internal] load metadata for docker.io/library/node@sha256:1314fb30ec37592d5845e5a160d522c0e680972aa534549940b8d73bde88481a
+#8 DONE 0.0s
+
+#9 [control-db internal] load .dockerignore
+#9 transferring context: 289B done
+#9 DONE 0.0s
+
+#10 [control-db 1/2] FROM docker.io/library/postgres@sha256:b6972e1115a4ff8eba5d7f7d19184926d1e16d7d1136ae1e1a7ebf286da0f015
+#10 DONE 0.0s
+
+#11 [control-db 2/2] RUN rm -f /usr/local/bin/gosu
+#11 CACHED
+
+#12 [opa build 2/6] ADD --checksum=sha256:4eddbf690f65d6ca440fa8c1f2ce2a3439070cdf5d42c7aa8669a9e1552fbd59 https://github.com/open-policy-agent/opa/archive/refs/tags/v1.22.4.tar.gz /tmp/opa.tar.gz
+#12 DONE 0.0s
+
+#13 [opa build 1/6] FROM docker.io/library/golang@sha256:70bd7ddea8b6cbe5d6943cde279d6b67feb10cc924fb9100d1d8757c1575b280
+#13 DONE 0.0s
+
+#14 [opa build 3/6] WORKDIR /src
+#14 CACHED
+
+#15 [opa build 6/6] RUN go test golang.org/x/net/html && go build -trimpath -tags=opa_wasm -ldflags='-s -w' -o /out/opa .
+#15 CACHED
+
+#16 [opa stage-1 1/3] COPY --from=build /out/opa /opa
+#16 CACHED
+
+#17 [opa build 4/6] RUN tar -xzf /tmp/opa.tar.gz --strip-components=1 -C /src
+#17 CACHED
+
+#18 [opa stage-1 2/3] COPY --from=build /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt
+#18 CACHED
+
+#19 [opa build 5/6] RUN go get golang.org/x/net@v0.62.0 && go mod verify
+#19 CACHED
+
+#20 [opa build 2/6] ADD --checksum=sha256:4eddbf690f65d6ca440fa8c1f2ce2a3439070cdf5d42c7aa8669a9e1552fbd59 https://github.com/open-policy-agent/opa/archive/refs/tags/v1.22.4.tar.gz /tmp/opa.tar.gz
+#20 CACHED
+
+#21 [opa stage-1 3/3] COPY --from=build /src/LICENSE /licenses/OPA-LICENSE
+#21 CACHED
+
+#22 [control-api build 1/8] FROM docker.io/library/node@sha256:1314fb30ec37592d5845e5a160d522c0e680972aa534549940b8d73bde88481a
+#22 DONE 0.0s
+
+#23 [control-api internal] load build context
+#23 transferring context: 5.64kB 0.0s done
+#23 transferring context: 5.64kB 0.0s done
+#23 DONE 0.0s
+
+#24 [dashboard internal] load build context
+#24 transferring context: 67.15kB 0.0s done
+#24 DONE 0.0s
+
+#25 [gateway 2/9] RUN apk add --no-cache git ca-certificates zlib=1.4-r0
+#25 CACHED
+
+#26 [gateway 3/9] WORKDIR /app
+#26 CACHED
+
+#27 [gateway 4/9] COPY package.json package-lock.json ./
+#27 CACHED
+
+#28 [gateway 5/9] RUN npm ci --omit=dev && rm -rf /root/.npm /usr/local/lib/node_modules/npm /usr/local/lib/node_modules/corepack /opt/yarn* && rm -f /usr/local/bin/npm /usr/local/bin/npx /usr/local/bin/yarn /usr/local/bin/yarnpkg /usr/local/bin/corepack
+#28 CACHED
+
+#29 [dashboard build 5/8] RUN ln -s apps/dashboard/node_modules /workspace/node_modules
+#29 CACHED
+
+#30 [dashboard build 2/8] WORKDIR /workspace
+#30 CACHED
+
+#31 [dashboard build 3/8] COPY apps/dashboard/package.json apps/dashboard/package-lock.json ./apps/dashboard/
+#31 CACHED
+
+#32 [dashboard build 4/8] RUN cd apps/dashboard && npm ci --ignore-scripts
+#32 CACHED
+
+#33 [dashboard build 6/8] COPY apps/dashboard ./apps/dashboard
+#33 CACHED
+
+#34 [control-db] exporting to image
+#34 exporting layers done
+#34 writing image sha256:8a12ac640023ef8ff473fd01a2bf49668e15737443fb29821a5059c044990a52 done
+#34 naming to docker.io/library/agentbrake-postgres:18-193f481f609ba4086c53 0.0s done
+#34 DONE 0.1s
+
+#35 [target-db] exporting to image
+#35 exporting layers done
+#35 writing image sha256:d94c7dd0bb2fba5c6390454c2847d5f28fe134150cc6e0df0585d151d003ba11 done
+#35 naming to docker.io/library/agentbrake-postgres:18-193f481f609ba4086c53 0.0s done
+#35 DONE 0.1s
+
+#36 [opa] exporting to image
+#36 exporting layers done
+#36 writing image sha256:39d8aef0adb40e102073613e642e1f6188f61bbd3d0f163861a87f72d4ec55bd 0.0s done
+#36 naming to docker.io/library/agentbrake-opa:1.22.4-3f9e5f443c6e97aa147e 0.0s done
+#36 DONE 0.1s
+
+#37 [gateway 6/9] COPY server ./server
+#37 DONE 0.1s
+
+#38 [dashboard build 7/8] COPY src ./src
+#38 DONE 0.1s
+
+#39 [mock-target 7/9] COPY services ./services
+#39 DONE 0.1s
+
+#40 [target-db] resolving provenance for metadata file
+#40 DONE 0.0s
+
+#41 [control-db] resolving provenance for metadata file
+#41 DONE 0.0s
+
+#42 [ingress 8/9] COPY scripts ./scripts
+#42 DONE 0.1s
+
+#43 [opa] resolving provenance for metadata file
+#43 DONE 0.0s
+
+#44 [gateway 9/9] COPY infra ./infra
+#44 DONE 0.0s
+
+#45 [mock-target] exporting to image
+#45 exporting layers 0.3s done
+#45 writing image sha256:bec31afb5f9ef6f8f6590a512119c2c1d3655097f80967b9fcaf954708c749a8
+#45 writing image sha256:bec31afb5f9ef6f8f6590a512119c2c1d3655097f80967b9fcaf954708c749a8 0.1s done
+#45 naming to docker.io/library/agentbrake-product-verify-655f88c5-runtime
+#45 naming to docker.io/library/agentbrake-product-verify-655f88c5-runtime 0.1s done
+#45 ...
+
+#46 [control-api] exporting to image
+#46 exporting layers 0.3s done
+#46 writing image sha256:0219131879b6b89f2f309efbb2f4aad5af17c76716987399e6ed6da2e1523a6c 0.0s done
+#46 naming to docker.io/library/agentbrake-product-verify-655f88c5-runtime 0.1s done
+#46 DONE 0.6s
+
+#47 [agent] exporting to image
+#47 exporting layers 0.3s done
+#47 writing image sha256:f8c3faac466894990c88b99df21fa7f89874d710f0422fa30fbdc2b2376d755e 0.1s done
+#47 naming to docker.io/library/agentbrake-product-verify-655f88c5-runtime 0.1s done
+#47 DONE 0.8s
+
+#48 [ingress] exporting to image
+#48 exporting layers 0.3s done
+#48 writing image sha256:4d3b2586c8d808bee0721a15a254bb740ce1161a27821bbb46cbc08a14a018e4 0.1s done
+#48 naming to docker.io/library/agentbrake-product-verify-655f88c5-runtime 0.1s done
+#48 DONE 0.8s
+
+#49 [gateway] exporting to image
+#49 exporting layers 0.3s done
+#49 writing image sha256:698c61960d5467cc1d7afd6465f6ba01cf6e87396fb298c36320f8553ff19fd9 0.1s done
+#49 naming to docker.io/library/agentbrake-product-verify-655f88c5-runtime 0.1s done
+#49 DONE 0.8s
+
+#45 [mock-target] exporting to image
+#45 DONE 0.8s
+
+#50 [dashboard build 8/8] RUN cd apps/dashboard && npm run build
+#50 0.765 
+#50 0.765 > agentbrake-dashboard@0.3.0-rc.1 build
+#50 0.765 > next build --webpack
+#50 0.765 
+#50 ...
+
+#51 [control-api] resolving provenance for metadata file
+#51 DONE 0.1s
+
+#52 [agent] resolving provenance for metadata file
+#52 DONE 0.1s
+
+#53 [gateway] resolving provenance for metadata file
+#53 DONE 0.0s
+
+#54 [ingress] resolving provenance for metadata file
+#54 DONE 0.0s
+
+#55 [mock-target] resolving provenance for metadata file
+#55 DONE 0.0s
+
+#50 [dashboard build 8/8] RUN cd apps/dashboard && npm run build
+#50 2.169 ▲ Next.js 16.4.6 (webpack)
+#50 2.195 ✓ Running next.config.mjs took 25ms
+#50 2.405 
+#50 2.444   Creating an optimized production build ...
+#50 9.328 ✓ Compiled successfully in 6.1s
+#50 9.345   Running TypeScript ...
+#50 13.62   Finished TypeScript in 4.3s ...
+#50 13.63   Collecting page data using 5 workers ...
+#50 14.37   Generating static pages using 5 workers (0/3) ...
+#50 15.18 ✓ Generating static pages using 5 workers (3/3) in 817ms
+#50 15.42   Finalizing page optimization ...
+#50 15.42   Collecting build traces ...
+#50 43.51 
+#50 43.51 Route (app)
+#50 43.51 ┌ ○ /
+#50 43.51 ├ ○ /_not-found
+#50 43.51 └ ƒ /api/[...path]
+#50 43.51 
+#50 43.51 
+#50 43.51 ○  (Static)   prerendered as static content
+#50 43.51 ƒ  (Dynamic)  server-rendered on demand
+#50 43.51 
+#50 DONE 43.6s
+
+#56 [dashboard runtime 2/6] RUN if command -v apk >/dev/null 2>&1; then apk add --no-cache zlib=1.4-r0; fi
+#56 CACHED
+
+#57 [dashboard runtime 3/6] RUN rm -rf /usr/local/lib/node_modules/npm /usr/local/lib/node_modules/corepack /opt/yarn* && rm -f /usr/local/bin/npm /usr/local/bin/npx /usr/local/bin/yarn /usr/local/bin/yarnpkg /usr/local/bin/corepack
+#57 CACHED
+
+#58 [dashboard runtime 4/6] WORKDIR /app
+#58 CACHED
+
+#59 [dashboard runtime 5/6] COPY --from=build --chown=node:node /workspace/apps/dashboard/.next/standalone ./
+#59 DONE 0.5s
+
+#60 [dashboard runtime 6/6] COPY --from=build --chown=node:node /workspace/apps/dashboard/.next/static ./apps/dashboard/.next/static
+#60 DONE 0.1s
+
+#61 [dashboard] exporting to image
+#61 exporting layers
+#61 exporting layers 0.6s done
+#61 writing image sha256:7618029f037f5bc8eddc0c16a4f9de19aba89204e76b32ffc7e1afe040b0f3de done
+#61 naming to docker.io/library/agentbrake-product-verify-655f88c5-dashboard done
+#61 DONE 0.6s
+
+#62 [dashboard] resolving provenance for metadata file
+#62 DONE 0.0s

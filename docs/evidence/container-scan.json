@@ -1,8 +1,8 @@
 {
-  "runId": "d1fd1b91-9df4-4800-b694-6dad82bfdcfa",
-  "sourceHash": "993f7cbf1a3a56dcb421f88368efa67dbbcf37809d0d45b9cdf54e0ab80287c7",
-  "currentSourceHash": "993f7cbf1a3a56dcb421f88368efa67dbbcf37809d0d45b9cdf54e0ab80287c7",
-  "startedAt": "2026-11-16T19:52:37.583Z",
+  "runId": "79d390f7-5d29-4dbc-a318-1fdb67601378",
+  "sourceHash": "b9c07645e95dca1369636c9fc38a7ed3f777dc15b2a4004b9032f9566a00e60d",
+  "currentSourceHash": "b9c07645e95dca1369636c9fc38a7ed3f777dc15b2a4004b9032f9566a00e60d",
+  "startedAt": "2026-11-16T23:14:03.213Z",
   "scanner": {
     "version": "0.76.2",
     "image": "aquasec/trivy@sha256:8f6bb947dbc528902e11f2f5be52f7b519f6a39d5d148f41166f2040499768fb",
@@ -13,28 +13,28 @@
   "images": [
     {
       "name": "runtime",
-      "imageId": "sha256:65a3144fb1b4d22d35925d884f9930fc3a2f4108c3b93ea7cdc5c91c41d69d83",
-      "reference": "agentbrake-product-verify-candidate-ec851b7a-runtime",
+      "imageId": "sha256:b0bf1949d14c21be57b042fc4f7a7323077c9ef840ddfc588eeb0f34398479c3",
+      "reference": "agentbrake-product-verify-candidate-d25a1f0d-runtime",
       "total": 0,
       "highCritical": []
     },
     {
       "name": "dashboard",
-      "imageId": "sha256:7e566e218a8c3509f34b0b4b8ac0a765d1087433cbcc5a99d61c52a9c297d21e",
-      "reference": "agentbrake-product-verify-candidate-ec851b7a-dashboard",
+      "imageId": "sha256:4f81b4279ec6e4aa8e62e8f0dcf8b8fa554a7e53f72878dba904811c7a838590",
+      "reference": "agentbrake-product-verify-candidate-d25a1f0d-dashboard",
       "total": 0,
       "highCritical": []
     },
     {
       "name": "postgres",
-      "imageId": "sha256:7aa5c1314fa74a3c2d6c155c537f0eb4ab26c25d315f221ca8c5a5d089dc65cd",
+      "imageId": "sha256:1afd5502a82b24f4f7510043f666aeb8308ac2a13f0ecec4373f72540cfbe07d",
       "reference": "agentbrake-postgres:18-193f481f609ba4086c53",
       "total": 0,
       "highCritical": []
     },
     {
       "name": "opa",
-      "imageId": "sha256:60601fc530dfd3edc411a86180c45fadf7ec1f59732d770c14811d784b9d7131",
+      "imageId": "sha256:656eb9984f7491cdcb8da049f759d7012098a5db4a187f51a4f0f2ec6ae6366c",
       "reference": "agentbrake-opa:1.22.4-3f9e5f443c6e97aa147e",
       "total": 0,
       "highCritical": []
@@ -47,5 +47,5 @@
     "UpdatedAt": "2026-11-16T13:03:44.830426244Z",
     "DownloadedAt": "2026-11-16T19:02:52.831437722Z"
   },
-  "finishedAt": "2026-11-16T19:54:21.710Z"
+  "finishedAt": "2026-11-16T23:15:41.026Z"
 }

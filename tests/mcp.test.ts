@@ -68,6 +68,18 @@ test("a real MCP stdio client calls the gateway and receives pending approval wi
       JSON.parse((status.content as { text: string }[])[0].text).status,
       "pending",
     );
+    const execute = system.gateway.connectors.execute.bind(system.gateway.connectors);
+    const synthetic = "ghp_" + "Z".repeat(32);
+    system.gateway.connectors.execute = async a => ({ ...(await execute(a) as object), note: synthetic });
+    const withheld = await client.callTool({ name: "database_read", arguments: { limit: 1 } });
+    assert.equal(withheld.isError, true);
+    const recorded = JSON.parse((withheld.content as { text: string }[])[0].text);
+    assert.equal(recorded.status, "allowed");
+    assert.equal(recorded.executionOutcome, "adapter-reported");
+    assert.equal(recorded.resultDisclosure, "withheld");
+    assert.equal(JSON.stringify(withheld).includes(synthetic), false);
+    const withheldStatus = await client.callTool({ name: "action_status", arguments: { id: recorded.id } });
+    assert.equal(withheldStatus.isError, true);
   } finally {
     await client.close();
     await transport.close();

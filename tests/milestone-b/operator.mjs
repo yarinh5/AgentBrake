@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { readFile, writeFile } from "node:fs/promises";
 import { randomUUID, createHash } from "node:crypto";
-import { legitimate, metrics, classifyBlocked } from "./corpus.mjs";
+import { legitimate, metrics, classifyAction } from "./corpus.mjs";
 const knownSecrets = [];
 const secret = async (name) => {
   const value = (await readFile("/run/secrets/" + name, "utf8")).trim();
@@ -335,11 +335,15 @@ if (command === "provision") {
         Object.assign(observation.actions.at(-1), {
           finalStatus: action.status,
           finalRule: action.rule,
+          executionOutcome: action.executionOutcome ?? "unrecorded",
+          resultDisclosure: action.resultDisclosure ?? "unrecorded",
         });
-        if (action.status === "blocked") {
+        const outcome = classifyAction(action);
+        if (outcome === "policy" || outcome === "withheld" || action.status === "blocked") {
+          observation.outputWithheld = outcome === "withheld";
           observation.falseBlock =
             observation.baselineSucceeded &&
-            classifyBlocked(action.rule) === "policy";
+            (outcome === "policy" || outcome === "withheld");
           if (!observation.falseBlock)
             observation.gatewayError = "operational-refusal:" + action.rule;
           allAllowed = false;
@@ -364,7 +368,7 @@ if (command === "provision") {
     }
     observation.gatewayMs = performance.now() - start;
     observation.afterGateway = await snapshot();
-    if (observation.falseBlock)
+    if (observation.falseBlock && !observation.outputWithheld)
       assert.deepEqual(
         observation.afterGateway,
         observation.afterBaseline,
