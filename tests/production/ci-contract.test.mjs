@@ -21,7 +21,14 @@ test('CI is a credential-free failing gate for policy/regression/build/security/
       if (step.run) { assert.equal(step.if, undefined); assert.equal(/\|\|\s*true/.test(step.run), false); commands.push(step.run); }
     }
   }
-  for (const required of ['npm run verify:stage1', 'npm run verify:security', 'npm run verify:isolation']) assert.ok(commands.includes(required));
+  for (const required of ['npm run verify:stage1', 'npm run verify:security', 'npm run verify:benchmark', 'npm run verify:enterprise']) assert.ok(commands.includes(required));
+  const isolationCommands = w.jobs.isolation.steps.map(step => step.run).filter(Boolean);
+  const browserSetup = isolationCommands.indexOf('npx playwright install --with-deps chromium');
+  assert.ok(browserSetup >= 0 && browserSetup < isolationCommands.indexOf('npm run verify:enterprise'), 'Prepare Chromium in the isolation job before installed Enterprise browser checks');
+  const isolationArtifacts = w.jobs.isolation.steps.find(step => step.uses?.startsWith('actions/upload-artifact@'));
+  assert.equal(isolationArtifacts.if, 'always()');
+  const artifactPaths = isolationArtifacts.with.path.split('\n');
+  for (const path of ['docs/evidence/*/isolation-summary.json', 'docs/evidence/*/enterprise-summary.json', 'docs/evidence/*/source-manifest.json']) assert.ok(artifactPaths.includes(path), `Missing CI acceptance evidence: ${path}`);
   const source = await sourceManifest();
   assert.ok(source.files.some(f => f.path === '.github/workflows/security-validation.yml'));
   assert.ok(packageFilePaths(source).includes('.github/workflows/security-validation.yml'));

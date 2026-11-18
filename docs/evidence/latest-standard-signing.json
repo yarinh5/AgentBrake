@@ -1,0 +1,6 @@
+{
+  "directory": "docs/evidence/standard-signing-a2205fb7-edd1-46ae-b357-bb3140999427",
+  "sourceHash": "2d8df354e16dacbdda4802a04dd875d6166f053f63a5a3b897a2bf41d358032e",
+  "result": "PASS_SCOPED_OFFLINE_STANDARD_SIGNING",
+  "trust": "Synthetic test key only"
+}

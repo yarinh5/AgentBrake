@@ -1,0 +1,5 @@
+{
+  "currency":"ILS","horizonYears":1,"hourlyCost":200,
+  "build":{"setupHours":100,"annualMaintenanceHours":80,"annualSecurityHours":40,"annualInfrastructureCost":1000},
+  "buy":{"setupHours":10,"annualOperatingHours":20,"annualReviewHours":20,"annualSubscriptionCost":12000,"annualInfrastructureCost":1000}
+}

@@ -5,8 +5,17 @@ import { join, resolve, sep } from "node:path";
 import { root } from "./opa-runtime.mjs";
 import { sourceManifest } from "./source-manifest.mjs";
 import { verifyModelCache } from "./verify-model-cache.mjs";
+import { verifyCodingModelCache } from "./coding-model-profile.mjs";
 import { composeEnvironment } from "./compose-environment.mjs";
+import { failureDiagnostics } from "./ci-failure-diagnostics.mjs";
+import { prepareFixtureAccess } from "./fixture-file-access.mjs";
+import { codexInferenceProfile } from "./codex-inference-profile.mjs";
+import { runCoding } from "../tests/milestone-b/coding-workflow.mjs";
 const milestoneB = process.argv.includes("--milestone-b");
+const codingWorkflow = process.argv.includes("--coding-workflow");
+if (codingWorkflow && !milestoneB) throw Error("Coding workflow requires the real Codex milestone-b fixture");
+const inferenceProfile = milestoneB ? codexInferenceProfile(process.env.AGENTBRAKE_CODEX_PROFILE) : null;
+const expandedBenchmark = milestoneB || process.argv.includes("--expanded-benchmark");
 const codexLock = milestoneB
   ? JSON.parse(
       await readFile(join(root, "infra/local/codex.lock.json"), "utf8"),
@@ -24,6 +33,10 @@ await writeFile(
   join(evidence, "source-manifest.json"),
   JSON.stringify(manifest, null, 2),
 );
+if (expandedBenchmark) {
+  const { expandedLegitimate } = await import('../tests/milestone-b/corpus.mjs');
+  await writeFile(join(evidence, 'expanded-corpus.json'), JSON.stringify(expandedLegitimate, null, 2));
+}
 const report = {
   runId,
   startedAt: new Date().toISOString(),
@@ -83,6 +96,10 @@ async function run(label, command, args, timeoutMs = 60000) {
     });
   });
   output = redact(output);
+  if (code || label === 'container-logs') {
+    const diagnostic = failureDiagnostics(label, output);
+    if (diagnostic) console.log(JSON.stringify(diagnostic));
+  }
   await writeFile(join(evidence, label + ".log"), output);
   report.commands.push({
     label,
@@ -109,6 +126,7 @@ const compose = (label, args, timeout) =>
       "-f",
       "infra/local/compose.yaml",
       ...(milestoneB ? ["-f", "infra/local/codex.compose.yaml"] : []),
+      ...(inferenceProfile?.gpu ? ["-f", "infra/local/codex-gpu.compose.yaml"] : []),
       ...args,
     ],
     timeout,
@@ -150,6 +168,13 @@ try {
         "Desktop predates the CVE-2025-9074 engine-access fix; update before isolation acceptance",
       );
   }
+  if (milestoneB) {
+    const engineCpus = Number(await run("docker-cpu-capacity", "docker", ["info", "--format", "{{.NCPU}}"], 15000));
+    if (!Number.isSafeInteger(engineCpus) || engineCpus < 1) throw Error("Invalid Docker CPU capacity");
+    report.resources = { engineCpus, codexCpuLimit: Math.min(2, engineCpus) };
+    if (inferenceProfile.gpu && engineCpus < 4) throw Error("gpu-8k fixture requires at least four Docker CPUs");
+    report.inferenceProfile = inferenceProfile;
+  }
   const images = JSON.parse(
     await readFile(join(root, "infra/local/images.lock.json"), "utf8"),
   );
@@ -166,6 +191,9 @@ try {
       ? {
           OLLAMA_IMAGE: codexLock.ollama.image,
           CODEX_VERSION: codexLock.codex.version,
+          CODEX_CPU_LIMIT: String(report.resources.codexCpuLimit),
+          CODEX_INFERENCE_PROFILE: inferenceProfile.name,
+          CODEX_CONTEXT_LENGTH: String(inferenceProfile.context),
           MODEL_DIR: join(root, ".tools/ollama-models").replaceAll("\\", "/"),
         }
       : {}),
@@ -219,7 +247,15 @@ try {
       join(root, ".tools/ollama-models"),
       codexLock.model.registryManifestSha256,
     );
+    if (codingWorkflow) report.codingModel = await verifyCodingModelCache(
+      join(root, ".tools/ollama-models"),
+      JSON.parse(await readFile(join(root, "infra/local/coding-model-profile.json"), "utf8")),
+    );
   }
+  report.fixtureAccess = await prepareFixtureAccess(runDir,
+    [...Object.keys(secrets), 'opa-auth.json'],
+    ['agent-credential.json', ...(milestoneB ? ['codex-credential.json'] : [])]);
+  env.FIXTURE_GID = report.fixtureAccess.group;
   await compose("compose-config", ["config", "--quiet"]);
   console.log("Building and starting the isolated AgentBrake fixture project…");
   attemptedUp = true;
@@ -394,7 +430,7 @@ try {
     ],
     120000,
   );
-  if (milestoneB) {
+  if (milestoneB || expandedBenchmark) {
     await compose(
       "git-container-tests",
       [
@@ -410,7 +446,8 @@ try {
       ],
       120000,
     );
-    const operator = async (label, command) =>
+  }
+  const operator = async (label, command) =>
       JSON.parse(
         (
           await compose(
@@ -424,12 +461,18 @@ try {
               "tests/milestone-b/operator.mjs",
               command,
             ],
-            180000,
+            command === 'benchmark-expanded' ? 600000 : 180000,
           )
         )
           .split("\n")
           .findLast((line) => line.startsWith("{")),
       );
+  if (expandedBenchmark) {
+    report.expandedBenchmark = await operator("expanded-benchmark", "benchmark-expanded");
+    if (report.expandedBenchmark.measurement.measurementResult !== 'PASS') throw Error('Expanded benchmark measurement failed');
+    console.log('Expanded measurement PASS; usability target: ' + report.expandedBenchmark.measurement.usabilityTarget);
+  }
+  if (milestoneB) {
     report.benchmark = await operator("milestone-b-benchmark", "benchmark");
     report.codexProvision = await operator("codex-provision", "provision");
     secrets.codexToken = JSON.parse(
@@ -451,6 +494,9 @@ try {
     );
     const codex = await inspect("codex-agent"),
       model = await inspect("local-model");
+    report.resources.actualCodexNanoCpus = codex.HostConfig.NanoCpus;
+    if (codex.HostConfig.NanoCpus !== report.resources.codexCpuLimit * 1e9)
+      throw Error("Codex CPU limit mismatch");
     const modelNetwork = JSON.parse(
       await run("inspect-inference-network", "docker", [
         "network",
@@ -473,7 +519,9 @@ try {
       codex.Config.User !== "1000:1000" ||
       !codex.HostConfig.ReadonlyRootfs ||
       !codex.HostConfig.CapDrop.includes("ALL") ||
-      codex.HostConfig.Privileged
+      codex.HostConfig.Privileged ||
+      codex.HostConfig.DeviceRequests?.length ||
+      codex.HostConfig.Devices?.length
     )
       throw Error("Codex credential/hardening boundary mismatch");
     for (const container of [codex, model])
@@ -493,6 +541,11 @@ try {
       !model.HostConfig.CapDrop.includes("ALL")
     )
       throw Error("Model mount/hardening mismatch");
+    if (model.HostConfig.Memory !== inferenceProfile.memoryBytes ||
+      !model.Config.Env.includes("OLLAMA_CONTEXT_LENGTH=" + inferenceProfile.context) ||
+      Boolean(model.HostConfig.DeviceRequests?.length) !== inferenceProfile.gpu ||
+      (inferenceProfile.gpu && (model.HostConfig.NanoCpus !== 4e9 || model.HostConfig.MemorySwap !== inferenceProfile.memoryBytes)))
+      throw Error("Model inference profile/resource mismatch");
     report.codexBoundary = {
       networks: Object.keys(codex.NetworkSettings.Networks),
       modelNetworks: Object.keys(model.NetworkSettings.Networks),
@@ -527,12 +580,19 @@ try {
             "node",
             "tests/milestone-b/codex-agent.mjs",
           ],
-          660000,
+          1260000,
         )
       )
         .split("\n")
         .findLast((line) => line.startsWith("{")),
     );
+    await compose("model-runtime-logs", ["logs", "--no-color", "--tail", "200", "local-model"], 15000);
+    if (report.codexRun.inferenceProfile?.name !== inferenceProfile.name ||
+      !report.codexRun.modelRuntime.models.some(m =>
+        m.digest === codexLock.model.expectedRegistryManifestSha256 &&
+        m.context_length === inferenceProfile.context &&
+        (inferenceProfile.gpu ? m.size_vram > 0 : m.size_vram === 0)))
+      throw Error("Actual model runtime does not match the selected inference profile");
     report.codexProof = await operator("codex-upstream-proof", "codex-proof");
     const clientActionIds = report.codexRun.events
       .filter(
@@ -557,6 +617,8 @@ try {
     if (afterCalls - beforeCalls < 2)
       throw Error("Codex did not make real allowed calls");
     report.milestoneB = "PASS_BOUNDED";
+    if (codingWorkflow)
+      report.coding = await runCoding({ compose, inspect, snapshot, evidence, secrets, runDir, inferenceProfile, modelProfile: report.codingModel });
   }
   report.environmentHash = hash(
     JSON.stringify({
@@ -567,6 +629,7 @@ try {
       codexBoundary: report.codexBoundary,
       codexBinary: report.codexRun?.binarySha256,
       modelIntegrity: report.modelIntegrity,
+      inferenceProfile: report.inferenceProfile,
     }),
   );
   report.result = "PASS";
@@ -579,7 +642,7 @@ try {
     try {
       await compose(
         "container-logs",
-        ["logs", "--no-color", "--tail", "100"],
+        ["--profile", "*", "logs", "--no-color", "--tail", "100"],
         15000,
       );
     } catch {}

@@ -5,7 +5,14 @@ data/
 test-results/
 playwright-report/
 *.log
-!docs/evidence/**/*.log
+# Raw validation output is retained locally and uploaded as short-lived CI
+# artifacts. Only curated, top-level JSON/Markdown summaries belong in Git.
+docs/evidence/**
+!docs/evidence/
+!docs/evidence/*.json
+!docs/evidence/*.md
+docs/evidence/clean-linux-final-package-acceptance.json
+docs/enterprise-work/restore-evidence-*/
 .tools/
 .agentbrake-local/
 .stage1-runtime/

@@ -1,0 +1,467 @@
+{
+  "at": "2026-11-17T17:32:37.107Z",
+  "result": "BLOCKED_DEPENDENCY_SECURITY_AND_EXTERNAL_ACCEPTANCE",
+  "sourceHash": "3ea2c8eb9d847d6213333172121d0e235fb0ef0e4efe44946108d0f4e18fb0c6",
+  "version": "0.3.0-rc.1",
+  "localRelease": "BLOCKED_DEPENDENCY_SECURITY",
+  "priorLocalRelease": {
+    "sourceHash": "c2bee4dedd7016ec6ed4e6325be8976db16085cb46c4c80b4ddef37779bc5f7f",
+    "result": "LOCAL_MVP_VERIFIED_EXTERNAL_GATES_OPEN",
+    "current": false
+  },
+  "releaseAttempt": {
+    "startedAt": "2026-11-17T17:00:57.5467168Z",
+    "sourceHash": "3ea2c8eb9d847d6213333172121d0e235fb0ef0e4efe44946108d0f4e18fb0c6",
+    "profile": "gpu-8k",
+    "result": "FAIL",
+    "stages": [
+      {
+        "seconds": 77.8,
+        "exitCode": 0,
+        "log": ".agentbrake-local/gpu-final-enterprise.log",
+        "name": "enterprise"
+      },
+      {
+        "seconds": 858.56,
+        "exitCode": 1,
+        "log": ".agentbrake-local/gpu-final-release.log",
+        "name": "release"
+      }
+    ],
+    "error": "release failed; original log retained",
+    "finishedAt": "2026-11-17T17:16:33.9267484Z"
+  },
+  "postAuditGates": {
+    "ScanExit": 0,
+    "ProductionExit": 2,
+    "PackageExit": 1,
+    "ExpectedProductionExit": 2,
+    "ExpectedPackageRejection": true
+  },
+  "securityFinding": {
+    "advisory": "GHSA-fc5q-39xc-vjpf",
+    "cve": "CVE-2026-112366",
+    "severity": "HIGH",
+    "package": "picomatch@4.0.7",
+    "transitiveHighRecords": 4,
+    "independentAdvisories": 1,
+    "scope": "Root build/development dependency. Actual bounded library reproduction; product request reachability not proven. Root production-only and dashboard audits have zero findings; no waiver of full audit.",
+    "publishedPatch": "NOT_AVAILABLE_AT_CHECK",
+    "proposedUpstreamFix": "https://github.com/micromatch/picomatch/pull/237",
+    "fixStatus": "OPEN_UNMERGED_NOT_APPLIED"
+  },
+  "gates": {
+    "native": {
+      "result": "PASS_SCOPED",
+      "runId": "261a7e96-1d63-43ae-86a0-f278165d897f"
+    },
+    "isolation": {
+      "result": "PASS",
+      "runId": "ed28a334-2571-4933-ae40-61c0c61ae861",
+      "cases": 4,
+      "cleanup": {
+        "result": "PASS",
+        "remaining": {
+          "containers": 0,
+          "networks": 0,
+          "volumes": 0
+        }
+      }
+    },
+    "product": {
+      "result": "PASS_LOCAL_PRODUCT",
+      "runId": "ec5567b3-5417-4738-a399-ac3b10397f8c",
+      "cases": 8,
+      "cleanup": {
+        "result": "PASS",
+        "containers": 0,
+        "volumes": 0,
+        "networks": 0
+      }
+    },
+    "service": {
+      "result": "PASS_LOCAL_SERVICE",
+      "runId": "23c86274-3372-472e-b6c5-54eb648ddbb4",
+      "cases": 7,
+      "cleanup": [
+        {
+          "project": "agentbrake-product-verify-restore-23c86274",
+          "result": "PASS",
+          "containers": 0,
+          "volumes": 0,
+          "networks": 0
+        },
+        {
+          "project": "agentbrake-product-verify-service-23c86274",
+          "result": "PASS",
+          "containers": 0,
+          "volumes": 0,
+          "networks": 0
+        }
+      ]
+    },
+    "candidate": {
+      "result": "PASS_LOCAL_CANDIDATE",
+      "runId": "f48bfdce-23e5-4de4-b82c-e4ba5e43d899",
+      "cases": 7,
+      "cleanup": {
+        "result": "PASS",
+        "containers": 0,
+        "volumes": 0,
+        "networks": 0
+      }
+    },
+    "security": {
+      "result": "FAIL",
+      "runId": "274eac4d-9cd6-4dc7-8992-c1d83ee74f1e"
+    },
+    "enterprise": {
+      "result": "PASS_LOCAL_INSTALLED_ENTERPRISE",
+      "runId": "cb143abd-aa5d-4f7f-bc61-155105e966ea",
+      "cases": 7,
+      "cleanup": {
+        "result": "PASS",
+        "containers": 0,
+        "volumes": 0,
+        "networks": 0,
+        "scopedFilesRemoved": true
+      }
+    }
+  },
+  "counts": {
+    "native": {
+      "tests": 277,
+      "pass": 271,
+      "fail": 0,
+      "skipped": 6
+    },
+    "postgres": {
+      "tests": 22,
+      "pass": 22,
+      "fail": 0,
+      "skipped": 0
+    },
+    "git": {
+      "tests": 16,
+      "pass": 16,
+      "fail": 0,
+      "skipped": 0
+    }
+  },
+  "codex": {
+    "runId": "ed28a334-2571-4933-ae40-61c0c61ae861",
+    "officialCli": "codex-cli 0.169.0",
+    "binarySha256": "b452ca20f838a8855a88a41050ee4a694033fff4ea3ecdad5633e6e0e8d13f2b",
+    "profile": {
+      "name": "gpu-8k",
+      "context": 8192,
+      "compact": 6500,
+      "gpu": true,
+      "memoryBytes": 6442450944
+    },
+    "instructionProfile": "bounded-two-read-tools-explicit-calls-v2",
+    "elapsedSeconds": 31.512,
+    "actualActions": [
+      {
+        "tool": "database_read",
+        "status": "allowed",
+        "id": "1269aea5-fb08-4dd4-a374-49fc1a4c819a"
+      },
+      {
+        "tool": "github_read_file",
+        "status": "allowed",
+        "id": "b6d46524-dc6c-44c3-91e9-dd53a53cb7c7"
+      }
+    ],
+    "replayedReads": 2,
+    "forbidden": {
+      "id": "cd253a11-3e4e-4888-aedd-a6c3812b570f",
+      "correlationId": "40562911-c48c-484f-84e6-5136e08e8c20",
+      "rule": "task-scope",
+      "status": "blocked"
+    },
+    "cleanup": {
+      "result": "PASS",
+      "remaining": {
+        "containers": 0,
+        "networks": 0,
+        "volumes": 0
+      }
+    },
+    "secretScan": {
+      "result": "PASS",
+      "files": 53,
+      "knownSyntheticSecrets": 12,
+      "contaminated": [],
+      "scope": "Exact known fixture credentials; operator separately scans issued credentials. Not a universal DLP scan."
+    },
+    "scope": "Actual local open-weight inference/official CLI/MCP; original two-read task with explicit supported calls, synthetic targets. No default model reliability or live GitHub claim."
+  },
+  "images": {
+    "result": "PASS_IMAGE_SCAN",
+    "runId": "5f7909fa-5f6a-40c6-9c55-5b1fe5cc6704",
+    "images": [
+      {
+        "name": "runtime",
+        "imageId": "sha256:3a9110ccfc456985dd1fe7bcea6d4c719df931d5706592b89826544d027867a4",
+        "total": 0
+      },
+      {
+        "name": "dashboard",
+        "imageId": "sha256:f4760261981adec92a02f80f62182b4c6d32ad23dffd1ddfaf0d10fe8e52447e",
+        "total": 0
+      },
+      {
+        "name": "postgres",
+        "imageId": "sha256:8296004a75257d1cd028cb0a0e5beee60b72ff8f67d534c81e9f907aca09ea36",
+        "total": 0
+      },
+      {
+        "name": "opa",
+        "imageId": "sha256:d832aa724daa0c01f288e87476f4df1f321b4a84df9f384575379bb45f47efdc",
+        "total": 0
+      }
+    ],
+    "database": {
+      "Version": 2,
+      "NextUpdate": "2026-11-18T13:00:16.23116036Z",
+      "UpdatedAt": "2026-11-17T13:00:16.23116094Z",
+      "DownloadedAt": "2026-11-17T17:27:25.575760954Z"
+    }
+  },
+  "benchmark": {
+    "total": 208,
+    "baselineSucceeded": 208,
+    "completed": 192,
+    "falseBlocks": 16,
+    "nonPolicyFailures": 0,
+    "completionVsBaseline": 0.9230769230769231,
+    "falseBlockRate": 0.07692307692307693,
+    "approvalRequired": 96,
+    "measurementResult": "PASS",
+    "usabilityTarget": "NOT_MET",
+    "baselineFailures": 0,
+    "byKind": {
+      "read": {
+        "total": 64,
+        "baselineSucceeded": 64,
+        "completed": 64,
+        "falseBlocks": 0,
+        "nonPolicyFailures": 0,
+        "completionVsBaseline": 1,
+        "falseBlockRate": 0,
+        "approvalRequired": 0
+      },
+      "preview": {
+        "total": 80,
+        "baselineSucceeded": 80,
+        "completed": 64,
+        "falseBlocks": 16,
+        "nonPolicyFailures": 0,
+        "completionVsBaseline": 0.8,
+        "falseBlockRate": 0.2,
+        "approvalRequired": 0
+      },
+      "pr": {
+        "total": 32,
+        "baselineSucceeded": 32,
+        "completed": 32,
+        "falseBlocks": 0,
+        "nonPolicyFailures": 0,
+        "completionVsBaseline": 1,
+        "falseBlockRate": 0,
+        "approvalRequired": 64
+      },
+      "update": {
+        "total": 32,
+        "baselineSucceeded": 32,
+        "completed": 32,
+        "falseBlocks": 0,
+        "nonPolicyFailures": 0,
+        "completionVsBaseline": 1,
+        "falseBlockRate": 0,
+        "approvalRequired": 32
+      }
+    },
+    "timing": {
+      "directBaselineTask": {
+        "count": 208,
+        "p50Ms": 33.48070000000007,
+        "p95Ms": 123.17000199999893
+      },
+      "gatewayTask": {
+        "count": 208,
+        "p50Ms": 53.26080000000002,
+        "p95Ms": 242.94620199999918
+      },
+      "authorization": {
+        "count": 272,
+        "p50Ms": 4.51,
+        "p95Ms": 7.19
+      },
+      "submitRoundTrip": {
+        "count": 272,
+        "p50Ms": 27.31010100000276,
+        "p95Ms": 46.75569900000119
+      },
+      "automatedApprovalRoundTrip": {
+        "count": 96,
+        "p50Ms": 49.64310000000114,
+        "p95Ms": 90.6814000000013
+      }
+    },
+    "humanApprovalWait": "NOT_MEASURED",
+    "corpusHash": "4977504a717538cc20c1bddf5bb7e08df272c6f7c1912925f87405b7a7bfe30c",
+    "scope": "208 prelabelled synthetic tasks; 8 parameter strata of 26 scenarios, including repeated reads and all 16 credential-shaped placeholders; actual direct adapter baseline versus gateway, sequential on one fixture with distinct branch names and per-step state checks; approvals by automated trusted fixture operator; task latency includes HTTP/target/snapshots, not provisioning or human wait; no general population or model-quality rate. Measurement PASS is not achievement of the separate <2% usability target."
+  },
+  "linux": {
+    "sourceHash": "2642bd1356660a8c91b157f2870bfb787e8088d83eca2544886f0784deed06bc",
+    "result": "PASS_SCOPED_LINUX_CHECKS",
+    "counts": {
+      "tests": 274,
+      "pass": 270,
+      "fail": 0,
+      "skipped": 4
+    },
+    "scope": "All seven changes are the explicit inference test profile, test prompt/diagnostics and verification metadata/regressions. Every other source-manifest file is byte-identical to the actual final Ubuntu nine-gate run. This does not relabel historical guest run hashes or claim final full release executed on Ubuntu. The real GPU CLI runs on the existing Windows/Docker environment.",
+    "changedVerificationFiles": [
+      "infra/local/codex-gpu.compose.yaml",
+      "infra/local/codex.compose.yaml",
+      "scripts/codex-inference-profile.mjs",
+      "scripts/verify-all.mjs",
+      "scripts/verify-isolation.mjs",
+      "tests/enforcement/codex-inference-profile.test.mjs",
+      "tests/milestone-b/codex-agent.mjs"
+    ]
+  },
+  "production": [
+    {
+      "id": "local-release",
+      "description": "Full local release gate for the exact source revision",
+      "status": "STALE_OR_FAILED"
+    },
+    {
+      "id": "https-candidate",
+      "description": "Actual local TLS, installed UI and agent network boundary",
+      "status": "PASS"
+    },
+    {
+      "id": "container-vulnerabilities",
+      "description": "Offline scan of built runtime/dashboard and pinned PostgreSQL/OPA images",
+      "status": "PASS"
+    },
+    {
+      "id": "live-github",
+      "status": "NOT_OBTAINED",
+      "description": "Named disposable repository, selected-repository GitHub App and real approved/denied workflow evidence"
+    },
+    {
+      "id": "clean-host",
+      "status": "NOT_OBTAINED",
+      "description": "Independent clean Linux host installation, certificate validation, backup restore and isolation proof"
+    },
+    {
+      "id": "human-security-review",
+      "status": "NOT_OBTAINED",
+      "description": "Independent human review of this revision, threat boundaries and acceptance evidence; critical/high findings resolved"
+    },
+    {
+      "id": "deployment-authorization",
+      "status": "NOT_OBTAINED",
+      "description": "Named host/account, DNS/TLS, private access path and explicit deployment/budget approval"
+    },
+    {
+      "id": "operations-owner",
+      "status": "NOT_OBTAINED",
+      "description": "Named incident/patch owner, external encrypted backup destination and tested restore/revocation procedure"
+    }
+  ],
+  "preservedInstallation": {
+    "sourceHash": "b9c07645e95dca1369636c9fc38a7ed3f777dc15b2a4004b9032f9566a00e60d",
+    "result": "PASS_EXISTING_INSTALLATION_HEALTH_BINDINGS",
+    "checkedAt": "2026-11-17T17:31:52.808Z",
+    "httpHealth": 200,
+    "containers": 9
+  },
+  "remaining": [
+    "Resolve picomatch ReDoS with a verified compatible maintained fix/replacement; full audit and exact-source release gates must pass. No blind downgrade, unknown fork or advisory suppression.",
+    "Independent human security review and written exact-version scope/sign-off.",
+    "Approved off-host backup destination, separate key custody, human notification/recovery drill and measured end-to-end recovery targets.",
+    "Independent/customer Linux installation and actual required IdP/SCIM/SIEM acceptance; no external deployment authorized.",
+    "Hosted CI currently covers earlier focused repair only; complete Enterprise source requires separate reviewed publication/integration.",
+    "Expanded synthetic false-block target<2% remains NOT_MET:16/208; no general-population usability claim.",
+    "GitHub GH01-GH07 scoped trial remains historical/source855; GH08live and live GitHub MCP/Codex NOT_RUN."
+  ],
+  "evidence": [
+    {
+      "path": "docs/evidence/261a7e96-1d63-43ae-86a0-f278165d897f/summary.json",
+      "sha256": "35bfd879b63d11afd28dd261ecd762f3ce6c92a0e84112b05b40dbf6570b207c",
+      "bytes": 6083
+    },
+    {
+      "path": "docs/evidence/ed28a334-2571-4933-ae40-61c0c61ae861/isolation-summary.json",
+      "sha256": "1cd23c457ce23e367f17528b8da53f6fcf9b52641bdb320a254a7c9894532177",
+      "bytes": 17488764
+    },
+    {
+      "path": "docs/evidence/ec5567b3-5417-4738-a399-ac3b10397f8c/product-summary.json",
+      "sha256": "b157b39911bc4966f5040d6350b401b461ac53970578d3fcb576db40ac61ed02",
+      "bytes": 3132
+    },
+    {
+      "path": "docs/evidence/23c86274-3372-472e-b6c5-54eb648ddbb4/service-summary.json",
+      "sha256": "454d4e7a92dd7edcec3054d33392bd99eb74e2a067d6eb11ce428089b5863014",
+      "bytes": 4203
+    },
+    {
+      "path": "docs/evidence/f48bfdce-23e5-4de4-b82c-e4ba5e43d899/candidate-summary.json",
+      "sha256": "e9040b6f18022435c5701566a2a738d629cfddb08f5aa3ed96d678bf8a75272b",
+      "bytes": 8444
+    },
+    {
+      "path": "docs/evidence/274eac4d-9cd6-4dc7-8992-c1d83ee74f1e/security-summary.json",
+      "sha256": "38c28dfe476f50c786a7e8438bc5c10e7ff2c2a67125a94111fe3b2c61be118b",
+      "bytes": 1019
+    },
+    {
+      "path": "docs/evidence/cb143abd-aa5d-4f7f-bc61-155105e966ea/enterprise-summary.json",
+      "sha256": "841ac79286e89ff21f99890654f9685025a8af8d31c3ed60fff8946c75d1d696",
+      "bytes": 8223
+    },
+    {
+      "path": "docs/evidence/container-scan.json",
+      "sha256": "869a90fc41d8066ce56cabc1d37913b7d4539e87664b6f90bd71948f48bc3a1e",
+      "bytes": 1972
+    },
+    {
+      "path": "docs/evidence/production-readiness.json",
+      "sha256": "7a9677eaeb682c17b3df196abe3ac10d2c06665d07b283f3182fec62142edd5f",
+      "bytes": 1824
+    },
+    {
+      "path": "docs/evidence/milestone-b.json",
+      "sha256": "1b494198fab14059078294f4a9f54bd4b892bfd92a8ec781f9415ebb70175123",
+      "bytes": 5627
+    },
+    {
+      "path": "docs/evidence/clean-linux-final-summary.json",
+      "sha256": "0baec1a30b2ad0f1c89e1d68ce8728959c199c17573120b2f7a10378d8557e39",
+      "bytes": 9193
+    },
+    {
+      "path": "docs/evidence/gpu-profile-linux-source-delta.json",
+      "sha256": "ddd7b55a52b164dcfe27f1020ac237427c1c449d57ee341946d9cdeb54154100",
+      "bytes": 2139
+    },
+    {
+      "path": "docs/evidence/post-audit-gates.json",
+      "sha256": "c0e721f86a0d5e2099605130861a2d988513a6e0af93835220caf637122c6039",
+      "bytes": 137
+    },
+    {
+      "path": "docs/evidence/enterprise-installed-final-health.json",
+      "sha256": "123a11d17adb15bdc3df58c0d5f1d45c3190d132dd47ca0700a9a43d9a8167b9",
+      "bytes": 2599
+    }
+  ]
+}

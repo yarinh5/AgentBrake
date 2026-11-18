@@ -23,7 +23,8 @@
         {
           "uses": "actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683",
           "with": {
-            "persist-credentials": false
+            "persist-credentials": false,
+            "fetch-depth": 0
           }
         },
         {
@@ -66,7 +67,8 @@
         {
           "uses": "actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683",
           "with": {
-            "persist-credentials": false
+            "persist-credentials": false,
+            "fetch-depth": 0
           }
         },
         {
@@ -80,6 +82,12 @@
         },
         {
           "run": "npm ci --ignore-scripts --prefix apps/dashboard"
+        },
+        {
+          "run": "npm run verify:repository-hygiene",
+          "env": {
+            "AGENTBRAKE_SCAN_BASE": "${{ github.event.pull_request.base.sha || github.event.before }}"
+          }
         },
         {
           "run": "npm run verify:security"
@@ -98,7 +106,7 @@
     },
     "isolation": {
       "runs-on": "ubuntu-24.04",
-      "timeout-minutes": 35,
+      "timeout-minutes": 40,
       "steps": [
         {
           "uses": "actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683",
@@ -116,14 +124,20 @@
           "run": "npm ci --ignore-scripts"
         },
         {
-          "run": "npm run verify:isolation"
+          "run": "npm run verify:benchmark"
+        },
+        {
+          "run": "npx playwright install --with-deps chromium"
+        },
+        {
+          "run": "npm run verify:enterprise"
         },
         {
           "uses": "actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02",
           "if": "always()",
           "with": {
             "name": "isolation-${{ github.run_id }}-${{ github.run_attempt }}",
-            "path": "docs/evidence/*/isolation-summary.json",
+            "path": "docs/evidence/*/isolation-summary.json\ndocs/evidence/*/enterprise-summary.json\ndocs/evidence/*/source-manifest.json",
             "retention-days": 14,
             "if-no-files-found": "error"
           }

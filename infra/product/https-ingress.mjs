@@ -26,9 +26,10 @@ export function createHttpsIngress({ origin, cert, key, backend = 'http://dashbo
       }
     } catch { if (!res.headersSent) fail(400); return; }
     const nominated = new Set(String(req.headers.connection ?? '').toLowerCase().split(',').map(x => x.trim()));
+    const scim = /^\/api\/scim\/v2\/(?:Users|Groups|ServiceProviderConfig|ResourceTypes|Schemas)(?:\/[a-zA-Z0-9_-]{1,100})?(?:\?[^#\r\n]*)?$/.test(req.url);
     const headers = {};
     for (const [name, value] of Object.entries(req.headers))
-      if (!hop.has(name) && !nominated.has(name) && !name.startsWith('x-forwarded-') && !['forwarded', 'authorization', 'host', 'content-length'].includes(name)) headers[name] = value;
+      if (!hop.has(name) && !nominated.has(name) && !name.startsWith('x-forwarded-') && !['forwarded', 'host', 'content-length'].includes(name) && (name !== 'authorization' || scim)) headers[name] = value;
     headers.host = publicUrl.host; headers['content-length'] = String(size);
     const upstream = upstreamRequest({ hostname: target.hostname, port: target.port || 80, path: req.url, method: req.method, headers }, response => {
       const excluded = new Set(String(response.headers.connection ?? '').toLowerCase().split(',').map(x => x.trim()));

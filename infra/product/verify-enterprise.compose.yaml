@@ -1,0 +1,47 @@
+# Disposable verifier only. The synthetic IdP/sink has no published port.
+services:
+  enterprise-fixture:
+    image: ${COMPOSE_PROJECT_NAME}-runtime
+    command: [node, --import, tsx, /app/container-fixture.ts]
+    user: '1000:1000'
+    group_add: ['${PRODUCT_RUNTIME_GID:-1000}']
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    pids_limit: 64
+    mem_limit: 192m
+    tmpfs: ['/tmp:size=32m,mode=1777']
+    environment:
+      NODE_EXTRA_CA_CERTS: /run/secrets/fixture-cert.pem
+    networks: [enterprise-outbound]
+    volumes:
+      - ../../tests/enterprise/container-fixture.ts:/app/container-fixture.ts:ro
+      - ${INSTALL_DIR}/enterprise-fixture.json:/run/secrets/enterprise-fixture.json:ro
+      - ${INSTALL_DIR}/fixture-cert.pem:/run/secrets/fixture-cert.pem:ro
+      - ${INSTALL_DIR}/fixture-key.pem:/run/secrets/fixture-key.pem:ro
+    healthcheck:
+      test: [CMD, node, -e, "fetch('https://localhost:8443/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 2s
+      timeout: 2s
+      retries: 20
+    labels: { com.agentbrake.product: '${INSTALLATION_ID}' }
+    logging:
+      driver: json-file
+      options: { max-size: '1m', max-file: '1' }
+  enterprise-egress:
+    environment:
+      NODE_EXTRA_CA_CERTS: /run/config/fixture-cert.pem
+    volumes:
+      - ${INSTALL_DIR}/fixture-cert.pem:/run/config/fixture-cert.pem:ro
+    depends_on:
+      enterprise-fixture: { condition: service_healthy }
+networks:
+  # Preserve the product's dedicated publication bridge. Docker 29 does not
+  # publish this host port on an internal bridge. Only fixed ingress joins it.
+  loopback-ingress: {}
+  dashboard: { internal: true }
+  control: { internal: true }
+  protected: { internal: true }
+  agent: { internal: true }
+  enterprise-private: { internal: true }
+  enterprise-outbound: { internal: true }

@@ -37,6 +37,14 @@ const requiredFiles = [
   "operators.json",
 ];
 const volumeNames = ["control-data", "target-data", "git-data"];
+function enterpriseRequired(installation) {
+  if (installation.enterpriseRequired !== undefined && installation.enterpriseRequired !== true)
+    throw Error("Invalid enterprise requirement marker");
+  if ((installation.enterpriseIdentityRequired !== undefined && installation.enterpriseIdentityRequired !== true) ||
+      (installation.enterpriseIdentityRequired === true && installation.enterpriseRequired !== true))
+    throw Error("Invalid enterprise identity requirement marker");
+  return installation.enterpriseRequired === true;
+}
 const parseRows = (raw) =>
   !raw.trim()
     ? []
@@ -188,6 +196,14 @@ export async function migrateProduct(config) {
   );
 }
 export async function startProduct(config, { build = true } = {}) {
+  // Re-read the durable requirement: config may predate enterprise enablement.
+  // Recovery/configuration tooling may load a stopped installation without its
+  // new credentials, but ordinary service startup must never select local auth.
+  const installation = JSON.parse(await readFile(join(config.dir, "installation.json"), "utf8"));
+  if (enterpriseRequired(installation) && !config.enterprise)
+    throw Error("Enterprise configuration is required before this installation can start; re-provision HTTPS and enterprise identity first");
+  if (installation.enterpriseIdentityRequired && config.enterprise?.identity !== true)
+    throw Error("Enterprise identity configuration is required; audit-only configuration cannot replace restored SSO authority");
   const recoveryIncomplete = await stat(
     join(config.dir, "recovery-incomplete.json"),
   ).then(() => true, (error) => {
@@ -239,6 +255,12 @@ export async function backupProduct(config) {
     const installation = JSON.parse(
       await readFile(join(config.dir, "installation.json"), "utf8"),
     );
+    const required = enterpriseRequired(installation);
+    // Also upgrade legacy enabled installations whose metadata predates this
+    // marker. Only the nonsecret requirement crosses the backup trust boundary.
+    if (required || config.enterprise) installation.enterpriseRequired = true;
+    if (installation.enterpriseIdentityRequired || config.enterprise?.identity === true)
+      installation.enterpriseIdentityRequired = true;
     let artifact;
     try {
       await composeProduct(
@@ -283,7 +305,13 @@ export async function backupProduct(config) {
           [
             "--profile",
             "agent",
-            "start",
+            // Compose 2.40 supports health-wait on up, not start. Resume only
+            // the previously running containers without rebuilding/replacing
+            // them or starting additional dependencies.
+            "up",
+            "-d",
+            "--no-deps",
+            "--no-recreate",
             "--wait",
             "--wait-timeout",
             "180",
@@ -325,6 +353,7 @@ export async function inspectBackup(file, keyFile) {
     !value.volumes
   )
     throw Error("Unsupported backup package");
+  enterpriseRequired(value.installation);
   if (
     Object.keys(value.files).sort().join() !==
       [...requiredFiles].sort().join() ||
@@ -489,6 +518,15 @@ export async function restoreProduct(file, keyFile, name, port) {
       // recovery.ts exits successfully only after authority suspension and
       // recovered audit-chain verification. Never clear this in failure cleanup.
       await rm(join(dir, "recovery-incomplete.json"));
+      if (enterpriseRequired(data.installation)) {
+        await composeProduct(config, ["--profile", "agent", "stop"], { capture: true });
+        return {
+          name,
+          restoredFrom: data.id,
+          status: "RESTORED_REQUIRES_ENTERPRISE_CONFIGURATION",
+          authority: "stopped and paused; all restored agent grants revoked; pending reviews blocked; re-provision HTTPS and enterprise configuration before start",
+        };
+      }
       await startProduct(config);
       return {
         name,

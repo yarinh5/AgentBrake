@@ -1,0 +1,373 @@
+{
+  "at": "2026-11-17T10:05:06.189Z",
+  "result": "LOCAL_ENTERPRISE_CONTROLS_VERIFIED_RELEASE_BLOCKED",
+  "sourceHash": "01e881bde6983224ffbddb36ac6cad21373e93a6bb338d6b398c4af511864ea5",
+  "verificationScope": {
+    "priorRuntimeVerificationSourceHash": "cad14e08e68caf1406304a4cc171bd0152fb85c8562cb28bed054b86331f496d",
+    "finalChange": [
+      "infra/security/security.ts",
+      "infra/security/security.yaml"
+    ],
+    "finalSecurityRun": "c632ef21-9319-46f5-8247-6de2cbf4c2bc",
+    "proof": "Compared every source-manifest entry: only scanner rule/self-test changed. Runtime, dependencies, build definitions and workflow harness are byte-identical. Preserve earlier runtime report hashes; this is not a new full release pass."
+  },
+  "releaseGate": {
+    "result": "FAIL_ACTUAL_CODEX_TIMEOUT",
+    "runId": "82399117-6db2-4b80-9a7d-85a482975f09",
+    "timeoutMs": 1200000,
+    "startedAt": "2026-11-17T09:30:19.574Z",
+    "finishedAt": "2026-11-17T09:50:10.013Z",
+    "instructionProfile": "bounded-two-read-tools-integration-fixture",
+    "configuredExposedTools": [
+      "github_read_file",
+      "database_read"
+    ],
+    "configurationHash": "ded7430195afd5a04dc219a130d7ef5a6a1859436c344ac59d533e26d4353dfa",
+    "instructionsSha256": "76e46437e726e1bd8aa5ed8441fab3943e03929e3bf937a73ad6a736bc215e93",
+    "observed": "Two unsupported resource discovery attempts, successful Gateway README read, no database read or completed workflow. No target/replay acceptance fabricated.",
+    "diagnostics": "docs/evidence/enterprise-model-diagnostics.json"
+  },
+  "native": {
+    "runId": "93f7156f-4f59-47b9-90a1-a42393c68810",
+    "result": "PASS_SCOPED",
+    "tests": {
+      "tests": 254,
+      "pass": 250,
+      "fail": 0,
+      "skipped": 4
+    },
+    "commands": [
+      {
+        "label": "rego",
+        "result": "PASS",
+        "exitCode": 0
+      },
+      {
+        "label": "node-tests",
+        "result": "PASS",
+        "exitCode": 0
+      },
+      {
+        "label": "typecheck",
+        "result": "PASS",
+        "exitCode": 0
+      },
+      {
+        "label": "build",
+        "result": "PASS",
+        "exitCode": 0
+      },
+      {
+        "label": "dashboard-build",
+        "result": "PASS",
+        "exitCode": 0
+      },
+      {
+        "label": "browser",
+        "result": "PASS",
+        "exitCode": 0
+      },
+      {
+        "label": "upstream-proof",
+        "result": "PASS",
+        "exitCode": 0
+      },
+      {
+        "label": "docker-preflight",
+        "result": "PASS",
+        "exitCode": 0
+      }
+    ]
+  },
+  "isolation": {
+    "runId": "82399117-6db2-4b80-9a7d-85a482975f09",
+    "result": "FAIL",
+    "postgresTests": {
+      "tests": 22,
+      "pass": 22,
+      "fail": 0,
+      "skipped": 0
+    },
+    "gitTests": {
+      "tests": 16,
+      "pass": 16,
+      "fail": 0,
+      "skipped": 0
+    },
+    "workflowCasesBeforeCodex": 14,
+    "cleanup": {
+      "result": "PASS",
+      "remaining": {
+        "containers": 0,
+        "networks": 0,
+        "volumes": 0
+      }
+    },
+    "credentialScan": {
+      "result": "PASS",
+      "files": 51,
+      "knownSyntheticSecrets": 12,
+      "contaminated": [],
+      "scope": "Exact known fixture credentials; operator separately scans issued credentials. Not a universal DLP scan."
+    }
+  },
+  "enterprise": {
+    "runId": "63a45127-9f29-4f1a-9048-d04464f4644b",
+    "result": "PASS_LOCAL_INSTALLED_ENTERPRISE",
+    "cases": [
+      {
+        "name": "managed-owner-bootstrap",
+        "result": "PASS",
+        "observed": "Production HTTPS/Next/control/PostgreSQL managed-account bootstrap completed before enabling enterprise mode."
+      },
+      {
+        "name": "compose-enterprise-isolation",
+        "result": "PASS",
+        "observed": "Control/agent/protected/dashboard/enterprise networks internal; existing dedicated publication bridge joins only fixed ingress, with only loopback port published; enterprise secret only control, fixture secret only fixture."
+      },
+      {
+        "name": "installed-signed-oidc-scim",
+        "result": "PASS",
+        "observed": "SCIM created a bound user and mapped operator group; signed RSA code/PKCE exchange traversed production enterprise egress; missing-cookie and replay callbacks denied."
+      },
+      {
+        "name": "installed-offboarding",
+        "result": "PASS",
+        "observed": "Bodyless SCIM DELETE over HTTPS immediately revoked the issued application session."
+      },
+      {
+        "name": "installed-audit-ack-restart",
+        "result": "PASS",
+        "observed": {
+          "acknowledgedSequence": "7",
+          "uniqueSinkEvents": 7,
+          "checkpointUnchangedOnRestart": true,
+          "operatorStatus": true
+        }
+      },
+      {
+        "name": "installed-agent-enterprise-denial",
+        "result": "PASS",
+        "observed": {
+          "attempts": 5,
+          "allBlocked": true,
+          "noSecrets": true,
+          "gatewayEnterpriseRoutes": [
+            404,
+            404
+          ]
+        }
+      },
+      {
+        "name": "installed-browser-enterprise",
+        "result": "PASS",
+        "observed": {
+          "ssoButton": true,
+          "ordinaryPasswordHidden": true,
+          "manualIdentityControlsHidden": true,
+          "expectedSyntheticIdpNavigation": true,
+          "browserErrors": 0
+        }
+      }
+    ],
+    "cleanup": {
+      "result": "PASS",
+      "containers": 0,
+      "volumes": 0,
+      "networks": 0,
+      "scopedFilesRemoved": true
+    },
+    "secretScan": {
+      "result": "PASS",
+      "knownValuesChecked": 41,
+      "artifacts": [
+        "enterprise-summary.json",
+        "source-manifest.json",
+        "enterprise-evidence.json.gz"
+      ]
+    }
+  },
+  "actualEnterpriseRestore": {
+    "path": "docs/enterprise-work/restore-evidence-2625eb1f-6210-43fe-b0ee-180b281727a1/summary.json",
+    "result": "PASS_LOCAL_ENTERPRISE_POSTGRES_RESTORE",
+    "cleanup": [
+      {
+        "name": "verify-ent-rst-2625eb1f",
+        "result": "PASS",
+        "containers": 0,
+        "volumes": 0,
+        "networks": 0,
+        "ownedFilesRemoved": true,
+        "ownedImageTagsRemoved": true
+      },
+      {
+        "name": "verify-ent-src-2625eb1f",
+        "result": "PASS",
+        "containers": 0,
+        "volumes": 0,
+        "networks": 0,
+        "ownedFilesRemoved": true,
+        "ownedImageTagsRemoved": true
+      }
+    ],
+    "knownSecretScan": {
+      "result": "PASS",
+      "checkedValues": 36,
+      "scope": "Sanitized summary and saved standalone harness; no raw backup/config/key in evidence"
+    }
+  },
+  "capacity": {
+    "path": "docs/evidence/enterprise-capacity-5b3a2995-be71-43ca-ad55-728626bc4d94/summary.json",
+    "result": "PASS_BOUNDED_LOCAL_PROFILE",
+    "workload": {
+      "requestsPerCell": 48,
+      "concurrency": [
+        1,
+        4,
+        8
+      ],
+      "replayCopies": 4,
+      "workloads": [
+        "read",
+        "replay",
+        "forbidden"
+      ],
+      "httpDeadlineMs": 10000,
+      "policyDeadlineMs": 250,
+      "warmupCalls": 0
+    },
+    "cleanup": {
+      "appClosed": true,
+      "targetClosed": true,
+      "opaStopped": true,
+      "temporaryFilesRemoved": true
+    }
+  },
+  "componentChecks": [
+    {
+      "kind": "product",
+      "sourceHash": "cad14e08e68caf1406304a4cc171bd0152fb85c8562cb28bed054b86331f496d",
+      "runId": "d19b529c-63bf-40a7-9c6d-7a0d4522378f",
+      "result": "PASS_LOCAL_PRODUCT"
+    },
+    {
+      "kind": "service",
+      "sourceHash": "cad14e08e68caf1406304a4cc171bd0152fb85c8562cb28bed054b86331f496d",
+      "runId": "74a64739-a1d8-453e-96cc-0fc36ac4a76f",
+      "result": "PASS_LOCAL_SERVICE"
+    },
+    {
+      "kind": "candidate",
+      "sourceHash": "cad14e08e68caf1406304a4cc171bd0152fb85c8562cb28bed054b86331f496d",
+      "runId": "e5194a00-569f-4fde-9aee-6c4800719627",
+      "result": "PASS_LOCAL_CANDIDATE"
+    },
+    {
+      "kind": "security",
+      "sourceHash": "01e881bde6983224ffbddb36ac6cad21373e93a6bb338d6b398c4af511864ea5",
+      "runId": "c632ef21-9319-46f5-8247-6de2cbf4c2bc",
+      "result": "PASS_LOCAL_SECURITY_CHECKS"
+    }
+  ],
+  "imageScan": {
+    "sourceHash": "cad14e08e68caf1406304a4cc171bd0152fb85c8562cb28bed054b86331f496d",
+    "runId": "f1b18853-a333-4433-9ff8-0c79c731f2b2",
+    "result": "PASS_IMAGE_SCAN",
+    "images": [
+      {
+        "name": "runtime",
+        "imageId": "sha256:5912c756653be5eecc0749066d33be2c61d80c750978151fe39f8a7ad16fb97c",
+        "reference": "agentbrake-product-verify-candidate-e5194a00-runtime",
+        "total": 0,
+        "highCritical": []
+      },
+      {
+        "name": "dashboard",
+        "imageId": "sha256:278f8d999c55dc0ec5ad3962481c09c08dd082efaf78e356d78e27022b711ba6",
+        "reference": "agentbrake-product-verify-candidate-e5194a00-dashboard",
+        "total": 0,
+        "highCritical": []
+      },
+      {
+        "name": "postgres",
+        "imageId": "sha256:4cac0a7a6fa29f872aba5cb5e8cfd844f2e2b16b17f502a796a4f8531756e5db",
+        "reference": "agentbrake-postgres:18-193f481f609ba4086c53",
+        "total": 0,
+        "highCritical": []
+      },
+      {
+        "name": "opa",
+        "imageId": "sha256:2f4425289034e7fa5f2c558ce8eea42910313e78b99fd0adc7a0a105db8d4b69",
+        "reference": "agentbrake-opa:1.22.4-3f9e5f443c6e97aa147e",
+        "total": 0,
+        "highCritical": []
+      }
+    ]
+  },
+  "production": {
+    "result": "BLOCKED",
+    "sourceHash": "01e881bde6983224ffbddb36ac6cad21373e93a6bb338d6b398c4af511864ea5",
+    "gates": [
+      {
+        "id": "local-release",
+        "description": "Full local release gate for the exact source revision",
+        "status": "STALE_OR_FAILED"
+      },
+      {
+        "id": "https-candidate",
+        "description": "Actual local TLS, installed UI and agent network boundary",
+        "status": "STALE_OR_FAILED"
+      },
+      {
+        "id": "container-vulnerabilities",
+        "description": "Offline scan of built runtime/dashboard and pinned PostgreSQL/OPA images",
+        "status": "STALE_OR_FAILED"
+      },
+      {
+        "id": "live-github",
+        "status": "NOT_OBTAINED",
+        "description": "Named disposable repository, selected-repository GitHub App and real approved/denied workflow evidence"
+      },
+      {
+        "id": "clean-host",
+        "status": "NOT_OBTAINED",
+        "description": "Independent clean Linux host installation, certificate validation, backup restore and isolation proof"
+      },
+      {
+        "id": "human-security-review",
+        "status": "NOT_OBTAINED",
+        "description": "Independent human review of this revision, threat boundaries and acceptance evidence; critical/high findings resolved"
+      },
+      {
+        "id": "deployment-authorization",
+        "status": "NOT_OBTAINED",
+        "description": "Named host/account, DNS/TLS, private access path and explicit deployment/budget approval"
+      },
+      {
+        "id": "operations-owner",
+        "status": "NOT_OBTAINED",
+        "description": "Named incident/patch owner, external encrypted backup destination and tested restore/revocation procedure"
+      }
+    ],
+    "limitation": "External gates require actual separately reviewed evidence. This command has no flag to relabel an offline fixture as live or approve deployment.",
+    "at": "2026-11-17T10:04:32.111Z"
+  },
+  "installed": {
+    "sourceHash": "b9c07645e95dca1369636c9fc38a7ed3f777dc15b2a4004b9032f9566a00e60d",
+    "upgraded": false,
+    "report": "docs/evidence/enterprise-host-interruption.json",
+    "limit": "Existing images/volumes resumed after Docker interruption; no pre-interruption transaction snapshot or byte-for-byte data continuity claim."
+  },
+  "remaining": [
+    "Complete actual local Codex workflow on suitable verified inference resources before release packaging",
+    "False-block target below2% not met:16/208 synthetic parameter tasks",
+    "Explicit named GitHub App/write approval and actual sandbox verification",
+    "Clean Ubuntu24.04 guest install/restore",
+    "Independent human security review",
+    "Real customer IdP/MFA/SCIM/SIEM acceptance and resumed restored identity/sink",
+    "Off-host backup, key custody, RPO/RTO, on-call exercise and hosted CI/branch controls",
+    "Native SAML/KMS, shared multitenancy and HA unsupported",
+    "Customer/legal/privacy/support and commercial acceptance"
+  ],
+  "scope": "Unreleased local synthetic implementation and review evidence. NOT an installable verified release or Production acceptance. No live App, paid model, customer data or external deployment. Previous successful release reports remain historical."
+}

@@ -1,17 +1,17 @@
 {
   "result": "PASS_BOUNDED",
   "stage": "Milestone B",
-  "startedAt": "2026-11-16T22:59:10.834Z",
-  "finishedAt": "2026-11-16T23:06:46.209Z",
-  "sourceHash": "b9c07645e95dca1369636c9fc38a7ed3f777dc15b2a4004b9032f9566a00e60d",
+  "startedAt": "2026-11-17T20:51:24.731Z",
+  "finishedAt": "2026-11-17T21:01:15.177Z",
+  "sourceHash": "2d8df354e16dacbdda4802a04dd875d6166f053f63a5a3b897a2bf41d358032e",
   "gitCommit": null,
-  "nativeRun": "58b5ddb0-dc82-4ad6-95a0-7ff78aae0d64",
-  "isolationRun": "e882aded-0f23-4aa3-9d83-dd8bf307f854",
+  "nativeRun": "f0df1e25-a959-4bc6-83f9-35b987437bd0",
+  "isolationRun": "55230ee0-5e8c-437c-a1d2-7ba2c5104daf",
   "nativeTests": {
-    "tests": 182,
-    "pass": 178,
+    "tests": 293,
+    "pass": 287,
     "fail": 0,
-    "skipped": 4
+    "skipped": 6
   },
   "postgresTests": {
     "tests": 22,
@@ -19,24 +19,144 @@
     "fail": 0,
     "skipped": 0
   },
-  "workflowCases": 14,
+  "workflowCases": 15,
+  "coding": {
+    "result": "PASS_SCOPED_LOCAL_CODING",
+    "modelProfile": {
+      "name": "agentbrake-coding-diagnostic:latest",
+      "manifestSha256": "f2272c38aabff3fc66fae65ab81bb6300a59205e461a769e149c815805796904",
+      "weightsSha256": "85e4a5b7b8ef0e48af0e8658f5aaab9c2324c76c1641493f4d1e25fce54b18b9",
+      "parameters": {
+        "num_predict": 2048,
+        "repeat_penalty": 1,
+        "seed": 42,
+        "stop": [
+          "<|im_start|>",
+          "<|im_end|>"
+        ],
+        "temperature": 0,
+        "top_k": 20,
+        "top_p": 0.8
+      }
+    },
+    "evidence": "docs/evidence/55230ee0-5e8c-437c-a1d2-7ba2c5104daf/coding-workflow.json",
+    "targetHeadSha": "607c7b56ff1144ae4dec8b6d20665451986ae3b4",
+    "replayAndDenial": {
+      "replay": {
+        "id": "f0d97bfa-0f27-4600-8a8a-04c56a22d38e",
+        "status": "allowed"
+      },
+      "forcedDenied": {
+        "id": "1929a9a3-9e40-487e-b9a6-e00ed3d60416",
+        "status": "blocked",
+        "rule": "task-scope"
+      },
+      "scope": "Deterministic adversarial request using the real task credential; not a claim that the model attempted this write"
+    },
+    "scope": "Additional synthetic four-phase orchestrated coding workflow, separate CLI context per phase with same task/candidate/budget; local Git mock PR, no live GitHub or human approval. Two-phase model loop failure is retained separately."
+  },
+  "expandedBenchmark": {
+    "total": 208,
+    "baselineSucceeded": 208,
+    "completed": 208,
+    "falseBlocks": 0,
+    "nonPolicyFailures": 0,
+    "completionVsBaseline": 1,
+    "falseBlockRate": 0,
+    "approvalRequired": 96,
+    "measurementResult": "PASS",
+    "usabilityTarget": "MET_SYNTHETIC_ONLY",
+    "baselineFailures": 0,
+    "byKind": {
+      "read": {
+        "total": 64,
+        "baselineSucceeded": 64,
+        "completed": 64,
+        "falseBlocks": 0,
+        "nonPolicyFailures": 0,
+        "completionVsBaseline": 1,
+        "falseBlockRate": 0,
+        "approvalRequired": 0
+      },
+      "preview": {
+        "total": 80,
+        "baselineSucceeded": 80,
+        "completed": 80,
+        "falseBlocks": 0,
+        "nonPolicyFailures": 0,
+        "completionVsBaseline": 1,
+        "falseBlockRate": 0,
+        "approvalRequired": 0
+      },
+      "pr": {
+        "total": 32,
+        "baselineSucceeded": 32,
+        "completed": 32,
+        "falseBlocks": 0,
+        "nonPolicyFailures": 0,
+        "completionVsBaseline": 1,
+        "falseBlockRate": 0,
+        "approvalRequired": 64
+      },
+      "update": {
+        "total": 32,
+        "baselineSucceeded": 32,
+        "completed": 32,
+        "falseBlocks": 0,
+        "nonPolicyFailures": 0,
+        "completionVsBaseline": 1,
+        "falseBlockRate": 0,
+        "approvalRequired": 32
+      }
+    },
+    "timing": {
+      "directBaselineTask": {
+        "count": 208,
+        "p50Ms": 32.148300000000745,
+        "p95Ms": 111.03329999999914
+      },
+      "gatewayTask": {
+        "count": 208,
+        "p50Ms": 52.55539999999928,
+        "p95Ms": 252.31860000000233
+      },
+      "authorization": {
+        "count": 272,
+        "p50Ms": 4.52,
+        "p95Ms": 6.44
+      },
+      "submitRoundTrip": {
+        "count": 272,
+        "p50Ms": 30.83020000000397,
+        "p95Ms": 42.8122000000003
+      },
+      "automatedApprovalRoundTrip": {
+        "count": 96,
+        "p50Ms": 48.72019999999975,
+        "p95Ms": 97.95010000000184
+      }
+    },
+    "humanApprovalWait": "NOT_MEASURED",
+    "corpusHash": "4977504a717538cc20c1bddf5bb7e08df272c6f7c1912925f87405b7a7bfe30c",
+    "scope": "208 prelabelled synthetic tasks; 8 parameter strata of 26 scenarios, including repeated reads and all 16 credential-shaped placeholders; actual direct adapter baseline versus gateway, sequential on one fixture with distinct branch names and per-step state checks; approvals by automated trusted fixture operator; task latency includes HTTP/target/snapshots, not provisioning or human wait; no general population or model-quality rate. Measurement PASS is not achievement of the separate <2% usability target."
+  },
   "gitContainerTests": {
-    "tests": 16,
-    "pass": 16,
+    "tests": 17,
+    "pass": 17,
     "fail": 0,
     "skipped": 0
   },
   "benchmark": {
     "total": 26,
     "baselineSucceeded": 26,
-    "completed": 24,
-    "falseBlocks": 2,
+    "completed": 26,
+    "falseBlocks": 0,
     "nonPolicyFailures": 0,
-    "completionVsBaseline": 0.9230769230769231,
-    "falseBlockRate": 0.07692307692307693,
+    "completionVsBaseline": 1,
+    "falseBlockRate": 0,
     "approvalRequired": 12,
-    "authorizationP50Ms": 5,
-    "authorizationP95Ms": 9.39,
+    "authorizationP50Ms": 4.31,
+    "authorizationP95Ms": 5.5,
     "corpusHash": "6d5c6529807d270e0cb3eb0e0e8c6ce16ca854d8d1d98f5e6dec0bd76ad77289"
   },
   "codex": {
@@ -69,11 +189,18 @@
         ]
       }
     ],
+    "inferenceProfile": {
+      "name": "gpu-8k",
+      "context": 8192,
+      "compact": 6500,
+      "gpu": true,
+      "memoryBytes": 6442450944
+    },
     "actualActions": 2,
     "replayedReads": 2,
     "forbiddenReplayRule": "task-scope"
   },
-  "environmentHash": "3c75786be10397a05494ee8663383630c8ba2145d52d3ec5d072727c73ecdf77",
+  "environmentHash": "3d7f5114c59ab65bc7203d9f9245da0f25d5bc0e2680816515ebc27223471c70",
   "cleanup": {
     "result": "PASS",
     "remaining": {
@@ -84,8 +211,8 @@
   },
   "credentialScan": {
     "result": "PASS",
-    "files": 49,
-    "knownSyntheticSecrets": 12,
+    "files": 90,
+    "knownSyntheticSecrets": 13,
     "contaminated": [],
     "scope": "Exact known fixture credentials; operator separately scans issued credentials. Not a universal DLP scan."
   },

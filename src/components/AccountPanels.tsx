@@ -6,7 +6,7 @@ const roles: Actor["role"][] = ["administrator", "operator", "approver", "viewer
 const message = (err: unknown) => err instanceof Error ? err.message : "Request failed";
 const passwordValid = (password: string, confirmation: string) => password.length >= 15 && password.length <= 128 && password === confirmation;
 
-export function SettingsPanel({ onSignedOut, onProfile }: { onSignedOut: () => void; onProfile: () => Promise<void> }) {
+export function SettingsPanel({ onSignedOut, onProfile, passwordManagedExternally = false, profileManagedExternally = false }: { onSignedOut: () => void; onProfile: () => Promise<void>; passwordManagedExternally?: boolean; profileManagedExternally?: boolean }) {
   const [account, setAccount] = useState<Account | null>(null), [name, setName] = useState("");
   const [error, setError] = useState(""), [notice, setNotice] = useState(""), [busy, setBusy] = useState(false);
   const [current, setCurrent] = useState(""), [password, setPassword] = useState(""), [confirmation, setConfirmation] = useState("");
@@ -26,21 +26,21 @@ export function SettingsPanel({ onSignedOut, onProfile }: { onSignedOut: () => v
     const entered = {currentPassword:current,password}; setCurrent("");setPassword("");setConfirmation("");setBusy(true);
     try {await api("/password/change",entered);onSignedOut();} catch(err){setError(message(err));} finally {setBusy(false);}
   }
-  return <section className="panel"><div className="panel-heading"><h2>Account settings</h2></div><div className="section-pad account-panel">
+  return <section className="panel"><div className="panel-heading"><h2>Account settings</h2></div><div className="section-pad account-panel">{passwordManagedExternally && <p>Your password and verification methods are managed by your organization.</p>}
     {error && <div className="error" role="alert">{error}</div>}{notice && <p role="status">{notice}</p>}
     {!account ? !error && <p role="status">Loading profile…</p> : <>
       <form className="account-form" onSubmit={save}>
-        <label>Profile name<input value={name} maxLength={80} required onChange={e=>setName(e.target.value)} autoComplete="name" /></label>
+        <label>Profile name<input value={name} maxLength={80} readOnly={profileManagedExternally} required onChange={e=>setName(e.target.value)} autoComplete="name" /></label>
         <label>Email<input type="email" value={account.email} readOnly /></label>
         <label>Role<input value={account.role} readOnly /></label>
-        <button className="button dark" disabled={busy}>Save profile</button>
+        {!profileManagedExternally && <button className="button dark" disabled={busy}>Save profile</button>}
       </form>
-      <form className="account-form password-form" onSubmit={changePassword}><h3>Change password</h3><p>Use 15 to 128 characters. Changing your password signs out all your sessions. Sign in again afterward.</p>
+      {!passwordManagedExternally && <form className="account-form password-form" onSubmit={changePassword}><h3>Change password</h3><p>Use 15 to 128 characters. Changing your password signs out all your sessions. Sign in again afterward.</p>
         <label>Current password<input type="password" value={current} required maxLength={128} autoComplete="current-password" onChange={e=>setCurrent(e.target.value)} /></label>
         <label>New password<input type="password" value={password} required minLength={15} maxLength={128} autoComplete="new-password" onChange={e=>setPassword(e.target.value)} /></label>
         <label>Confirm new password<input type="password" value={confirmation} required minLength={15} maxLength={128} autoComplete="new-password" onChange={e=>setConfirmation(e.target.value)} /></label>
         <button className="button dark" disabled={busy}>Change password</button>
-      </form>
+      </form>}
     </>}
   </div></section>;
 }
@@ -59,7 +59,7 @@ function MemberCard({member,busy,change,recover}: {member:Account;busy:boolean;c
   </article>;
 }
 
-export function TeamPanel({revision}: {revision?:string}) {
+export function TeamPanel({revision,managedExternally=false}: {revision?:string;managedExternally?:boolean}) {
   const [team,setTeam]=useState<Team|null>(null),[email,setEmail]=useState(""),[role,setRole]=useState<Actor["role"]>("viewer");
   const [error,setError]=useState(""),[notice,setNotice]=useState(""),[busy,setBusy]=useState(false);
   const [secret,setSecret]=useState<{url:string;expiresAt:number;kind:"invite"|"reset"}|null>(null);
@@ -75,12 +75,13 @@ export function TeamPanel({revision}: {revision?:string}) {
       <label>One-time link<input readOnly value={secret.url} onFocus={e=>e.target.select()} /></label>
       <div className="task-actions"><button className="button secondary" onClick={()=>void navigator.clipboard.writeText(secret.url).then(()=>setNotice("Link copied."),()=>setCopyError("Copy unavailable. Select the link and copy it manually."))}>Copy link</button><button className="button secondary" onClick={()=>{setSecret(null);setCopyError("");setNotice("");}}>Dismiss link</button></div>{copyError && <p role="alert">{copyError}</p>}
     </section>}
-    <section className="panel"><div className="panel-heading"><h2>Invite a teammate</h2></div><form className="section-pad account-form" onSubmit={invite}>
+    {managedExternally && <p>Membership and roles are managed by your organization through SCIM.</p>}
+    {!managedExternally && <section className="panel"><div className="panel-heading"><h2>Invite a teammate</h2></div><form className="section-pad account-form" onSubmit={invite}>
       <label>Invitation email<input type="email" maxLength={254} required value={email} onChange={e=>setEmail(e.target.value)} /></label><label>Invitation role<select value={role} onChange={e=>setRole(e.target.value as Actor["role"])}>{roles.map(value=><option key={value}>{value}</option>)}</select></label><button className="button dark" disabled={busy || !!secret}>Create invitation</button>
-    </form></section>
+    </form></section>}
     <section className="team-section"><h2>Workspace members</h2><p>Authority changes revoke the member’s current sessions. Keep at least one active administrator.</p>{!team && !error && <p role="status">Loading team…</p>}
-      <div className="boundary-grid">{team?.members.map(member=><MemberCard key={member.id} member={member} busy={busy} change={(id,patch)=>run(async()=>{await api(`/team/${id}`,patch,"PATCH");await load();setNotice("Member updated.");})} recover={id=>{if(!secret)void run(async()=>{show(await api(`/team/${id}/recovery`,{}),"reset");});else setError("Dismiss the current one-time link before issuing another.");}} />)}</div>
+      <div className="boundary-grid">{team?.members.map(member=>managedExternally ? <article className="panel member-card" key={member.id}><h3>{member.name}</h3><p>{member.email}</p><p>{member.role} · {member.active ? "Active" : "Disabled"}</p></article> : <MemberCard key={member.id} member={member} busy={busy} change={(id,patch)=>run(async()=>{await api(`/team/${id}`,patch,"PATCH");await load();setNotice("Member updated.");})} recover={id=>{if(!secret)void run(async()=>{show(await api(`/team/${id}/recovery`,{}),"reset");});else setError("Dismiss the current one-time link before issuing another.");}} />)}</div>
     </section>
-    <section className="panel section-pad team-section"><h2>Pending invitations</h2>{team?.invitations.length===0 && <p>No pending invitations.</p>}{team?.invitations.map(invitation=><div className="invitation-row" key={invitation.id}><p>{invitation.email} · {invitation.role}<br /><small>Expires {new Date(invitation.expiresAt).toLocaleString()}</small></p><button className="button secondary" disabled={busy} onClick={()=>void run(async()=>{await api(`/team/invitations/${invitation.id}`,{},"DELETE");await load();setNotice("Invitation revoked.");})}>Revoke invitation for {invitation.email}</button></div>)}</section>
+    {!managedExternally && <section className="panel section-pad team-section"><h2>Pending invitations</h2>{team?.invitations.length===0 && <p>No pending invitations.</p>}{team?.invitations.map(invitation=><div className="invitation-row" key={invitation.id}><p>{invitation.email} · {invitation.role}<br /><small>Expires {new Date(invitation.expiresAt).toLocaleString()}</small></p><button className="button secondary" disabled={busy} onClick={()=>void run(async()=>{await api(`/team/invitations/${invitation.id}`,{},"DELETE");await load();setNotice("Invitation revoked.");})}>Revoke invitation for {invitation.email}</button></div>)}</section>}
   </>;
 }

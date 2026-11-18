@@ -1,12 +1,9 @@
 name: ${COMPOSE_PROJECT_NAME:?Use the AgentBrake verifier}
 x-runtime: &runtime
   image: ${COMPOSE_PROJECT_NAME}-runtime
-  build:
-    context: ../..
-    dockerfile: infra/local/Dockerfile
-    args:
-      NODE_IMAGE: ${NODE_IMAGE:?Resolve pinned images first}
+  pull_policy: never
   user: "1000:1000"
+  group_add: ["${FIXTURE_GID:-1000}"]
   read_only: true
   cap_drop: [ALL]
   security_opt: [no-new-privileges:true]
@@ -20,6 +17,11 @@ x-runtime: &runtime
 services:
   gateway:
     <<: *runtime
+    build:
+      context: ../..
+      dockerfile: infra/local/Dockerfile
+      args:
+        NODE_IMAGE: ${NODE_IMAGE:?Resolve pinned images first}
     environment:
       AGENTBRAKE_ISOLATED: "1"
     command: [node, --import, tsx, server/isolated.ts]
@@ -58,6 +60,7 @@ services:
   opa:
     image: ${OPA_IMAGE:?Resolve pinned images first}
     user: "1000:1000"
+    group_add: ["${FIXTURE_GID:-1000}"]
     read_only: true
     cap_drop: [ALL]
     security_opt: [no-new-privileges:true]
@@ -83,6 +86,7 @@ services:
   target-db:
     image: ${POSTGRES_IMAGE:?Resolve pinned images first}
     user: postgres
+    group_add: ["${FIXTURE_GID:-1000}"]
     read_only: true
     cap_drop: [ALL]
     security_opt: [no-new-privileges:true]
@@ -106,13 +110,14 @@ services:
       - /var/run/postgresql:uid=70,gid=70,mode=0770
       - /tmp:size=32m,mode=1777
     healthcheck:
-      test: [CMD, pg_isready, -U, fixture_owner, -d, agentbrake_target_fixture]
+      test: [CMD, pg_isready, -h, 127.0.0.1, -U, fixture_owner, -d, agentbrake_target_fixture]
       interval: 2s
       timeout: 2s
       retries: 40
   control-db:
     image: ${POSTGRES_IMAGE:?Resolve pinned images first}
     user: postgres
+    group_add: ["${FIXTURE_GID:-1000}"]
     read_only: true
     cap_drop: [ALL]
     security_opt: [no-new-privileges:true]
@@ -135,7 +140,7 @@ services:
       - /var/run/postgresql:uid=70,gid=70,mode=0770
       - /tmp:size=32m,mode=1777
     healthcheck:
-      test: [CMD, pg_isready, -U, control_owner, -d, agentbrake_control_fixture]
+      test: [CMD, pg_isready, -h, 127.0.0.1, -U, control_owner, -d, agentbrake_control_fixture]
       interval: 2s
       timeout: 2s
       retries: 40
@@ -147,6 +152,7 @@ services:
       POSTGRES_CONTROL_TEST: "1"
       POSTGRES_TARGET_TEST: "1"
     volumes:
+      - ${RUN_DIR}/target-token:/run/secrets/target-token:ro
       - ${RUN_DIR}/admin-key:/run/secrets/admin-key:ro
       - ${RUN_DIR}/observer-token:/run/secrets/observer-token:ro
       - ${RUN_DIR}/target-read-password:/run/secrets/target-read-password:ro

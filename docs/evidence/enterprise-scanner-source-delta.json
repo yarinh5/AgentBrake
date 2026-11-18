@@ -1,0 +1,11 @@
+{
+  "at": "2026-11-17T10:00:46.145Z",
+  "sourceHash": "01e881bde6983224ffbddb36ac6cad21373e93a6bb338d6b398c4af511864ea5",
+  "priorSourceHash": "cad14e08e68caf1406304a4cc171bd0152fb85c8562cb28bed054b86331f496d",
+  "changes": [
+    "infra/security/security.ts",
+    "infra/security/security.yaml"
+  ],
+  "removed": [],
+  "scope": "Only scanner rule and scanner self-test changed; runtime, application tests, builds and workflow harness bytes unchanged. Earlier runtime evidence retains its original source hash; not a fresh full-release pass."
+}

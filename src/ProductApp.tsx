@@ -468,8 +468,8 @@ export default function App() {
           )}
           {(page === "Overview" || page === "Connections") && <button className="button secondary onboarding-link" onClick={() => navigate("Get started")}>Get started: Connect a scoped task <ArrowRight size={15} /></button>}
           {page === "Get started" && <GettingStarted />}
-          {page === "Settings" && session.authMode === "account" && <SettingsPanel onSignedOut={clearSession} onProfile={async () => { const current: Session = await api("/session"); setSession(current); await refresh(); }} />}
-          {page === "Team" && session.authMode === "account" && configure && <TeamPanel revision={workspace.updatedAt} />}
+          {page === "Settings" && session.authMode === "account" && <SettingsPanel profileManagedExternally={!!setup?.enterprise} passwordManagedExternally={!!setup?.enterprise && session.assurance?.method !== 'break-glass'} onSignedOut={clearSession} onProfile={async () => { const current: Session = await api("/session"); setSession(current); await refresh(); }} />}
+          {page === "Team" && session.authMode === "account" && configure && <TeamPanel managedExternally={!!setup?.enterprise} revision={workspace.updatedAt} />}
           {page === "Team" && !(session.authMode === "account" && configure) && <p>Administrator access is required for team management.</p>}
           {page === "Overview" && (
             <>

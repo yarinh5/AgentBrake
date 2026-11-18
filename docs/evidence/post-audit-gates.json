@@ -1,0 +1,7 @@
+{
+  "ScanExit": 0,
+  "ProductionExit": 2,
+  "PackageExit": 1,
+  "ExpectedProductionExit": 2,
+  "ExpectedPackageRejection": true
+}

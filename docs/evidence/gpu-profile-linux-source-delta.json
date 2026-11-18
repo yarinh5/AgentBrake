@@ -1,0 +1,44 @@
+{
+  "at": "2026-11-17T17:02:31.750202+00:00",
+  "result": "PASS_EXACT_FILE_DELTA",
+  "fromSourceHash": "2642bd1356660a8c91b157f2870bfb787e8088d83eca2544886f0784deed06bc",
+  "toSourceHash": "3ea2c8eb9d847d6213333172121d0e235fb0ef0e4efe44946108d0f4e18fb0c6",
+  "changes": [
+    {
+      "path": "infra/local/codex-gpu.compose.yaml",
+      "before": null,
+      "after": "73ad097c9e54fed9ba5406bf0324bcb3bfa5b06e7d508242f1385a802574e6c7"
+    },
+    {
+      "path": "infra/local/codex.compose.yaml",
+      "before": "a07ca33fe151ef9bd79fccdefea323da16e720bbc39b6edf0cf19509ae44954d",
+      "after": "bf53453812578d8ac73c316d953fcee7b30e2fe86f181936736d543a48e894e2"
+    },
+    {
+      "path": "scripts/codex-inference-profile.mjs",
+      "before": null,
+      "after": "28e20bbb92a5efd3f4caad673559c1136b175d0166d4bee1fb4ff88ed2b2cfed"
+    },
+    {
+      "path": "scripts/verify-all.mjs",
+      "before": "0f19cbb0339def9f7e40957ba562f747210f20fe5567fdc217c14915e2c4aecc",
+      "after": "fa90c7dea711b99b471440babaf9adef64bfaf804fcf03ed0aba9e1cfd1fee6b"
+    },
+    {
+      "path": "scripts/verify-isolation.mjs",
+      "before": "5aedc02c9e9da5530a839e9dbd15cfa76f982a624d88d050a901e1d3dbab3408",
+      "after": "2b11e61a6a83558063d8b7c67a7d0ccfff2349cf682a445e279561de1be14acf"
+    },
+    {
+      "path": "tests/enforcement/codex-inference-profile.test.mjs",
+      "before": null,
+      "after": "7838550237fbb58c405da67de74471d881f6767e2332b23d4c4f06d1625c30ad"
+    },
+    {
+      "path": "tests/milestone-b/codex-agent.mjs",
+      "before": "982da83bce2cdd22114e8b013ec4841410b43f00a7a4d3d9731b5a28e005c816",
+      "after": "ac829c6b4c2ea05b7184c9168c9d30b3bfaf503e30e6b5ffd9a4f9c53f028c8e"
+    }
+  ],
+  "scope": "All seven changes are the explicit inference test profile, test prompt/diagnostics and verification metadata/regressions. Every other source-manifest file is byte-identical to the actual final Ubuntu nine-gate run. This does not relabel historical guest run hashes or claim final full release executed on Ubuntu. The real GPU CLI runs on the existing Windows/Docker environment."
+}

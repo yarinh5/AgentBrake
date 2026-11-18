@@ -4,6 +4,7 @@ import { createHash, randomUUID } from "node:crypto";
 import { join, relative } from "node:path";
 import { startOpa, root, opaPath } from "./opa-runtime.mjs";
 import { sourceManifest } from "./source-manifest.mjs";
+import { failureDiagnostics } from "./ci-failure-diagnostics.mjs";
 const hash = (value) => createHash("sha256").update(value).digest("hex");
 const runId = randomUUID(),
   startedAt = new Date().toISOString();
@@ -52,6 +53,7 @@ async function run(label, command, args) {
     child.once("exit", (code) => resolve(code ?? 1));
   });
   output = output.replaceAll(opa.token, "[REDACTED]");
+  if (exitCode && label === 'node-tests') console.log(JSON.stringify(failureDiagnostics(label, output)));
   await writeFile(join(directory, label + ".log"), output);
   commands.push({
     label,
@@ -94,8 +96,7 @@ try {
     "--noEmit",
   ]);
   const build = await run("build", process.execPath, [
-    "node_modules/vite/bin/vite.js",
-    "build",
+    "scripts/build-ui.mjs",
   ]);
   if (!build) {
     const dashboard = await run("dashboard-build", process.execPath, [

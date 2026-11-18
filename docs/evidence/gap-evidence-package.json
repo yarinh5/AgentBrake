@@ -1,0 +1,10 @@
+{
+  "sourceHash": "c2bee4dedd7016ec6ed4e6325be8976db16085cb46c4c80b4ddef37779bc5f7f",
+  "archive": "F:\\project love\\AgentBrake\\.agentbrake-local\\releases\\agentbrake-gap-evidence-c2bee4dedd70-95d97b18.tar.gz",
+  "sha256": "2bdb841a6d38eb00ebf73c7569e864b4c14c37442d7cf302d9555badd6fd0c87",
+  "files": 36,
+  "bytes": 729361,
+  "validation": "PASS_EXTRACTED_INVENTORY_AND_HASHES",
+  "extracted": "F:\\project love\\AgentBrake\\.agentbrake-local\\releases\\gap-extracted-f88d5049-f8eb-4f5b-9db5-59a4945fb367",
+  "scope": "Integrity and private-key-header check; not a universal secret detector or independent review."
+}

@@ -1,0 +1,21 @@
+{
+  "at": "2026-11-17T17:26:40.375Z",
+  "result": "PASS_PUBLIC_DB_REFRESH",
+  "backup": "F:\\project love\\AgentBrake\\.agentbrake-local\\trivy-cache-before-c60874e7-e687-4b87-88e5-7c24e8297320",
+  "scope": "Public vulnerability database refresh only. Existing cache copied intact first; no source, images, credentials or runtime data uploaded.",
+  "before": {
+    "Version": 2,
+    "NextUpdate": "2026-11-17T13:03:44.830426014Z",
+    "UpdatedAt": "2026-11-16T13:03:44.830426244Z",
+    "DownloadedAt": "2026-11-16T19:02:52.831437722Z"
+  },
+  "reassessment": "Both prior attempts downloaded the public artifact but the128MiB tmpfs filled at128.03MiB of133.73MiB. Increase only the disposable download tmpfs to512MiB within its1GiB container cap; source and scan gates unchanged.",
+  "after": {
+    "Version": 2,
+    "NextUpdate": "2026-11-18T13:00:16.23116036Z",
+    "UpdatedAt": "2026-11-17T13:00:16.23116094Z",
+    "DownloadedAt": "2026-11-17T17:27:25.575760954Z"
+  },
+  "databaseSha256": "c071fb0ffef9587397244b24410916d3da718d65798a02d4888b00d765d0d5c0",
+  "finishedAt": "2026-11-17T17:27:30.576Z"
+}

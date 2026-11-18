@@ -1,0 +1,9 @@
+{
+  "schemaVersion":1,
+  "planHash":"0000000000000000000000000000000000000000000000000000000000000000",
+  "observations":[
+    {"taskId":"read","baseline":"completed","status":"completed","target":"matched","dispatch":"dispatched","evidenceComplete":true,"approvals":0,"policyMs":5,"taskMs":100},
+    {"taskId":"reviewed-change","baseline":"completed","status":"completed","target":"matched","dispatch":"dispatched","evidenceComplete":true,"approvals":1,"policyMs":8,"taskMs":1000,"approvalWaitMs":800},
+    {"taskId":"forbidden-change","baseline":"not-run","status":"blocked","target":"unchanged","dispatch":"not-dispatched","evidenceComplete":true,"approvals":0,"policyMs":4}
+  ]
+}

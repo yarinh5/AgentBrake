@@ -5,6 +5,8 @@ import { join, resolve, dirname } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { composeEnvironment } from "./compose-environment.mjs";
 import { loadCandidate } from './candidate-config.mjs';
+import { loadEnterprise } from './enterprise-manifest.mjs';
+import { prepareFixtureAccess as prepareRuntimeFileAccess } from './fixture-file-access.mjs';
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 // Installation loading and authenticated backup preflight must resolve the same
 // recipe identity, including legacy manifests that predate runtime profiles.
@@ -42,7 +44,10 @@ export async function productConfig(name = "local") {
   )
     throw Error("Invalid local installation manifest");
   const images = await productImages(config.runtimeProfile);
+  if(config.enterpriseRequired!==undefined&&config.enterpriseRequired!==true)throw Error('Invalid enterprise requirement marker');
+  if(config.enterpriseIdentityRequired!==undefined&&(config.enterpriseIdentityRequired!==true||config.enterpriseRequired!==true))throw Error('Invalid enterprise identity requirement marker');
   const candidate = await loadCandidate({ name, dir, id: config.id });
+  const enterprise = await loadEnterprise({name,dir,id:config.id,candidate});
   return {
     name,
     dir,
@@ -50,6 +55,9 @@ export async function productConfig(name = "local") {
     port: config.port,
     project: "agentbrake-product-" + name,
     candidate,
+    enterprise,
+    enterpriseRequired: config.enterpriseRequired === true,
+    enterpriseIdentityRequired: config.enterpriseIdentityRequired === true,
     minimal: images.minimal,
     env: {
       ...process.env,
@@ -57,6 +65,9 @@ export async function productConfig(name = "local") {
       INSTALLATION_ID: config.id,
       INSTALL_DIR: dir.replaceAll("\\", "/"),
       DASHBOARD_PORT: String(config.port),
+      PRODUCT_RUNTIME_GID: process.platform === 'linux' ? String(process.getgid()) : '1000',
+      ENTERPRISE_REQUIRED: config.enterpriseRequired === true ? '1' : '0',
+      ENTERPRISE_IDENTITY_REQUIRED: config.enterpriseIdentityRequired === true ? '1' : '0',
       ...images.env,
       NEXT_TELEMETRY_DISABLED: "1",
       ...(candidate?.httpsOrigin ? { AGENTBRAKE_PUBLIC_ORIGIN: candidate.httpsOrigin } : {}),
@@ -161,6 +172,18 @@ export async function prepareProduct(config) {
     }),
     { mode: 0o600 },
   );
+  // Docker bind mounts retain Linux ownership. Grant only the explicit runtime
+  // group read access to files actually mounted into services. The host parent
+  // stays owner-only; operator metadata, recovery keys and input keys stay0600.
+  const access = process.platform === 'linux' ? await prepareRuntimeFileAccess(config.dir, [
+    'operators.json', 'session-key', 'binding-key', 'bridge-key', 'opa-token',
+    'target-token', 'observer-token', 'control-password', 'control-owner-password',
+    'postgres-bootstrap', 'target-read-password', 'target-write-password', 'opa-auth.json',
+    ...(config.candidate?.httpsOrigin ? ['tls-cert.pem', 'tls-key.pem'] : []),
+    ...(config.candidate?.github ? ['github-app.json', 'github-app-key.pem'] : []),
+    ...(config.enterprise ? ['enterprise.json', 'enterprise-manifest.json', 'enterprise-egress.json'] : []),
+  ], []) : { group: '1000' };
+  config.env.PRODUCT_RUNTIME_GID = access.group;
 }
 export async function dockerProduct(
   config,
@@ -197,7 +220,11 @@ export async function dockerProduct(
     });
     const timer = setTimeout(() => {
       child.kill();
-      reject(Error("Local Docker command deadline exceeded"));
+      reject(Object.assign(Error("Local Docker command deadline exceeded"), {
+        output,
+        errorOutput,
+        timedOut: true,
+      }));
     }, timeoutMs);
     child.stdout?.on("data", (chunk) => {
       output += chunk;
@@ -242,6 +269,7 @@ export const composeProduct = (config, args, options) =>
       ...(config.minimal ? ['-f', join(root, 'infra/product/minimal.compose.yaml')] : []),
       ...(config.candidate?.httpsOrigin ? ['-f', join(root, 'infra/product/https.compose.yaml')] : []),
       ...(config.candidate?.github ? ['-f', join(root, 'infra/product/github.compose.yaml')] : []),
+      ...(config.enterprise ? ['-f', join(root, 'infra/product/enterprise.compose.yaml')] : []),
       ...(config.verificationComposeFiles ?? []).flatMap(file => ['-f', file]),
       ...args,
     ],

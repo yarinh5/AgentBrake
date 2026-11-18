@@ -10,13 +10,12 @@
     "esModuleInterop": true,
     "resolveJsonModule": true,
     "noEmit": true,
-    "types": ["node", "vite/client"]
+    "types": ["node"]
   },
   "include": [
     "src",
     "server",
     "tests",
-    "vite.config.ts",
     "playwright.config.ts"
   ]
 }

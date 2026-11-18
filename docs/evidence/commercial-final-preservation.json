@@ -1,0 +1,25 @@
+{
+  "at": "2026-11-17T18:51:02.324Z",
+  "result": "PASS_SOURCE_ARTIFACT_REFERENCE_AND_OLD_ARCHIVE_PRESERVATION",
+  "sourceHash": "6c5db3b91a0cb7f9e9055bedfee5088a6b075fd4b32491949339693b7dd0a63a",
+  "evidenceReferences": 26,
+  "archives": [
+    {
+      "path": ".agentbrake-local/releases/agentbrake-UNRELEASED-external-review-855b2915022f-8958623d.tar.gz",
+      "sha256": "ebc214a2e13a47b8102157077cf33011ea1e03d985c4f8b99316990f337bf5e2"
+    },
+    {
+      "path": ".agentbrake-local/releases/agentbrake-UNRELEASED-linux-review-3ea2c8eb9d84-fecee3cd.tar.gz",
+      "sha256": "7bc51ec9b3c09e9cd41c571ae861604dc6289f61845d5f4473ed7583eab9948d"
+    },
+    {
+      "path": "F:\\project love\\AgentBrake\\.agentbrake-local\\releases\\agentbrake-0.3.0-rc.1-6c5db3b91a0c-1c082619.tar.gz",
+      "sha256": "0f9e2300fc830172d0a136e679c83331641bc03a7939c6204e6963f566d7edfa"
+    },
+    {
+      "path": "F:\\project love\\AgentBrake\\.agentbrake-local\\releases\\agentbrake-UNRELEASED-commercial-review-6c5db3b91a0c-ab4c30b5.tar.gz",
+      "sha256": "f6d73d2d507bccfa2d6692cb0e6c68accb0221a58ce3568a466550a9a80c41d0"
+    }
+  ],
+  "scope": "Exact source, selected install/review archive bytes, all closure references and original855b/3ea archives unchanged. No deployment or existing installation upgrade."
+}

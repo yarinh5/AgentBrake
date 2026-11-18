@@ -7,6 +7,9 @@ import { composeEnvironment } from "../../scripts/compose-environment.mjs";
 import { spawnSync } from "node:child_process";
 import { mkdir } from "node:fs/promises";
 
+// A clean checkout has no ignored runtime directory; each fixture owns setup.
+await mkdir(resolve('.agentbrake-local'), { recursive: true, mode: 0o700 });
+
 async function cleanup(dir) {
   assert.equal(dirname(resolve(dir)), resolve(".agentbrake-local"));
   assert.match(basename(dir), /^env-contract-[a-zA-Z0-9]+$/);

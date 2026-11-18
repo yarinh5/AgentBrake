@@ -104,6 +104,15 @@ const initial = await snapshot(),
 const changes = [
   { path: "docs/change.md", content: "# Approved local fixture\n" },
 ];
+const missingBranch = await action(gitAgent, "github_open_pull_request", {
+  repo, baseSha, branch, changes, title: "Missing branch must not be reviewable", body: "",
+});
+assert.equal(missingBranch.status, "blocked");
+assert.equal(missingBranch.rule, "preview-unavailable");
+assert.deepEqual(await snapshot(), initial);
+assert.equal((await approve(missingBranch.id)).status, 409);
+assert.deepEqual(await snapshot(), initial);
+record("missing-feature-branch-no-dispatch-no-approval", missingBranch, { executionCalls: 0 });
 const proposal = await action(gitAgent, "github_propose_change", {
   repo,
   baseSha,

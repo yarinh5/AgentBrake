@@ -1,0 +1,379 @@
+{
+  "at": "2026-11-17T09:51:43.302Z",
+  "result": "DIAGNOSTICS_NOT_RELEASE_ACCEPTANCE",
+  "attempts": [
+    {
+      "runId": "ead73570-0b8f-4b29-a651-9f57493b152f",
+      "sourceHash": "ad12b62c992187a2cb96d4adcbba993b1bd5c96ee7bd5117501b98e19fcf3fc4",
+      "result": "FAIL",
+      "cause": "Observed CUDA KV-cache allocation failure despite partial offload/headroom",
+      "startedAt": "2026-11-17T08:20:02.257Z",
+      "finishedAt": "2026-11-17T08:20:23.289Z",
+      "elapsedSeconds": 21.032,
+      "exitCode": 1,
+      "timedOut": false,
+      "profile": "default-instructions-full-catalog",
+      "configuredExposedTools": "full-catalog",
+      "configurationHash": "57d5ecaafb09a7918b0ef83ab33d9a0ec36ef43087b4a681e9f5f030e8d683cc",
+      "instructionsSha256": null,
+      "binarySha256": "b452ca20f838a8855a88a41050ee4a694033fff4ea3ecdad5633e6e0e8d13f2b",
+      "models": [],
+      "eventTypes": [
+        {
+          "type": "thread.started",
+          "itemType": null
+        },
+        {
+          "type": "item.completed",
+          "itemType": "error"
+        },
+        {
+          "type": "turn.started",
+          "itemType": null
+        },
+        {
+          "type": "error",
+          "itemType": null
+        },
+        {
+          "type": "turn.failed",
+          "itemType": null
+        }
+      ],
+      "workflowTimeoutMs": 600000,
+      "completedToolCalls": [],
+      "promptProgress": [
+        "local-model-1  | ggml_backend_cuda_buffer_type_alloc_buffer: allocating 1292.00 MiB on device 0: cudaMalloc failed: out of memory",
+        "local-model-1  | llama_init_from_model: failed to initialize the context: failed to allocate buffer for kv cache",
+        "local-model-1  | time=2026-11-17T08:20:23.272Z level=INFO source=sched.go:679 msg=\"Load failed\" model=/models/blobs/sha256-85e4a5b7b8ef0e48af0e8658f5aaab9c2324c76c1641493f4d1e25fce54b18b9 error=\"llama-server process has terminated: exit status 1: cudaMalloc failed: out of memory\\nggml_backend_buft_alloc_buffer_n_default: failed to allocate CUDA0 buffer of size 1354760192\\nllama_init_from_model: failed to initialize the context: failed to allocate buffer for kv cache\""
+      ],
+      "rawWorkflowLog": "docs/evidence/ead73570-0b8f-4b29-a651-9f57493b152f/codex-real-workflow.log",
+      "rawWorkflowLogSha256": "3b7d295ff799319baff34859cfbff78dc87f2db7be4564a44a3046b24d180d3e",
+      "cleanup": {
+        "result": "PASS",
+        "remaining": {
+          "containers": 0,
+          "networks": 0,
+          "volumes": 0
+        }
+      },
+      "knownCredentialScan": "PASS"
+    },
+    {
+      "runId": "e150fc5f-245d-41ae-a416-fd88abeedcbe",
+      "sourceHash": "fc683bf456d14f756e72671ad24e0e4aee0c2782b86012d17e783360bb03494b",
+      "result": "FAIL",
+      "cause": "CPU default-instruction workflow exceeded 600 seconds before a tool call",
+      "startedAt": "2026-11-17T08:35:02.064Z",
+      "finishedAt": "2026-11-17T08:45:02.256Z",
+      "elapsedSeconds": 600.192,
+      "exitCode": 1,
+      "timedOut": true,
+      "profile": "default-instructions-full-catalog",
+      "configuredExposedTools": "full-catalog",
+      "configurationHash": "57d5ecaafb09a7918b0ef83ab33d9a0ec36ef43087b4a681e9f5f030e8d683cc",
+      "instructionsSha256": null,
+      "binarySha256": "b452ca20f838a8855a88a41050ee4a694033fff4ea3ecdad5633e6e0e8d13f2b",
+      "models": [
+        {
+          "name": "qwen3:4b-instruct",
+          "digest": "0edcdef34593eac1aa2be9c7d06c432dcf81945adca5eca2f27662c18f168ba0",
+          "size_vram": 0,
+          "context_length": 32768
+        }
+      ],
+      "eventTypes": [
+        {
+          "type": "thread.started",
+          "itemType": null
+        },
+        {
+          "type": "item.completed",
+          "itemType": "error"
+        },
+        {
+          "type": "turn.started",
+          "itemType": null
+        }
+      ],
+      "workflowTimeoutMs": 600000,
+      "completedToolCalls": [],
+      "promptProgress": [
+        "local-model-1  | slot   operator(): id  0 | task 0 | new prompt, n_ctx_slot = 32768, n_keep = 4, task.n_tokens = 9617",
+        "local-model-1  | slot print_timing: id  0 | task 0 | prompt processing, n_tokens =   1024, progress = 0.11, t =  31.52 s / 32.49 tokens per second",
+        "local-model-1  | slot print_timing: id  0 | task 0 | prompt processing, n_tokens =   2048, progress = 0.21, t =  89.97 s / 22.76 tokens per second",
+        "local-model-1  | slot print_timing: id  0 | task 0 | prompt processing, n_tokens =   3072, progress = 0.32, t = 171.58 s / 17.90 tokens per second",
+        "local-model-1  | slot print_timing: id  0 | task 0 | prompt processing, n_tokens =   4096, progress = 0.43, t = 323.20 s / 12.67 tokens per second",
+        "local-model-1  | slot print_timing: id  0 | task 0 | prompt processing, n_tokens =   5120, progress = 0.53, t = 493.90 s / 10.37 tokens per second"
+      ],
+      "rawWorkflowLog": "docs/evidence/e150fc5f-245d-41ae-a416-fd88abeedcbe/codex-real-workflow.log",
+      "rawWorkflowLogSha256": "b2796128d1da81b1a4adb838b22387527bf33cb5a7246fd6d9d80bd9a2714940",
+      "cleanup": {
+        "result": "PASS",
+        "remaining": {
+          "containers": 0,
+          "networks": 0,
+          "volumes": 0
+        }
+      },
+      "knownCredentialScan": "PASS"
+    },
+    {
+      "runId": "a4dcea21-a369-4332-ba05-67338e9985fe",
+      "sourceHash": "dee28f6e726122b46e59fd3ad7c7fe73bfca9e7eda675ec6f65d687c6fef2c7f",
+      "result": "FAIL",
+      "cause": "CPU concise-instruction/all-tools workflow exceeded 600 seconds before a tool call",
+      "startedAt": "2026-11-17T08:48:57.636Z",
+      "finishedAt": "2026-11-17T08:58:57.789Z",
+      "elapsedSeconds": 600.153,
+      "exitCode": 1,
+      "timedOut": true,
+      "profile": "bounded-read-only-integration-fixture",
+      "configuredExposedTools": "full-catalog",
+      "configurationHash": "4a9afb592576716778bd1d4bc711fb6c0c036b505456f67fafafd511c51ca710",
+      "instructionsSha256": "76e46437e726e1bd8aa5ed8441fab3943e03929e3bf937a73ad6a736bc215e93",
+      "binarySha256": "b452ca20f838a8855a88a41050ee4a694033fff4ea3ecdad5633e6e0e8d13f2b",
+      "models": [
+        {
+          "name": "qwen3:4b-instruct",
+          "digest": "0edcdef34593eac1aa2be9c7d06c432dcf81945adca5eca2f27662c18f168ba0",
+          "size_vram": 0,
+          "context_length": 32768
+        }
+      ],
+      "eventTypes": [
+        {
+          "type": "thread.started",
+          "itemType": null
+        },
+        {
+          "type": "item.completed",
+          "itemType": "error"
+        },
+        {
+          "type": "turn.started",
+          "itemType": null
+        }
+      ],
+      "workflowTimeoutMs": 600000,
+      "completedToolCalls": [],
+      "promptProgress": [
+        "local-model-1  | slot   operator(): id  0 | task 0 | new prompt, n_ctx_slot = 32768, n_keep = 4, task.n_tokens = 6106",
+        "local-model-1  | slot print_timing: id  0 | task 0 | prompt processing, n_tokens =   1024, progress = 0.17, t =  38.01 s / 26.94 tokens per second",
+        "local-model-1  | slot print_timing: id  0 | task 0 | prompt processing, n_tokens =   2048, progress = 0.34, t =  99.59 s / 20.57 tokens per second",
+        "local-model-1  | slot print_timing: id  0 | task 0 | prompt processing, n_tokens =   3072, progress = 0.50, t = 201.09 s / 15.28 tokens per second",
+        "local-model-1  | slot print_timing: id  0 | task 0 | prompt processing, n_tokens =   4096, progress = 0.67, t = 334.55 s / 12.24 tokens per second",
+        "local-model-1  | slot print_timing: id  0 | task 0 | prompt processing, n_tokens =   5120, progress = 0.84, t = 514.70 s / 9.95 tokens per second"
+      ],
+      "rawWorkflowLog": "docs/evidence/a4dcea21-a369-4332-ba05-67338e9985fe/codex-real-workflow.log",
+      "rawWorkflowLogSha256": "e2b8d13419cedaca5df7406dc2553ad65df4b0e6ee6dc0d2b9add3c2f238df4d",
+      "cleanup": {
+        "result": "PASS",
+        "remaining": {
+          "containers": 0,
+          "networks": 0,
+          "volumes": 0
+        }
+      },
+      "knownCredentialScan": "PASS"
+    },
+    {
+      "runId": "59f20cd5-196d-4130-be47-d1833eda1127",
+      "sourceHash": "78d731f7c1f168cac06289b6204741b4650b06b68900567653ab9f1016f7b736",
+      "result": "FAIL",
+      "cause": "CPU concise-instruction/two-read-tools workflow exceeded 600 seconds before a tool call",
+      "startedAt": "2026-11-17T09:02:07.748Z",
+      "finishedAt": "2026-11-17T09:12:07.894Z",
+      "elapsedSeconds": 600.146,
+      "exitCode": 1,
+      "timedOut": true,
+      "profile": "bounded-two-read-tools-integration-fixture",
+      "configuredExposedTools": [
+        "github_read_file",
+        "database_read"
+      ],
+      "configurationHash": "c0032f262ff6f1a6be71992099b3f935fb1d0110b2b9f9295262b3dc44edfe46",
+      "instructionsSha256": "76e46437e726e1bd8aa5ed8441fab3943e03929e3bf937a73ad6a736bc215e93",
+      "binarySha256": "b452ca20f838a8855a88a41050ee4a694033fff4ea3ecdad5633e6e0e8d13f2b",
+      "models": [
+        {
+          "name": "qwen3:4b-instruct",
+          "digest": "0edcdef34593eac1aa2be9c7d06c432dcf81945adca5eca2f27662c18f168ba0",
+          "size_vram": 0,
+          "context_length": 32768
+        }
+      ],
+      "eventTypes": [
+        {
+          "type": "thread.started",
+          "itemType": null
+        },
+        {
+          "type": "item.completed",
+          "itemType": "error"
+        },
+        {
+          "type": "turn.started",
+          "itemType": null
+        }
+      ],
+      "workflowTimeoutMs": 600000,
+      "completedToolCalls": [],
+      "promptProgress": [
+        "local-model-1  | slot   operator(): id  0 | task 0 | new prompt, n_ctx_slot = 32768, n_keep = 4, task.n_tokens = 4969",
+        "local-model-1  | slot print_timing: id  0 | task 0 | prompt processing, n_tokens =   1024, progress = 0.21, t =  41.71 s / 24.55 tokens per second",
+        "local-model-1  | slot print_timing: id  0 | task 0 | prompt processing, n_tokens =   2048, progress = 0.41, t = 108.38 s / 18.90 tokens per second",
+        "local-model-1  | slot print_timing: id  0 | task 0 | prompt processing, n_tokens =   3072, progress = 0.62, t = 194.41 s / 15.80 tokens per second",
+        "local-model-1  | slot print_timing: id  0 | task 0 | prompt processing, n_tokens =   4096, progress = 0.82, t = 336.22 s / 12.18 tokens per second"
+      ],
+      "rawWorkflowLog": "docs/evidence/59f20cd5-196d-4130-be47-d1833eda1127/codex-real-workflow.log",
+      "rawWorkflowLogSha256": "2f9db5b4aa916fec252bbfdb75fee3220274ba3b4bebdba32afc5fe9cde27cea",
+      "cleanup": {
+        "result": "PASS",
+        "remaining": {
+          "containers": 0,
+          "networks": 0,
+          "volumes": 0
+        }
+      },
+      "knownCredentialScan": "PASS"
+    },
+    {
+      "runId": "82399117-6db2-4b80-9a7d-85a482975f09",
+      "sourceHash": "cad14e08e68caf1406304a4cc171bd0152fb85c8562cb28bed054b86331f496d",
+      "result": "FAIL",
+      "cause": "Twenty-minute CPU workflow timed out after two unsupported resource discovery calls and one successful Gateway README read; required database read and completed workflow were absent. Slow actual generation observed; no release acceptance.",
+      "startedAt": "2026-11-17T09:30:19.574Z",
+      "finishedAt": "2026-11-17T09:50:10.013Z",
+      "elapsedSeconds": 1190.439,
+      "exitCode": 1,
+      "timedOut": true,
+      "profile": "bounded-two-read-tools-integration-fixture",
+      "configuredExposedTools": [
+        "github_read_file",
+        "database_read"
+      ],
+      "configurationHash": "ded7430195afd5a04dc219a130d7ef5a6a1859436c344ac59d533e26d4353dfa",
+      "instructionsSha256": "76e46437e726e1bd8aa5ed8441fab3943e03929e3bf937a73ad6a736bc215e93",
+      "binarySha256": "b452ca20f838a8855a88a41050ee4a694033fff4ea3ecdad5633e6e0e8d13f2b",
+      "models": [
+        {
+          "name": "qwen3:4b-instruct",
+          "digest": "0edcdef34593eac1aa2be9c7d06c432dcf81945adca5eca2f27662c18f168ba0",
+          "size_vram": 0,
+          "context_length": 32768
+        }
+      ],
+      "eventTypes": [
+        {
+          "type": "thread.started",
+          "itemType": null
+        },
+        {
+          "type": "item.completed",
+          "itemType": "error"
+        },
+        {
+          "type": "turn.started",
+          "itemType": null
+        },
+        {
+          "type": "item.completed",
+          "itemType": "agent_message"
+        },
+        {
+          "type": "item.started",
+          "itemType": "mcp_tool_call"
+        },
+        {
+          "type": "item.completed",
+          "itemType": "mcp_tool_call"
+        },
+        {
+          "type": "item.completed",
+          "itemType": "agent_message"
+        },
+        {
+          "type": "item.started",
+          "itemType": "mcp_tool_call"
+        },
+        {
+          "type": "item.completed",
+          "itemType": "mcp_tool_call"
+        },
+        {
+          "type": "item.completed",
+          "itemType": "agent_message"
+        },
+        {
+          "type": "item.started",
+          "itemType": "mcp_tool_call"
+        },
+        {
+          "type": "item.completed",
+          "itemType": "mcp_tool_call"
+        }
+      ],
+      "workflowTimeoutMs": 1200000,
+      "completedToolCalls": [
+        {
+          "tool": "list_mcp_resources",
+          "status": "failed",
+          "error": "resources/list failed: resources/list failed for `agentbrake`: Mcp error: -32601: Method not found"
+        },
+        {
+          "tool": "list_mcp_resource_templates",
+          "status": "failed",
+          "error": "resources/templates/list failed: resources/templates/list failed for `agentbrake`: Mcp error: -32601: Method not found"
+        },
+        {
+          "tool": "github_read_file",
+          "status": "completed",
+          "error": null
+        }
+      ],
+      "promptProgress": [
+        "local-model-1  | slot   operator(): id  0 | task 0 | new prompt, n_ctx_slot = 32768, n_keep = 4, task.n_tokens = 4969",
+        "local-model-1  | slot print_timing: id  0 | task 0 | prompt processing, n_tokens =   1024, progress = 0.21, t =  35.19 s / 29.10 tokens per second",
+        "local-model-1  | slot print_timing: id  0 | task 0 | prompt processing, n_tokens =   2048, progress = 0.41, t =  91.87 s / 22.29 tokens per second",
+        "local-model-1  | slot print_timing: id  0 | task 0 | prompt processing, n_tokens =   3072, progress = 0.62, t = 172.19 s / 17.84 tokens per second",
+        "local-model-1  | slot print_timing: id  0 | task 0 | prompt processing, n_tokens =   4096, progress = 0.82, t = 285.13 s / 14.37 tokens per second",
+        "local-model-1  | slot   operator(): id  0 | task 83 | new prompt, n_ctx_slot = 32768, n_keep = 4, task.n_tokens = 5087",
+        "local-model-1  | slot   operator(): id  0 | task 142 | new prompt, n_ctx_slot = 32768, n_keep = 4, task.n_tokens = 5187",
+        "local-model-1  | slot   operator(): id  0 | task 232 | new prompt, n_ctx_slot = 32768, n_keep = 4, task.n_tokens = 6098"
+      ],
+      "rawWorkflowLog": "docs/evidence/82399117-6db2-4b80-9a7d-85a482975f09/codex-real-workflow.log",
+      "rawWorkflowLogSha256": "0e7240cfe4b459785acc6be12c441fd0cdbabebbb3d7a6e3f6668a14adbf9983",
+      "cleanup": {
+        "result": "PASS",
+        "remaining": {
+          "containers": 0,
+          "networks": 0,
+          "volumes": 0
+        }
+      },
+      "knownCredentialScan": "PASS"
+    }
+  ],
+  "deliberateAbort": {
+    "runId": "871a8b05-de0c-4945-af15-73ad59916ef6",
+    "sourceHash": "56aef2bd6620a77ad9887fda256a189c1bc0727f604269621eb53becb00858a3",
+    "reason": "Old source snapshot after necessary Enterprise verifier causal-barrier correction; root deliberately stopped only that disposable Gateway before model execution",
+    "cleanup": {
+      "result": "PASS",
+      "remaining": {
+        "containers": 0,
+        "networks": 0,
+        "volumes": 0
+      }
+    },
+    "knownCredentialScan": "PASS"
+  },
+  "cpuDiagnostic": {
+    "interrupted": "docs/evidence/model-cpu-diagnostic-b70b2a21-8aa7-453c-8ab3-4ff5aaa930a0/summary.json",
+    "successfulStandalone": "docs/evidence/model-cpu-diagnostic-036918ad-3fee-479b-9373-7829a4201495/summary.json",
+    "limitation": "Standalone OK is not actual Codex workflow acceptance; first attempt interrupted by Docker daemon failure of unknown cause"
+  },
+  "stoppingDecision": "The final-source 20-minute actual workflow also failed. Preserve FAIL and stop this tuning approach; no further prompt/catalog/timeout relaxation or scripted model substitution. Full release and release packaging remain blocked. Complete independent product/security checks without relabeling them as release acceptance. A future inference rerun needs an evidence-based resource/provider solution and unchanged functional acceptance.",
+  "scope": "Synthetic local diagnostics, no paid model or external target. No default-instruction behavior, model robustness or CPU SLA is established by the custom two-tool profile."
+}

@@ -15,6 +15,8 @@ assert.equal(
   "Package requires the verified current source",
 );
 assert.equal(release.result, "LOCAL_MVP_VERIFIED_EXTERNAL_GATES_OPEN");
+assert.equal(release.baseline?.coding?.result, "PASS_SCOPED_LOCAL_CODING",
+  "Package requires the useful actual Codex coding-to-local-PR gate");
 assert.equal(
   release.service?.result,
   "PASS_LOCAL_SERVICE",

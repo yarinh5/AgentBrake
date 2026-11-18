@@ -1,0 +1,7 @@
+{
+  "schemaVersion":1,
+  "id":"synthetic-example",
+  "environment":"synthetic",
+  "context":{"sourceHash":"0000000000000000000000000000000000000000000000000000000000000000","agentProfile":"example-agent","modelId":"example-model","topologyId":"isolated-example"},
+  "tasks":[{"id":"read","intent":"benign","expected":"allow"},{"id":"reviewed-change","intent":"benign","expected":"approval"},{"id":"forbidden-change","intent":"forbidden","expected":"deny"}]
+}

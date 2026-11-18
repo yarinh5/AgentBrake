@@ -1,6 +1,12 @@
 const MAX_BODY = 32 * 1024;
 const id = "[a-zA-Z0-9_-]{1,100}";
 const routes: [RegExp, string[]][] = [
+  [/^enterprise\/(?:auth|status)$/, ["GET"]],
+  [/^enterprise\/oidc\/start$/, ["POST"]],
+  [/^enterprise\/oidc\/callback$/, ["GET"]],
+  [/^scim\/v2\/(?:ServiceProviderConfig|ResourceTypes|Schemas)$/, ["GET"]],
+  [/^scim\/v2\/(?:Users|Groups)$/, ["GET", "POST"]],
+  [new RegExp(`^scim/v2/(?:Users|Groups)/${id}$`), ["GET", "PUT", "PATCH", "DELETE"]],
   [/^setup$/, ["GET", "POST"]],
   [/^profile$/, ["GET", "PATCH"]],
   [/^team$/, ["GET"]],
@@ -38,8 +44,12 @@ export async function controlProxy(request: Request, path: string[], configured 
   // 0.0.0.0), which can differ from the browser's loopback Host. Validate the
   // actual Host first and derive the browser origin from that trusted header.
   const origin = request.headers.get("origin");
-  if ((origin && origin !== dashboardOrigin) || (request.method !== "GET" && origin !== dashboardOrigin)) return fail(403, "Dashboard origin verification failed");
   const pathname = path.join("/");
+  const scim = /^scim\/v2\//.test(pathname);
+  // Service provisioning has its own bearer credential. Never substitute a
+  // browser session or relax same-origin rules on any other API route.
+  const machineRequest = scim && !!publicOrigin && !origin && /^Bearer [\x21-\x7e]{32,512}$/.test(request.headers.get('authorization') ?? '');
+  if ((origin && origin !== dashboardOrigin) || (request.method !== "GET" && origin !== dashboardOrigin && !machineRequest)) return fail(403, "Dashboard origin verification failed");
   if (path.some(segment => !/^[a-zA-Z0-9_-]+$/.test(segment)) || pathname.length > 220) return fail(404, "Unsupported dashboard API route");
   const route = routes.find(([pattern]) => pattern.test(pathname));
   if (!route) return fail(404, "Unsupported dashboard API route");
@@ -54,7 +64,9 @@ export async function controlProxy(request: Request, path: string[], configured 
   if (length && (!/^\d+$/.test(length) || Number(length) > MAX_BODY)) return fail(413, "Request exceeds the 32 KiB limit");
   let body: string | undefined;
   if (request.method !== "GET") {
-    if (!request.headers.get("content-type")?.match(/^application\/json(?:\s*;|$)/i)) return fail(415, "JSON body required");
+    const contentTypeValid=!!request.headers.get("content-type")?.match(scim ? /^application\/(?:scim\+)?json(?:\s*;|$)/i : /^application\/json(?:\s*;|$)/i);
+    const scimDelete=scim&&request.method==='DELETE';
+    if (!contentTypeValid&&!scimDelete) return fail(415, "JSON body required");
     const reader = request.body?.getReader();
     const chunks: Uint8Array[] = []; let size = 0;
     try {
@@ -66,19 +78,27 @@ export async function controlProxy(request: Request, path: string[], configured 
       }
       const bytes = new Uint8Array(size); let offset = 0;
       for (const chunk of chunks) { bytes.set(chunk, offset); offset += chunk.byteLength; }
-      body = new TextDecoder("utf-8", { fatal: true }).decode(bytes);
-      JSON.parse(body);
+      if (!(scimDelete&&size===0)) {
+        if(!contentTypeValid)return fail(415,'JSON body required');
+        body = new TextDecoder("utf-8", { fatal: true }).decode(bytes);
+        JSON.parse(body);
+      }
     } catch { return fail(400, "Malformed JSON request"); }
     finally { reader?.releaseLock(); }
   }
   const headers = new Headers({ "Accept": "application/json", "Host": backend.host, "Origin": backend.origin });
-  for (const name of ["cookie", "x-ab-csrf"]) { const value = request.headers.get(name); if (value) headers.set(name, value); }
+  for (const name of scim ? ["authorization", "if-match"] : ["cookie", "x-ab-csrf"]) { const value = request.headers.get(name); if (value) headers.set(name, value); }
   if (body !== undefined) headers.set("Content-Type", "application/json");
   const target = new URL(`/api/${pathname}`, backend); target.search = browser.search;
   try {
-    const response = await transport(target, { method: request.method, headers, body, redirect: "error", cache: "no-store", signal: AbortSignal.any([request.signal, AbortSignal.timeout(30_000)]) });
+    const callback = pathname === 'enterprise/oidc/callback';
+    const response = await transport(target, { method: request.method, headers, body, redirect: callback ? "manual" : "error", cache: "no-store", signal: AbortSignal.any([request.signal, AbortSignal.timeout(30_000)]) });
     const outgoing = new Headers({ "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff" });
-    for (const name of ["content-type", "content-disposition", "x-correlation-id"]) { const value = response.headers.get(name); if (value) outgoing.set(name, value); }
+    if (response.status >= 300 && response.status < 400) {
+      if (!callback || response.status !== 303 || response.headers.get('location') !== '/') { await response.body?.cancel(); return fail(502, 'Unexpected authentication redirect'); }
+      outgoing.set('Location', '/');
+    }
+    for (const name of ["content-type", "content-disposition", "x-correlation-id", ...(scim ? ['etag'] : [])]) { const value = response.headers.get(name); if (value) outgoing.set(name, value); }
     for (const cookie of response.headers.getSetCookie()) {
       if (publicOrigin && !/;\s*Secure(?:;|$)/i.test(cookie)) { await response.body?.cancel(); return fail(502, 'HTTPS session configuration is invalid'); }
       outgoing.append("Set-Cookie", cookie);

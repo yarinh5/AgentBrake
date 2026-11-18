@@ -1,0 +1,13 @@
+{
+  "At": "2026-11-17T16:34:07.4434631Z",
+  "Scope": "Read-only resource inventory during the separate VM validation; no host settings changed",
+  "Cpu": "Intel(R) Core(TM) i7-9700K CPU @ 3.60GHz",
+  "PhysicalCores": 8,
+  "LogicalProcessors": 8,
+  "PhysicalKiB": 67023724,
+  "FreePhysicalKiB": 30065652,
+  "CommitLimitKiB": 69119856,
+  "FreeCommitKiB": 4505404,
+  "Gpu": "NVIDIA GeForce RTX 2060 SUPER, 8192 MiB, 6404 MiB, 15 %",
+  "Decision": "Finish and power off the eight-GiB VM before bounded GPU diagnosis. Existing host commit headroom is a distinct constraint from free physical RAM."
+}

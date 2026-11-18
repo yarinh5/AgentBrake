@@ -1,10 +1,15 @@
 {
   "result": "BLOCKED",
-  "sourceHash": "b9c07645e95dca1369636c9fc38a7ed3f777dc15b2a4004b9032f9566a00e60d",
+  "sourceHash": "2d8df354e16dacbdda4802a04dd875d6166f053f63a5a3b897a2bf41d358032e",
   "gates": [
     {
       "id": "local-release",
       "description": "Full local release gate for the exact source revision",
+      "status": "PASS"
+    },
+    {
+      "id": "useful-coding",
+      "description": "Actual configured Codex edit/test/local PR, target readback, replay and denial; no live or statistical reliability claim",
       "status": "PASS"
     },
     {
@@ -44,5 +49,5 @@
     }
   ],
   "limitation": "External gates require actual separately reviewed evidence. This command has no flag to relabel an offline fixture as live or approve deployment.",
-  "at": "2026-11-16T23:16:12.434Z"
+  "at": "2026-11-17T21:09:39.227Z"
 }

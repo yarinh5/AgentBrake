@@ -1,0 +1,38 @@
+{
+  "result": "PASS_BOUNDED_PROXY_CAPACITY_AND_DENIAL",
+  "normal": {
+    "requested": 25,
+    "connected": 25,
+    "earlyClosed": 0,
+    "remaining": 25
+  },
+  "bounded": {
+    "requested": 129,
+    "connected": 129,
+    "earlyClosed": 1,
+    "remaining": 128
+  },
+  "denied": [
+    {
+      "target": "api.github.com:443",
+      "status": 403
+    },
+    {
+      "target": "api.openai.com:443",
+      "status": 403
+    },
+    {
+      "target": "127.0.0.1:8878",
+      "status": 403
+    }
+  ],
+  "publicPositive": {
+    "target": "https://registry.npmjs.org/-/ping",
+    "status": 200
+  },
+  "finalUbuntu": {
+    "evidence": "docs/evidence/clean-linux-final-package-acceptance.json",
+    "result": "Pinned scanner image download and corrected security gate passed without a capacity drop."
+  },
+  "scope": "Operator dependency transport only; unchanged host/IP allowlist, no protected agent authorization changes; no upstream requests in the connection/denial probes."
+}

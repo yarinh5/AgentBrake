@@ -1,0 +1,162 @@
+{
+  "startedAt": "2026-11-17T12:04:33.748Z",
+  "cause": "Unknown host/engine interruption during diagnostic; simultaneous exit255, OOMKilled=false. No model-performance conclusion.",
+  "installedSourceHash": "b9c07645e95dca1369636c9fc38a7ed3f777dc15b2a4004b9032f9566a00e60d",
+  "before": [
+    {
+      "service": "control-db",
+      "image": "sha256:1afd5502a82b24f4f7510043f666aeb8308ac2a13f0ecec4373f72540cfbe07d",
+      "volumes": [
+        "cf68689c0de0c228a783c498edf4817521dada5bad57676a742dd7ec007a493d",
+        "agentbrake-product-local_control-data"
+      ],
+      "state": "exited",
+      "exit": 255,
+      "oom": false,
+      "finishedAt": "2026-11-17T12:01:27.3193875Z"
+    },
+    {
+      "service": "target-db",
+      "image": "sha256:1afd5502a82b24f4f7510043f666aeb8308ac2a13f0ecec4373f72540cfbe07d",
+      "volumes": [
+        "175518b2cfe787ee263021bd6e0cef966ed1cd324209a15c7fcd95086836179d",
+        "agentbrake-product-local_target-data"
+      ],
+      "state": "exited",
+      "exit": 255,
+      "oom": false,
+      "finishedAt": "2026-11-17T12:01:27.3220339Z"
+    },
+    {
+      "service": "opa",
+      "image": "sha256:656eb9984f7491cdcb8da049f759d7012098a5db4a187f51a4f0f2ec6ae6366c",
+      "volumes": [],
+      "state": "exited",
+      "exit": 255,
+      "oom": false,
+      "finishedAt": "2026-11-17T12:01:27.3219873Z"
+    },
+    {
+      "service": "mock-target",
+      "image": "sha256:b0bf1949d14c21be57b042fc4f7a7323077c9ef840ddfc588eeb0f34398479c3",
+      "volumes": [
+        "agentbrake-product-local_git-data"
+      ],
+      "state": "exited",
+      "exit": 255,
+      "oom": false,
+      "finishedAt": "2026-11-17T12:01:27.3244611Z"
+    },
+    {
+      "service": "gateway",
+      "image": "sha256:b0bf1949d14c21be57b042fc4f7a7323077c9ef840ddfc588eeb0f34398479c3",
+      "volumes": [],
+      "state": "exited",
+      "exit": 255,
+      "oom": false,
+      "finishedAt": "2026-11-17T12:01:27.3244691Z"
+    },
+    {
+      "service": "control-api",
+      "image": "sha256:b0bf1949d14c21be57b042fc4f7a7323077c9ef840ddfc588eeb0f34398479c3",
+      "volumes": [],
+      "state": "exited",
+      "exit": 255,
+      "oom": false,
+      "finishedAt": "2026-11-17T12:01:27.3153794Z"
+    },
+    {
+      "service": "agent",
+      "image": "sha256:b0bf1949d14c21be57b042fc4f7a7323077c9ef840ddfc588eeb0f34398479c3",
+      "volumes": [],
+      "state": "exited",
+      "exit": 255,
+      "oom": false,
+      "finishedAt": "2026-11-17T12:01:27.3245674Z"
+    },
+    {
+      "service": "dashboard",
+      "image": "sha256:4f81b4279ec6e4aa8e62e8f0dcf8b8fa554a7e53f72878dba904811c7a838590",
+      "volumes": [],
+      "state": "exited",
+      "exit": 255,
+      "oom": false,
+      "finishedAt": "2026-11-17T12:01:27.3172945Z"
+    },
+    {
+      "service": "ingress",
+      "image": "sha256:b0bf1949d14c21be57b042fc4f7a7323077c9ef840ddfc588eeb0f34398479c3",
+      "volumes": [],
+      "state": "exited",
+      "exit": 255,
+      "oom": false,
+      "finishedAt": "2026-11-17T12:01:27.3147796Z"
+    }
+  ],
+  "after": [
+    {
+      "service": "control-db",
+      "image": "sha256:1afd5502a82b24f4f7510043f666aeb8308ac2a13f0ecec4373f72540cfbe07d",
+      "health": "healthy",
+      "volumes": [
+        "cf68689c0de0c228a783c498edf4817521dada5bad57676a742dd7ec007a493d",
+        "agentbrake-product-local_control-data"
+      ]
+    },
+    {
+      "service": "target-db",
+      "image": "sha256:1afd5502a82b24f4f7510043f666aeb8308ac2a13f0ecec4373f72540cfbe07d",
+      "health": "healthy",
+      "volumes": [
+        "175518b2cfe787ee263021bd6e0cef966ed1cd324209a15c7fcd95086836179d",
+        "agentbrake-product-local_target-data"
+      ]
+    },
+    {
+      "service": "opa",
+      "image": "sha256:656eb9984f7491cdcb8da049f759d7012098a5db4a187f51a4f0f2ec6ae6366c",
+      "volumes": []
+    },
+    {
+      "service": "mock-target",
+      "image": "sha256:b0bf1949d14c21be57b042fc4f7a7323077c9ef840ddfc588eeb0f34398479c3",
+      "health": "healthy",
+      "volumes": [
+        "agentbrake-product-local_git-data"
+      ]
+    },
+    {
+      "service": "gateway",
+      "image": "sha256:b0bf1949d14c21be57b042fc4f7a7323077c9ef840ddfc588eeb0f34398479c3",
+      "health": "healthy",
+      "volumes": []
+    },
+    {
+      "service": "control-api",
+      "image": "sha256:b0bf1949d14c21be57b042fc4f7a7323077c9ef840ddfc588eeb0f34398479c3",
+      "health": "healthy",
+      "volumes": []
+    },
+    {
+      "service": "agent",
+      "image": "sha256:b0bf1949d14c21be57b042fc4f7a7323077c9ef840ddfc588eeb0f34398479c3",
+      "volumes": []
+    },
+    {
+      "service": "dashboard",
+      "image": "sha256:4f81b4279ec6e4aa8e62e8f0dcf8b8fa554a7e53f72878dba904811c7a838590",
+      "health": "healthy",
+      "volumes": []
+    },
+    {
+      "service": "ingress",
+      "image": "sha256:b0bf1949d14c21be57b042fc4f7a7323077c9ef840ddfc588eeb0f34398479c3",
+      "health": "healthy",
+      "volumes": []
+    }
+  ],
+  "result": "PASS_EXISTING_CONTAINERS_RESUMED",
+  "http": 200,
+  "finishedAt": "2026-11-17T12:05:02.328Z",
+  "scope": "Started original containers only, no rebuild/upgrade/recreation or volume deletion. Image/volume bindings checked; not a transaction-level continuity proof."
+}

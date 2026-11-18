@@ -1,0 +1,245 @@
+{
+  "at": "2026-11-17T07:23:54.756Z",
+  "sourceHash": "c2bee4dedd7016ec6ed4e6325be8976db16085cb46c4c80b4ddef37779bc5f7f",
+  "result": "LOCAL_VALIDATION_COMPLETE_USABILITY_AND_EXTERNAL_GATES_OPEN",
+  "production": "BLOCKED",
+  "changedSourceFiles": [
+    ".github/workflows/security-validation.yml",
+    "infra/local/codex.compose.yaml",
+    "infra/local/codex.lock.json",
+    "infra/local/compose.yaml",
+    "package.json",
+    "scripts/verify-all.mjs",
+    "scripts/verify-isolation.mjs",
+    "tests/enforcement/benchmark-metrics.test.ts",
+    "tests/milestone-b/codex-agent.mjs",
+    "tests/milestone-b/corpus.mjs",
+    "tests/milestone-b/operator.mjs",
+    "tests/production/ci-contract.test.mjs"
+  ],
+  "installedBuild": {
+    "sourceHash": "b9c07645e95dca1369636c9fc38a7ed3f777dc15b2a4004b9032f9566a00e60d",
+    "upgradedThisTask": false,
+    "runtimeApplicationSourceUnchanged": true
+  },
+  "expandedBenchmark": {
+    "total": 208,
+    "baselineSucceeded": 208,
+    "completed": 192,
+    "falseBlocks": 16,
+    "nonPolicyFailures": 0,
+    "completionVsBaseline": 0.9230769230769231,
+    "falseBlockRate": 0.07692307692307693,
+    "approvalRequired": 96,
+    "measurementResult": "PASS",
+    "usabilityTarget": "NOT_MET",
+    "baselineFailures": 0,
+    "byKind": {
+      "read": {
+        "total": 64,
+        "baselineSucceeded": 64,
+        "completed": 64,
+        "falseBlocks": 0,
+        "nonPolicyFailures": 0,
+        "completionVsBaseline": 1,
+        "falseBlockRate": 0,
+        "approvalRequired": 0
+      },
+      "preview": {
+        "total": 80,
+        "baselineSucceeded": 80,
+        "completed": 64,
+        "falseBlocks": 16,
+        "nonPolicyFailures": 0,
+        "completionVsBaseline": 0.8,
+        "falseBlockRate": 0.2,
+        "approvalRequired": 0
+      },
+      "pr": {
+        "total": 32,
+        "baselineSucceeded": 32,
+        "completed": 32,
+        "falseBlocks": 0,
+        "nonPolicyFailures": 0,
+        "completionVsBaseline": 1,
+        "falseBlockRate": 0,
+        "approvalRequired": 64
+      },
+      "update": {
+        "total": 32,
+        "baselineSucceeded": 32,
+        "completed": 32,
+        "falseBlocks": 0,
+        "nonPolicyFailures": 0,
+        "completionVsBaseline": 1,
+        "falseBlockRate": 0,
+        "approvalRequired": 32
+      }
+    },
+    "timing": {
+      "directBaselineTask": {
+        "count": 208,
+        "p50Ms": 34.106198999994376,
+        "p95Ms": 129.2013939999997
+      },
+      "gatewayTask": {
+        "count": 208,
+        "p50Ms": 53.47679500000004,
+        "p95Ms": 248.8525899999986
+      },
+      "authorization": {
+        "count": 272,
+        "p50Ms": 4.52,
+        "p95Ms": 6.18
+      },
+      "submitRoundTrip": {
+        "count": 272,
+        "p50Ms": 27.620301000000836,
+        "p95Ms": 42.02270099999987
+      },
+      "automatedApprovalRoundTrip": {
+        "count": 96,
+        "p50Ms": 50.7494979999974,
+        "p95Ms": 104.83250299999963
+      }
+    },
+    "humanApprovalWait": "NOT_MEASURED",
+    "corpusHash": "4977504a717538cc20c1bddf5bb7e08df272c6f7c1912925f87405b7a7bfe30c",
+    "scope": "208 prelabelled synthetic tasks; 8 parameter strata of 26 scenarios, including repeated reads and all 16 credential-shaped placeholders; actual direct adapter baseline versus gateway, sequential on one fixture with distinct branch names and per-step state checks; approvals by automated trusted fixture operator; task latency includes HTTP/target/snapshots, not provisioning or human wait; no general population or model-quality rate. Measurement PASS is not achievement of the separate <2% usability target."
+  },
+  "native": {
+    "tests": 184,
+    "pass": 180,
+    "fail": 0,
+    "skipped": 4
+  },
+  "isolation": {
+    "runId": "e6e0cdbf-23d3-465b-9d06-8cc4dc4ecc2f",
+    "result": "PASS",
+    "cleanup": {
+      "result": "PASS",
+      "remaining": {
+        "containers": 0,
+        "networks": 0,
+        "volumes": 0
+      }
+    },
+    "credentialScan": {
+      "result": "PASS",
+      "files": 51,
+      "knownSyntheticSecrets": 12,
+      "contaminated": [],
+      "scope": "Exact known fixture credentials; operator separately scans issued credentials. Not a universal DLP scan."
+    }
+  },
+  "release": {
+    "finishedAt": "2026-11-17T07:21:16.063Z",
+    "productRun": "377af8ab-f501-42eb-9f9d-bb7d5bcc9f56",
+    "serviceRun": "6b339ad3-b3c7-4175-8827-f516bffbb476",
+    "candidateRun": "3b8cf260-6ade-4299-aca0-b23846414e47",
+    "securityRun": "8e34c286-45ea-4b05-82f8-f474f17dce6d"
+  },
+  "imageScan": {
+    "runId": "9bc60d0f-9e51-475f-8f12-95c9ceaaaf13",
+    "result": "PASS_IMAGE_SCAN",
+    "images": [
+      {
+        "name": "runtime",
+        "imageId": "sha256:cf244d6cabd99224b5fce2711846ed2f8afa55dd6a3c7403ddf863fdbafa224d",
+        "reference": "agentbrake-product-verify-candidate-3b8cf260-runtime",
+        "total": 0,
+        "highCritical": []
+      },
+      {
+        "name": "dashboard",
+        "imageId": "sha256:ca399ec6dc33975f14b5274d08ca9348d87dd7ec29a947b4ce85afd4b4d012af",
+        "reference": "agentbrake-product-verify-candidate-3b8cf260-dashboard",
+        "total": 0,
+        "highCritical": []
+      },
+      {
+        "name": "postgres",
+        "imageId": "sha256:8bf1b9c1acc45aa41b8a8cc06e789a1ea81b7d688d3450f9013da3a640d45d6b",
+        "reference": "agentbrake-postgres:18-193f481f609ba4086c53",
+        "total": 0,
+        "highCritical": []
+      },
+      {
+        "name": "opa",
+        "imageId": "sha256:daba8d8ff944180f56f68b429340760804662e539e186e9157f922460010458f",
+        "reference": "agentbrake-opa:1.22.4-3f9e5f443c6e97aa147e",
+        "total": 0,
+        "highCritical": []
+      }
+    ]
+  },
+  "gaps": [
+    {
+      "id": "live-github",
+      "status": "NOT_OBTAINED",
+      "description": "Named disposable repository, selected-repository GitHub App and real approved/denied workflow evidence"
+    },
+    {
+      "id": "clean-host",
+      "status": "NOT_OBTAINED",
+      "description": "Independent clean Linux host installation, certificate validation, backup restore and isolation proof"
+    },
+    {
+      "id": "human-security-review",
+      "status": "NOT_OBTAINED",
+      "description": "Independent human review of this revision, threat boundaries and acceptance evidence; critical/high findings resolved"
+    },
+    {
+      "id": "deployment-authorization",
+      "status": "NOT_OBTAINED",
+      "description": "Named host/account, DNS/TLS, private access path and explicit deployment/budget approval"
+    },
+    {
+      "id": "operations-owner",
+      "status": "NOT_OBTAINED",
+      "description": "Named incident/patch owner, external encrypted backup destination and tested restore/revocation procedure"
+    }
+  ],
+  "externalPreparation": {
+    "repository": "yarinh5/AgentBrake-Sandbox",
+    "repositoryId": 1461019528,
+    "ownerId": 87584981,
+    "visibility": "public",
+    "branchesObserved": [],
+    "app": "AgentBrake Validation",
+    "appInstallation": "UNVERIFIED_SETTINGS_SIGN_IN_REQUIRED",
+    "appId": 5796132,
+    "installationId": 182835437,
+    "identifierEvidence": "USER_REPORTED_NOT_REMOTE_VERIFIED",
+    "privateKey": "LOCAL_RSA2048_PUBLIC_FINGERPRINT_MATCH_REMOTE_REGISTRATION_UNVERIFIED",
+    "operator": "Yarin, temporary; operational acceptance not granted",
+    "ubuntuVm": "PROCESS_PREPARED_VM_NOT_CREATED",
+    "liveWritesAndAppConnection": "AWAITING_EXPLICIT_APPROVAL"
+  },
+  "remaining": [
+    "<2% false-block target not achieved; conservative credential-shaped placeholder refusals retained",
+    "Representative customer tasks and human approval-time measurement",
+    "Named sandbox GitHub App remote installation/key registration verification, approval and live evidence",
+    "Independent clean Linux VM installation",
+    "Independent human security sign-off",
+    "Hosted CI runs and protected branch configuration",
+    "Yarin appointed temporarily; off-host backup/key custody/objectives and operating exercise still pending",
+    "Consented design-partner interviews, commercial/legal/support acceptance",
+    "SSO/MFA/SCIM/HA remain unimplemented and outside this validation scope"
+  ],
+  "failedAttempt": {
+    "runId": "935ea4e7-9f39-4417-8c4a-d8583ee8976a",
+    "cause": "Generated root README variants violated existing path contract; 14 direct-baseline failures; corrected test corpus, no policy relaxation",
+    "cleanup": "PASS"
+  },
+  "modelFailure": {
+    "runId": "13b8600e-2ff0-420c-85b3-44a0ae88e570",
+    "followupFailedRun": "dfdea5c5-323d-42d1-ac31-5bd2f0b79c2d",
+    "cause": "Local inference CUDA OOM;32768 standalone passed but integration still failed; explicit4096MiB GPU headroom then passed actual Codex with CPU offload",
+    "actualCodexAfterFix": "a85ec485-6e99-4e88-a9b3-d4f89bd25610",
+    "diagnostic": "docs/evidence/model-diagnostic-bfcf83bc-fade-46b0-9790-24ccee2164f2",
+    "correctedDiagnostic": "docs/evidence/model-diagnostic-fef8e6cc-2794-4c16-9f6e-edb3edc6e7b0",
+    "cleanup": "PASS"
+  },
+  "scope": "Local synthetic validation only. No live target, paid service, external deployment, owner account change or installed data modification. No independent human review claimed."
+}

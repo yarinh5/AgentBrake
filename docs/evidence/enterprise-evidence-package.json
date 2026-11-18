@@ -1,0 +1,11 @@
+{
+  "at": "2026-11-17T10:05:09.839Z",
+  "result": "PASS_UNRELEASED_REVIEW_ARCHIVE_INTEGRITY",
+  "releaseStatus": "BLOCKED",
+  "sourceHash": "01e881bde6983224ffbddb36ac6cad21373e93a6bb338d6b398c4af511864ea5",
+  "archive": "F:\\project love\\AgentBrake\\.agentbrake-local\\releases\\agentbrake-UNRELEASED-enterprise-review-01e881bde698-cf880d0c.tar.gz",
+  "sha256": "f83bdb4c6dfcfd3279876fd3227bbab72b7a46de1e599d9bf42b328a4f124a40",
+  "bytes": 1478723,
+  "files": 341,
+  "scope": "Unreleased local synthetic implementation and review evidence. NOT an installable verified release or Production acceptance. No live App, paid model, customer data or external deployment. Previous successful release reports remain historical."
+}

@@ -12,7 +12,7 @@
   },
   "model": {
     "name": "qwen3:4b-instruct",
-    "contextTokens": 65536,
+    "contextTokens": 32768,
     "cloud": false,
     "expectedRegistryManifestSha256": "0edcdef34593eac1aa2be9c7d06c432dcf81945adca5eca2f27662c18f168ba0",
     "manifestSha256": "6214d088d3846e16c9fe00adcbabdbfddc61ce4a70daacc46cb2310c38603054",

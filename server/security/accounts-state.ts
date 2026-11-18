@@ -7,6 +7,7 @@ export type Account = OperatorIdentity & {
         salt: string;
         hash: string;
     };
+    federation?: { issuer: string; subject: string; externalId: string; deleted?: boolean };
 };
 export type Invitation = {
     id: string;
@@ -24,6 +25,7 @@ export type IdentityState = {
         tokenHash: string;
         expiresAt: number;
     }[];
+    scimGroups?: { id: string; externalId: string; displayName: string; members: string[]; revision: number; deleted?: boolean }[];
 };
 export const emptyIdentity = (): IdentityState => ({ initialized: false, accounts: [], invitations: [], recoveries: [] });
 // Synchronous callback runs under the database identity lock. Never do KDF or I/O here.

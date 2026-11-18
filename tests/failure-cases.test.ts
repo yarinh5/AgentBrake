@@ -136,3 +136,38 @@ test("an approved sandbox issue is created exactly once", async () => {
     await s.close();
   }
 });
+
+test("the exact public example marker survives input and approval preview scanning", async () => {
+  const s = make();
+  try {
+    const pending = await s.action("github_create_issue", {
+      repo: "agentbrake/sandbox",
+      title: "Public configuration example",
+      body: "Documentation placeholder: password=example-only-placeholder",
+    });
+    assert.equal(pending.status, "pending");
+    assert.equal(pending.rule, "github-writes");
+  } finally {
+    await s.close();
+  }
+});
+
+test("public marker lookalikes and mixed real credentials remain blocked", async () => {
+  for (const body of [
+    "password=example-only-placeholderX",
+    `password=example-only-placeholder token=${"ghp_" + "S".repeat(32)}`,
+  ]) {
+    const s = make();
+    try {
+      const denied = await s.action("github_create_issue", {
+        repo: "agentbrake/sandbox",
+        title: "Unsafe configuration example",
+        body,
+      });
+      assert.equal(denied.status, "blocked");
+      assert.equal(denied.rule, "secret-protection");
+    } finally {
+      await s.close();
+    }
+  }
+});

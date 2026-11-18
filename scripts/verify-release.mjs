@@ -3,7 +3,7 @@ import { readFile, writeFile } from "node:fs/promises";
 import { sourceManifest } from "./source-manifest.mjs";
 const startedAt = new Date().toISOString();
 for (const args of [
-  ["scripts/verify-all.mjs", "--milestone-b"],
+  ["scripts/verify-all.mjs", "--milestone-b", "--coding-workflow"],
   ["scripts/verify-product.mjs"],
   ["scripts/verify-service.mjs"],
   ["scripts/verify-candidate.mjs"],
@@ -32,6 +32,7 @@ const candidatePointer = await json('docs/evidence/latest-candidate.json');
 const candidate = await json(candidatePointer.directory + '/candidate-summary.json');
 if (
   baseline.result !== "PASS_BOUNDED" ||
+  baseline.coding?.result !== "PASS_SCOPED_LOCAL_CODING" ||
   product.result !== "PASS_LOCAL_PRODUCT" ||
   security.result !== "PASS_LOCAL_SECURITY_CHECKS" ||
   service.result !== "PASS_LOCAL_SERVICE" ||

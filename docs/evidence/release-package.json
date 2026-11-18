@@ -1,8 +1,8 @@
 {
-  "archive": "F:\\project love\\AgentBrake\\.agentbrake-local\\releases\\agentbrake-0.3.0-rc.1-b9c07645e95d-06b90c60.tar.gz",
-  "sha256": "9b75fc7d75f86a23346ff06c582f9d7eec9f084520a772758d3dca76336629ed",
-  "bytes": 382104,
+  "archive": "F:\\project love\\AgentBrake\\.agentbrake-local\\releases\\agentbrake-0.3.0-rc.1-2d8df354e16d-d30b37d6.tar.gz",
+  "sha256": "89d6f75d33a8809429606ae635a5d765c8f72d83f4fe5e62801beac5922ce6d4",
+  "bytes": 537358,
   "version": "0.3.0-rc.1",
-  "sourceHash": "b9c07645e95dca1369636c9fc38a7ed3f777dc15b2a4004b9032f9566a00e60d",
-  "files": 227
+  "sourceHash": "2d8df354e16dacbdda4802a04dd875d6166f053f63a5a3b897a2bf41d358032e",
+  "files": 284
 }

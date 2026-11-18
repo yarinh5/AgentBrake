@@ -27,6 +27,9 @@ try {
     await dockerProduct(config, ['image', 'save', '--output', archive, image.Id], { capture: true });
     try {
       await dockerProduct(config, ['run', '--rm', '--network', 'none', '--read-only', '--cap-drop', 'ALL', '--security-opt', 'no-new-privileges:true', '--memory', '2g', '--pids-limit', '64', '--tmpfs', '/tmp:size=512m',
+        // Linux bind mounts preserve the operator's ownership. Match it so the
+        // capability-free scanner can read its private cache and write reports.
+        ...(process.platform === 'linux' ? ['--user', `${process.getuid()}:${process.getgid()}`] : []), '--env', 'HOME=/tmp',
         '--mount', `type=bind,src=${cache},dst=/cache`, '--mount', `type=bind,src=${scratch},dst=/images,readonly`, '--mount', `type=bind,src=${directory},dst=/output`,
         scanner.image, 'image', '--cache-dir', '/cache', '--skip-db-update', '--skip-java-db-update', '--offline-scan', '--scanners', 'vuln', '--no-progress', '--format', 'json', '--output', `/output/${name}.json`, '--input', `/images/${name}.tar`], { capture: true, timeoutMs: 300000 });
       const results = JSON.parse(await readFile(join(directory, name + '.json'), 'utf8'));

@@ -342,16 +342,7 @@ export class GitFixtureAdapter {
         }
         case "github_open_pull_request": {
           const { baseSha, branch, title, body } = request.arguments;
-          await this.checkBase(baseSha);
-          const feature = (await this.branches()).find(
-            ({ name }) => name === branch,
-          );
-          if (
-            !feature ||
-            feature.sha !== baseSha ||
-            this.pullRequests.some(({ head }) => head === branch)
-          )
-            throw new Error("Feature branch missing, changed or already used");
+          await this.checkPullRequestBranch(baseSha, branch);
           const preview = await this.proposal(request.arguments);
           const entries = await this.entries(baseSha);
           const byPath = new Map(entries.map((entry) => [entry.path, entry]));
@@ -435,18 +426,17 @@ export class GitFixtureAdapter {
     if (!parsed.success) throw Error("Invalid Git preview");
     const request = parsed.data;
     if (request.tool === "github_open_pull_request") {
-      const { repo, baseSha, branch, changes } = request.arguments;
-      const details = await this.execute({
-        tool: "github_propose_change",
-        arguments: { repo, baseSha, branch, changes },
-        sandbox: true,
+      return this.serial(async () => {
+        await this.refreshState();
+        const { baseSha, branch } = request.arguments;
+        await this.checkPullRequestBranch(baseSha, branch);
+        const details = await this.proposal(request.arguments);
+        return {
+          kind: "git-change",
+          summary: "Commit reviewed changes and open a local mock pull request",
+          details,
+        };
       });
-      if (!details) throw Error("Git preview unavailable");
-      return {
-        kind: "git-change",
-        summary: "Commit reviewed changes and open a local mock pull request",
-        details,
-      };
     }
     if (request.tool === "github_create_branch")
       return this.serial(async () => {
@@ -495,6 +485,13 @@ export class GitFixtureAdapter {
   private async checkBase(baseSha: string) {
     if ((await this.mainSha()) !== baseSha)
       throw new Error("Stale fixture base SHA");
+  }
+
+  private async checkPullRequestBranch(baseSha: string, branch: string) {
+    await this.checkBase(baseSha);
+    const feature = (await this.branches()).find(({ name }) => name === branch);
+    if (!feature || feature.sha !== baseSha || this.pullRequests.some(({ head }) => head === branch))
+      throw new Error("Feature branch missing, changed or already used");
   }
 
   private async branches() {

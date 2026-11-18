@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { readFile, writeFile } from "node:fs/promises";
 import { randomUUID, createHash } from "node:crypto";
-import { legitimate, metrics, classifyAction } from "./corpus.mjs";
+import { legitimate, expandedLegitimate, metrics, classifyAction, measurementReport } from "./corpus.mjs";
 const knownSecrets = [];
 const secret = async (name) => {
   const value = (await readFile("/run/secrets/" + name, "utf8")).trim();
@@ -231,7 +231,10 @@ if (command === "provision") {
     scope:
       "Actual Codex model choices recorded separately from exact authorized-read replay and deterministic forbidden-request replay.",
   });
-} else if (command === "benchmark") {
+} else if (command === "benchmark" || command === "benchmark-expanded") {
+  const corpus = command === "benchmark-expanded" ? expandedLegitimate : legitimate;
+  const baselinePrefix = command === 'benchmark-expanded' ? 'expanded-baseline' : 'baseline';
+  const gatewayPrefix = command === 'benchmark-expanded' ? 'expanded-gateway' : 'gateway';
   const targetToken = await secret("target-token"),
     observations = [];
   const direct = async (tool, args) => {
@@ -250,7 +253,7 @@ if (command === "provision") {
   const initial = await snapshot(),
     repo = "agentbrake/sandbox",
     baseSha = initial.git.mainSha;
-  for (const item of legitimate) {
+  for (const item of corpus) {
     const build = (prefix) => {
       if (item.kind === "read" || item.kind === "update")
         return [{ tool: item.tool, args: item.args }];
@@ -275,6 +278,7 @@ if (command === "provision") {
     const observation = {
       id: item.id,
       kind: item.kind,
+      cohort: item.cohort ?? 0,
       intent: "legitimate",
       baselineSucceeded: false,
       completed: false,
@@ -285,14 +289,14 @@ if (command === "provision") {
     };
     let start = performance.now();
     try {
-      for (const step of build("baseline"))
+      for (const step of build(baselinePrefix))
         checkResult(step, await direct(step.tool, step.args));
       checkEffect(
         observation.before,
         await snapshot(),
         item,
-        build("baseline"),
-        "baseline",
+        build(baselinePrefix),
+        baselinePrefix,
       );
       observation.baselineSucceeded = true;
     } catch {
@@ -300,7 +304,7 @@ if (command === "provision") {
     }
     observation.baselineMs = performance.now() - start;
     observation.afterBaseline = await snapshot();
-    const steps = build("gateway"),
+    const steps = build(gatewayPrefix),
       agent = await create(
         [...new Set(steps.map((s) => s.tool))],
         item.tool?.startsWith("database_") ? ["customers"] : [repo],
@@ -309,6 +313,7 @@ if (command === "provision") {
     try {
       let allAllowed = true;
       for (const step of steps) {
+        const requestStart = performance.now();
         let action = await submit(agent, step.tool, step.args);
         observation.actions.push({
           id: action.id,
@@ -316,6 +321,7 @@ if (command === "provision") {
           status: action.status,
           rule: action.rule,
           authorizationMs: action.durationMs,
+          requestMs: performance.now() - requestStart,
         });
         if (action.status === "pending") {
           observation.approvals++;
@@ -324,12 +330,14 @@ if (command === "provision") {
           assert.equal(action.agentId, agent.agent.id);
           for (const [key, value] of Object.entries(step.args))
             assert.deepEqual(action.arguments[key], value);
+          const approvalStart = performance.now();
           const approved = await request(
             "/api/approvals/" + action.id,
             { decision: "approve" },
             admin,
           );
           assert.equal(approved.status, 200);
+          observation.actions.at(-1).approvalMs = performance.now() - approvalStart;
           action = approved.body;
         }
         Object.assign(observation.actions.at(-1), {
@@ -359,7 +367,7 @@ if (command === "provision") {
           await snapshot(),
           item,
           steps,
-          "gateway",
+          gatewayPrefix,
         );
       observation.completed =
         allAllowed && observation.actions.length === steps.length;
@@ -377,6 +385,7 @@ if (command === "provision") {
     observations.push(observation);
   }
   const report = metrics(observations);
+  const measurement = measurementReport(observations);
   const timings = observations
     .flatMap((o) => o.actions.map((a) => a.authorizationMs))
     .sort((a, b) => a - b);
@@ -388,14 +397,15 @@ if (command === "provision") {
         ? "PASS"
         : "FAIL",
     metrics: report,
+    measurement,
     authorizationP50Ms: timings[Math.floor(timings.length * 0.5)],
     authorizationP95Ms: timings[Math.ceil(timings.length * 0.95) - 1],
     corpusHash: createHash("sha256")
-      .update(JSON.stringify(legitimate))
+      .update(JSON.stringify(corpus))
       .digest("hex"),
     observations,
     scope:
-      "26 prelabelled synthetic tasks; actual direct adapter baseline versus gateway, sequential on one fixture with distinct branch names and per-step state checks; approvals by trusted fixture operator; no general population or model-quality rate.",
+      `${corpus.length} prelabelled synthetic tasks; ${command === 'benchmark-expanded' ? '8 parameter strata of 26 scenarios, including repeated reads and all 16 credential-shaped placeholders' : 'historical cohort'}; actual direct adapter baseline versus gateway, sequential on one fixture with distinct branch names and per-step state checks; approvals by automated trusted fixture operator; task latency includes HTTP/target/snapshots, not provisioning or human wait; no general population or model-quality rate. Measurement PASS is not achievement of the separate <2% usability target.`,
   });
   if (
     report.nonPolicyFailures ||

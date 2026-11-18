@@ -18,6 +18,30 @@ const repo = "agentbrake/sandbox";
 const branch = "agentbrake/documentation";
 const changes = [{ path: "README.md", content: "# Revised fixture\n" }];
 
+test("PR preview refuses a missing, moved or used feature branch without changing target state", async () => {
+  await fixture(async (adapter, directory) => {
+    const { mainSha: baseSha } = await adapter.snapshot();
+    const action = { tool: "github_open_pull_request", arguments: { repo, branch, baseSha, changes, title: "Reviewed change", body: "" }, sandbox: true };
+    const initial = await filesDigest(directory);
+    await assert.rejects(adapter.preview(action), /Feature branch/);
+    assert.equal(await filesDigest(directory), initial);
+    await call(adapter, "github_create_branch", { repo, branch, baseSha });
+    const ready = await filesDigest(directory);
+    assert.equal((await adapter.preview(action)).kind, "git-change");
+    assert.equal(await filesDigest(directory), ready);
+    await call(adapter, "github_open_pull_request", action.arguments);
+    const after = await adapter.snapshot();
+    const head = after.branches.find(b => b.name === branch)!.sha;
+    const moved = "agentbrake/moved";
+    await git(directory, ["update-ref", "refs/heads/" + moved, head]);
+    const completed = await filesDigest(directory);
+    await assert.rejects(adapter.preview(action), /Feature branch/);
+    await assert.rejects(adapter.preview({ ...action, arguments: { ...action.arguments, branch: moved } }), /Feature branch/);
+    assert.equal(await filesDigest(directory), completed);
+    assert.equal((await adapter.snapshot()).mainSha, baseSha);
+  });
+});
+
 test("persistent fixture reopens exact branch/PR state and refuses another installation or unmarked repository", async () => {
   await disposable(async (root) => {
     const directory = join(root, "persistent.git"),
@@ -135,8 +159,9 @@ type Result = Awaited<ReturnType<GitFixtureAdapter["execute"]>>;
 
 test("human PR review computes the canonical diff from a full PR request without mutating Git", async () => {
   await fixture(async (adapter, directory) => {
-    const { mainSha: baseSha } = await adapter.snapshot(),
-      before = await filesDigest(directory);
+    const { mainSha: baseSha } = await adapter.snapshot();
+    await call(adapter, "github_create_branch", { repo, baseSha, branch });
+    const before = await filesDigest(directory);
     const preview = await adapter.preview({
       tool: "github_open_pull_request",
       arguments: {

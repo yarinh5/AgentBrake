@@ -1,0 +1,9 @@
+{
+  "at": "2026-11-17T17:35:22.651Z",
+  "result": "PASS_FINAL_SOURCE_AND_ORIGINAL_ARCHIVE_PRESERVATION",
+  "sourceHash": "3ea2c8eb9d847d6213333172121d0e235fb0ef0e4efe44946108d0f4e18fb0c6",
+  "originalArchiveSha256": "ebc214a2e13a47b8102157077cf33011ea1e03d985c4f8b99316990f337bf5e2",
+  "newReviewArchiveSha256": "7bc51ec9b3c09e9cd41c571ae861604dc6289f61845d5f4473ed7583eab9948d",
+  "newReviewOnly": true,
+  "production": "BLOCKED"
+}

@@ -4,6 +4,8 @@ import { sourceManifest } from "./source-manifest.mjs";
 const json = async (path) => JSON.parse(await readFile(path, "utf8"));
 const startedAt = new Date().toISOString();
 const milestoneB = process.argv.includes("--milestone-b");
+const codingWorkflow = process.argv.includes("--coding-workflow");
+if (codingWorkflow && !milestoneB) throw Error("Useful coding requires the actual Codex fixture");
 for (const script of [
   "scripts/verify-stage1.mjs",
   "scripts/verify-isolation.mjs",
@@ -14,7 +16,7 @@ for (const script of [
       [
         script,
         ...(milestoneB && script.endsWith("verify-isolation.mjs")
-          ? ["--milestone-b"]
+          ? ["--milestone-b", ...(codingWorkflow ? ["--coding-workflow"] : [])]
           : []),
       ],
       {
@@ -37,6 +39,7 @@ const current = await sourceManifest();
 if (
   native.result !== "PASS_SCOPED" ||
   isolation.result !== "PASS" ||
+  (codingWorkflow && isolation.coding?.result !== "PASS_SCOPED_LOCAL_CODING") ||
   (milestoneB &&
     (isolation.milestoneB !== "PASS_BOUNDED" ||
       isolation.cleanup?.result !== "PASS" ||
@@ -68,6 +71,20 @@ const report = {
     isolationPointer.directory + "/stage2-postgres-tests.log",
   ),
   workflowCases: isolation.stage2.cases.length,
+  ...(codingWorkflow ? { coding: {
+    result: isolation.coding.result,
+    modelProfile: isolation.coding.modelProfile,
+    evidence: isolationPointer.directory + "/coding-workflow.json",
+    targetHeadSha: isolation.coding.targetReadback.headSha,
+    replayAndDenial: isolation.coding.replayAndDenial,
+    scope: isolation.coding.scope,
+  } } : {}),
+  ...(isolation.expandedBenchmark ? { expandedBenchmark: {
+    ...isolation.expandedBenchmark.metrics,
+    ...isolation.expandedBenchmark.measurement,
+    corpusHash: isolation.expandedBenchmark.corpusHash,
+    scope: isolation.expandedBenchmark.scope,
+  } } : {}),
   ...(milestoneB
     ? {
         gitContainerTests: await testCounts(
@@ -83,6 +100,7 @@ const report = {
           version: isolation.codexRun.version,
           binarySha256: isolation.codexRun.binarySha256,
           model: isolation.codexRun.model,
+          inferenceProfile: isolation.codexRun.inferenceProfile,
           actualActions: isolation.codexProof.actions.length,
           replayedReads: isolation.codexProof.replayedReads.length,
           forbiddenReplayRule: isolation.codexProof.forcedInjectionAttempt.rule,
