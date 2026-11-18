@@ -1,0 +1,5 @@
+
+> agentbrake@0.3.0-rc.1 setup:coding-profile
+> node scripts/setup-coding-profile.mjs
+
+{"name":"agentbrake-coding-diagnostic:latest","manifestSha256":"f2272c38aabff3fc66fae65ab81bb6300a59205e461a769e149c815805796904","weightsSha256":"85e4a5b7b8ef0e48af0e8658f5aaab9c2324c76c1641493f4d1e25fce54b18b9","parameters":{"num_predict":2048,"repeat_penalty":1,"seed":42,"stop":["<|im_start|>","<|im_end|>"],"temperature":0,"top_k":20,"top_p":0.8}}

@@ -1,0 +1,28 @@
+{
+  "status": 200,
+  "body": {
+    "id": "7e48590d-152c-425f-8ab3-588ab3444670",
+    "agentId": "38bed2d3-0e4a-46e7-bb8c-5f3df172ec6a",
+    "requestId": "9dbd5a90-0cac-4bd4-9f14-cd951380d7e2",
+    "tool": "database_read",
+    "digest": "08a6be2385967d35328e82bea042cb289c5b6e6f530fc78691b8c57325449d71",
+    "destination": "698dd8b58207c9d97f1c9e05e3d653c496e0bc5931cfd63460992da64029df66",
+    "correlationId": "03eb0af9-fc27-4bc2-b6ec-0dbe849dc08c",
+    "grantId": "4ca2f8b0-48c6-441a-afaa-795d711a1572",
+    "grantFingerprint": "ae38c361c3e7b9373630eafb48c719557c6282efbb84b339c2ef5280f566aa09",
+    "policyRevision": 3,
+    "policyDecisionId": "a9059f54-d118-4d0d-ba1c-741f07f6a589",
+    "policyVersion": "stage2.v1",
+    "policyHash": "9ac719fef979ee7b37c5c5ef3173621453782a0a02d432727391beeff1234d14",
+    "policyEffect": "DENY",
+    "arguments": {},
+    "status": "blocked",
+    "rule": "grant-revoked",
+    "reason": "This task grant has been revoked.",
+    "resource": "restricted",
+    "sandbox": true,
+    "createdAt": "2026-11-17T07:16:04.572Z",
+    "expiresAt": "2026-11-17T07:31:04.572Z",
+    "durationMs": 1.65
+  }
+}

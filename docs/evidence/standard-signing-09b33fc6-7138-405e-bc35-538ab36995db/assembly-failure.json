@@ -1,0 +1,9 @@
+{
+  "result": "FAIL_HARNESS_ASSEMBLY",
+  "sourceHash": "2d8df354e16dacbdda4802a04dd875d6166f053f63a5a3b897a2bf41d358032e",
+  "archiveSha256": "89d6f75d33a8809429606ae635a5d765c8f72d83f4fe5e62801beac5922ce6d4",
+  "observed": "The fixture exited before signing because /tools/cosign did not exist.",
+  "cause": "The host directory contained cosign-linux-amd64, while the unchanged fixture contract expected the binary mounted at /tools/cosign.",
+  "resolution": "A new candidate mounted the exact same hash-verified binary file directly at /tools/cosign. No archive, verifier assertion or signing semantics changed.",
+  "supersededBy": "docs/evidence/standard-signing-a2205fb7-edd1-46ae-b357-bb3140999427/summary.json"
+}

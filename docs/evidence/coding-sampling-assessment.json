@@ -1,0 +1,33 @@
+{
+  "sourceHash": "c043156a9a2f69b6d3ddfc0eb6eec315faba38250f8eb38ae2a02f7087f7c999",
+  "runId": "f6ff23d3-31f2-4e59-8c2d-4e0483fc6210",
+  "result": "FAIL",
+  "timedOut": true,
+  "elapsedMs": 240632,
+  "modelObservedTests": [
+    {
+      "exitCode": 1,
+      "command": "/bin/bash -lc 'node clamp.test.mjs'"
+    }
+  ],
+  "independentGrade": {
+    "syntaxScopeAccepted": true,
+    "exitCode": 0,
+    "stdout": "8 clamp cases passed\n",
+    "stderr": ""
+  },
+  "targetBeforeEqualsFailureSnapshot": false,
+  "executedWritePhases": 0,
+  "diagnosis": "The model consumed tool results, observed a failing test and wrote a correct candidate, then generated without completing the required test call. Actual GPU profile was confirmed during the run. The product read was allowed and no target mutation occurred. The sampling change is a hypothesis, not an established cause or fix.",
+  "nextExperiment": "Separate same-weights temperature0/seed42/max2048-token cohort; unchanged prompts, grants, network, assertions and240s deadline; do not retry uncertain writes or waive observed-test requirement.",
+  "snapshotDifference": {
+    "callsBefore": 624,
+    "callsAfter": 625,
+    "equalDataKeys": [
+      "customers",
+      "schema",
+      "git"
+    ]
+  },
+  "targetDataUnchanged": true
+}

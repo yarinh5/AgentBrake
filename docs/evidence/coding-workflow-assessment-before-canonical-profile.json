@@ -1,0 +1,27 @@
+{
+  "at": "2026-11-17T20:28:18.466133+00:00",
+  "result": "PASS_SCOPED_CONFIGURED_CODING_TWO_RUNS",
+  "sourceHash": "c043156a9a2f69b6d3ddfc0eb6eec315faba38250f8eb38ae2a02f7087f7c999",
+  "historicalFailures": "docs/evidence/coding-workflow-assessment-before-client-fix.json",
+  "cause": "CLI advertised an unavailable request_user_input tool; prior harness advanced on exit zero without completed-action proof. Repeated calls also exhausted the unchanged 20-call budget in the earlier cohort.",
+  "change": "Disable unavailable request_user_input and dummy tools in pinned Codex 0.169.0 configuration; require correlated completed tool/backend action per phase; verify candidate syntax/tests, independent target content, replay and denial. Gateway policy, 20-call/15-minute task grant and network boundary unchanged.",
+  "limits": [
+    "Four fresh CLI contexts orchestrate one bounded task using local Qwen3:4b-instruct GPU8k; not unconstrained model reliability.",
+    "Two approvals by trusted automated fixture operator, not human usability acceptance.",
+    "PR is local Git mock, not live GitHub.",
+    "Default c043 verify:coding timed out. The separately hashed configured profile passed twice on c043; C05 has scoped proof, while default-fixture adoption and field reliability remain open."
+  ],
+  "finalSourceRun": {
+    "sourceHash": "c043156a9a2f69b6d3ddfc0eb6eec315faba38250f8eb38ae2a02f7087f7c999",
+    "runId": "f6ff23d3-31f2-4e59-8c2d-4e0483fc6210",
+    "result": "FAIL",
+    "observed": "Read succeeded; actual model observed a failing test and wrote a correct candidate. Independent eight-case grading passed. Model did not execute the required second test before240s deadline; no PR phase was attempted. GPU confirmed100% offload; model continued token generation, so this is not the earlier CPU-only prefill timeout.",
+    "unknown": "Why the local4B model continued generation instead of completing the next tool call; one successful prior run does not establish reliability."
+  },
+  "configuredProfileEvidence": "docs/evidence/coding-profile-acceptance.json",
+  "remaining": "Vanilla verify:coding profile remains unqualified after timeout. The separately hashed bounded profile passed twice; broader model/customer reliability and live GitHub acceptance remain unmeasured.",
+  "earlierPass": {
+    "runId": "3b5315c5-4f84-428f-9f25-b16628b98816",
+    "sourceHash": "04aa9253bf3ee2b292d61ecf09695adc3e595e464eedefef600d31166f08cf40"
+  }
+}

@@ -9,17 +9,20 @@
   "scripts": {
     "dev": "node scripts/local.mjs",
     "setup": "node scripts/install-opa.mjs",
-    "build": "tsc --noEmit && vite build",
+    "build": "tsc --noEmit && node scripts/build-ui.mjs",
     "start": "node scripts/local.mjs --built",
     "test": "node scripts/test.mjs",
     "setup:policy": "node scripts/install-opa.mjs",
     "test:ui": "node tests/product-ui/run.mjs",
     "verify:stage1": "node scripts/verify-stage1.mjs",
     "verify:isolation": "node scripts/verify-isolation.mjs",
+    "verify:benchmark": "node scripts/verify-isolation.mjs --expanded-benchmark",
+    "verify:coding": "node scripts/verify-isolation.mjs --milestone-b --coding-workflow",
     "mcp": "tsx server/mcp.ts",
     "verify:stage2": "node scripts/verify-isolation.mjs",
     "verify:full": "node scripts/verify-all.mjs",
     "setup:codex-local": "node scripts/setup-codex-local.mjs",
+    "setup:coding-profile": "node scripts/setup-coding-profile.mjs",
     "verify:milestone-b": "node scripts/verify-all.mjs --milestone-b",
     "product:init": "node scripts/product.mjs init",
     "product:start": "node scripts/product.mjs start",
@@ -34,7 +37,9 @@
     "verify:images": "node scripts/verify-images.mjs",
     "product:doctor": "node scripts/product.mjs doctor",
     "product:backup": "node scripts/product.mjs backup",
-    "package:release": "node scripts/package-release.mjs"
+    "package:release": "node scripts/package-release.mjs",
+    "verify:enterprise": "node scripts/verify-enterprise.mjs",
+    "verify:capacity": "node --import tsx tests/enterprise/capacity.mjs"
   },
   "dependencies": {
     "@modelcontextprotocol/node": "2.1.2",
@@ -44,6 +49,7 @@
     "dotenv": "17.4.2",
     "express": "5.3.0",
     "lucide-react": "0.468.0",
+    "openid-client": "6.9.0",
     "pg": "8.23.1",
     "react": "19.3.1",
     "react-dom": "19.3.1",
@@ -58,8 +64,7 @@
     "@types/pg": "8.23.1",
     "@types/react": "19.3.0",
     "@types/react-dom": "19.3.0",
-    "@vitejs/plugin-react": "4.7.0",
-    "typescript": "5.9.3",
-    "vite": "6.4.6"
+    "esbuild": "0.28.2",
+    "typescript": "5.9.3"
   }
 }

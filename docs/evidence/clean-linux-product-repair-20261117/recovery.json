@@ -1,0 +1,7 @@
+{
+  "sha256": "ca537ace9f43dfd2cf2da0c3d2ce009b2bc251ee0c41824df07a498961012bf0",
+  "bytes": 7979052,
+  "compressedBytes": 136713,
+  "retrievedFrom": "clean-linux-failure-diagnostics-20261117",
+  "reason": "Tests and disk report completed; excessive plaintext serial export interrupted by graceful ACPI shutdown, then exact disk report retrieved compressed."
+}

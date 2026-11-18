@@ -24,18 +24,17 @@ const system = createApp({
     databaseUrl: process.env.DATABASE_URL,
   },
 });
-let vite:
-  Awaited<ReturnType<(typeof import("vite"))["createServer"]>> | undefined;
+// @ts-expect-error Shared Node build tooling is JavaScript.
+import { developmentUi } from "../scripts/build-ui.mjs";
+let ui: Awaited<ReturnType<typeof developmentUi>> | undefined;
 if (process.argv.includes("--production")) {
   system.app.use(express.static(resolve("dist")));
   system.app.get("/{*path}", (_req, res) =>
     res.sendFile(resolve("dist/index.html")),
   );
 } else {
-  vite = await (
-    await import("vite")
-  ).createServer({ server: { middlewareMode: true }, appType: "spa" });
-  system.app.use(vite.middlewares);
+  ui = await developmentUi();
+  system.app.use(ui.middleware);
 }
 const port = Number(process.env.PORT || 4310);
 const server = system.app.listen(port, "127.0.0.1", () =>
@@ -45,7 +44,7 @@ const server = system.app.listen(port, "127.0.0.1", () =>
 );
 async function shutdown() {
   server.close();
-  await vite?.close();
+  await ui?.close();
   await system.close();
   process.exit(0);
 }

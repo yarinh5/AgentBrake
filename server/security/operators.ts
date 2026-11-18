@@ -28,6 +28,7 @@ export type OperatorSession = {
   csrfToken: string;
   authMode?: "key" | "account";
   revision?: number;
+  assurance?: { method: "oidc" | "break-glass"; issuer?: string; authTime?: number };
 };
 export class LocalOperators {
   private identities: { actor: OperatorIdentity; keyHash: string }[];
@@ -76,8 +77,8 @@ export class LocalOperators {
   login(key: string) {
     return this.issue(this.credential(key), "key");
   }
-  issue(actor: OperatorIdentity, authMode: "key" | "account", revision?: number) {
-    return this.reserveSession().issue(actor, authMode, revision);
+  issue(actor: OperatorIdentity, authMode: "key" | "account", revision?: number, assurance?: OperatorSession["assurance"]) {
+    return this.reserveSession().issue(actor, authMode, revision, assurance);
   }
   pruneSessions(keep: (session: OperatorSession) => boolean) {
     for (const [id, session] of this.sessions)
@@ -99,10 +100,10 @@ export class LocalOperators {
     const release = () => { this.reservations.delete(reservation); };
     return {
       release,
-      issue: (actor: OperatorIdentity, authMode: "key" | "account", revision?: number) => {
+      issue: (actor: OperatorIdentity, authMode: "key" | "account", revision?: number, assurance?: OperatorSession["assurance"]) => {
         if (!this.reservations.has(reservation)) throw Error("Session reservation is no longer available");
         if (replaceKeys) this.pruneSessions(s => s.authMode !== "key");
-        const session = { actor, expiresAt: Date.now() + 8 * 3600_000, csrfToken, authMode, revision };
+        const session = { actor, expiresAt: Date.now() + 8 * 3600_000, csrfToken, authMode, revision, ...(assurance ? {assurance} : {}) };
         this.sessions.set(id, session);
         release();
         return { token, ...session };

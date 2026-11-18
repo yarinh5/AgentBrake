@@ -1,0 +1,77 @@
+{
+  "scope": "VM dependency-egress guard installed with NICs disabled; not a product claim",
+  "commands": [
+    {
+      "command": [
+        "nft",
+        "--check",
+        "--file",
+        "/etc/ab-dependency-guard.nft"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "command": [
+        "chown",
+        "-R",
+        "abvalidation:abvalidation",
+        "/opt/agentbrake/.agentbrake-local"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "command": [
+        "netplan",
+        "generate"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "command": [
+        "systemctl",
+        "daemon-reload"
+      ],
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "command": [
+        "systemctl",
+        "enable",
+        "--now",
+        "ab-dependency-guard.service"
+      ],
+      "exitCode": 0,
+      "output": "Created symlink /etc/systemd/system/multi-user.target.wants/ab-dependency-guard.service \u2192 /etc/systemd/system/ab-dependency-guard.service.\n"
+    },
+    {
+      "command": [
+        "nft",
+        "list",
+        "table",
+        "inet",
+        "ab_dependency_guard"
+      ],
+      "exitCode": 0,
+      "output": "table inet ab_dependency_guard {\n\tchain output {\n\t\ttype filter hook output priority filter - 10; policy drop;\n\t\toifname \"lo\" accept\n\t\toifname \"docker0\" accept\n\t\toifname \"br-*\" accept\n\t\tct state established,related accept\n\t\toifname \"abegress0\" ip daddr 10.0.2.2 tcp dport 8877 counter packets 0 bytes 0 accept\n\t\tcounter packets 0 bytes 0 reject with icmpx admin-prohibited\n\t}\n\n\tchain forward {\n\t\ttype filter hook forward priority filter - 10; policy accept;\n\t\toifname \"abegress0\" ip daddr 10.0.2.2 tcp dport 8877 counter packets 0 bytes 0 accept\n\t\toifname \"abegress0\" counter packets 0 bytes 0 reject with icmpx admin-prohibited\n\t}\n\n\tchain input {\n\t\ttype filter hook input priority filter - 10; policy drop;\n\t\tiifname \"lo\" accept\n\t\tiifname \"docker0\" accept\n\t\tiifname \"br-*\" accept\n\t\tct state established,related accept\n\t\tcounter packets 0 bytes 0 reject with icmpx admin-prohibited\n\t}\n}\n"
+    },
+    {
+      "command": [
+        "ip",
+        "route"
+      ],
+      "exitCode": 0,
+      "output": "172.17.0.0/16 dev docker0 proto kernel scope link src 172.17.0.1 linkdown \n"
+    }
+  ],
+  "rules": "table inet ab_dependency_guard {\n\tchain output {\n\t\ttype filter hook output priority filter - 10; policy drop;\n\t\toifname \"lo\" accept\n\t\toifname \"docker0\" accept\n\t\toifname \"br-*\" accept\n\t\tct state established,related accept\n\t\toifname \"abegress0\" ip daddr 10.0.2.2 tcp dport 8877 counter packets 0 bytes 0 accept\n\t\tcounter packets 0 bytes 0 reject with icmpx admin-prohibited\n\t}\n\n\tchain forward {\n\t\ttype filter hook forward priority filter - 10; policy accept;\n\t\toifname \"abegress0\" ip daddr 10.0.2.2 tcp dport 8877 counter packets 0 bytes 0 accept\n\t\toifname \"abegress0\" counter packets 0 bytes 0 reject with icmpx admin-prohibited\n\t}\n\n\tchain input {\n\t\ttype filter hook input priority filter - 10; policy drop;\n\t\tiifname \"lo\" accept\n\t\tiifname \"docker0\" accept\n\t\tiifname \"br-*\" accept\n\t\tct state established,related accept\n\t\tcounter packets 0 bytes 0 reject with icmpx admin-prohibited\n\t}\n}",
+  "interfaces": [
+    "docker0",
+    "lo"
+  ],
+  "routes": "172.17.0.0/16 dev docker0 proto kernel scope link src 172.17.0.1 linkdown",
+  "result": "PASS_OFFLINE_GUARD_PREPARATION_ONLY"
+}

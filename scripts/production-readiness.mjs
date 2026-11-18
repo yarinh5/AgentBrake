@@ -3,6 +3,7 @@ export function assessProduction({ sourceHash, localRelease, candidate, images }
     status: !evidence ? 'NOT_RUN' : evidence.sourceHash === sourceHash && evidence.result === expected ? 'PASS' : 'STALE_OR_FAILED' });
   const gates = [
     checked('local-release', localRelease, 'LOCAL_MVP_VERIFIED_EXTERNAL_GATES_OPEN', 'Full local release gate for the exact source revision'),
+    checked('useful-coding', localRelease ? {sourceHash:localRelease.sourceHash,result:localRelease.baseline?.coding?.result} : undefined, 'PASS_SCOPED_LOCAL_CODING', 'Actual configured Codex edit/test/local PR, target readback, replay and denial; no live or statistical reliability claim'),
     checked('https-candidate', candidate?.cleanup?.result === 'PASS' ? candidate : candidate ? { ...candidate, result: 'FAIL_CLEANUP' } : undefined, 'PASS_LOCAL_CANDIDATE', 'Actual local TLS, installed UI and agent network boundary'),
     checked('container-vulnerabilities', images, 'PASS_IMAGE_SCAN', 'Offline scan of built runtime/dashboard and pinned PostgreSQL/OPA images'),
     { id: 'live-github', status: 'NOT_OBTAINED', description: 'Named disposable repository, selected-repository GitHub App and real approved/denied workflow evidence' },

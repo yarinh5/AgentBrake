@@ -1,0 +1,6 @@
+{
+  "scope": "New regression on the unchanged installer; generated fixtures only",
+  "exitCode": 1,
+  "output": "TAP version 13\n# Subtest: Linux product installer permits mounted runtime secrets only to configured service identities\nnot ok 1 - Linux product installer permits mounted runtime secrets only to configured service identities\n  ---\n  duration_ms: 2965.927063\n  type: 'test'\n  location: '/opt/agentbrake/tests/enforcement/product-file-access.test.mjs:8:1'\n  failureType: 'testCodeFailure'\n  error: |-\n    gateway must read its actual mounted installation files\n    \n    13 !== 0\n    \n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  expected: 0\n  actual: 13\n  operator: 'strictEqual'\n  stack: |-\n    TestContext.<anonymous> (file:///opt/agentbrake/tests/enforcement/product-file-access.test.mjs:26:11)\n    process.processTicksAndRejections (node:internal/process/task_queues:103:5)\n    async Test.run (node:internal/test_runner/test:1054:7)\n    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 3668.175426\n",
+  "result": "FAIL"
+}

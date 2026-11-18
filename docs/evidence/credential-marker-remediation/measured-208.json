@@ -1,0 +1,92 @@
+{
+  "sourceHash": "c043156a9a2f69b6d3ddfc0eb6eec315faba38250f8eb38ae2a02f7087f7c999",
+  "runId": "9f24317a-7ff2-403a-a039-10320d00fe51",
+  "overallResult": "FAIL",
+  "metrics": {
+    "total": 208,
+    "baselineSucceeded": 208,
+    "completed": 208,
+    "falseBlocks": 0,
+    "nonPolicyFailures": 0,
+    "completionVsBaseline": 1,
+    "falseBlockRate": 0,
+    "approvalRequired": 96
+  },
+  "measurement": {
+    "measurementResult": "PASS",
+    "usabilityTarget": "MET_SYNTHETIC_ONLY",
+    "baselineFailures": 0,
+    "byKind": {
+      "read": {
+        "total": 64,
+        "baselineSucceeded": 64,
+        "completed": 64,
+        "falseBlocks": 0,
+        "nonPolicyFailures": 0,
+        "completionVsBaseline": 1,
+        "falseBlockRate": 0,
+        "approvalRequired": 0
+      },
+      "preview": {
+        "total": 80,
+        "baselineSucceeded": 80,
+        "completed": 80,
+        "falseBlocks": 0,
+        "nonPolicyFailures": 0,
+        "completionVsBaseline": 1,
+        "falseBlockRate": 0,
+        "approvalRequired": 0
+      },
+      "pr": {
+        "total": 32,
+        "baselineSucceeded": 32,
+        "completed": 32,
+        "falseBlocks": 0,
+        "nonPolicyFailures": 0,
+        "completionVsBaseline": 1,
+        "falseBlockRate": 0,
+        "approvalRequired": 64
+      },
+      "update": {
+        "total": 32,
+        "baselineSucceeded": 32,
+        "completed": 32,
+        "falseBlocks": 0,
+        "nonPolicyFailures": 0,
+        "completionVsBaseline": 1,
+        "falseBlockRate": 0,
+        "approvalRequired": 32
+      }
+    },
+    "timing": {
+      "directBaselineTask": {
+        "count": 208,
+        "p50Ms": 37.1102979999996,
+        "p95Ms": 151.09650200000033
+      },
+      "gatewayTask": {
+        "count": 208,
+        "p50Ms": 59.161097999996855,
+        "p95Ms": 305.4305019999997
+      },
+      "authorization": {
+        "count": 272,
+        "p50Ms": 4.88,
+        "p95Ms": 8.39
+      },
+      "submitRoundTrip": {
+        "count": 272,
+        "p50Ms": 32.669799999999896,
+        "p95Ms": 60.18289900000127
+      },
+      "automatedApprovalRoundTrip": {
+        "count": 96,
+        "p50Ms": 50.90419999999722,
+        "p95Ms": 120.2796989999988
+      }
+    },
+    "humanApprovalWait": "NOT_MEASURED"
+  },
+  "scope": "208 prelabelled synthetic tasks; 8 parameter strata of 26 scenarios, including repeated reads and all 16 credential-shaped placeholders; actual direct adapter baseline versus gateway, sequential on one fixture with distinct branch names and per-step state checks; approvals by automated trusted fixture operator; task latency includes HTTP/target/snapshots, not provisioning or human wait; no general population or model-quality rate. Measurement PASS is not achievement of the separate <2% usability target.",
+  "remainingFailure": "coding-review-4-1794942898291 failed (exit 125); see log"
+}

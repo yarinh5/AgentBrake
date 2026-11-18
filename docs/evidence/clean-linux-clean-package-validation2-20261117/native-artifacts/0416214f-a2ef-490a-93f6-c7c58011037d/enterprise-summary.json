@@ -1,0 +1,30 @@
+{
+  "runId": "0416214f-a2ef-490a-93f6-c7c58011037d",
+  "sourceHash": "c043156a9a2f69b6d3ddfc0eb6eec315faba38250f8eb38ae2a02f7087f7c999",
+  "startedAt": "2026-11-17T20:01:56.321Z",
+  "result": "FAIL",
+  "cases": [],
+  "scope": "Disposable minimal Docker installation; synthetic TLS IdP and audit sink; internal control/agent/enterprise networks with existing dedicated fixed-ingress publication bridge; real customer acceptance excluded.",
+  "failure": {
+    "stage": "build",
+    "message": "Local Docker command failed (1)",
+    "diagnostic": "time=\"2026-11-17T20:01:57Z\" level=warning msg=\"Docker Compose is configured to build using Bake, but buildx isn't installed\"\nfailed to solve: failed to compute cache key: failed to copy: httpReadSeeker: failed open: failed to do request: Get \"https://production.cloudfront.docker.com/registry-v2/docker/registry/v2/blobs/sha256/a8/a8a2131d1a0200e4043297f891ac2c853818d67d11de5ab1abf8ea3980cc6c93/data?Expires=1794948719&Signature=OzaNeJo8NvMK5n~rQFpBGEiWlitAfWacs1mS3b9JNOJ5CTjlcXVDLOCDwe0l-vcmiH-cDQy32CoOt-VcXusT5UKZnqP9FvDgAaymJWiOnYQy9WXIx4sX-o3DYwWl3Mbaeh5U6O6mIgWtEGHErPCDlNVIuAPgfI~mYVFN~kp~hAbA1qtv6Pe0cMG6TRcaWF~plZbWMgRrBA0NL7fKPzjcczgFaqFjl66-vpbKGnfdk8TkAQj0d4tWSa8iDC~leEsziDdDiY47Rxn8vDMHv18f3Vd0zQnd466lbLnqha7QhO7VUZVrMKsmCv6zS0o~5MSFChYwVI3d8FXF1hojZCKR8g__&Key-Pair-Id=K31B9XRZB58O8Z\": unexpected EOF\n"
+  },
+  "cleanup": {
+    "result": "PASS",
+    "containers": 0,
+    "volumes": 0,
+    "networks": 0,
+    "scopedFilesRemoved": true
+  },
+  "finishedAt": "2026-11-17T20:01:58.744Z",
+  "secretScan": {
+    "result": "PASS",
+    "knownValuesChecked": 29,
+    "artifacts": [
+      "enterprise-summary.json",
+      "source-manifest.json",
+      "enterprise-evidence.json.gz"
+    ]
+  }
+}

@@ -1,0 +1,71 @@
+#cloud-config
+users: []
+disable_root: true
+ssh_pwauth: false
+package_update: false
+package_upgrade: false
+write_files:
+  - path: /usr/local/sbin/agentbrake-phase.py
+    permissions: '0700'
+    content: |
+      import json,pathlib,subprocess,traceback,os,socket,time
+      P=pathlib.Path
+      root=P('/opt/agentbrake');proxy='http://10.0.2.2:8877'
+      r={'scope':'Approved development guest, public dependencies only, synthetic native tests','commands':[],'probes':[],'releaseAcceptance':False}
+      env={**os.environ,'PATH':'/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin','HTTP_PROXY':proxy,'HTTPS_PROXY':proxy,'http_proxy':proxy,'https_proxy':proxy,'NO_PROXY':'localhost,127.0.0.1,::1','no_proxy':'localhost,127.0.0.1,::1','NEXT_TELEMETRY_DISABLED':'1','DEBIAN_FRONTEND':'noninteractive'}
+      def emit(value):
+       with open('/dev/ttyS0','w') as f:f.write('\nAGENTBRAKE_PROGRESS='+json.dumps(value)+'\n')
+      def run(label,args,timeout=600,user=False):
+       emit({'starting':label});at=time.monotonic()
+       command=['runuser','-u','abvalidation','--',*args] if user else args
+       p=subprocess.run(command,text=True,stdout=subprocess.PIPE,stderr=subprocess.STDOUT,env=env,cwd=root,timeout=timeout)
+       (P('/var/lib/agentbrake-validation')/(label+'.log')).write_text(p.stdout)
+       r['commands'].append({'label':label,'exitCode':p.returncode,'seconds':round(time.monotonic()-at,2),'outputTail':p.stdout[-12000:]})
+       emit({'finished':label,'exitCode':p.returncode})
+       if p.returncode:raise RuntimeError(label+' failed')
+       return p.stdout.strip()
+      try:
+       assert run('guard-active',['systemctl','is-active','ab-dependency-guard'])=='active'
+       r['interfaces']=sorted(p.name for p in P('/sys/class/net').iterdir())
+       assert all(n in ['lo','docker0','abegress0'] for n in r['interfaces']) and 'abegress0' in r['interfaces']
+       r['rulesBefore']=run('rules-before',['nft','list','table','inet','ab_dependency_guard'])
+       for host,port in [('10.0.2.2',8878),('198.51.100.1',443),('10.0.2.3',53)]:
+        s=socket.socket();s.settimeout(3)
+        try:s.connect((host,port));raise AssertionError('Direct egress escaped guard')
+        except OSError as e:r['probes'].append({'target':host+':'+str(port),'result':'DENIED','errno':e.errno})
+        finally:s.close()
+       status=run('public-npm-positive',['curl','--silent','--show-error','--max-time','30','--proxy',proxy,'--noproxy','','--output','/dev/null','--write-out','%{http_code}','https://registry.npmjs.org/-/ping'])
+       assert status=='200'
+       for target in ['127.0.0.1:8878','api.github.com:443','api.openai.com:443']:
+        p=subprocess.run(['curl','--silent','--max-time','5','--proxy',proxy,'--noproxy','','--output','/dev/null','--write-out','%{http_connect}','https://'+target+'/'],capture_output=True,text=True,env=env)
+        assert p.returncode==56 and p.stdout=='403';r['probes'].append({'proxyTarget':target,'result':'DENIED_403'})
+       r['rulesAfter']=run('rules-after',['nft','list','table','inet','ab_dependency_guard'])
+       nodeImage=json.loads((root/'infra/local/images.lock.json').read_text())['images']['node']['image']
+       run('pull-node',['docker','--config',str(root/'.agentbrake-local/docker-public'),'pull',nodeImage],600)
+       js="""const net=require('node:net'),http=require('node:http');(async()=>{const denied=await new Promise((r,j)=>{const s=net.connect(8878,'10.0.2.2',()=>{s.destroy();j(Error('escape'))});s.setTimeout(3000,()=>{s.destroy();r(true)});s.on('error',()=>r(true))});const status=await new Promise((r,j)=>{const q=http.request({host:'10.0.2.2',port:8877,method:'CONNECT',path:'registry.npmjs.org:443'});q.on('connect',(x,s)=>{s.destroy();r(x.statusCode)});q.on('error',j);q.end()});if(!denied||status!==200)throw Error('boundary failed');console.log(JSON.stringify({directHostDenied:denied,publicProxyStatus:status}))})().catch(e=>{console.error(e.message);process.exit(1)})"""
+       r['containerProbe']=json.loads(run('container-egress-probe',['docker','run','--rm','--read-only','--cap-drop','ALL','--security-opt','no-new-privileges:true','--memory','128m',nodeImage,'node','-e',js],60))
+       r['networkBoundary']='PASS_DEFINED_GUEST_AND_CONTAINER_PROBES'
+       run('npm-root',['npm','ci','--ignore-scripts'],900,True)
+       run('npm-dashboard',['npm','ci','--ignore-scripts','--prefix','apps/dashboard'],900,True)
+       run('opa-install',['node','--use-env-proxy','scripts/install-opa.mjs'],300,True)
+       run('browser-os-dependencies',['node','node_modules/@playwright/test/cli.js','install-deps','chromium'],900)
+       run('browser-download',['node','node_modules/@playwright/test/cli.js','install','chromium'],600,True)
+       run('native-stage1',['node','scripts/verify-stage1.mjs'],1800,True)
+       r['result']='PASS_CLEAN_GUEST_NATIVE_ONLY'
+      except Exception as e:r['result']='FAIL';r['error']=str(e);r['trace']=traceback.format_exc()
+      finally:
+       pointer=root/'docs/evidence/latest.json'
+       if pointer.exists():
+        r['nativePointer']=json.loads(pointer.read_text());d=root/r['nativePointer']['directory'];r['nativeSummary']=json.loads((d/'summary.json').read_text())
+        log=d/'node-tests.log'
+        if log.exists():r['nodeTestTail']=log.read_text()[-14000:]
+       P('/var/lib/agentbrake-validation/native.json').write_text(json.dumps(r))
+       with open('/dev/ttyS0','w') as f:f.write('\nAGENTBRAKE_PHASE_REPORT='+json.dumps(r)+'\n')
+
+runcmd:
+  - [python3, /usr/local/sbin/agentbrake-phase.py]
+power_state:
+  mode: poweroff
+  delay: now
+  timeout: 30
+  condition: true

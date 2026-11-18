@@ -1,0 +1,220 @@
+#0 building with "default" instance using docker driver
+
+#1 [control-db internal] load build definition from Postgres.Dockerfile
+#1 transferring dockerfile: 316B done
+#1 WARN: InvalidDefaultArgInFrom: Default value for ARG ${POSTGRES_BASE_IMAGE} results in empty or invalid base image name (line 2)
+#1 DONE 0.0s
+
+#2 [opa internal] load build definition from Opa.Dockerfile
+#2 transferring dockerfile: 918B done
+#2 DONE 0.0s
+
+#3 [control-db internal] load metadata for docker.io/library/postgres@sha256:b6972e1115a4ff8eba5d7f7d19184926d1e16d7d1136ae1e1a7ebf286da0f015
+#3 DONE 0.1s
+
+#4 [opa internal] load metadata for docker.io/library/golang@sha256:70bd7ddea8b6cbe5d6943cde279d6b67feb10cc924fb9100d1d8757c1575b280
+#4 DONE 0.1s
+
+#5 [control-db internal] load .dockerignore
+#5 transferring context: 289B done
+#5 DONE 0.0s
+
+#6 [opa internal] load .dockerignore
+#6 transferring context: 289B done
+#6 DONE 0.0s
+
+#7 [opa build 2/6] ADD --checksum=sha256:4eddbf690f65d6ca440fa8c1f2ce2a3439070cdf5d42c7aa8669a9e1552fbd59 https://github.com/open-policy-agent/opa/archive/refs/tags/v1.22.4.tar.gz /tmp/opa.tar.gz
+#7 DONE 0.0s
+
+#8 [control-db 1/2] FROM docker.io/library/postgres@sha256:b6972e1115a4ff8eba5d7f7d19184926d1e16d7d1136ae1e1a7ebf286da0f015
+#8 resolve docker.io/library/postgres@sha256:b6972e1115a4ff8eba5d7f7d19184926d1e16d7d1136ae1e1a7ebf286da0f015 0.1s done
+#8 DONE 0.1s
+
+#9 [opa build 1/6] FROM docker.io/library/golang@sha256:70bd7ddea8b6cbe5d6943cde279d6b67feb10cc924fb9100d1d8757c1575b280
+#9 resolve docker.io/library/golang@sha256:70bd7ddea8b6cbe5d6943cde279d6b67feb10cc924fb9100d1d8757c1575b280
+#9 resolve docker.io/library/golang@sha256:70bd7ddea8b6cbe5d6943cde279d6b67feb10cc924fb9100d1d8757c1575b280 0.1s done
+#9 DONE 0.1s
+
+#10 [control-db 2/2] RUN rm -f /usr/local/bin/gosu
+#10 CACHED
+
+#11 [opa build 2/6] ADD --checksum=sha256:4eddbf690f65d6ca440fa8c1f2ce2a3439070cdf5d42c7aa8669a9e1552fbd59 https://github.com/open-policy-agent/opa/archive/refs/tags/v1.22.4.tar.gz /tmp/opa.tar.gz
+#11 CACHED
+
+#12 [opa build 3/6] WORKDIR /src
+#12 CACHED
+
+#13 [opa build 4/6] RUN tar -xzf /tmp/opa.tar.gz --strip-components=1 -C /src
+#13 CACHED
+
+#14 [opa build 6/6] RUN go test golang.org/x/net/html && go build -trimpath -tags=opa_wasm -ldflags='-s -w' -o /out/opa .
+#14 CACHED
+
+#15 [opa stage-1 1/3] COPY --from=build /out/opa /opa
+#15 CACHED
+
+#16 [opa stage-1 2/3] COPY --from=build /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt
+#16 CACHED
+
+#17 [opa build 5/6] RUN go get golang.org/x/net@v0.62.0 && go mod verify
+#17 CACHED
+
+#18 [opa stage-1 3/3] COPY --from=build /src/LICENSE /licenses/OPA-LICENSE
+#18 CACHED
+
+#19 [opa] exporting to image
+#19 exporting layers done
+#19 exporting manifest sha256:4f45cd2706470c21672eda75dfd653450171c33e5178776cb3a96d1d1222e635 0.0s done
+#19 exporting config sha256:8ef8d7d35259d7ba498b99231077ce9f167cac79169781130b314fa1e2ab7c83
+#19 exporting config sha256:8ef8d7d35259d7ba498b99231077ce9f167cac79169781130b314fa1e2ab7c83 0.0s done
+#19 exporting attestation manifest sha256:76923962205f39130e872e21f64d6231e5c04f9905e04a7facf4485f200b41fe
+#19 exporting attestation manifest sha256:76923962205f39130e872e21f64d6231e5c04f9905e04a7facf4485f200b41fe 0.2s done
+#19 exporting manifest list sha256:b1452a20634f4db1d38d9f6ad4e765e7e1f2be623de911bb70ffe2dc202d3ab1
+#19 exporting manifest list sha256:b1452a20634f4db1d38d9f6ad4e765e7e1f2be623de911bb70ffe2dc202d3ab1 0.0s done
+#19 naming to docker.io/library/agentbrake-opa:1.22.4-3f9e5f443c6e97aa147e 0.0s done
+#19 unpacking to docker.io/library/agentbrake-opa:1.22.4-3f9e5f443c6e97aa147e 0.0s done
+#19 DONE 0.5s
+
+#20 [control-db] exporting to image
+#20 exporting layers 0.0s done
+#20 exporting manifest sha256:6091f42a4bf7960b5d50980d3cdb510f01a91bc5355148cde145ca3332dfba2e 0.1s done
+#20 exporting config sha256:bdfe8d7b2d2be6357d0fe60bfad50ed7685d02f50ed9bb96a938d0481c547a1a 0.0s done
+#20 exporting attestation manifest sha256:806dbccbe3e4e7283bd5f7bf6837416f71b09018ce8a6cf17e7f767c60e6cf15 0.1s done
+#20 exporting manifest list sha256:4031294b2ae4c5ea139adc5d2044a71a6f4dee06184142935df64136b7427df7 0.1s done
+#20 naming to docker.io/library/agentbrake-postgres:18-193f481f609ba4086c53 done
+#20 unpacking to docker.io/library/agentbrake-postgres:18-193f481f609ba4086c53
+#20 unpacking to docker.io/library/agentbrake-postgres:18-193f481f609ba4086c53 0.1s done
+#20 DONE 0.6s
+
+#21 [opa] resolving provenance for metadata file
+#21 DONE 0.0s
+
+#22 [control-db] resolving provenance for metadata file
+#22 DONE 0.0s
+
+#23 [control-api internal] load build definition from Dockerfile
+#23 transferring dockerfile: 568B done
+#23 WARN: InvalidDefaultArgInFrom: Default value for ARG ${NODE_IMAGE} results in empty or invalid base image name (line 2)
+#23 DONE 0.0s
+
+#24 [control-api internal] load metadata for docker.io/library/node@sha256:1314fb30ec37592d5845e5a160d522c0e680972aa534549940b8d73bde88481a
+#24 DONE 0.0s
+
+#25 [control-api internal] load .dockerignore
+#25 transferring context: 289B done
+#25 DONE 0.0s
+
+#26 [control-api internal] load build context
+#26 transferring context: 660.75kB 0.1s done
+#26 DONE 0.1s
+
+#27 [control-api 1/9] FROM docker.io/library/node@sha256:1314fb30ec37592d5845e5a160d522c0e680972aa534549940b8d73bde88481a
+#27 resolve docker.io/library/node@sha256:1314fb30ec37592d5845e5a160d522c0e680972aa534549940b8d73bde88481a 0.1s done
+#27 DONE 0.1s
+
+#28 [control-api 5/9] RUN npm ci --omit=dev && rm -rf /root/.npm /usr/local/lib/node_modules/npm /usr/local/lib/node_modules/corepack /opt/yarn* && rm -f /usr/local/bin/npm /usr/local/bin/npx /usr/local/bin/yarn /usr/local/bin/yarnpkg /usr/local/bin/corepack
+#28 CACHED
+
+#29 [control-api 6/9] COPY server ./server
+#29 CACHED
+
+#30 [control-api 7/9] COPY services ./services
+#30 CACHED
+
+#31 [control-api 8/9] COPY scripts ./scripts
+#31 CACHED
+
+#32 [control-api 2/9] RUN apk add --no-cache git ca-certificates zlib=1.4-r0
+#32 CACHED
+
+#33 [control-api 3/9] WORKDIR /app
+#33 CACHED
+
+#34 [control-api 4/9] COPY package.json package-lock.json ./
+#34 CACHED
+
+#35 [control-api 9/9] COPY infra ./infra
+#35 CACHED
+
+#36 [control-api] exporting to image
+#36 exporting layers done
+#36 exporting manifest sha256:f5ab4e004b25866073d27b99e443f7b267d539f47ce41d8e2f802db36c0e5c32 0.0s done
+#36 exporting config sha256:8e61163e7610e175444356760f98efa3d3e29b7c5dda954a699cc17d6d32cf44 0.0s done
+#36 exporting attestation manifest sha256:fdfdff5b63f7aa89bd52db0a5984a1aa95b86bf2acddf65b8fd8921500c93882 0.0s done
+#36 exporting manifest list sha256:55e2ee2d801c2365bbcf6706601f8028c5e1609432c5eb4bbd6efd8d40644dc1 0.0s done
+#36 naming to docker.io/library/agentbrake-product-verify-c52b3a9d-runtime:latest done
+#36 unpacking to docker.io/library/agentbrake-product-verify-c52b3a9d-runtime:latest
+#36 unpacking to docker.io/library/agentbrake-product-verify-c52b3a9d-runtime:latest 0.0s done
+#36 DONE 0.1s
+
+#37 [control-api] resolving provenance for metadata file
+#37 DONE 0.0s
+
+#38 [dashboard internal] load build definition from Dockerfile
+#38 transferring dockerfile: 1.37kB done
+#38 DONE 0.0s
+
+#24 [dashboard internal] load metadata for docker.io/library/node@sha256:1314fb30ec37592d5845e5a160d522c0e680972aa534549940b8d73bde88481a
+#24 DONE 0.1s
+
+#39 [dashboard internal] load .dockerignore
+#39 transferring context: 289B done
+#39 DONE 0.0s
+
+#27 [dashboard build 1/8] FROM docker.io/library/node@sha256:1314fb30ec37592d5845e5a160d522c0e680972aa534549940b8d73bde88481a
+#27 resolve docker.io/library/node@sha256:1314fb30ec37592d5845e5a160d522c0e680972aa534549940b8d73bde88481a 0.0s done
+#27 DONE 0.1s
+
+#40 [dashboard internal] load build context
+#40 transferring context: 194.68kB 0.0s done
+#40 DONE 0.0s
+
+#41 [dashboard build 6/8] COPY apps/dashboard ./apps/dashboard
+#41 CACHED
+
+#42 [dashboard build 4/8] RUN cd apps/dashboard && npm ci --ignore-scripts
+#42 CACHED
+
+#43 [dashboard build 7/8] COPY src ./src
+#43 CACHED
+
+#44 [dashboard build 3/8] COPY apps/dashboard/package.json apps/dashboard/package-lock.json ./apps/dashboard/
+#44 CACHED
+
+#45 [dashboard build 5/8] RUN ln -s apps/dashboard/node_modules /workspace/node_modules
+#45 CACHED
+
+#46 [dashboard build 8/8] RUN cd apps/dashboard && npm run build
+#46 CACHED
+
+#47 [dashboard build 2/8] WORKDIR /workspace
+#47 CACHED
+
+#48 [dashboard runtime 4/6] WORKDIR /app
+#48 CACHED
+
+#49 [dashboard runtime 3/6] RUN rm -rf /usr/local/lib/node_modules/npm /usr/local/lib/node_modules/corepack /opt/yarn* && rm -f /usr/local/bin/npm /usr/local/bin/npx /usr/local/bin/yarn /usr/local/bin/yarnpkg /usr/local/bin/corepack
+#49 CACHED
+
+#50 [dashboard runtime 2/6] RUN if command -v apk >/dev/null 2>&1; then apk add --no-cache zlib=1.4-r0; fi
+#50 CACHED
+
+#51 [dashboard runtime 5/6] COPY --from=build --chown=node:node /workspace/apps/dashboard/.next/standalone ./
+#51 CACHED
+
+#52 [dashboard runtime 6/6] COPY --from=build --chown=node:node /workspace/apps/dashboard/.next/static ./apps/dashboard/.next/static
+#52 CACHED
+
+#53 [dashboard] exporting to image
+#53 exporting layers done
+#53 exporting manifest sha256:2fa38e531e1d9ce329142eb034cfdf88dd7e847bbd35cb4552dcc060255a8683 0.0s done
+#53 exporting config sha256:cf4008483fc03b50292ed3178402974114bdb354f3667b68a8d2ff9a923a1cde 0.0s done
+#53 exporting attestation manifest sha256:2913871f5ca0414fb1c5e3d7adfda15c99217b21e512c2137f5c201da5e26ed1 0.0s done
+#53 exporting manifest list sha256:5e538aacff06d78ca7200b489915a60ad2ee3d2d0f8409b24b713e6aa75d4374 0.0s done
+#53 naming to docker.io/library/agentbrake-product-verify-c52b3a9d-dashboard:latest done
+#53 unpacking to docker.io/library/agentbrake-product-verify-c52b3a9d-dashboard:latest
+#53 unpacking to docker.io/library/agentbrake-product-verify-c52b3a9d-dashboard:latest 0.0s done
+#53 DONE 0.1s
+
+#54 [dashboard] resolving provenance for metadata file
+#54 DONE 0.0s

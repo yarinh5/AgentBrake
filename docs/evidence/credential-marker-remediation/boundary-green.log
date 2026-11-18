@@ -1,0 +1,96 @@
+TAP version 13
+# (node:70056) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# Subtest: public-marker classification accepts only the complete literal, never credential suffixes
+ok 1 - public-marker classification accepts only the complete literal, never credential suffixes
+  ---
+  duration_ms: 22.0897
+  ...
+# (node:9804) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# Subtest: database_read: withheld output does not erase actual execution or permit a replay
+ok 2 - database_read: withheld output does not erase actual execution or permit a replay
+  ---
+  duration_ms: 73.1652
+  ...
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# Subtest: database_update: withheld output does not erase actual execution or permit a replay
+ok 3 - database_update: withheld output does not erase actual execution or permit a replay
+  ---
+  duration_ms: 26.4371
+  ...
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# Subtest: safe result, denial, post-dispatch rejection and uncertain mutation have distinct outcomes
+ok 4 - safe result, denial, post-dispatch rejection and uncertain mutation have distinct outcomes
+  ---
+  duration_ms: 40.3632
+  ...
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# Subtest: the exact public example marker is released in an otherwise safe adapter result
+ok 5 - the exact public example marker is released in an otherwise safe adapter result
+  ---
+  duration_ms: 10.2185
+  ...
+# Subtest: legacy blocked secret output remains uncertain, not rewritten as a proven success
+ok 6 - legacy blocked secret output remains uncertain, not rewritten as a proven success
+  ---
+  duration_ms: 9.882
+  ...
+# (node:76312) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# Subtest: a queued approval cannot survive a change to its destination binding key
+ok 7 - a queued approval cannot survive a change to its destination binding key
+  ---
+  duration_ms: 84.3538
+  ...
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# Subtest: expired approval never updates the destination record
+ok 8 - expired approval never updates the destination record
+  ---
+  duration_ms: 15.4487
+  ...
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# Subtest: audit storage failure prevents dispatch and cannot turn into cached success
+ok 9 - audit storage failure prevents dispatch and cannot turn into cached success
+  ---
+  duration_ms: 10.1833
+  ...
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# Subtest: audit is append-only and exported entries verify
+ok 10 - audit is append-only and exported entries verify
+  ---
+  duration_ms: 9.9196
+  ...
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# Subtest: an approved sandbox issue is created exactly once
+ok 11 - an approved sandbox issue is created exactly once
+  ---
+  duration_ms: 17.479
+  ...
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# Subtest: the exact public example marker survives input and approval preview scanning
+ok 12 - the exact public example marker survives input and approval preview scanning
+  ---
+  duration_ms: 8.6963
+  ...
+# Subtest: public marker lookalikes and mixed real credentials remain blocked
+ok 13 - public marker lookalikes and mixed real credentials remain blocked
+  ---
+  duration_ms: 8.8149
+  ...
+1..13
+# tests 13
+# suites 0
+# pass 13
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1356.5312

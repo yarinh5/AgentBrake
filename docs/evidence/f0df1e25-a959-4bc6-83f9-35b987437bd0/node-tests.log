@@ -1,0 +1,1646 @@
+TAP version 13
+# (node:78916) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# Subtest: managed identities enforce actual HTTP authority, credentials, tokens and revisions
+ok 1 - managed identities enforce actual HTTP authority, credentials, tokens and revisions
+  ---
+  duration_ms: 5974.5587
+  ...
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# Subtest: account restart keeps managed key lockout and accounts
+ok 2 - account restart keeps managed key lockout and accounts
+  ---
+  duration_ms: 6392.9192
+  ...
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# Subtest: identity and audit rollback together on audit insert failure
+ok 3 - identity and audit rollback together on audit insert failure
+  ---
+  duration_ms: 1059.5422
+  ...
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# Subtest: explicit compatibility mode rejects managed account methods
+ok 4 - explicit compatibility mode rejects managed account methods
+  ---
+  duration_ms: 12.7779
+  ...
+# Subtest: invitation and recovery expiration are checked by actual public HTTP endpoints
+ok 5 - invitation and recovery expiration are checked by actual public HTTP endpoints
+  ---
+  duration_ms: 541.7462
+  ...
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# Subtest: production asynchronous scrypt is salted, bounded to two and does not block the event loop
+ok 6 - production asynchronous scrypt is salted, bounded to two and does not block the event loop
+  ---
+  duration_ms: 1547.2471
+  ...
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# Subtest: session capacity: saturated legacy sessions bootstrap into a usable managed administrator
+ok 7 - session capacity: saturated legacy sessions bootstrap into a usable managed administrator
+  ---
+  duration_ms: 2037.826
+  ...
+# Subtest: session capacity: active sessions protect signup state, invalidated revisions reclaim slots
+ok 8 - session capacity: active sessions protect signup state, invalidated revisions reclaim slots
+  ---
+  duration_ms: 70828.1946
+  ...
+# (node:24884) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# Subtest: approval shows minimal actual before/after state without disclosing review data to the agent
+ok 9 - approval shows minimal actual before/after state without disclosing review data to the agent
+  ---
+  duration_ms: 53.8547
+  ...
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# Subtest: changed target since review is blocked before mutation dispatch
+ok 10 - changed target since review is blocked before mutation dispatch
+  ---
+  duration_ms: 18.9085
+  ...
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# Subtest: concurrent idempotent submissions never expose human review data to the agent
+ok 11 - concurrent idempotent submissions never expose human review data to the agent
+  ---
+  duration_ms: 16.7629
+  ...
+# Subtest: target compare-and-set rejects a race after final preview with no overwrite
+ok 12 - target compare-and-set rejects a race after final preview with no overwrite
+  ---
+  duration_ms: 16.6411
+  ...
+# Subtest: backup envelope authenticates metadata and payload without plaintext credentials
+ok 13 - backup envelope authenticates metadata and payload without plaintext credentials
+  ---
+  duration_ms: 3.2484
+  ...
+# Subtest: backup encryption has fresh nonce and rejects oversized input before parsing
+ok 14 - backup encryption has fresh nonce and rejects oversized input before parsing
+  ---
+  duration_ms: 0.9177
+  ...
+# Subtest: every expanded legitimate change uses a supported target path and payload
+ok 15 - every expanded legitimate change uses a supported target path and payload
+  ---
+  duration_ms: 7.6447
+  ...
+# Subtest: post-execution withheld output is a usability block, not completion or prevented mutation
+ok 16 - post-execution withheld output is a usability block, not completion or prevented mutation
+  ---
+  duration_ms: 0.2369
+  ...
+# Subtest: benchmark denominators separate policy blocks, approvals, baseline and transport failures
+ok 17 - benchmark denominators separate policy blocks, approvals, baseline and transport failures
+  ---
+  duration_ms: 0.9425
+  ...
+# Subtest: PDP and unknown operational refusals fail the benchmark rather than inflate policy false blocks
+ok 18 - PDP and unknown operational refusals fail the benchmark rather than inflate policy false blocks
+  ---
+  duration_ms: 0.1659
+  ...
+# Subtest: expanded reporting cannot hide failed baselines or pool away placeholder false blocks
+ok 19 - expanded reporting cannot hide failed baselines or pool away placeholder false blocks
+  ---
+  duration_ms: 1.0625
+  ...
+# Subtest: CI diagnostics locate failures without emitting error payloads or credentials
+ok 20 - CI diagnostics locate failures without emitting error payloads or credentials
+  ---
+  duration_ms: 3.2575
+  ...
+# Subtest: inference selection preserves the CPU default and rejects unknown profiles
+ok 21 - inference selection preserves the CPU default and rejects unknown profiles
+  ---
+  duration_ms: 1.9834
+  ...
+# Subtest: cpu-32k renders a confined model without granting GPU access to the agent
+ok 22 - cpu-32k renders a confined model without granting GPU access to the agent
+  ---
+  duration_ms: 241.6016
+  ...
+# Subtest: gpu-8k renders a confined model without granting GPU access to the agent
+ok 23 - gpu-8k renders a confined model without granting GPU access to the agent
+  ---
+  duration_ms: 250.6429
+  ...
+# Subtest: coding model requires pinned bytes and exact bounded sampling
+ok 24 - coding model requires pinned bytes and exact bounded sampling
+  ---
+  duration_ms: 23.033
+  ...
+# Subtest: modified sampling bytes fail before inference
+ok 25 - modified sampling bytes fail before inference
+  ---
+  duration_ms: 17.3962
+  ...
+# Subtest: a rehashed alias cannot silently change the accepted sampling contract
+ok 26 - a rehashed alias cannot silently change the accepted sampling contract
+  ---
+  duration_ms: 16.4791
+  ...
+# Subtest: missing aliases and unsafe model names fail closed
+ok 27 - missing aliases and unsafe model names fail closed
+  ---
+  duration_ms: 9.9555
+  ...
+# Subtest: isolation preserves image ownership and final database readiness
+ok 28 - isolation preserves image ownership and final database readiness
+  ---
+  duration_ms: 220.1064
+  ...
+# Subtest: product preserves image ownership and final database readiness
+ok 29 - product preserves image ownership and final database readiness
+  ---
+  duration_ms: 229.2314
+  ...
+# Subtest: minimal product preserves image ownership and final database readiness
+ok 30 - minimal product preserves image ownership and final database readiness
+  ---
+  duration_ms: 251.9243
+  ...
+# Subtest: Codex verification renders a one-CPU limit on a one-CPU test host
+ok 31 - Codex verification renders a one-CPU limit on a one-CPU test host
+  ---
+  duration_ms: 230.4441
+  ...
+# Subtest: actual product Compose launcher ignores inherited synthetic envfile selectors
+ok 32 - actual product Compose launcher ignores inherited synthetic envfile selectors
+  ---
+  duration_ms: 466.811
+  ...
+# Subtest: shared verifier/product environment ignores default .env and preserves explicit inputs in real Compose config
+ok 33 - shared verifier/product environment ignores default .env and preserves explicit inputs in real Compose config
+  ---
+  duration_ms: 828.0987
+  ...
+# (node:28088) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# Subtest: real team control mutations retain the authenticated human and export no credentials
+ok 34 - real team control mutations retain the authenticated human and export no credentials
+  ---
+  duration_ms: 146.2407
+  ...
+# Subtest: internal fixture calls are not attributed to an invented human; trusted owner creation remains explicit
+ok 35 - internal fixture calls are not attributed to an invented human; trusted owner creation remains explicit
+  ---
+  duration_ms: 1.2658
+  ...
+# (node:73592) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# Subtest: activity filters/pagination and policy history return real persisted records with bounded input
+ok 36 - activity filters/pagination and policy history return real persisted records with bounded input
+  ---
+  duration_ms: 127.5621
+  ...
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# Subtest: evidence separates adapter observation from UNKNOWN and exports redacted JSON/CSV without formula execution
+ok 37 - evidence separates adapter observation from UNKNOWN and exports redacted JSON/CSV without formula execution
+  ---
+  duration_ms: 48.4876
+  ...
+# Subtest: Demo Lab submits safe read and blocked SQL through the Gateway with real outcomes
+ok 38 - Demo Lab submits safe read and blocked SQL through the Gateway with real outcomes
+  ---
+  duration_ms: 27.5209
+  ...
+# (node:50228) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# Subtest: real OPA allows a scoped read and upstream observes exactly one invocation
+ok 39 - real OPA allows a scoped read and upstream observes exactly one invocation
+  ---
+  duration_ms: 50.3374
+  ...
+# Subtest: expired grant is denied before the upstream boundary; target is unchanged
+ok 40 - expired grant is denied before the upstream boundary; target is unchanged
+  ---
+  duration_ms: 4.9592
+  ...
+# Subtest: revoked grant is denied even when the agent itself is active
+ok 41 - revoked grant is denied even when the agent itself is active
+  ---
+  duration_ms: 3.8661
+  ...
+# Subtest: unavailable OPA never falls back to legacy allow
+ok 42 - unavailable OPA never falls back to legacy allow
+  ---
+  duration_ms: 6.2545
+  ...
+# Subtest: PDP decision cannot override missing grant or caller-supplied identity
+ok 43 - PDP decision cannot override missing grant or caller-supplied identity
+  ---
+  duration_ms: 4.6729
+  ...
+# Subtest: unknown, traversal, destructive, and obfuscated SQL never call upstream
+ok 44 - unknown, traversal, destructive, and obfuscated SQL never call upstream
+  ---
+  duration_ms: 10.6964
+  ...
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# Subtest: approval-required writes produce no upstream call before review
+ok 45 - approval-required writes produce no upstream call before review
+  ---
+  duration_ms: 12.579
+  ...
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# Subtest: simultaneous distinct reads both succeed within quota
+ok 46 - simultaneous distinct reads both succeed within quota
+  ---
+  duration_ms: 15.5511
+  ...
+# Subtest: a real configured destination is denied before connector dispatch
+ok 47 - a real configured destination is denied before connector dispatch
+  ---
+  duration_ms: 5.093
+  ...
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# Subtest: policy revision changes invalidate pending human review
+ok 48 - policy revision changes invalidate pending human review
+  ---
+  duration_ms: 8.7655
+  ...
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# Subtest: concurrent identical request IDs execute once
+ok 49 - concurrent identical request IDs execute once
+  ---
+  duration_ms: 9.2786
+  ...
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# Subtest: quota is consumed at dispatch, including concurrent calls
+ok 50 - quota is consumed at dispatch, including concurrent calls
+  ---
+  duration_ms: 10.699
+  ...
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# Subtest: authority revoke during real PDP evaluation cannot authorize a stale write
+ok 51 - authority revoke during real PDP evaluation cannot authorize a stale write
+  ---
+  duration_ms: 7.4965
+  ...
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# Subtest: authority expiry during real PDP evaluation cannot authorize a stale write
+ok 52 - authority expiry during real PDP evaluation cannot authorize a stale write
+  ---
+  duration_ms: 5.9334
+  ...
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# Subtest: authority policy during real PDP evaluation cannot authorize a stale write
+ok 53 - authority policy during real PDP evaluation cannot authorize a stale write
+  ---
+  duration_ms: 6.7133
+  ...
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# Subtest: row budget is enforced by real OPA
+ok 54 - row budget is enforced by real OPA
+  ---
+  duration_ms: 5.5615
+  ...
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# Subtest: eight in-flight decisions bound concurrency and the reservation is released
+ok 55 - eight in-flight decisions bound concurrency and the reservation is released
+  ---
+  duration_ms: 51.027
+  ...
+# Subtest: per-agent rate limit rejects the 121st request without dispatch
+ok 56 - per-agent rate limit rejects the 121st request without dispatch
+  ---
+  duration_ms: 98.6934
+  ...
+# Subtest: oversized and deep direct envelopes are bounded before authorization
+ok 57 - oversized and deep direct envelopes are bounded before authorization
+  ---
+  duration_ms: 2.3971
+  ...
+# (node:55672) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# Subtest: frozen benign and hostile content cases preserve output disclosure boundaries
+ok 58 - frozen benign and hostile content cases preserve output disclosure boundaries
+  ---
+  duration_ms: 178.1474
+  ...
+# Subtest: public-marker classification accepts only the complete literal, never credential suffixes
+ok 59 - public-marker classification accepts only the complete literal, never credential suffixes
+  ---
+  duration_ms: 4.8962
+  ...
+# Subtest: Docker deadline retains captured build output for redacted evidence
+ok 60 - Docker deadline retains captured build output for redacted evidence
+  ---
+  duration_ms: 242.1279
+  ...
+# (node:69872) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# Subtest: database_read: withheld output does not erase actual execution or permit a replay
+ok 61 - database_read: withheld output does not erase actual execution or permit a replay
+  ---
+  duration_ms: 58.8742
+  ...
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# Subtest: database_update: withheld output does not erase actual execution or permit a replay
+ok 62 - database_update: withheld output does not erase actual execution or permit a replay
+  ---
+  duration_ms: 24.018
+  ...
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# Subtest: safe result, denial, post-dispatch rejection and uncertain mutation have distinct outcomes
+ok 63 - safe result, denial, post-dispatch rejection and uncertain mutation have distinct outcomes
+  ---
+  duration_ms: 34.1919
+  ...
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# Subtest: the exact public example marker is released in an otherwise safe adapter result
+ok 64 - the exact public example marker is released in an otherwise safe adapter result
+  ---
+  duration_ms: 11.5273
+  ...
+# Subtest: legacy blocked secret output remains uncertain, not rewritten as a proven success
+ok 65 - legacy blocked secret output remains uncertain, not rewritten as a proven success
+  ---
+  duration_ms: 13.2699
+  ...
+# Subtest: fixture permissions preserve private parent and authorize only the runtime group on Linux
+ok 66 - fixture permissions preserve private parent and authorize only the runtime group on Linux # SKIP Requires POSIX UID/GID and Docker on Linux; exercised by hosted Native CI
+  ---
+  duration_ms: 0.8417
+  ...
+# (node:62284) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# Subtest: separate control/agent surfaces and authenticated bridge preserve team proof and single execution
+ok 67 - separate control/agent surfaces and authenticated bridge preserve team proof and single execution
+  ---
+  duration_ms: 152.3133
+  ...
+# Subtest: stdio permits the exact private fixture host only with explicit isolated mode
+ok 68 - stdio permits the exact private fixture host only with explicit isolated mode
+  ---
+  duration_ms: 1.2783
+  ...
+# (node:9348) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# Subtest: MCP withholds sensitive output while retaining execution outcome and replay identity
+ok 69 - MCP withholds sensitive output while retaining execution outcome and replay identity
+  ---
+  duration_ms: 155.8438
+  ...
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# Subtest: MCP 2026-07-28 is stateless: discovery and allowed read reach real OPA once
+ok 70 - MCP 2026-07-28 is stateless: discovery and allowed read reach real OPA once
+  ---
+  duration_ms: 33.5094
+  ...
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# Subtest: MCP explicit 2025-11-25 compatibility initializes and queues write without dispatch
+ok 71 - MCP explicit 2025-11-25 compatibility initializes and queues write without dispatch
+  ---
+  duration_ms: 41.0953
+  ...
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# Subtest: MCP rejects invalid bearer before discovery
+ok 72 - MCP rejects invalid bearer before discovery
+  ---
+  duration_ms: 10.4516
+  ...
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# Subtest: MCP rejects unsupported without dispatch
+ok 73 - MCP rejects unsupported without dispatch
+  ---
+  duration_ms: 7.898
+  ...
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# Subtest: MCP rejects missingVersion without dispatch
+ok 74 - MCP rejects missingVersion without dispatch
+  ---
+  duration_ms: 7.7408
+  ...
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# Subtest: MCP rejects missingMethod without dispatch
+ok 75 - MCP rejects missingMethod without dispatch
+  ---
+  duration_ms: 9.3241
+  ...
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# Subtest: MCP rejects methodMismatch without dispatch
+ok 76 - MCP rejects methodMismatch without dispatch
+  ---
+  duration_ms: 11.7513
+  ...
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# Subtest: MCP rejects nameMismatch without dispatch
+ok 77 - MCP rejects nameMismatch without dispatch
+  ---
+  duration_ms: 8.1149
+  ...
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# Subtest: MCP rejects versionMismatch without dispatch
+ok 78 - MCP rejects versionMismatch without dispatch
+  ---
+  duration_ms: 7.7927
+  ...
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# Subtest: MCP unknown/schema-mismatched/identity-spoofed calls never dispatch
+ok 79 - MCP unknown/schema-mismatched/identity-spoofed calls never dispatch
+  ---
+  duration_ms: 20.8138
+  ...
+# Subtest: MCP malformed, deep and oversized envelopes fail before the tool boundary
+ok 80 - MCP malformed, deep and oversized envelopes fail before the tool boundary
+  ---
+  duration_ms: 12.4457
+  ...
+# Subtest: frozen labels bind all semantics and reject tampering, duplicate tasks and mismatched expected decisions
+ok 81 - frozen labels bind all semantics and reject tampering, duplicate tasks and mismatched expected decisions
+  ---
+  duration_ms: 19.4062
+  ...
+# Subtest: valid synthetic results cannot assert real customers, prevention proof, SLA or pilot admission
+ok 82 - valid synthetic results cannot assert real customers, prevention proof, SLA or pilot admission
+  ---
+  duration_ms: 6.0278
+  ...
+# Subtest: missing tasks and failed baselines remain visible and cannot produce acceptance
+ok 83 - missing tasks and failed baselines remain visible and cannot produce acceptance
+  ---
+  duration_ms: 7.0926
+  ...
+# Subtest: withheld output is a false block but does not pretend the action was prevented
+ok 84 - withheld output is a false block but does not pretend the action was prevented
+  ---
+  duration_ms: 4.0707
+  ...
+# Subtest: removing false blocks or invalidating their baselines cannot publish an improved rate
+ok 85 - removing false blocks or invalidating their baselines cannot publish an improved rate
+  ---
+  duration_ms: 12.2155
+  ...
+# Subtest: exactly two percent is not below two percent and small samples cannot meet target
+ok 86 - exactly two percent is not below two percent and small samples cannot meet target
+  ---
+  duration_ms: 4.0686
+  ...
+# Subtest: unknown execution/target or missing evidence is incomplete; reported forbidden effect is unsafe
+ok 87 - unknown execution/target or missing evidence is incomplete; reported forbidden effect is unsafe
+  ---
+  duration_ms: 12.1282
+  ...
+# Subtest: duplicate/foreign observations, raw payload, misleading blocked state and invalid timings fail closed
+ok 88 - duplicate/foreign observations, raw payload, misleading blocked state and invalid timings fail closed
+  ---
+  duration_ms: 7.504
+  ...
+# Subtest: approval requirement and attack-set coverage cannot silently disappear
+ok 89 - approval requirement and attack-set coverage cannot silently disappear
+  ---
+  duration_ms: 10.4161
+  ...
+# Subtest: field inputs produce reported sample status only, not representative or independently verified claims
+ok 90 - field inputs produce reported sample status only, not representative or independently verified claims
+  ---
+  duration_ms: 3.0335
+  ...
+# Subtest: cost comparison preserves explicit first-year and recurring assumptions, including negative savings
+ok 91 - cost comparison preserves explicit first-year and recurring assumptions, including negative savings
+  ---
+  duration_ms: 2.2745
+  ...
+# Subtest: cost calculator rejects missing/invalid values and does not divide by zero
+ok 92 - cost calculator rejects missing/invalid values and does not divide by zero
+  ---
+  duration_ms: 0.9403
+  ...
+# Subtest: actual CLI freezes/evaluates offline, preserves files and sanitizes invalid-input errors
+ok 93 - actual CLI freezes/evaluates offline, preserves files and sanitizes invalid-input errors
+  ---
+  duration_ms: 828.1661
+  ...
+# Subtest: Linux product installer permits mounted runtime secrets only to configured service identities
+ok 94 - Linux product installer permits mounted runtime secrets only to configured service identities # SKIP Requires real Linux bind-mount permissions and Docker
+  ---
+  duration_ms: 0.7869
+  ...
+# Subtest: actual restore/start orchestration: build-failure (simulated Docker)
+ok 95 - actual restore/start orchestration: build-failure (simulated Docker)
+  ---
+  duration_ms: 244.8762
+  ...
+# Subtest: actual restore/start orchestration: recovery-failure (simulated Docker)
+ok 96 - actual restore/start orchestration: recovery-failure (simulated Docker)
+  ---
+  duration_ms: 251.8027
+  ...
+# Subtest: actual restore/start orchestration: success (simulated Docker)
+ok 97 - actual restore/start orchestration: success (simulated Docker)
+  ---
+  duration_ms: 277.1736
+  ...
+# Subtest: actual restore/start orchestration: minimal-success (simulated Docker)
+ok 98 - actual restore/start orchestration: minimal-success (simulated Docker)
+  ---
+  duration_ms: 255.0417
+  ...
+# Subtest: actual restore/start orchestration: minimal-image-mismatch (simulated Docker)
+ok 99 - actual restore/start orchestration: minimal-image-mismatch (simulated Docker)
+  ---
+  duration_ms: 214.5581
+  ...
+# Subtest: actual restore/start orchestration: unknown-profile (simulated Docker)
+ok 100 - actual restore/start orchestration: unknown-profile (simulated Docker)
+  ---
+  duration_ms: 225.5863
+  ...
+# Subtest: actual restore/start orchestration: ordinary-start (simulated Docker)
+ok 101 - actual restore/start orchestration: ordinary-start (simulated Docker)
+  ---
+  duration_ms: 244.431
+  ...
+# (node:68848) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# Subtest: separate HTTP target observes real mediated read, zero blocked writes, and no credential forwarding
+ok 102 - separate HTTP target observes real mediated read, zero blocked writes, and no credential forwarding
+  ---
+  duration_ms: 123.1839
+  ...
+# Subtest: unavailable configured fixture cannot silently fall back to local data
+ok 103 - unavailable configured fixture cannot silently fall back to local data
+  ---
+  duration_ms: 14.1406
+  ...
+# (node:50568) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# Subtest: REST json rejection has one redacted correlated audit event and zero calls
+ok 104 - REST json rejection has one redacted correlated audit event and zero calls
+  ---
+  duration_ms: 71.9627
+  ...
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# Subtest: REST envelope rejection has one redacted correlated audit event and zero calls
+ok 105 - REST envelope rejection has one redacted correlated audit event and zero calls
+  ---
+  duration_ms: 15.0916
+  ...
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# Subtest: REST depth rejection has one redacted correlated audit event and zero calls
+ok 106 - REST depth rejection has one redacted correlated audit event and zero calls
+  ---
+  duration_ms: 10.099
+  ...
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# Subtest: REST size rejection has one redacted correlated audit event and zero calls
+ok 107 - REST size rejection has one redacted correlated audit event and zero calls
+  ---
+  duration_ms: 10.393
+  ...
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# Subtest: REST auth rejection has one redacted correlated audit event and zero calls
+ok 108 - REST auth rejection has one redacted correlated audit event and zero calls
+  ---
+  duration_ms: 13.6384
+  ...
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# Subtest: REST rate limit is audited once with no denied dispatch
+ok 109 - REST rate limit is audited once with no denied dispatch
+  ---
+  duration_ms: 385.7484
+  ...
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# Subtest: REST rejection remains failed when the audit sink fails; no raw details escape
+ok 110 - REST rejection remains failed when the audit sink fails; no raw details escape
+  ---
+  duration_ms: 21.1264
+  ...
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# Subtest: REST replay conflicts are audited without another invocation
+ok 111 - REST replay conflicts are audited without another invocation
+  ---
+  duration_ms: 34.8113
+  ...
+# Subtest: REST concurrency refusal is audited while eight legitimate decisions are waiting
+ok 112 - REST concurrency refusal is audited while eight legitimate decisions are waiting
+  ---
+  duration_ms: 71.1004
+  ...
+# (node:7796) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# Subtest: result retention removes old payloads without deleting audit, pending proof or permitting replay
+ok 113 - result retention removes old payloads without deleting audit, pending proof or permitting replay
+  ---
+  duration_ms: 62.2768
+  ...
+# (node:69252) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# Subtest: cached results are withdrawn from REST and MCP status after policy changes
+ok 114 - cached results are withdrawn from REST and MCP status after policy changes
+  ---
+  duration_ms: 153.128
+  ...
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# Subtest: status recovery remains available when execution quota is consumed
+ok 115 - status recovery remains available when execution quota is consumed
+  ---
+  duration_ms: 15.9023
+  ...
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# Subtest: approval expiry during awaited real PDP evaluation blocks before dispatch
+ok 116 - approval expiry during awaited real PDP evaluation blocks before dispatch
+  ---
+  duration_ms: 281.8871
+  ...
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# Subtest: credential-shaped unknown tool names never appear in REST records or audit exports
+ok 117 - credential-shaped unknown tool names never appear in REST records or audit exports
+  ---
+  duration_ms: 21.372
+  ...
+# Subtest: credential-shaped unknown tool names are not echoed in MCP errors
+ok 118 - credential-shaped unknown tool names are not echoed in MCP errors
+  ---
+  duration_ms: 10.0148
+  ...
+# Subtest: verified source and actual package inventory contain the root Vite entry and its public favicon
+ok 119 - verified source and actual package inventory contain the root Vite entry and its public favicon
+  ---
+  duration_ms: 182.0273
+  ...
+# (node:50072) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# Subtest: policy revision changing between initial approval check and PDP snapshot requires fresh review
+ok 120 - policy revision changing between initial approval check and PDP snapshot requires fresh review
+  ---
+  duration_ms: 59.9581
+  ...
+# Subtest: a delayed rejection cannot overwrite a concurrently executed approval
+ok 121 - a delayed rejection cannot overwrite a concurrently executed approval
+  ---
+  duration_ms: 17.7313
+  ...
+# (node:70944) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# Subtest: only administrator issues bounded structured task grants and revokes future dispatch
+ok 122 - only administrator issues bounded structured task grants and revokes future dispatch
+  ---
+  duration_ms: 139.578
+  ...
+# (node:80388) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# Subtest: team review binds the task owner and requires a separate authorized human; one execution under replay/race
+ok 123 - team review binds the task owner and requires a separate authorized human; one execution under replay/race
+  ---
+  duration_ms: 159.4003
+  ...
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# Subtest: team control rejects missing CSRF, missing/swapped review proof and action edits after review
+ok 124 - team control rejects missing CSRF, missing/swapped review proof and action edits after review
+  ---
+  duration_ms: 55.3441
+  ...
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# Subtest: team roles and tenant checks protect control/audit; logout revokes the session
+ok 125 - team roles and tenant checks protect control/audit; logout revokes the session
+  ---
+  duration_ms: 40.4801
+  ...
+# Subtest: human rejection audit retains the authenticated reviewer receipt without dispatch
+ok 126 - human rejection audit retains the authenticated reviewer receipt without dispatch
+  ---
+  duration_ms: 24.9196
+  ...
+# (node:48780) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# Subtest: real HTTP OpenTelemetry spans contain correlation/outcome but never request secrets or raw paths
+ok 127 - real HTTP OpenTelemetry spans contain correlation/outcome but never request secrets or raw paths
+  ---
+  duration_ms: 79.7527
+  ...
+# Subtest: actual HTTP response loss after mutation yields UNKNOWN and same request never dispatches again
+ok 128 - actual HTTP response loss after mutation yields UNKNOWN and same request never dispatches again
+  ---
+  duration_ms: 2991.2913
+  ...
+# Subtest: pending review survives a real process restart with unchanged proof and executes exactly once
+ok 129 - pending review survives a real process restart with unchanged proof and executes exactly once
+  ---
+  duration_ms: 1848.0623
+  ...
+# Subtest: process crash after target commit recovers as UNKNOWN without replaying the write
+ok 130 - process crash after target commit recovers as UNKNOWN without replaying the write
+  ---
+  duration_ms: 1765.367
+  ...
+# Subtest: the installed build dependency graph excludes the reproduced unpatched ReDoS dependency
+ok 131 - the installed build dependency graph excludes the reproduced unpatched ReDoS dependency
+  ---
+  duration_ms: 1742.0827
+  ...
+# Subtest: the actual React build emits reachable JS/CSS/favicon without injecting host environment
+ok 132 - the actual React build emits reachable JS/CSS/favicon without injecting host environment
+  ---
+  duration_ms: 304.1008
+  ...
+# Subtest: development HTTP serves only compiled public assets, preserving API and file boundaries
+ok 133 - development HTTP serves only compiled public assets, preserving API and file boundaries
+  ---
+  duration_ms: 453.5497
+  ...
+# (node:70624) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# Subtest: built and development bundles render the real application in Chromium without script errors
+ok 134 - built and development bundles render the real application in Chromium without script errors
+  ---
+  duration_ms: 2939.6137
+  ...
+# Subtest: cold volume roundtrip preserves binary data and refuses nonempty restore
+ok 135 - cold volume roundtrip preserves binary data and refuses nonempty restore
+  ---
+  duration_ms: 5038.5152
+  ...
+# Subtest: snapshot writer refuses incompressible data above the shared package ceiling
+ok 136 - snapshot writer refuses incompressible data above the shared package ceiling
+  ---
+  duration_ms: 2241.687
+  ...
+# (node:65600) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# Subtest: compatibility install exposes disabled enterprise sign-in without enabling provisioning
+ok 137 - compatibility install exposes disabled enterprise sign-in without enabling provisioning
+  ---
+  duration_ms: 59.6242
+  ...
+# Subtest: gateway surface cannot enable human enterprise credentials
+ok 138 - gateway surface cannot enable human enterprise credentials
+  ---
+  duration_ms: 0.6268
+  ...
+# (node:62388) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: delivers bounded redacted authenticated batches and resumes durable cursor
+ok 139 - delivers bounded redacted authenticated batches and resumes durable cursor
+  ---
+  duration_ms: 75.9288
+  ...
+# Subtest: does not advance on 429; retries same IDs after restart
+ok 140 - does not advance on 429; retries same IDs after restart
+  ---
+  duration_ms: 40.0975
+  ...
+# Subtest: does not advance on 500; retries same IDs after restart
+ok 141 - does not advance on 500; retries same IDs after restart
+  ---
+  duration_ms: 37.987
+  ...
+# Subtest: does not advance on bad-ack; retries same IDs after restart
+ok 142 - does not advance on bad-ack; retries same IDs after restart
+  ---
+  duration_ms: 34.2114
+  ...
+# Subtest: does not advance on partial-ack; retries same IDs after restart
+ok 143 - does not advance on partial-ack; retries same IDs after restart
+  ---
+  duration_ms: 37.6988
+  ...
+# Subtest: does not advance on redirect; retries same IDs after restart
+ok 144 - does not advance on redirect; retries same IDs after restart
+  ---
+  duration_ms: 36.1889
+  ...
+# Subtest: does not advance on lost-ack; retries same IDs after restart
+ok 145 - does not advance on lost-ack; retries same IDs after restart
+  ---
+  duration_ms: 39.2056
+  ...
+# Subtest: does not advance on large-ack; retries same IDs after restart
+ok 146 - does not advance on large-ack; retries same IDs after restart
+  ---
+  duration_ms: 37.3359
+  ...
+# Subtest: exclusive writer lock and concurrent ticks cannot double send
+ok 147 - exclusive writer lock and concurrent ticks cannot double send
+  ---
+  duration_ms: 39.1613
+  ...
+# Subtest: rejects corrupted source and retained-chain deletion without advancing
+ok 148 - rejects corrupted source and retained-chain deletion without advancing
+  ---
+  duration_ms: 36.8369
+  ...
+# Subtest: accepts sequence allocation gaps when retained hash chain is intact
+ok 149 - accepts sequence allocation gaps when retained hash chain is intact
+  ---
+  duration_ms: 33.1477
+  ...
+# Subtest: rejects a corrupt checkpoint and changing installation or sink identity
+ok 150 - rejects a corrupt checkpoint and changing installation or sink identity
+  ---
+  duration_ms: 40.2232
+  ...
+# Subtest: refuses insecure endpoints unless literal loopback test exception is explicit
+ok 151 - refuses insecure endpoints unless literal loopback test exception is explicit
+  ---
+  duration_ms: 21.0549
+  ...
+# Subtest: timeouts leave the durable cursor unchanged and close drains in-flight delivery
+ok 152 - timeouts leave the durable cursor unchanged and close drains in-flight delivery
+  ---
+  duration_ms: 189.7477
+  ...
+# Subtest: rejects edited source bytes and missing acknowledged anchor
+ok 153 - rejects edited source bytes and missing acknowledged anchor
+  ---
+  duration_ms: 37.4152
+  ...
+# Subtest: checkpoint write failure preserves replay and never exposes the filesystem error
+ok 154 - checkpoint write failure preserves replay and never exposes the filesystem error
+  ---
+  duration_ms: 34.7965
+  ...
+# Subtest: start polls newly appended events and close stops polling
+ok 155 - start polls newly appended events and close stops polling
+  ---
+  duration_ms: 298.7262
+  ...
+# Subtest: preserves security event categories emitted by account and grant changes
+ok 156 - preserves security event categories emitted by account and grant changes
+  ---
+  duration_ms: 44.5861
+  ...
+# Subtest: fixed egress adapter receives only configured URL and remains subject to exact ACK
+ok 157 - fixed egress adapter receives only configured URL and remains subject to exact ACK
+  ---
+  duration_ms: 67.7675
+  ...
+# Subtest: crashed writer fails closed until verified stale lock recovery, then resumes checkpoint
+ok 158 - crashed writer fails closed until verified stale lock recovery, then resumes checkpoint
+  ---
+  duration_ms: 509.9921
+  ...
+# Subtest: egress adapter oversized cannot advance cursor
+ok 159 - egress adapter oversized cannot advance cursor
+  ---
+  duration_ms: 30.4033
+  ...
+# Subtest: egress adapter redirect cannot advance cursor
+ok 160 - egress adapter redirect cannot advance cursor
+  ---
+  duration_ms: 29.5506
+  ...
+# Subtest: egress adapter timeout cannot advance cursor
+ok 161 - egress adapter timeout cannot advance cursor
+  ---
+  duration_ms: 186.186
+  ...
+# Subtest: enterprise sign-in has an SSO action and does not show ordinary local-password fallback
+ok 162 - enterprise sign-in has an SSO action and does not show ordinary local-password fallback
+  ---
+  duration_ms: 14.0927
+  ...
+# Subtest: emergency local login is an explicit secondary choice, never automatically exposed
+ok 163 - emergency local login is an explicit secondary choice, never automatically exposed
+  ---
+  duration_ms: 5.3103
+  ...
+# Subtest: misconfigured uninitialized enterprise install cannot offer bootstrap that server disables
+ok 164 - misconfigured uninitialized enterprise install cannot offer bootstrap that server disables
+  ---
+  duration_ms: 1.6439
+  ...
+# Subtest: enterprise team and password screens direct changes to organization identity management
+ok 165 - enterprise team and password screens direct changes to organization identity management
+  ---
+  duration_ms: 1.7043
+  ...
+# (node:18764) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: enterprise setup is opt-in on dedicated HTTPS installation and never overwrites authority
+ok 166 - enterprise setup is opt-in on dedicated HTTPS installation and never overwrites authority
+  ---
+  duration_ms: 36.1946
+  ...
+# Subtest: enterprise config refuses unsafe endpoints, caller cursor paths and testing bypass
+ok 167 - enterprise config refuses unsafe endpoints, caller cursor paths and testing bypass
+  ---
+  duration_ms: 9.7918
+  ...
+# Subtest: an SSO-required restored installation cannot be satisfied by audit-only reconfiguration
+ok 168 - an SSO-required restored installation cannot be satisfied by audit-only reconfiguration
+  ---
+  duration_ms: 15.4225
+  ...
+# Subtest: enterprise egress exposes only exact numbered HTTPS routes, never request-selected destinations
+ok 169 - enterprise egress exposes only exact numbered HTTPS routes, never request-selected destinations
+  ---
+  duration_ms: 62.0835
+  ...
+# Subtest: enterprise egress rejects unsafe config, redirects and oversized replies
+ok 170 - enterprise egress rejects unsafe config, redirects and oversized replies
+  ---
+  duration_ms: 9.757
+  ...
+# (node:72368) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: TLS ingress preserves service authorization on exact SCIM routes
+ok 171 - TLS ingress preserves service authorization on exact SCIM routes
+  ---
+  duration_ms: 2161.6978
+  ...
+# Subtest: real dashboard proxy accepts the full configured 512-character SCIM token contract
+ok 172 - real dashboard proxy accepts the full configured 512-character SCIM token contract
+  ---
+  duration_ms: 34.736
+  ...
+# Subtest: real dashboard proxy forwards bodyless SCIM DELETE without requiring JSON
+ok 173 - real dashboard proxy forwards bodyless SCIM DELETE without requiring JSON
+  ---
+  duration_ms: 12.4495
+  ...
+# Subtest: actual TLS proxy app flow provisions with 300-character bearer and denies cross-install token
+ok 174 - actual TLS proxy app flow provisions with 300-character bearer and denies cross-install token
+  ---
+  duration_ms: 25.6669
+  ...
+# Subtest: full HTTPS OIDC exchange, mapped authority and SCIM offboarding use actual application sessions
+ok 175 - full HTTPS OIDC exchange, mapped authority and SCIM offboarding use actual application sessions
+  ---
+  duration_ms: 97.4288
+  ...
+# (node:80328) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: SSO policy rejects password, legacy sessions, recovery and bootstrap bypasses
+ok 176 - SSO policy rejects password, legacy sessions, recovery and bootstrap bypasses
+  ---
+  duration_ms: 535.8122
+  ...
+# Subtest: explicit break-glass only authenticates named admin and does not claim OIDC assurance
+ok 177 - explicit break-glass only authenticates named admin and does not claim OIDC assurance
+  ---
+  duration_ms: 1012.5056
+  ...
+# Subtest: federated account cannot also act as break-glass even with its former local password
+ok 178 - federated account cannot also act as break-glass even with its former local password
+  ---
+  duration_ms: 511.586
+  ...
+# (node:38632) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: signed OIDC code exchange requires provisioned subject, browser state and MFA
+ok 179 - signed OIDC code exchange requires provisioned subject, browser state and MFA
+  ---
+  duration_ms: 1285.7243
+  ...
+# Subtest: SCIM service auth, atomic groups, ETags, immutable bindings and revocation
+ok 180 - SCIM service auth, atomic groups, ETags, immutable bindings and revocation
+  ---
+  duration_ms: 711.1374
+  ...
+# Subtest: in-flight OIDC exchange cannot resurrect an offboarded and reactivated account
+ok 181 - in-flight OIDC exchange cannot resurrect an offboarded and reactivated account
+  ---
+  duration_ms: 716.1836
+  ...
+# Subtest: SCIM group changes roll back with audit and revoke sessions atomically
+ok 182 - SCIM group changes roll back with audit and revoke sessions atomically
+  ---
+  duration_ms: 780.5883
+  ...
+# Subtest: SCIM never links by email and explicit linking cannot claim break-glass
+ok 183 - SCIM never links by email and explicit linking cannot claim break-glass
+  ---
+  duration_ms: 713.3067
+  ...
+# Subtest: OIDC pending browser state expires and has bounded capacity
+ok 184 - OIDC pending browser state expires and has bounded capacity
+  ---
+  duration_ms: 1243.4154
+  ...
+# Subtest: OIDC uses current configured group mapping rather than a persisted obsolete role
+ok 185 - OIDC uses current configured group mapping rather than a persisted obsolete role
+  ---
+  duration_ms: 652.105
+  ...
+# Subtest: encrypted copy preserves recoverable content, verifies checksum and refuses overwrite
+ok 186 - encrypted copy preserves recoverable content, verifies checksum and refuses overwrite
+  ---
+  duration_ms: 50.698
+  ...
+# Subtest: corrupt source and wrong recovery key never create destination files
+ok 187 - corrupt source and wrong recovery key never create destination files
+  ---
+  duration_ms: 17.6582
+  ...
+# Subtest: destination junction ancestors and source symlinks are refused
+ok 188 - destination junction ancestors and source symlinks are refused
+  ---
+  duration_ms: 9.0872
+  ...
+# Subtest: retention is a bounded preview and never removes files
+ok 189 - retention is a bounded preview and never removes files
+  ---
+  duration_ms: 28.69
+  ...
+# Subtest: fresh health distinguishes unavailable, low disk, stale backup, certificate warning and UNKNOWN
+ok 190 - fresh health distinguishes unavailable, low disk, stale backup, certificate warning and UNKNOWN
+  ---
+  duration_ms: 336.3003
+  ...
+# Subtest: systemd templates remain inert and reject directive injection
+ok 191 - systemd templates remain inert and reject directive injection
+  ---
+  duration_ms: 0.7026
+  ...
+# Subtest: availability rejects redirects, enforces deadline and CLI makes UNKNOWN actionable
+ok 192 - availability rejects redirects, enforces deadline and CLI makes UNKNOWN actionable
+  ---
+  duration_ms: 272.5751
+  ...
+# Subtest: OIDC callback forwards only relative root redirect and both secure cookies without following redirect
+ok 193 - OIDC callback forwards only relative root redirect and both secure cookies without following redirect
+  ---
+  duration_ms: 27.6435
+  ...
+# Subtest: SCIM machine transport passes bearer and conditional version without accepting cross-origin browser mutation
+ok 194 - SCIM machine transport passes bearer and conditional version without accepting cross-origin browser mutation
+  ---
+  duration_ms: 8.2659
+  ...
+# Subtest: SCIM credentials are not forwarded to browser API and origin rules stay strict
+ok 195 - SCIM credentials are not forwarded to browser API and origin rules stay strict
+  ---
+  duration_ms: 1.436
+  ...
+# Subtest: backup/restore preserves authentication requirement: enterprise-backup
+ok 196 - backup/restore preserves authentication requirement: enterprise-backup
+  ---
+  duration_ms: 403.14
+  ...
+# Subtest: backup/restore preserves authentication requirement: marked-backup
+ok 197 - backup/restore preserves authentication requirement: marked-backup
+  ---
+  duration_ms: 388.7268
+  ...
+# Subtest: backup/restore preserves authentication requirement: plain-backup
+ok 198 - backup/restore preserves authentication requirement: plain-backup
+  ---
+  duration_ms: 402.7764
+  ...
+# Subtest: backup/restore preserves authentication requirement: malformed-marker
+ok 199 - backup/restore preserves authentication requirement: malformed-marker
+  ---
+  duration_ms: 232.5732
+  ...
+# Subtest: backup/restore preserves authentication requirement: malformed-identity-marker
+ok 200 - backup/restore preserves authentication requirement: malformed-identity-marker
+  ---
+  duration_ms: 231.7324
+  ...
+# Subtest: backup/restore preserves authentication requirement: identity-without-enterprise
+ok 201 - backup/restore preserves authentication requirement: identity-without-enterprise
+  ---
+  duration_ms: 228.874
+  ...
+# Subtest: backup/restore preserves authentication requirement: enterprise-restore
+ok 202 - backup/restore preserves authentication requirement: enterprise-restore
+  ---
+  duration_ms: 248.4644
+  ...
+# Subtest: backup/restore preserves authentication requirement: stale-start
+ok 203 - backup/restore preserves authentication requirement: stale-start
+  ---
+  duration_ms: 238.3001
+  ...
+# Subtest: attestation binds archive digest, source, version and trusted key without bundling keys
+ok 204 - attestation binds archive digest, source, version and trusted key without bundling keys
+  ---
+  duration_ms: 59.7501
+  ...
+# Subtest: CLI signs and verifies a real tar archive and returns failure on modified signature
+ok 205 - CLI signs and verifies a real tar archive and returns failure on modified signature
+  ---
+  duration_ms: 369.1257
+  ...
+# Subtest: payload edits, untrusted rotation, invalid algorithm and missing expected claims fail closed
+ok 206 - payload edits, untrusted rotation, invalid algorithm and missing expected claims fail closed
+  ---
+  duration_ms: 365.9674
+  ...
+# (node:77844) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# Subtest: a queued approval cannot survive a change to its destination binding key
+ok 207 - a queued approval cannot survive a change to its destination binding key
+  ---
+  duration_ms: 79.5383
+  ...
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# Subtest: expired approval never updates the destination record
+ok 208 - expired approval never updates the destination record
+  ---
+  duration_ms: 12.9261
+  ...
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# Subtest: audit storage failure prevents dispatch and cannot turn into cached success
+ok 209 - audit storage failure prevents dispatch and cannot turn into cached success
+  ---
+  duration_ms: 9.687
+  ...
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# Subtest: audit is append-only and exported entries verify
+ok 210 - audit is append-only and exported entries verify
+  ---
+  duration_ms: 9.1217
+  ...
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# Subtest: an approved sandbox issue is created exactly once
+ok 211 - an approved sandbox issue is created exactly once
+  ---
+  duration_ms: 15.0974
+  ...
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# Subtest: the exact public example marker survives input and approval preview scanning
+ok 212 - the exact public example marker survives input and approval preview scanning
+  ---
+  duration_ms: 10.2631
+  ...
+# Subtest: public marker lookalikes and mixed real credentials remain blocked
+ok 213 - public marker lookalikes and mixed real credentials remain blocked
+  ---
+  duration_ms: 6.7821
+  ...
+# (node:80684) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# Subtest: administrator login is required to inspect the workspace
+ok 214 - administrator login is required to inspect the workspace
+  ---
+  duration_ms: 90.8961
+  ...
+# Subtest: create a scoped agent; its token cannot administer the workspace
+ok 215 - create a scoped agent; its token cannot administer the workspace
+  ---
+  duration_ms: 17.8919
+  ...
+# Subtest: allowed reads execute against real isolated SQLite records
+ok 216 - allowed reads execute against real isolated SQLite records
+  ---
+  duration_ms: 24.9552
+  ...
+# Subtest: destructive and unknown tools never delete records
+ok 217 - destructive and unknown tools never delete records
+  ---
+  duration_ms: 29.7415
+  ...
+# Subtest: writes wait for human approval and an approval executes the stored action once
+ok 218 - writes wait for human approval and an approval executes the stored action once
+  ---
+  duration_ms: 54.383
+  ...
+# Subtest: reusing a request ID with changed arguments is rejected
+ok 219 - reusing a request ID with changed arguments is rejected
+  ---
+  duration_ms: 10.6803
+  ...
+# Subtest: an agent cannot approve its own request
+ok 220 - an agent cannot approve its own request
+  ---
+  duration_ms: 12.0505
+  ...
+# Subtest: revocation is rechecked when an administrator approves
+ok 221 - revocation is rechecked when an administrator approves
+  ---
+  duration_ms: 39.125
+  ...
+# Subtest: policy changes supersede queued approvals
+ok 222 - policy changes supersede queued approvals
+  ---
+  duration_ms: 17.4264
+  ...
+# Subtest: global emergency stop blocks new calls and queued approvals
+ok 223 - global emergency stop blocks new calls and queued approvals
+  ---
+  duration_ms: 25.4543
+  ...
+# Subtest: resource scopes, secret file paths and malformed structured arguments are denied
+ok 224 - resource scopes, secret file paths and malformed structured arguments are denied
+  ---
+  duration_ms: 18.3161
+  ...
+# Subtest: reading protected data taints the agent and blocks subsequent outbound writes
+ok 225 - reading protected data taints the agent and blocks subsequent outbound writes
+  ---
+  duration_ms: 6.0397
+  ...
+# Subtest: secrets are blocked without persisting the raw credential in events or pending data
+ok 226 - secrets are blocked without persisting the raw credential in events or pending data
+  ---
+  duration_ms: 8.1907
+  ...
+# Subtest: cross-origin browser mutations and DNS-rebinding hosts are rejected
+ok 227 - cross-origin browser mutations and DNS-rebinding hosts are rejected
+  ---
+  duration_ms: 9.8602
+  ...
+# (node:72580) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# Subtest: a real MCP stdio client calls the gateway and receives pending approval without a write
+ok 228 - a real MCP stdio client calls the gateway and receives pending approval without a write
+  ---
+  duration_ms: 711.9946
+  ...
+# (node:33516) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# Subtest: PDP timeout response denies with zero upstream calls and unchanged target
+ok 229 - PDP timeout response denies with zero upstream calls and unchanged target
+  ---
+  duration_ms: 114.7527
+  ...
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# Subtest: PDP error response denies with zero upstream calls and unchanged target
+ok 230 - PDP error response denies with zero upstream calls and unchanged target
+  ---
+  duration_ms: 19.8836
+  ...
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# Subtest: PDP missing response denies with zero upstream calls and unchanged target
+ok 231 - PDP missing response denies with zero upstream calls and unchanged target
+  ---
+  duration_ms: 11.9552
+  ...
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# Subtest: PDP malformed response denies with zero upstream calls and unchanged target
+ok 232 - PDP malformed response denies with zero upstream calls and unchanged target
+  ---
+  duration_ms: 15.5615
+  ...
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# Subtest: PDP oversized response denies with zero upstream calls and unchanged target
+ok 233 - PDP oversized response denies with zero upstream calls and unchanged target
+  ---
+  duration_ms: 16.7188
+  ...
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# Subtest: PDP redirect response denies with zero upstream calls and unchanged target
+ok 234 - PDP redirect response denies with zero upstream calls and unchanged target
+  ---
+  duration_ms: 10.7239
+  ...
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# Subtest: PDP html response denies with zero upstream calls and unchanged target
+ok 235 - PDP html response denies with zero upstream calls and unchanged target
+  ---
+  duration_ms: 12.018
+  ...
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# Subtest: PDP forged-effect response denies with zero upstream calls and unchanged target
+ok 236 - PDP forged-effect response denies with zero upstream calls and unchanged target
+  ---
+  duration_ms: 11.0793
+  ...
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# Subtest: PDP forged-decision_id response denies with zero upstream calls and unchanged target
+ok 237 - PDP forged-decision_id response denies with zero upstream calls and unchanged target
+  ---
+  duration_ms: 14.0453
+  ...
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# Subtest: PDP forged-policy_hash response denies with zero upstream calls and unchanged target
+ok 238 - PDP forged-policy_hash response denies with zero upstream calls and unchanged target
+  ---
+  duration_ms: 12.1964
+  ...
+# Subtest: PDP forged-policy_version response denies with zero upstream calls and unchanged target
+ok 239 - PDP forged-policy_version response denies with zero upstream calls and unchanged target
+  ---
+  duration_ms: 9.0141
+  ...
+# Subtest: real OPA exposes only authenticated decision and health APIs, never management/data
+ok 240 - real OPA exposes only authenticated decision and health APIs, never management/data
+  ---
+  duration_ms: 12.7258
+  ...
+# Subtest: account routes allow exact methods and retain origin and route boundaries
+ok 241 - account routes allow exact methods and retain origin and route boundaries
+  ---
+  duration_ms: 41.3866
+  ...
+# Subtest: dashboard proxy rejects untrusted origins, routes, destinations and oversized or malformed bodies before dispatch
+ok 242 - dashboard proxy rejects untrusted origins, routes, destinations and oversized or malformed bodies before dispatch
+  ---
+  duration_ms: 2.9232
+  ...
+# Subtest: dashboard proxy binds backend host/origin, preserves CSRF/cookie and streams the response without forwarding bearer credentials
+ok 243 - dashboard proxy binds backend host/origin, preserves CSRF/cookie and streams the response without forwarding bearer credentials
+  ---
+  duration_ms: 1.4575
+  ...
+# Subtest: dashboard validates browser origin against trusted Host when Next reconstructs an internal listening URL
+ok 244 - dashboard validates browser origin against trusted Host when Next reconstructs an internal listening URL
+  ---
+  duration_ms: 0.612
+  ...
+# Subtest: candidate configuration pins a dedicated repository, writes no private key in metadata and cannot overwrite local/existing configuration
+ok 245 - candidate configuration pins a dedicated repository, writes no private key in metadata and cannot overwrite local/existing configuration
+  ---
+  duration_ms: 201.4358
+  ...
+# Subtest: CI is a credential-free failing gate for policy/regression/build/security/isolation, included in release source
+ok 246 - CI is a credential-free failing gate for policy/regression/build/security/isolation, included in release source
+  ---
+  duration_ms: 181.4531
+  ...
+# (node:72840) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: App JWT and installation authority are scoped; safe file read returns only bounded data
+ok 247 - App JWT and installation authority are scoped; safe file read returns only bounded data
+  ---
+  duration_ms: 52.0256
+  ...
+# Subtest: unknown tool, secret path, outside repo, main branch and duplicate change paths never mint a credential
+ok 248 - unknown tool, secret path, outside repo, main branch and duplicate change paths never mint a credential
+  ---
+  duration_ms: 9.8719
+  ...
+# Subtest: wrong immutable identity, broader token permissions/repositories, redirects and oversized responses fail closed
+ok 249 - wrong immutable identity, broader token permissions/repositories, redirects and oversized responses fail closed
+  ---
+  duration_ms: 27.4831
+  ...
+# Subtest: human preview pins real identity and before/after content; protected main required for mutation
+ok 250 - human preview pins real identity and before/after content; protected main required for mutation
+  ---
+  duration_ms: 12.1064
+  ...
+# Subtest: branch and draft PR use exact approved commit, paths and non-force ref update
+ok 251 - branch and draft PR use exact approved commit, paths and non-force ref update
+  ---
+  duration_ms: 23.0088
+  ...
+# Subtest: missing/swapped/stale preview cannot mutate; partial PR failure is never a zero-effect TargetChanged error
+ok 252 - missing/swapped/stale preview cannot mutate; partial PR failure is never a zero-effect TargetChanged error
+  ---
+  duration_ms: 15.0106
+  ...
+# Subtest: sandbox containing workflow automation refuses branch/PR mutations before side effects
+ok 253 - sandbox containing workflow automation refuses branch/PR mutations before side effects
+  ---
+  duration_ms: 11.0941
+  ...
+# Subtest: invalid, expired, near-expiry and excessive-lifetime tokens never authorize repository access
+ok 254 - invalid, expired, near-expiry and excessive-lifetime tokens never authorize repository access
+  ---
+  duration_ms: 12.9749
+  ...
+# Subtest: cached token is refreshed at its safety cutoff; failed refresh never uses the stale credential
+ok 255 - cached token is refreshed at its safety cutoff; failed refresh never uses the stale credential
+  ---
+  duration_ms: 9.7861
+  ...
+# (node:11480) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# Subtest: operator can issue and narrow an explicitly configured App sandbox grant but cannot expand its target
+ok 256 - operator can issue and narrow an explicitly configured App sandbox grant but cannot expand its target
+  ---
+  duration_ms: 106.4635
+  ...
+# Subtest: fixed GitHub egress rejects alternate hosts/repos/mint scope before outbound dispatch and never follows redirects
+ok 257 - fixed GitHub egress rejects alternate hosts/repos/mint scope before outbound dispatch and never follows redirects
+  ---
+  duration_ms: 66.6048
+  ...
+# (node:15164) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: real Gateway/OPA denies outside scope before any App HTTP; explicit App read succeeds
+ok 258 - real Gateway/OPA denies outside scope before any App HTTP; explicit App read succeeds
+  ---
+  duration_ms: 88.8376
+  ...
+# Subtest: pending has zero mutation; independent approval dispatches once; duplicate approval fails
+ok 259 - pending has zero mutation; independent approval dispatches once; duplicate approval fails
+  ---
+  duration_ms: 34.6071
+  ...
+# Subtest: changed repository identity after preview blocks with zero dispatch
+ok 260 - changed repository identity after preview blocks with zero dispatch
+  ---
+  duration_ms: 14.5528
+  ...
+# Subtest: lost PR response records UNKNOWN and request replay never retries side effects
+ok 261 - lost PR response records UNKNOWN and request replay never retries side effects
+  ---
+  duration_ms: 38.148
+  ...
+# Subtest: local demo identity remains a fixture even when the App is configured
+ok 262 - local demo identity remains a fixture even when the App is configured
+  ---
+  duration_ms: 9.5464
+  ...
+# (node:55672) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# Subtest: HTTPS dashboard uses a pinned origin; forwarding headers cannot substitute for Host or Origin
+ok 263 - HTTPS dashboard uses a pinned origin; forwarding headers cannot substitute for Host or Origin
+  ---
+  duration_ms: 28.8326
+  ...
+# Subtest: HTTPS mode refuses to forward a non-Secure session cookie
+ok 264 - HTTPS mode refuses to forward a non-Secure session cookie
+  ---
+  duration_ms: 3.0799
+  ...
+# Subtest: private control API issues and clears Secure cookies when HTTPS entrypoint is configured
+ok 265 - private control API issues and clears Secure cookies when HTTPS entrypoint is configured
+  ---
+  duration_ms: 73.4878
+  ...
+# Subtest: actual TLS entrypoint pins host, drops credentials/forwarded headers and has no plaintext or arbitrary destination path
+ok 266 - actual TLS entrypoint pins host, drops credentials/forwarded headers and has no plaintext or arbitrary destination path
+  ---
+  duration_ms: 438.0405
+  ...
+# Subtest: image scan refuses a rebuilt tag that differs from the image exercised by the candidate
+ok 267 - image scan refuses a rebuilt tag that differs from the image exercised by the candidate
+  ---
+  duration_ms: 1.1841
+  ...
+# Subtest: useful coding is a separate required gate; two-read or failed evidence cannot satisfy it
+ok 268 - useful coding is a separate required gate; two-read or failed evidence cannot satisfy it
+  ---
+  duration_ms: 1.2022
+  ...
+# Subtest: production readiness cannot promote local or stale evidence to live/security/deployment acceptance
+ok 269 - production readiness cannot promote local or stale evidence to live/security/deployment acceptance
+  ---
+  duration_ms: 0.3587
+  ...
+# Subtest: PR preview refuses a missing, moved or used feature branch without changing target state
+ok 270 - PR preview refuses a missing, moved or used feature branch without changing target state
+  ---
+  duration_ms: 3488.0043
+  ...
+# Subtest: persistent fixture reopens exact branch/PR state and refuses another installation or unmarked repository
+ok 271 - persistent fixture reopens exact branch/PR state and refuses another installation or unmarked repository
+  ---
+  duration_ms: 3354.8394
+  ...
+# Subtest: human PR review computes the canonical diff from a full PR request without mutating Git
+ok 272 - human PR review computes the canonical diff from a full PR request without mutating Git
+  ---
+  duration_ms: 1527.8955
+  ...
+# Subtest: creates a new real Git fixture with trusted identity, protected main and bounded reads
+ok 273 - creates a new real Git fixture with trusted identity, protected main and bounded reads
+  ---
+  duration_ms: 1434.018
+  ...
+# Subtest: refuses existing directories and repositories without changing their contents
+ok 274 - refuses existing directories and repositories without changing their contents
+  ---
+  duration_ms: 515.9919
+  ...
+# Subtest: canonical proposals return an exact diff and fingerprint without writing Git objects
+ok 275 - canonical proposals return an exact diff and fingerprint without writing Git objects
+  ---
+  duration_ms: 1657.2062
+  ...
+# Subtest: proposal diff applies exactly, including empty files and missing terminal newlines
+ok 276 - proposal diff applies exactly, including empty files and missing terminal newlines
+  ---
+  duration_ms: 2731.5476
+  ...
+# Subtest: queued requests cannot swap validated branch or content before execution
+ok 277 - queued requests cannot swap validated branch or content before execution
+  ---
+  duration_ms: 1910.8181
+  ...
+# Subtest: approved feature branch and mock PR produce one real commit while main remains unchanged
+ok 278 - approved feature branch and mock PR produce one real commit while main remains unchanged
+  ---
+  duration_ms: 3270.6185
+  ...
+# Subtest: rejects protected branches, external repos, extra arguments and forbidden tools with no effects
+ok 279 - rejects protected branches, external repos, extra arguments and forbidden tools with no effects
+  ---
+  duration_ms: 740.554
+  ...
+# Subtest: rejects workflow, secret, traversal and ambiguous paths before reading or writing
+ok 280 - rejects workflow, secret, traversal and ambiguous paths before reading or writing
+  ---
+  duration_ms: 713.452
+  ...
+# Subtest: enforces file count, UTF-8 bytes, total bytes, duplicate paths and exact nested schemas
+ok 281 - enforces file count, UTF-8 bytes, total bytes, duplicate paths and exact nested schemas
+  ---
+  duration_ms: 936.9838
+  ...
+# Subtest: stale main, stale feature, missing feature and no-op proposals fail before mutation
+ok 282 - stale main, stale feature, missing feature and no-op proposals fail before mutation
+  ---
+  duration_ms: 2577.2046
+  ...
+# Subtest: concurrent branch and PR requests produce at most one effect each
+ok 283 - concurrent branch and PR requests produce at most one effect each
+  ---
+  duration_ms: 5316.3262
+  ...
+# Subtest: Git tree symlinks are never resolved or overwritten through an allowed path
+ok 284 - Git tree symlinks are never resolved or overwritten through an allowed path
+  ---
+  duration_ms: 1426.4231
+  ...
+# Subtest: closing preserves evidence and rejects subsequent execution
+ok 285 - closing preserves evidence and rejects subsequent execution
+  ---
+  duration_ms: 545.5383
+  ...
+# Subtest: fast Git read commands do not fail after an unused stdin pipe closes
+ok 286 - fast Git read commands do not fail after an unused stdin pipe closes
+  ---
+  duration_ms: 6957.5468
+  ...
+# Subtest: local adapter refuses remote, privileged, alternate-database and URL override configurations
+ok 287 - local adapter refuses remote, privileged, alternate-database and URL override configurations
+  ---
+  duration_ms: 1.8607
+  ...
+# Subtest: local adapter rejects out-of-contract input before opening a database connection
+ok 288 - local adapter rejects out-of-contract input before opening a database connection
+  ---
+  duration_ms: 5.2188
+  ...
+# Subtest: local adapter schema exposes only the approved customer template
+ok 289 - local adapter schema exposes only the approved customer template
+  ---
+  duration_ms: 1.1873
+  ...
+# Subtest: PostgreSQL reviewed update has an atomic version condition and removes the unversioned writer entry point
+ok 290 - PostgreSQL reviewed update has an atomic version condition and removes the unversioned writer entry point # SKIP Requires the dedicated local Docker target runner (POSTGRES_TARGET_TEST=1).
+  ---
+  duration_ms: 0.0954
+  ...
+# Subtest: PostgreSQL target preserves state on denied operations and changes only the approved fixture row
+ok 291 - PostgreSQL target preserves state on denied operations and changes only the approved fixture row # SKIP Requires the dedicated local Docker target runner (POSTGRES_TARGET_TEST=1).
+  ---
+  duration_ms: 0.1081
+  ...
+# Subtest: PostgreSQL target roles deny broad writes, DDL, privilege escalation and program execution
+ok 292 - PostgreSQL target roles deny broad writes, DDL, privilege escalation and program execution # SKIP Requires the dedicated local Docker target runner (POSTGRES_TARGET_TEST=1).
+  ---
+  duration_ms: 0.0828
+  ...
+# Subtest: PostgreSQL target default read-only mode and statement timeout are active on the server
+ok 293 - PostgreSQL target default read-only mode and statement timeout are active on the server # SKIP Requires the dedicated local Docker target runner (POSTGRES_TARGET_TEST=1).
+  ---
+  duration_ms: 0.1559
+  ...
+1..293
+# tests 293
+# suites 0
+# pass 287
+# fail 0
+# cancelled 0
+# skipped 6
+# todo 0
+# duration_ms 210646.4787

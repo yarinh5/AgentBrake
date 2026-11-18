@@ -1,0 +1,73 @@
+{
+  "schemaVersion": 1,
+  "action": {
+    "id": "96b5f32b-9c0e-4739-a392-a376b4eea5d4",
+    "agentId": "67b557b6-7994-4b35-bea9-b07b27bad5ad",
+    "requestId": "b760061d-a30f-40c0-ad88-0991440e02c6",
+    "tool": "github_create_branch",
+    "destination": "036b2fb6793194e59e5a9745f1715aa277cc1238a53ccd1080d2d0207a24e271",
+    "correlationId": "0dae9dd5-d56e-4ec9-a131-2f5de7451527",
+    "grantId": "659ca1ff-4e0f-4b6b-a8f7-6f6b40f652ef",
+    "grantFingerprint": "e22750667a9be1711ad42006a1cb55550529d4510f82bc6e2840f8a6a19677b6",
+    "policyRevision": 1,
+    "policyDecisionId": "e96c6cec-91ed-464f-8620-8c678f8e2386",
+    "policyVersion": "stage2.v1",
+    "policyHash": "9ac719fef979ee7b37c5c5ef3173621453782a0a02d432727391beeff1234d14",
+    "policyEffect": "DENY",
+    "arguments": {},
+    "status": "blocked",
+    "rule": "policy-deny",
+    "reason": "The policy engine denied this action.",
+    "resource": "yarinh5/AgentBrake-Sandbox",
+    "sandbox": false,
+    "createdAt": "2026-11-17T11:50:30.259Z",
+    "expiresAt": "2026-11-17T12:05:30.259Z",
+    "durationMs": 8.45
+  },
+  "decision": {
+    "id": "e96c6cec-91ed-464f-8620-8c678f8e2386",
+    "policyHash": "9ac719fef979ee7b37c5c5ef3173621453782a0a02d432727391beeff1234d14",
+    "version": "stage2.v1",
+    "revision": 1,
+    "effect": "DENY",
+    "reason": "The policy engine denied this action."
+  },
+  "review": {},
+  "execution": {
+    "status": "blocked",
+    "observation": "not-dispatched",
+    "outcome": "not-dispatched",
+    "resultDisclosure": "unrecorded",
+    "resultRetained": false,
+    "correlationId": "0dae9dd5-d56e-4ec9-a131-2f5de7451527"
+  },
+  "audit": {
+    "valid": true,
+    "redacted": true,
+    "entries": [
+      {
+        "seq": 14,
+        "data": {
+          "type": "action.blocked",
+          "details": {
+            "actionId": "96b5f32b-9c0e-4739-a392-a376b4eea5d4",
+            "agentId": "67b557b6-7994-4b35-bea9-b07b27bad5ad",
+            "tool": "github_create_branch",
+            "rule": "policy-deny",
+            "correlationId": "0dae9dd5-d56e-4ec9-a131-2f5de7451527",
+            "grantId": "659ca1ff-4e0f-4b6b-a8f7-6f6b40f652ef",
+            "decisionId": "e96c6cec-91ed-464f-8620-8c678f8e2386",
+            "policyHash": "9ac719fef979ee7b37c5c5ef3173621453782a0a02d432727391beeff1234d14",
+            "policyRevision": 1,
+            "effect": "DENY"
+          },
+          "at": "2026-11-17T11:50:30.263Z"
+        },
+        "previous_hash": "15b7624563bd5145639a0d65352aaa67e22575430d67558df175278d770d68db",
+        "hash": "e2e591522780531df52ef8f41d1c62cd0130378ad58450e0ada3ab3b018aec13"
+      }
+    ],
+    "verification": "Hash chain checked against stored records before redaction; this filtered redacted export is not an independent full-chain proof."
+  },
+  "coverage": "Local synthetic fixture. Adapter response is not independent target verification. UNKNOWN requires target reconciliation; never retry automatically."
+}

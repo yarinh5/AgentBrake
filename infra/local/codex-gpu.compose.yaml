@@ -1,0 +1,11 @@
+# Opt-in bounded inference fixture. Only the model receives GPU access.
+# No target credentials, exposed ports or external runtime network are added.
+services:
+  local-model:
+    gpus: all
+    cpus: 4
+    mem_limit: 6g
+    memswap_limit: 6g
+    environment:
+      CUDA_VISIBLE_DEVICES: "0"
+      OLLAMA_GPU_OVERHEAD: "2147483648"

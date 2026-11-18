@@ -1,5 +1,6 @@
 // Only the generated, local persistent Compose installation may use this entrypoint.
 import { readFile } from "node:fs/promises";
+import { createHash } from 'node:crypto';
 import { lookup } from "node:dns/promises";
 import { createApp } from "./app.js";
 import { PostgresStore } from "./postgres-store.js";
@@ -8,11 +9,14 @@ import { createGatewayBridge, RemoteGateway } from "./gateway-bridge.js";
 import type { OperatorCredential } from "./security/operators.js";
 import { LocalTelemetry } from "./telemetry.js";
 import { githubAppConfigSchema } from './adapters/github-app-client.js';
+import {validateEnterpriseServices,enterpriseRoutes,enterpriseTransport} from './enterprise/config.js';
+import {createAuditDelivery} from './enterprise/audit-delivery.js';
 if (process.env.AGENTBRAKE_PRODUCT !== "1")
   throw Error("Use the generated local product Compose installation");
 const role = process.env.AGENTBRAKE_ROLE;
 if (!["control", "gateway"].includes(role ?? ""))
   throw Error("Explicit product role required");
+if(role==='control'&&process.env.AGENTBRAKE_ENTERPRISE_REQUIRED==='1'&&process.env.AGENTBRAKE_ENTERPRISE!=='1')throw Error('Enterprise configuration must be reprovisioned before starting the control service');
 const secret = async (name: string) =>
   (await readFile("/run/secrets/" + name, "utf8")).trim();
 const githubPublic = process.env.AGENTBRAKE_GITHUB_APP === '1'
@@ -99,6 +103,17 @@ if (role === "gateway") {
   const operators = JSON.parse(
     await secret("operators.json"),
   ) as OperatorCredential[];
+  let enterprise;
+  if(process.env.AGENTBRAKE_ENTERPRISE === '1') {
+    const text=await readFile('/run/secrets/enterprise.json','utf8');
+    const manifest=JSON.parse(await readFile('/run/config/enterprise-manifest.json','utf8'));
+    if(manifest.installationId!==process.env.AGENTBRAKE_INSTALLATION_ID || createHash('sha256').update(text).digest('hex')!==manifest.configHash)throw Error('Enterprise installation/configuration mismatch');
+    enterprise=validateEnterpriseServices(JSON.parse(text));
+    if(process.env.AGENTBRAKE_ENTERPRISE_IDENTITY_REQUIRED==='1'&&!enterprise.identity)throw Error('Restored SSO policy requires identity configuration');
+    if(!(await store.identityState()).initialized)throw Error('Initialize managed accounts before enabling enterprise services');
+  }
+  const enterpriseFetch=enterprise ? enterpriseTransport(enterpriseRoutes(enterprise)) : undefined;
+  const auditDelivery=enterprise?.audit ? await createAuditDelivery(store,{...enterprise.audit,installationId:process.env.AGENTBRAKE_INSTALLATION_ID!,checkpointPath:'/var/lib/agentbrake/enterprise/siem.cursor.json'}, {fetch:enterpriseFetch!}) : undefined;
   const system = createApp({
     store,
     databasePath: ":memory:",
@@ -111,11 +126,16 @@ if (role === "gateway") {
     adminKey: await secret("session-key"),
     operators,
     managedAccounts: true,
+    enterpriseIdentity: enterprise?.identity,
+    enterpriseTransport: enterpriseFetch,
+    auditDelivery,
     connectionModes: githubPublic ? { github: 'github-app-sandbox', repository: githubPublic.repository, database: 'sandbox' } : undefined,
     secureCookies: process.env.AGENTBRAKE_SECURE_COOKIES === '1',
     allowedHosts: ["control-api"],
     gateway: new RemoteGateway("http://gateway-control:4315", bridgeKey),
   });
+  try { await system.enterpriseReady(); } catch(error) { await system.close(); throw error; }
+  auditDelivery?.start();
   const server = system.app.listen(4314, "0.0.0.0");
   const close = async () => {
     server.closeAllConnections();

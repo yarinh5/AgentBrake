@@ -1,0 +1,28 @@
+{
+  "status": 200,
+  "body": {
+    "id": "731cb565-57cd-44ac-81c9-7f269a10843c",
+    "agentId": "3fdf7720-487b-4430-a5f8-ee2ea304ede3",
+    "requestId": "b38db9e8-70d1-4016-aac8-bd61efa836ad",
+    "tool": "database_read",
+    "digest": "2c6cdb71bd85db5e59f0ab57d9ae7e3e3d4109c67f2ab8cea71faa60dbae17cd",
+    "destination": "3f09ed3fd9d1b95e741fe99f1185f05c5cf3a6e662ecb790508b755affba2dfe",
+    "correlationId": "884b8b19-9430-400e-b650-5b6052812204",
+    "grantId": "0fea1df3-a3cb-431c-a152-5ed3436fdedc",
+    "grantFingerprint": "c5e627d880f961b967ba7f256cc942852892fad3d725c4da19d4b5656204a7aa",
+    "policyRevision": 1,
+    "policyDecisionId": "af036b59-a7d6-4194-bffd-b0a04c670ecf",
+    "policyVersion": "stage2.v1",
+    "policyHash": "9ac719fef979ee7b37c5c5ef3173621453782a0a02d432727391beeff1234d14",
+    "policyEffect": "DENY",
+    "arguments": {},
+    "status": "blocked",
+    "rule": "invalid-arguments",
+    "reason": "Arguments do not match the strict tool schema.",
+    "resource": "restricted",
+    "sandbox": true,
+    "createdAt": "2026-11-17T16:02:16.956Z",
+    "expiresAt": "2026-11-17T16:17:16.956Z",
+    "durationMs": 5.02
+  }
+}

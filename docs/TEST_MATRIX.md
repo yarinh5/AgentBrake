@@ -1,6 +1,37 @@
 # Product-to-test traceability
 
+## Candidate 2d8df354e16d — scoped engineering verification complete
+
+Source `2d8df354e16dacbdda4802a04dd875d6166f053f63a5a3b897a2bf41d358032e` passed the full local release, Enterprise and four-image gates. Native results are287 pass,0 fail and6 explicit skips; all22 PostgreSQL tests,17 Git-container tests and15 Gateway workflows passed. The required actual Codex flow read and edited code, observed a failing test, passed the corrected eight-case test, created a local mock PR, read the target back, replayed without an extra effect and denied an out-of-task write. Evidence: `evidence/engineering-final-d0f25655-2637-41a6-b56d-89b5f63d0ef2/validation.json` and `evidence/55230ee0-5e8c-437c-a1d2-7ba2c5104daf/coding-workflow.json`.
+
+The unchanged208-task synthetic corpus completed208/208 with zero false blocks and zero non-policy failures. This is26 scenario families across eight strata and automated fixture approvals; it is not a representative customer rate or human-approval measurement.
+
+The exact284-file archive SHA-256 `89d6f75d33a8809429606ae635a5d765c8f72d83f4fe5e62801beac5922ce6d4` passed safe extraction and per-file hashes. On the separately created Ubuntu24.04.5 guest, native, isolation, product, encrypted backup/restore service, HTTPS candidate, Enterprise and corrected npm-invoked security checks passed with the source unchanged. The first security attempt is retained as FAIL because the VM harness invoked Node directly instead of the required npm script; Semgrep itself had zero findings. Composite evidence: `evidence/clean-linux-final-package-acceptance.json`.
+
+## Historical c043 continuation — 2026-11-17
+
 PASS is bounded to local synthetic paths and exact source hashes. Final gate: evidence/local-release.json; preceding runs are separately scoped. Live GitHub and independent external review are not inferred.
+
+## Enterprise extension, 2026-11-17
+
+The new tests are collected by the existing native verifier; there are70 Enterprise cases in addition to the180 previous passing native cases. Exact-source counts and final release status must be read from the current evidence, not inferred from this inventory. The separate installed Enterprise verifier and actual restore packet cover boundaries the small native fixtures cannot establish.
+
+| ID | Required behavior | Executed path / limitation |
+|---|---|---|
+| E01 | Bound signed OIDC code exchange; wrong identity/state/claims cannot log in | identity.test.ts, identity-policy.test.ts and full-http.test.ts; installed real token/JWKS exchange in verify-enterprise; synthetic IdP only |
+| E02 | No ordinary password/recovery authority under SSO; explicit emergency identity distinct | Account-policy/application/UI tests and actual installed password refusal in restore-acceptance; real emergency custody/MFA exercise remains open |
+| E03 | Stale signed MFA cannot authorize new control mutation | Full HTTPS session remains readable but new agent creation returns401 with unchanged count; configured auth_time limit, not proof of physical MFA |
+| E04 | SCIM bounded bearer, mappings, revisions, ETags, offboarding and pending-login invalidation | Native identity/full HTTP plus actual installed Next/HTTPS/PostgreSQL SCIM; real customer SCIM client subset acceptance remains open |
+| E05 | Agent cannot access Enterprise routes, secrets or network | Application/egress/config tests plus five installed direct-IP probes and secret mount checks; host/daemon attacks excluded |
+| E06 | Audit delivery preserves stable IDs and acknowledges durably without raw payloads |23 audit-delivery tests including actual local sink/crash/restart; installed sink ACK and control restart; external sink durability unverified |
+| E07 | Backup/restore cannot remove required SSO |8 restore-authority regressions plus actual authenticated PostgreSQL cold backup, stopped restore and read-only recovery observer; restored IdP/sink resumption and off-host recovery remain open |
+| E08 | Copy/retention/health/signature tools report real failures and refuse unsafe filesystem or trust inputs |10 operations/signing tests on actual temporary files, encryption, Ed25519 and HTTP/certificate failures; no organizational signing identity or scheduled/off-host operation implied |
+| E09 | Installed browser exposes organization sign-in and removes unsupported local identity controls | Static UI regressions plus actual installed Playwright smoke, zero browser errors; browser stops at synthetic IdP navigation, Node path completes signed exchange separately |
+| E10 | Short concurrency profile preserves target counts, replay and denial behavior |432 actual HTTP requests at concurrency1/4/8 with real OPA and separate observed fixture; not production PostgreSQL load or an SLA |
+
+Current detailed evidence: enterprise-work/container.md, enterprise-work/restore-acceptance.md, enterprise-work/capacity.md and enterprise-work/REVIEW.md. The last is an agent review, not human certification. The original product matrix follows.
+
+Expanded measurement (2026-11-17): `npm run verify:benchmark` includes the existing isolated boundary/target checks and 208 prelabelled parameter cases with actual direct baseline and target-state comparisons. `benchmark-metrics.test.ts` rejects hidden baseline failure, separates withheld output from prevention/completion, preserves per-kind rates and distinguishes measurement success from the <2% usability target. Timings for full task/submit/automatic approval are distinct from policy latency and unmeasured human wait. Frozen corpus and source hashes accompany the isolation report. Runtime production code is unchanged by this expansion.
 
 | ID | Required behavior | Local evidence path / external gap |
 |---|---|---|
@@ -81,3 +112,10 @@ P01–P08 are local acceptance only when final source hashes/results match. Exte
 
 Commands/results for these cases are in PLAN_COMMERCIAL_READINESS.md and SECURITY_EVIDENCE.md. New test presence alone does not mean PASS. GH01–08 live cases remain NOT RUN in GITHUB_SANDBOX_VALIDATION.md; independent Linux T29 remains open.
 
+
+
+Commercial continuation 2026-11-17: `evidence/coding-workflow-assessment.json` preserves two incomplete actual Codex coding cohorts on e972. Both read actual Git code, observed a failing local test, corrected the file and passed an independent eight-case check. Neither completed the required PR flow. Two-phase repeated previews consumed the unchanged20-call quota; four-phase execution skipped branch creation despite CLI exit0. The harness incorrectly advanced and the Git mock preview did not require an existing branch. The approved request returned UNKNOWN; the second historical attempt lacks a post-failure independent target snapshot and is not relabeled not-applied. Both disposable projects and known-credential scans passed cleanup.
+
+Git preview repair evidence is `evidence/git-preview-precondition/`: RED missing expected rejection; first full Git run16pass/1fail exposed an older diff-preview test missing the now-required branch setup; the test now creates the branch before measuring readonly preview. GREEN17pass/0fail plus TypeScript/build. Preview and execution reuse the same branch/base/used-state check under the existing serialized adapter. The real GitHub adapter already checks that prerequisite. Added actual MCP/Gateway regression must observe blocked/preview-unavailable, zero execution calls, unchanged Git/DB and409 on attempted approval. Final full release proof is recorded separately after execution.
+
+The experimental coding harness now requires actual matching allowed action IDs before advancing a phase and tries an independent failure snapshot before fixture cleanup. Those harness corrections are not a third successful model run. Mock PR uses open/mock fields, not the live provider Draft flag; the diagnostic assertion was corrected to the actual declared fixture contract. Repeated prompt-only retries were stopped; model capability/profile remains an open engineering acceptance condition.

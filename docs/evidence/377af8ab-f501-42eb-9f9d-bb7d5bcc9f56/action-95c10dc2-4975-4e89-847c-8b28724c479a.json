@@ -1,0 +1,43 @@
+{
+  "status": 200,
+  "body": {
+    "id": "95c10dc2-4975-4e89-847c-8b28724c479a",
+    "agentId": "38bed2d3-0e4a-46e7-bb8c-5f3df172ec6a",
+    "requestId": "0f266183-f661-4a7d-8fb3-841d880aaf7b",
+    "tool": "database_read",
+    "digest": "7074f324e00c25017d02cb94b881c6a7f092c3c9deab63aee4da7807ab61c00e",
+    "destination": "698dd8b58207c9d97f1c9e05e3d653c496e0bc5931cfd63460992da64029df66",
+    "correlationId": "49729a93-5402-4456-8a30-d937b291fd38",
+    "grantId": "4ca2f8b0-48c6-441a-afaa-795d711a1572",
+    "grantFingerprint": "7f4ceb0cc11410060be0b4de88d2f0ffec79bf0196198ec1354d5d37d4db5cfa",
+    "policyRevision": 1,
+    "policyDecisionId": "fa6bec92-c51a-4797-92a7-3621a055d154",
+    "policyVersion": "stage2.v1",
+    "policyHash": "9ac719fef979ee7b37c5c5ef3173621453782a0a02d432727391beeff1234d14",
+    "policyEffect": "ALLOW",
+    "arguments": {
+      "limit": 1
+    },
+    "status": "allowed",
+    "rule": "approved-reads",
+    "reason": "Executed through the enforced gateway.",
+    "resource": "customers",
+    "sandbox": true,
+    "createdAt": "2026-11-17T07:15:27.150Z",
+    "expiresAt": "2026-11-17T07:30:27.150Z",
+    "durationMs": 37.1,
+    "executionOutcome": "adapter-reported",
+    "resultDisclosure": "released",
+    "result": {
+      "rows": [
+        {
+          "id": 1,
+          "name": "Acme Studio",
+          "plan": "Enterprise",
+          "status": "active",
+          "version": 0
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "runId": "dd79c148-9aef-4f3c-88e2-e65d9a27b7d5",
+  "sourceHash": "c043156a9a2f69b6d3ddfc0eb6eec315faba38250f8eb38ae2a02f7087f7c999",
+  "startedAt": "2026-11-17T20:01:52.686Z",
+  "result": "FAIL",
+  "cases": [
+    {
+      "name": "compose-boundaries",
+      "result": "PASS",
+      "observed": "Agent has one internal network; GitHub test egress internal; only loopback HTTPS port published."
+    }
+  ],
+  "scope": "Local disposable Docker install with actual TLS/Next/control/Gateway and synthetic App key. GitHub outbound network internal; no real GitHub call or production certificate validation.",
+  "error": "Local Docker command failed (1)",
+  "cleanup": {
+    "result": "PASS",
+    "containers": 0,
+    "volumes": 0,
+    "networks": 0
+  },
+  "finishedAt": "2026-11-17T20:01:54.868Z"
+}

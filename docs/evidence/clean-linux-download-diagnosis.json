@@ -1,0 +1,54 @@
+{
+  "result": "FAIL_ENVIRONMENT_DOWNLOADS",
+  "sourceHash": "c043156a9a2f69b6d3ddfc0eb6eec315faba38250f8eb38ae2a02f7087f7c999",
+  "packageSha256": "f292228b0c036a0f38fcffef1c99eb224b6b0cbc67777f7240bf1f921c0c7dd3",
+  "native": {
+    "result": "PASS_SCOPED",
+    "runId": "7908f64e-f1e8-47e4-9f53-8830867ee1cb",
+    "passed": 283,
+    "failed": 0,
+    "skipped": 4
+  },
+  "failures": [
+    {
+      "label": "isolation",
+      "error": "isolation failed"
+    },
+    {
+      "label": "product",
+      "error": "product failed"
+    },
+    {
+      "label": "service",
+      "error": "service failed"
+    },
+    {
+      "label": "candidate",
+      "error": "candidate failed"
+    },
+    {
+      "label": "enterprise",
+      "error": "enterprise failed"
+    },
+    {
+      "label": "security",
+      "error": "security failed"
+    }
+  ],
+  "observed": "Docker layer fetches closed with unexpected EOF before application execution; isolated6 gates failed at image preparation.",
+  "proxyCapacityReproduction": {
+    "connections": 25,
+    "earlyClosed": 1,
+    "remaining": 24,
+    "upstreamRequests": 0
+  },
+  "cause": "CONFIRMED_FOR_THE_DIAGNOSTIC_CONTINUATION: instrumented VM traffic reached24 active connections and recorded an explicit connection-cap-drop, matching the scanner/image EOF. The first failed run lacked this telemetry and remains historical. Raising only the local public-dependency proxy cap to128 removed the drop; host/IP/method restrictions were unchanged.",
+  "remediation": {
+    "normalProbe": "25 requested,25 connected,0 early closed",
+    "boundaryProbe": "129 requested,128 remained,1 early closed",
+    "protectedTargets": "GitHub API, OpenAI API and private loopback CONNECT remained HTTP403",
+    "finalPackageEvidence": "docs/evidence/clean-linux-final-package-acceptance.json",
+    "finalOutcome": "Pinned public scanner image downloaded; exact-package Ubuntu isolation, product, service, candidate, Enterprise and corrected security gates passed."
+  },
+  "limits": "The final result is a separate Ubuntu guest on the same physical host with reused public caches, not a cold-cache or independent customer-host result."
+}

@@ -1,11 +1,9 @@
 name: ${COMPOSE_PROJECT_NAME:?Use scripts/product.mjs}
 x-runtime: &runtime
   image: ${COMPOSE_PROJECT_NAME}-runtime
-  build:
-    context: ../..
-    dockerfile: ${RUNTIME_DOCKERFILE:-infra/local/Dockerfile}
-    args: { NODE_IMAGE: "${NODE_IMAGE:?Pinned node image required}" }
+  pull_policy: never
   user: "1000:1000"
+  group_add: ["${PRODUCT_RUNTIME_GID:-1000}"]
   read_only: true
   cap_drop: [ALL]
   security_opt: [no-new-privileges:true]
@@ -85,8 +83,12 @@ services:
     labels: { com.agentbrake.product: "${INSTALLATION_ID}" }
   control-api:
     <<: *runtime
+    build:
+      context: ../..
+      dockerfile: ${RUNTIME_DOCKERFILE:-infra/local/Dockerfile}
+      args: { NODE_IMAGE: "${NODE_IMAGE:?Pinned node image required}" }
     command: [node, --import, tsx, server/product.ts]
-    environment: { AGENTBRAKE_PRODUCT: "1", AGENTBRAKE_ROLE: control }
+    environment: { AGENTBRAKE_PRODUCT: "1", AGENTBRAKE_ROLE: control, AGENTBRAKE_ENTERPRISE_REQUIRED: "${ENTERPRISE_REQUIRED:-0}", AGENTBRAKE_ENTERPRISE_IDENTITY_REQUIRED: "${ENTERPRISE_IDENTITY_REQUIRED:-0}" }
     networks: [dashboard, control]
     volumes:
       - ${INSTALL_DIR}/operators.json:/run/secrets/operators.json:ro
@@ -153,6 +155,7 @@ services:
   opa:
     image: ${OPA_IMAGE}
     user: "1000:1000"
+    group_add: ["${PRODUCT_RUNTIME_GID:-1000}"]
     read_only: true
     cap_drop: [ALL]
     security_opt: [no-new-privileges:true]
@@ -179,6 +182,7 @@ services:
   control-db:
     image: ${POSTGRES_IMAGE}
     user: postgres
+    group_add: ["${PRODUCT_RUNTIME_GID:-1000}"]
     read_only: true
     cap_drop: [ALL]
     security_opt: [no-new-privileges:true]
@@ -203,7 +207,7 @@ services:
       ["/var/run/postgresql:uid=70,gid=70,mode=0770", "/tmp:size=32m,mode=1777"]
     depends_on: { volume-init: { condition: service_completed_successfully } }
     healthcheck:
-      test: [CMD, pg_isready, -U, control_owner, -d, agentbrake_control_fixture]
+      test: [CMD, pg_isready, -h, 127.0.0.1, -U, control_owner, -d, agentbrake_control_fixture]
       interval: 3s
       timeout: 2s
       retries: 40
@@ -211,6 +215,7 @@ services:
   target-db:
     image: ${POSTGRES_IMAGE}
     user: postgres
+    group_add: ["${PRODUCT_RUNTIME_GID:-1000}"]
     read_only: true
     cap_drop: [ALL]
     security_opt: [no-new-privileges:true]
@@ -236,7 +241,7 @@ services:
       ["/var/run/postgresql:uid=70,gid=70,mode=0770", "/tmp:size=32m,mode=1777"]
     depends_on: { volume-init: { condition: service_completed_successfully } }
     healthcheck:
-      test: [CMD, pg_isready, -U, fixture_owner, -d, agentbrake_target_fixture]
+      test: [CMD, pg_isready, -h, 127.0.0.1, -U, fixture_owner, -d, agentbrake_target_fixture]
       interval: 3s
       timeout: 2s
       retries: 40

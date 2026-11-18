@@ -1,0 +1,40 @@
+{
+  "runId": "1ccf8787-c638-460b-b9bf-b57d01806ad6",
+  "sourceHash": "8710c17580dd07e7dfe96e0894505a75026825daadcf86aa010b10463045115c",
+  "startedAt": "2026-11-17T14:06:47.845Z",
+  "result": "FAIL",
+  "cases": [
+    {
+      "name": "managed-owner-bootstrap",
+      "result": "PASS",
+      "observed": "Production HTTPS/Next/control/PostgreSQL managed-account bootstrap completed before enabling enterprise mode."
+    },
+    {
+      "name": "compose-enterprise-isolation",
+      "result": "PASS",
+      "observed": "Control/agent/protected/dashboard/enterprise networks internal; existing dedicated publication bridge joins only fixed ingress, with only loopback port published; enterprise secret only control, fixture secret only fixture."
+    }
+  ],
+  "scope": "Disposable minimal Docker installation; synthetic TLS IdP and audit sink; internal control/agent/enterprise networks with existing dedicated fixed-ingress publication bridge; real customer acceptance excluded.",
+  "failure": {
+    "stage": "enterprise-start",
+    "message": "Local Docker command failed (1)"
+  },
+  "cleanup": {
+    "result": "PASS",
+    "containers": 0,
+    "volumes": 0,
+    "networks": 0,
+    "scopedFilesRemoved": true
+  },
+  "finishedAt": "2026-11-17T14:07:56.539Z",
+  "secretScan": {
+    "result": "PASS",
+    "knownValuesChecked": 31,
+    "artifacts": [
+      "enterprise-summary.json",
+      "source-manifest.json",
+      "enterprise-evidence.json.gz"
+    ]
+  }
+}

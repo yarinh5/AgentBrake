@@ -69,6 +69,26 @@ test('safe result, denial, post-dispatch rejection and uncertain mutation have d
   } finally { await s.close(); }
 });
 
+test('the exact public example marker is released in an otherwise safe adapter result', async () => {
+  const s = fixture();
+  try {
+    const execute = s.gateway.connectors.execute.bind(s.gateway.connectors);
+    s.gateway.connectors.execute = async a => ({
+      ...(await execute(a) as object),
+      documentation: 'api_key=example-only-placeholder',
+    });
+    const action = await s.gateway.submit(s.agent.id, {
+      requestId: randomUUID(),
+      tool: 'database_read',
+      arguments: { limit: 1 },
+    });
+    assert.equal(action.status, 'allowed');
+    assert.equal(action.executionOutcome, 'adapter-reported');
+    assert.equal(action.resultDisclosure, 'released');
+    assert.equal((action.result as { documentation: string }).documentation, 'api_key=example-only-placeholder');
+  } finally { await s.close(); }
+});
+
 test('legacy blocked secret output remains uncertain, not rewritten as a proven success', async () => {
   const s = fixture();
   try {

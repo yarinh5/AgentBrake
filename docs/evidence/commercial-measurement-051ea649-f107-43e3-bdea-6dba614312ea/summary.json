@@ -1,0 +1,44 @@
+{
+  "id": "051ea649-f107-43e3-bdea-6dba614312ea",
+  "at": "2026-11-17T10:35:06.431Z",
+  "sourceHash": "88939fe7d7ea74692f70ca64887c2b3d0169015074ed5b670170906a1547d3f3",
+  "result": "PASS_OFFLINE_TOOLING_ONLY",
+  "checks": [
+    {
+      "name": "freeze",
+      "expectedExit": 0,
+      "exitCode": 0,
+      "stdout": "{\"command\":\"freeze\",\"result\":\"WRITTEN\"}\n",
+      "stderr": ""
+    },
+    {
+      "name": "small-sample",
+      "expectedExit": 2,
+      "exitCode": 2,
+      "stdout": "{\"command\":\"evaluate\",\"result\":\"INSUFFICIENT_SAMPLE\",\"pilotAdmission\":\"NOT_ASSESSED\"}\n",
+      "stderr": ""
+    },
+    {
+      "name": "no-overwrite",
+      "expectedExit": 1,
+      "exitCode": 1,
+      "stdout": "",
+      "stderr": "Pilot measurement refused: check bounded input schema, frozen-plan binding and a new output path. No input contents logged.\n"
+    },
+    {
+      "name": "cost",
+      "expectedExit": 0,
+      "exitCode": 0,
+      "stdout": "{\"command\":\"cost\",\"result\":\"WRITTEN\"}\n",
+      "stderr": ""
+    }
+  ],
+  "hashes": {
+    "input-plan.json": "c2df58cc4e9152a24521b7fc8bcf0d6126f5d29f8f53724e241f42526faf1410",
+    "frozen.json": "ef9b1e25eb7cbbaa7a47dfea4c61c38dadc09aa968bd1ffc8730f7472cead895",
+    "observations.json": "b4945fc8164942985ee57c68f47d7adafd313839cf63bf5cd61b5ac3c418ff84",
+    "report.json": "fe11815ffda4856df8c3b6a88817e5b58e4f1c728b8fbf759fccc5def5fff7e8",
+    "cost.json": "dd21151947581d17a259a19508aa7bc951ddc2a58f0ba06f32187a5a0482c934"
+  },
+  "scope": "Invented synthetic rows exercise actual CLI; no agent/target execution or measured customer ROI. Sample is intentionally insufficient; pilotAdmission NOT_ASSESSED. No production or installed-service changes."
+}

@@ -23,6 +23,8 @@ import { mountControlExperience } from "./control-experience.js";
 import type { GatewayPort } from "./gateway-port.js";
 import type { LocalTelemetry } from "./telemetry.js";
 import { ManagedAccounts } from "./security/accounts.js";
+import { mountEnterpriseIdentity, validateEnterpriseIdentityConfig, type EnterpriseIdentityConfig } from './security/enterprise-identity.js';
+import type { AuditDelivery } from './enterprise/audit-delivery.js';
 export function createApp<
   S extends ControlStore = Store,
   G extends GatewayPort = Gateway,
@@ -38,6 +40,9 @@ export function createApp<
   operators?: OperatorCredential[];
   managedAccounts?: boolean;
   secureCookies?: boolean;
+  enterpriseIdentity?: EnterpriseIdentityConfig;
+  enterpriseTransport?: typeof fetch;
+  auditDelivery?: AuditDelivery;
   surface?: "combined" | "control" | "gateway";
   gateway?: G;
   telemetry?: LocalTelemetry;
@@ -45,6 +50,10 @@ export function createApp<
 }) {
   if (options.adminKey.length < 24)
     throw new Error("ADMIN_KEY must contain at least 24 characters");
+  if (options.enterpriseIdentity && (!options.managedAccounts || options.surface === 'gateway'))
+    throw Error('Enterprise identity requires managed control accounts');
+  if (options.auditDelivery && options.surface === 'gateway') throw Error('Audit delivery belongs to the control surface');
+  const enterprise = options.enterpriseIdentity ? validateEnterpriseIdentityConfig(options.enterpriseIdentity) : undefined;
   const store = (options.store ?? new Store(options.databasePath)) as S;
   const connectors = new Connectors(
     store,
@@ -78,7 +87,7 @@ export function createApp<
   if (options.managedAccounts && options.surface === "gateway")
     throw Error("Gateway cannot enable managed accounts");
   const accounts = options.managedAccounts
-    ? new ManagedAccounts(store, legacyIdentities)
+    ? new ManagedAccounts(store, legacyIdentities, enterprise ? {ssoRequired:true,breakGlassAccountId:enterprise.breakGlassAccountId} : undefined)
     : undefined;
   const identities = accounts ?? legacyIdentities;
   const sessionCookie = (token: string, seconds: number) =>
@@ -132,6 +141,8 @@ export function createApp<
   app.get("/api/health", (_req, res) =>
     res.json({ status: "ok", version: "0.3.0-rc.1" }),
   );
+  const federation = enterprise ? mountEnterpriseIdentity(app, {store,accounts:accounts!,legacy:legacyIdentities,config:enterprise,secureCookies:options.secureCookies,sessionCookie,transport:options.enterpriseTransport}) : undefined;
+  if (!federation) app.get('/api/enterprise/auth', (_req,res)=>res.json({enabled:false}));
   app.post("/api/login", async (req, res) => {
     loginAttempts = loginAttempts.filter((t) => t > Date.now() - 60_000);
     if (loginAttempts.length >= 15)
@@ -158,6 +169,7 @@ export function createApp<
       csrfToken: session.csrfToken,
       teamMode: identities.team,
       authMode: session.authMode,
+      assurance: session.assurance,
     });
   });
   const access =
@@ -172,12 +184,18 @@ export function createApp<
           throw new HttpError(403, "Tenant access denied");
         if (roles.length && !roles.includes(session.actor.role))
           throw new HttpError(403, "Operator role does not permit this action");
+        if (enterprise && session.assurance?.method === 'oidc' && !["GET", "HEAD", "OPTIONS"].includes(req.method) && req.path !== '/api/logout') {
+          const authenticatedAt=session.assurance.authTime;
+          if(typeof authenticatedAt!=='number'||Date.now()/1000-authenticatedAt>enterprise.maxAuthAgeSeconds)
+            throw new HttpError(401,'Fresh organization verification required before changing control state. Sign in again.');
+        }
         if (!["GET", "HEAD", "OPTIONS"].includes(req.method))
           identities.checkCsrf(session, req.headers["x-ab-csrf"]);
         res.locals.actor = session.actor;
         res.locals.csrfToken = session.csrfToken;
         res.locals.session = session;
         res.locals.authMode = session.authMode;
+        res.locals.assurance = session.assurance;
         next();
       } catch (error) {
         next(error);
@@ -187,6 +205,7 @@ export function createApp<
     manage = access("administrator", "operator"),
     configure = access("administrator"),
     approve = access("administrator", "approver");
+  app.get('/api/enterprise/status', configure, (_req,res)=>res.json({identityEnabled:!!enterprise,auditDelivery:options.auditDelivery?.status() ?? {enabled:false}}));
   const auditContext = (res: express.Response): AuditContext => {
     const actor = res.locals.actor as OperatorIdentity;
     return {
@@ -201,6 +220,7 @@ export function createApp<
       csrfToken: res.locals.csrfToken,
       teamMode: identities.team,
       authMode: res.locals.authMode,
+      assurance: res.locals.assurance,
     }),
   );
   app.post("/api/logout", admin, async (req, res) => {
@@ -224,7 +244,7 @@ export function createApp<
     if(loginAttempts.length>=15) throw new HttpError(429,"Too many attempts. Try again in one minute.");
     loginAttempts.push(Date.now());
   };
-  app.get("/api/setup", async (_req,res)=>res.json(accounts ? await accounts.status() : {managed:false,initialized:false}));
+  app.get("/api/setup", async (_req,res)=>res.json({...accounts ? await accounts.status() : {managed:false,initialized:false},...(enterprise?{enterprise:{enabled:true,providerLabel:enterprise.providerLabel??'Organization SSO',breakGlassEnabled:!!enterprise.breakGlassAccountId}}:{})}));
   app.post("/api/setup",async(req,res)=>{
     credentialAttempt();
     accountSession(res,await managed().setup(req.body));
@@ -606,8 +626,11 @@ export function createApp<
     app,
     store,
     gateway,
+    enterpriseReady: async () => { await federation?.validateReady(); },
     close: async () => {
       for (const client of clients) client.end();
+      federation?.close();
+      await options.auditDelivery?.close();
       await closeMcp();
       await connectors.close();
       await store.close();

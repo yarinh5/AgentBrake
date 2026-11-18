@@ -1,0 +1,14 @@
+{
+  "at": "2026-11-17T17:33:18.921Z",
+  "result": "PASS_UNRELEASED_REVIEW_PACKAGE_INTEGRITY",
+  "releaseStatus": "BLOCKED_DEPENDENCY_SECURITY",
+  "productionStatus": "BLOCKED",
+  "humanReview": "NOT_RUN",
+  "sourceHash": "3ea2c8eb9d847d6213333172121d0e235fb0ef0e4efe44946108d0f4e18fb0c6",
+  "archive": "F:\\project love\\AgentBrake\\.agentbrake-local\\releases\\agentbrake-UNRELEASED-linux-review-3ea2c8eb9d84-fecee3cd.tar.gz",
+  "sha256": "7bc51ec9b3c09e9cd41c571ae861604dc6289f61845d5f4473ed7583eab9948d",
+  "bytes": 8228655,
+  "fileCount": 888,
+  "scan": "Limited full private-key block and GitHub-token patterns; not universal DLP",
+  "scope": "Current local source and selected historical/current reports; not a release or independent security sign-off. No runtime data, backups, installed credentials, App PEM or model weights included."
+}

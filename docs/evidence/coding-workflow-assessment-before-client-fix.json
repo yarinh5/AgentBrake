@@ -1,0 +1,66 @@
+{
+  "at": "2026-11-17T18:24:58.989Z",
+  "result": "INCOMPLETE_USEFUL_WORKFLOW",
+  "sourceHash": "e9722202db98dfa5804f39c12f8761455f62cb08e1c44c303455b93a08aa3677",
+  "model": "Qwen3:4b-instruct pinned existing local model, gpu-8k",
+  "cli": "0.169.0",
+  "attempts": [
+    {
+      "run": "91ef973d-5d1b-4844-8165-306068939cba",
+      "result": "FAIL",
+      "coding": {
+        "syntaxScopeAccepted": true,
+        "exitCode": 0,
+        "stdout": "8 clamp cases passed\n",
+        "stderr": ""
+      },
+      "codingMs": 78063,
+      "writeMs": 226543,
+      "cause": "Repeated preview calls consumed unchanged20-call grant; actual branch creation approved, no PR; model final statement incorrectly denied branch creation. Backend evidence prevails.",
+      "effectsObserved": {
+        "branchAdded": 1,
+        "prAdded": 0
+      },
+      "limits": "No unauthorized write claim beyond compared snapshots; model loop root cause not independently proven."
+    },
+    {
+      "run": "e9fba757-6ba0-410c-81e4-75a92e1e7d23",
+      "result": "FAIL",
+      "coding": {
+        "syntaxScopeAccepted": true,
+        "exitCode": 0,
+        "stdout": "8 clamp cases passed\n",
+        "stderr": ""
+      },
+      "codingMs": 27479,
+      "phases": [
+        {
+          "phase": 2,
+          "exit": 0,
+          "elapsedMs": 18964,
+          "timedOut": false
+        },
+        {
+          "phase": 3,
+          "exit": 0,
+          "elapsedMs": 13966,
+          "timedOut": false
+        },
+        {
+          "phase": 4,
+          "exit": 0,
+          "elapsedMs": 21577,
+          "timedOut": false
+        }
+      ],
+      "causes": [
+        "Phase3 emitted no tool call despite exit0, hallucinating unavailable request_user_input.",
+        "Harness advanced on exit0 instead of completed-action proof.",
+        "Local Git preview failed to require existing feature branch; approval then returned UNKNOWN when execution found missing branch."
+      ],
+      "observation": "UNKNOWN has no independent post-failure target snapshot in this historical attempt; do not relabel it not-applied or claim zero effects. Disposable project removed during verified cleanup."
+    }
+  ],
+  "change": "Stop repeated prompt-only retries. Harden harness phase completion and failure observation; reproduce/fix Git preview precondition with direct and actual Gateway regressions. No model/profile success claimed.",
+  "remaining": "Useful complete coding-to-mock-PR not achieved; local exact-content path requires a capable verified model/client profile and target-linked replay/denial acceptance. Live GitHub remains separate authorized gate."
+}

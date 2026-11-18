@@ -1,0 +1,12 @@
+{
+  "id": "fff0d095-aa45-4289-b996-ecdd454469d4",
+  "startedAt": "2026-11-17T10:26:47.793Z",
+  "result": "FAIL",
+  "source": "https://cloud-images.ubuntu.com/releases/noble/release/",
+  "filename": "noble-server-cloudimg-amd64.ova",
+  "fingerprint": "D2EB44626FDDC30B513D5BB71A5D6C4C7DB87C81",
+  "verificationReference": "https://ubuntu.com/docs/public-images/public-images-how-to/verify-image-checksum/",
+  "scope": "Official Ubuntu24.04 cloud image public download and signature/checksum preparation only. No VM created or started; no installer, customer data, private credentials, paid service or Production access.",
+  "error": "gpgv: keyblock resource 'F:\\\\project love\\\\AgentBrake\\\\.tools\\\\ubuntu-validation-fff0d095-aa45-4289-b996-ecdd454469d4\\\\gnupg/F:\\\\project love\\\\AgentBrake\\\\.tools\\\\ubuntu-validation-fff0d095-aa45-4289-b996-ecdd454469d4\\\\public-only.gpg': No such file or directory\ngpgv: Signature made Sat Oct 17 23:33:10 2026    \ngpgv:                using RSA key D2EB44626FDDC30B513D5BB71A5D6C4C7DB87C81\ngpgv: Can't check signature: No public key\n\n\n2 !== 0\n",
+  "finishedAt": "2026-11-17T10:26:48.800Z"
+}

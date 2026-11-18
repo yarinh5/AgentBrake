@@ -1,0 +1,822 @@
+[
+  {
+    "scenario": "allowed-read",
+    "result": "PASS",
+    "status": "allowed",
+    "upstreamCalls": 1,
+    "beforeApprovalCalls": 1,
+    "targetBefore": {
+      "customers": [
+        {
+          "id": 1,
+          "name": "Acme Studio",
+          "plan": "Enterprise",
+          "status": "active",
+          "version": 0
+        },
+        {
+          "id": 2,
+          "name": "Orbit Labs",
+          "plan": "Growth",
+          "status": "active",
+          "version": 0
+        },
+        {
+          "id": 3,
+          "name": "Northstar",
+          "plan": "Enterprise",
+          "status": "active",
+          "version": 0
+        },
+        {
+          "id": 4,
+          "name": "Forma Design",
+          "plan": "Starter",
+          "status": "active",
+          "version": 0
+        }
+      ],
+      "issues": []
+    },
+    "targetAfter": {
+      "customers": [
+        {
+          "id": 1,
+          "name": "Acme Studio",
+          "plan": "Enterprise",
+          "status": "active",
+          "version": 0
+        },
+        {
+          "id": 2,
+          "name": "Orbit Labs",
+          "plan": "Growth",
+          "status": "active",
+          "version": 0
+        },
+        {
+          "id": 3,
+          "name": "Northstar",
+          "plan": "Enterprise",
+          "status": "active",
+          "version": 0
+        },
+        {
+          "id": 4,
+          "name": "Forma Design",
+          "plan": "Starter",
+          "status": "active",
+          "version": 0
+        }
+      ],
+      "issues": []
+    },
+    "beforeHash": "8979f16bc46018f2b93ca5a8445a887e783db84dfb060e719258a13411d238a4",
+    "afterHash": "8979f16bc46018f2b93ca5a8445a887e783db84dfb060e719258a13411d238a4",
+    "correlationId": "d583e16a-8d36-4e91-8a25-a83413b00f73",
+    "decisionId": "2ef29ca3-827d-419b-9a0b-6d072e5c4c0e",
+    "policyHash": "9ac719fef979ee7b37c5c5ef3173621453782a0a02d432727391beeff1234d14",
+    "policyRevision": 1,
+    "grantId": "8ed57033-fbe7-469a-b7f0-455e0ff968a1",
+    "rule": "approved-reads",
+    "auditChainValid": true
+  },
+  {
+    "scenario": "expired-grant",
+    "result": "PASS",
+    "status": "blocked",
+    "upstreamCalls": 0,
+    "beforeApprovalCalls": 0,
+    "targetBefore": {
+      "customers": [
+        {
+          "id": 1,
+          "name": "Acme Studio",
+          "plan": "Enterprise",
+          "status": "active",
+          "version": 0
+        },
+        {
+          "id": 2,
+          "name": "Orbit Labs",
+          "plan": "Growth",
+          "status": "active",
+          "version": 0
+        },
+        {
+          "id": 3,
+          "name": "Northstar",
+          "plan": "Enterprise",
+          "status": "active",
+          "version": 0
+        },
+        {
+          "id": 4,
+          "name": "Forma Design",
+          "plan": "Starter",
+          "status": "active",
+          "version": 0
+        }
+      ],
+      "issues": []
+    },
+    "targetAfter": {
+      "customers": [
+        {
+          "id": 1,
+          "name": "Acme Studio",
+          "plan": "Enterprise",
+          "status": "active",
+          "version": 0
+        },
+        {
+          "id": 2,
+          "name": "Orbit Labs",
+          "plan": "Growth",
+          "status": "active",
+          "version": 0
+        },
+        {
+          "id": 3,
+          "name": "Northstar",
+          "plan": "Enterprise",
+          "status": "active",
+          "version": 0
+        },
+        {
+          "id": 4,
+          "name": "Forma Design",
+          "plan": "Starter",
+          "status": "active",
+          "version": 0
+        }
+      ],
+      "issues": []
+    },
+    "beforeHash": "8979f16bc46018f2b93ca5a8445a887e783db84dfb060e719258a13411d238a4",
+    "afterHash": "8979f16bc46018f2b93ca5a8445a887e783db84dfb060e719258a13411d238a4",
+    "correlationId": "7dd36b76-47ad-4777-b09e-a12025b418cb",
+    "decisionId": "214a90e5-ec5d-4462-b4ce-2cea1f1074c5",
+    "policyHash": "9ac719fef979ee7b37c5c5ef3173621453782a0a02d432727391beeff1234d14",
+    "policyRevision": 1,
+    "grantId": "645e5de5-c5d6-46ac-90b7-a3b3156fd559",
+    "rule": "grant-expired",
+    "auditChainValid": true
+  },
+  {
+    "scenario": "revoked-grant",
+    "result": "PASS",
+    "status": "blocked",
+    "upstreamCalls": 0,
+    "beforeApprovalCalls": 0,
+    "targetBefore": {
+      "customers": [
+        {
+          "id": 1,
+          "name": "Acme Studio",
+          "plan": "Enterprise",
+          "status": "active",
+          "version": 0
+        },
+        {
+          "id": 2,
+          "name": "Orbit Labs",
+          "plan": "Growth",
+          "status": "active",
+          "version": 0
+        },
+        {
+          "id": 3,
+          "name": "Northstar",
+          "plan": "Enterprise",
+          "status": "active",
+          "version": 0
+        },
+        {
+          "id": 4,
+          "name": "Forma Design",
+          "plan": "Starter",
+          "status": "active",
+          "version": 0
+        }
+      ],
+      "issues": []
+    },
+    "targetAfter": {
+      "customers": [
+        {
+          "id": 1,
+          "name": "Acme Studio",
+          "plan": "Enterprise",
+          "status": "active",
+          "version": 0
+        },
+        {
+          "id": 2,
+          "name": "Orbit Labs",
+          "plan": "Growth",
+          "status": "active",
+          "version": 0
+        },
+        {
+          "id": 3,
+          "name": "Northstar",
+          "plan": "Enterprise",
+          "status": "active",
+          "version": 0
+        },
+        {
+          "id": 4,
+          "name": "Forma Design",
+          "plan": "Starter",
+          "status": "active",
+          "version": 0
+        }
+      ],
+      "issues": []
+    },
+    "beforeHash": "8979f16bc46018f2b93ca5a8445a887e783db84dfb060e719258a13411d238a4",
+    "afterHash": "8979f16bc46018f2b93ca5a8445a887e783db84dfb060e719258a13411d238a4",
+    "correlationId": "1e3640f7-b33d-4db5-8802-33bd0f5653c4",
+    "decisionId": "9d3e215a-67d7-4b50-bd63-06be95e084b5",
+    "policyHash": "9ac719fef979ee7b37c5c5ef3173621453782a0a02d432727391beeff1234d14",
+    "policyRevision": 1,
+    "grantId": "6a615765-3742-4677-a288-2fb7ede7258d",
+    "rule": "grant-revoked",
+    "auditChainValid": true
+  },
+  {
+    "scenario": "unknown-tool",
+    "result": "PASS",
+    "status": "blocked",
+    "upstreamCalls": 0,
+    "beforeApprovalCalls": 0,
+    "targetBefore": {
+      "customers": [
+        {
+          "id": 1,
+          "name": "Acme Studio",
+          "plan": "Enterprise",
+          "status": "active",
+          "version": 0
+        },
+        {
+          "id": 2,
+          "name": "Orbit Labs",
+          "plan": "Growth",
+          "status": "active",
+          "version": 0
+        },
+        {
+          "id": 3,
+          "name": "Northstar",
+          "plan": "Enterprise",
+          "status": "active",
+          "version": 0
+        },
+        {
+          "id": 4,
+          "name": "Forma Design",
+          "plan": "Starter",
+          "status": "active",
+          "version": 0
+        }
+      ],
+      "issues": []
+    },
+    "targetAfter": {
+      "customers": [
+        {
+          "id": 1,
+          "name": "Acme Studio",
+          "plan": "Enterprise",
+          "status": "active",
+          "version": 0
+        },
+        {
+          "id": 2,
+          "name": "Orbit Labs",
+          "plan": "Growth",
+          "status": "active",
+          "version": 0
+        },
+        {
+          "id": 3,
+          "name": "Northstar",
+          "plan": "Enterprise",
+          "status": "active",
+          "version": 0
+        },
+        {
+          "id": 4,
+          "name": "Forma Design",
+          "plan": "Starter",
+          "status": "active",
+          "version": 0
+        }
+      ],
+      "issues": []
+    },
+    "beforeHash": "8979f16bc46018f2b93ca5a8445a887e783db84dfb060e719258a13411d238a4",
+    "afterHash": "8979f16bc46018f2b93ca5a8445a887e783db84dfb060e719258a13411d238a4",
+    "correlationId": "44199f5d-a1de-457a-9a4a-921fdf0e9974",
+    "decisionId": "118416ef-b1f1-4d45-90f2-27d0255b7f7e",
+    "policyHash": "9ac719fef979ee7b37c5c5ef3173621453782a0a02d432727391beeff1234d14",
+    "policyRevision": 1,
+    "grantId": "43afa4cd-c3c6-4ae6-9693-c777fe52a4ca",
+    "rule": "unknown-tool",
+    "auditChainValid": true
+  },
+  {
+    "scenario": "out-of-scope",
+    "result": "PASS",
+    "status": "blocked",
+    "upstreamCalls": 0,
+    "beforeApprovalCalls": 0,
+    "targetBefore": {
+      "customers": [
+        {
+          "id": 1,
+          "name": "Acme Studio",
+          "plan": "Enterprise",
+          "status": "active",
+          "version": 0
+        },
+        {
+          "id": 2,
+          "name": "Orbit Labs",
+          "plan": "Growth",
+          "status": "active",
+          "version": 0
+        },
+        {
+          "id": 3,
+          "name": "Northstar",
+          "plan": "Enterprise",
+          "status": "active",
+          "version": 0
+        },
+        {
+          "id": 4,
+          "name": "Forma Design",
+          "plan": "Starter",
+          "status": "active",
+          "version": 0
+        }
+      ],
+      "issues": []
+    },
+    "targetAfter": {
+      "customers": [
+        {
+          "id": 1,
+          "name": "Acme Studio",
+          "plan": "Enterprise",
+          "status": "active",
+          "version": 0
+        },
+        {
+          "id": 2,
+          "name": "Orbit Labs",
+          "plan": "Growth",
+          "status": "active",
+          "version": 0
+        },
+        {
+          "id": 3,
+          "name": "Northstar",
+          "plan": "Enterprise",
+          "status": "active",
+          "version": 0
+        },
+        {
+          "id": 4,
+          "name": "Forma Design",
+          "plan": "Starter",
+          "status": "active",
+          "version": 0
+        }
+      ],
+      "issues": []
+    },
+    "beforeHash": "8979f16bc46018f2b93ca5a8445a887e783db84dfb060e719258a13411d238a4",
+    "afterHash": "8979f16bc46018f2b93ca5a8445a887e783db84dfb060e719258a13411d238a4",
+    "correlationId": "9257c78d-be88-45f9-a2e1-a5919f040f6b",
+    "decisionId": "b85e2c31-1618-4abb-8ce2-6d2109e303fa",
+    "policyHash": "9ac719fef979ee7b37c5c5ef3173621453782a0a02d432727391beeff1234d14",
+    "policyRevision": 1,
+    "grantId": "896ef4e0-b7bf-4aec-8336-c9ba90d07d62",
+    "rule": "resource-scope",
+    "auditChainValid": true
+  },
+  {
+    "scenario": "unavailable-pdp",
+    "result": "PASS",
+    "status": "blocked",
+    "upstreamCalls": 0,
+    "beforeApprovalCalls": 0,
+    "targetBefore": {
+      "customers": [
+        {
+          "id": 1,
+          "name": "Acme Studio",
+          "plan": "Enterprise",
+          "status": "active",
+          "version": 0
+        },
+        {
+          "id": 2,
+          "name": "Orbit Labs",
+          "plan": "Growth",
+          "status": "active",
+          "version": 0
+        },
+        {
+          "id": 3,
+          "name": "Northstar",
+          "plan": "Enterprise",
+          "status": "active",
+          "version": 0
+        },
+        {
+          "id": 4,
+          "name": "Forma Design",
+          "plan": "Starter",
+          "status": "active",
+          "version": 0
+        }
+      ],
+      "issues": []
+    },
+    "targetAfter": {
+      "customers": [
+        {
+          "id": 1,
+          "name": "Acme Studio",
+          "plan": "Enterprise",
+          "status": "active",
+          "version": 0
+        },
+        {
+          "id": 2,
+          "name": "Orbit Labs",
+          "plan": "Growth",
+          "status": "active",
+          "version": 0
+        },
+        {
+          "id": 3,
+          "name": "Northstar",
+          "plan": "Enterprise",
+          "status": "active",
+          "version": 0
+        },
+        {
+          "id": 4,
+          "name": "Forma Design",
+          "plan": "Starter",
+          "status": "active",
+          "version": 0
+        }
+      ],
+      "issues": []
+    },
+    "beforeHash": "8979f16bc46018f2b93ca5a8445a887e783db84dfb060e719258a13411d238a4",
+    "afterHash": "8979f16bc46018f2b93ca5a8445a887e783db84dfb060e719258a13411d238a4",
+    "correlationId": "377cdd58-f86e-4ba9-ac09-9078c8723e2e",
+    "decisionId": "0174b973-b58a-468a-a336-7400ba28a889",
+    "policyHash": "9ac719fef979ee7b37c5c5ef3173621453782a0a02d432727391beeff1234d14",
+    "policyRevision": 1,
+    "grantId": "1340a2a3-2f00-451a-b1bd-027bc9e4f347",
+    "rule": "pdp-unavailable",
+    "auditChainValid": true
+  },
+  {
+    "scenario": "approval-pending",
+    "result": "PASS",
+    "status": "pending",
+    "upstreamCalls": 0,
+    "beforeApprovalCalls": 0,
+    "targetBefore": {
+      "customers": [
+        {
+          "id": 1,
+          "name": "Acme Studio",
+          "plan": "Enterprise",
+          "status": "active",
+          "version": 0
+        },
+        {
+          "id": 2,
+          "name": "Orbit Labs",
+          "plan": "Growth",
+          "status": "active",
+          "version": 0
+        },
+        {
+          "id": 3,
+          "name": "Northstar",
+          "plan": "Enterprise",
+          "status": "active",
+          "version": 0
+        },
+        {
+          "id": 4,
+          "name": "Forma Design",
+          "plan": "Starter",
+          "status": "active",
+          "version": 0
+        }
+      ],
+      "issues": []
+    },
+    "targetAfter": {
+      "customers": [
+        {
+          "id": 1,
+          "name": "Acme Studio",
+          "plan": "Enterprise",
+          "status": "active",
+          "version": 0
+        },
+        {
+          "id": 2,
+          "name": "Orbit Labs",
+          "plan": "Growth",
+          "status": "active",
+          "version": 0
+        },
+        {
+          "id": 3,
+          "name": "Northstar",
+          "plan": "Enterprise",
+          "status": "active",
+          "version": 0
+        },
+        {
+          "id": 4,
+          "name": "Forma Design",
+          "plan": "Starter",
+          "status": "active",
+          "version": 0
+        }
+      ],
+      "issues": []
+    },
+    "beforeHash": "8979f16bc46018f2b93ca5a8445a887e783db84dfb060e719258a13411d238a4",
+    "afterHash": "8979f16bc46018f2b93ca5a8445a887e783db84dfb060e719258a13411d238a4",
+    "correlationId": "328d4af0-8c50-499c-bd7f-79bb3c4a3276",
+    "decisionId": "4ef40ae5-dd9a-45ed-936b-1276e12a5533",
+    "policyHash": "9ac719fef979ee7b37c5c5ef3173621453782a0a02d432727391beeff1234d14",
+    "policyRevision": 1,
+    "grantId": "42ff9fe0-7d4d-4fbe-aae5-2d518eea18cb",
+    "rule": "database-writes",
+    "auditChainValid": true
+  },
+  {
+    "scenario": "approved-once",
+    "result": "PASS",
+    "status": "allowed",
+    "upstreamCalls": 1,
+    "beforeApprovalCalls": 0,
+    "targetBefore": {
+      "customers": [
+        {
+          "id": 1,
+          "name": "Acme Studio",
+          "plan": "Enterprise",
+          "status": "active",
+          "version": 0
+        },
+        {
+          "id": 2,
+          "name": "Orbit Labs",
+          "plan": "Growth",
+          "status": "active",
+          "version": 0
+        },
+        {
+          "id": 3,
+          "name": "Northstar",
+          "plan": "Enterprise",
+          "status": "active",
+          "version": 0
+        },
+        {
+          "id": 4,
+          "name": "Forma Design",
+          "plan": "Starter",
+          "status": "active",
+          "version": 0
+        }
+      ],
+      "issues": []
+    },
+    "targetAfter": {
+      "customers": [
+        {
+          "id": 1,
+          "name": "Acme Studio",
+          "plan": "Enterprise",
+          "status": "paused",
+          "version": 1
+        },
+        {
+          "id": 2,
+          "name": "Orbit Labs",
+          "plan": "Growth",
+          "status": "active",
+          "version": 0
+        },
+        {
+          "id": 3,
+          "name": "Northstar",
+          "plan": "Enterprise",
+          "status": "active",
+          "version": 0
+        },
+        {
+          "id": 4,
+          "name": "Forma Design",
+          "plan": "Starter",
+          "status": "active",
+          "version": 0
+        }
+      ],
+      "issues": []
+    },
+    "beforeHash": "8979f16bc46018f2b93ca5a8445a887e783db84dfb060e719258a13411d238a4",
+    "afterHash": "ed05457bc946f01cb2135e4af308d56c68753e18b1e32b52a455ec4758c16d7d",
+    "correlationId": "01d41cc6-0362-476d-b8b3-07c7984e7cba",
+    "decisionId": "4fb67df3-6687-48b2-93a5-e18f546144a8",
+    "policyHash": "9ac719fef979ee7b37c5c5ef3173621453782a0a02d432727391beeff1234d14",
+    "policyRevision": 1,
+    "grantId": "9942203a-85f2-4fd9-9b2a-d4452cd658b0",
+    "rule": "database-writes",
+    "auditChainValid": true
+  },
+  {
+    "scenario": "injection-scope",
+    "result": "PASS",
+    "status": "blocked",
+    "upstreamCalls": 0,
+    "beforeApprovalCalls": 0,
+    "targetBefore": {
+      "customers": [
+        {
+          "id": 1,
+          "name": "Acme Studio",
+          "plan": "Enterprise",
+          "status": "active",
+          "version": 0
+        },
+        {
+          "id": 2,
+          "name": "Orbit Labs",
+          "plan": "Growth",
+          "status": "active",
+          "version": 0
+        },
+        {
+          "id": 3,
+          "name": "Northstar",
+          "plan": "Enterprise",
+          "status": "active",
+          "version": 0
+        },
+        {
+          "id": 4,
+          "name": "Forma Design",
+          "plan": "Starter",
+          "status": "active",
+          "version": 0
+        }
+      ],
+      "issues": []
+    },
+    "targetAfter": {
+      "customers": [
+        {
+          "id": 1,
+          "name": "Acme Studio",
+          "plan": "Enterprise",
+          "status": "active",
+          "version": 0
+        },
+        {
+          "id": 2,
+          "name": "Orbit Labs",
+          "plan": "Growth",
+          "status": "active",
+          "version": 0
+        },
+        {
+          "id": 3,
+          "name": "Northstar",
+          "plan": "Enterprise",
+          "status": "active",
+          "version": 0
+        },
+        {
+          "id": 4,
+          "name": "Forma Design",
+          "plan": "Starter",
+          "status": "active",
+          "version": 0
+        }
+      ],
+      "issues": []
+    },
+    "beforeHash": "8979f16bc46018f2b93ca5a8445a887e783db84dfb060e719258a13411d238a4",
+    "afterHash": "8979f16bc46018f2b93ca5a8445a887e783db84dfb060e719258a13411d238a4",
+    "correlationId": "256c8d8c-aa7a-4bd4-855e-3227e0848f61",
+    "decisionId": "eb64a7f4-930c-480c-863c-af82cbce0854",
+    "policyHash": "9ac719fef979ee7b37c5c5ef3173621453782a0a02d432727391beeff1234d14",
+    "policyRevision": 1,
+    "grantId": "eb3ecf3f-ef81-485b-a049-bb381ec09a15",
+    "rule": "invalid-arguments",
+    "auditChainValid": true
+  },
+  {
+    "scenario": "secret-content",
+    "result": "PASS",
+    "status": "blocked",
+    "upstreamCalls": 0,
+    "beforeApprovalCalls": 0,
+    "targetBefore": {
+      "customers": [
+        {
+          "id": 1,
+          "name": "Acme Studio",
+          "plan": "Enterprise",
+          "status": "active",
+          "version": 0
+        },
+        {
+          "id": 2,
+          "name": "Orbit Labs",
+          "plan": "Growth",
+          "status": "active",
+          "version": 0
+        },
+        {
+          "id": 3,
+          "name": "Northstar",
+          "plan": "Enterprise",
+          "status": "active",
+          "version": 0
+        },
+        {
+          "id": 4,
+          "name": "Forma Design",
+          "plan": "Starter",
+          "status": "active",
+          "version": 0
+        }
+      ],
+      "issues": []
+    },
+    "targetAfter": {
+      "customers": [
+        {
+          "id": 1,
+          "name": "Acme Studio",
+          "plan": "Enterprise",
+          "status": "active",
+          "version": 0
+        },
+        {
+          "id": 2,
+          "name": "Orbit Labs",
+          "plan": "Growth",
+          "status": "active",
+          "version": 0
+        },
+        {
+          "id": 3,
+          "name": "Northstar",
+          "plan": "Enterprise",
+          "status": "active",
+          "version": 0
+        },
+        {
+          "id": 4,
+          "name": "Forma Design",
+          "plan": "Starter",
+          "status": "active",
+          "version": 0
+        }
+      ],
+      "issues": []
+    },
+    "beforeHash": "8979f16bc46018f2b93ca5a8445a887e783db84dfb060e719258a13411d238a4",
+    "afterHash": "8979f16bc46018f2b93ca5a8445a887e783db84dfb060e719258a13411d238a4",
+    "correlationId": "c5831700-6ec9-4b61-bfa6-701f812088a4",
+    "decisionId": "7de654ae-9afd-4a57-af09-aaf383d2f9cc",
+    "policyHash": "9ac719fef979ee7b37c5c5ef3173621453782a0a02d432727391beeff1234d14",
+    "policyRevision": 1,
+    "grantId": "308cea19-85ec-409d-a8c2-f337c6488551",
+    "rule": "secret-protection",
+    "auditChainValid": true
+  }
+]

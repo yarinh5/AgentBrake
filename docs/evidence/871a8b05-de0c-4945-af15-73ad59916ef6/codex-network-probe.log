@@ -1,0 +1,18 @@
+node:internal/deps/undici/undici:15456
+      Error.captureStackTrace(err);
+            ^
+
+TypeError: fetch failed
+    at node:internal/deps/undici/undici:15456:13
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async file:///app/tests/isolation/agent.mjs:135:17 {
+  [cause]: Error: getaddrinfo EAI_AGAIN gateway
+      at GetAddrInfoReqWrap.onlookupall [as oncomplete] (node:dns:122:26) {
+    errno: -3001,
+    code: 'EAI_AGAIN',
+    syscall: 'getaddrinfo',
+    hostname: 'gateway'
+  }
+}
+
+Node.js v22.23.5

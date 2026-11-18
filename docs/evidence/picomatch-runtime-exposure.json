@@ -1,0 +1,23 @@
+{
+  "at": "2026-11-17T17:24:46.198Z",
+  "sourceHash": "3ea2c8eb9d847d6213333172121d0e235fb0ef0e4efe44946108d0f4e18fb0c6",
+  "result": "PASS_SCOPED_RUNTIME_PACKAGE_RESOLUTION",
+  "checks": [
+    {
+      "kind": "runtime",
+      "imageId": "sha256:3a9110ccfc456985dd1fe7bcea6d4c719df931d5706592b89826544d027867a4",
+      "entry": "/app/server/product.ts",
+      "positive": "/app/node_modules/pg/lib/index.js",
+      "picomatch": null
+    },
+    {
+      "kind": "dashboard",
+      "imageId": "sha256:f4760261981adec92a02f80f62182b4c6d32ad23dffd1ddfaf0d10fe8e52447e",
+      "entry": "/app/apps/dashboard/server.js",
+      "positive": "/app/apps/dashboard/node_modules/next/dist/server/next.js",
+      "picomatch": null
+    }
+  ],
+  "cleanup": "PASS",
+  "scope": "Actual candidate image entrypoint resolution finds its positive-control dependency and cannot resolve a standalone picomatch package. Does not inspect all vendored/bundled code or establish universal reachability absence. Full build/development audit remains failing; no suppression or release waiver."
+}

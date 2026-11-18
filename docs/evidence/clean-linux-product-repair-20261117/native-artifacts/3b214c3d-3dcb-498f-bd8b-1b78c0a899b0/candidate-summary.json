@@ -1,0 +1,230 @@
+{
+  "runId": "3b214c3d-3dcb-498f-bd8b-1b78c0a899b0",
+  "sourceHash": "8710c17580dd07e7dfe96e0894505a75026825daadcf86aa010b10463045115c",
+  "startedAt": "2026-11-17T14:04:32.787Z",
+  "result": "PASS_LOCAL_CANDIDATE",
+  "cases": [
+    {
+      "name": "compose-boundaries",
+      "result": "PASS",
+      "observed": "Agent has one internal network; GitHub test egress internal; only loopback HTTPS port published."
+    },
+    {
+      "name": "rebuilt-opa-policy-tests",
+      "result": "PASS",
+      "observed": "Actual selected OPA image passed the repository Rego suite in a networkless container."
+    },
+    {
+      "name": "fresh-tls-install",
+      "result": "PASS",
+      "observed": {
+        "http": "200",
+        "services": [
+          {
+            "name": "agent",
+            "state": "running",
+            "health": "not-configured"
+          },
+          {
+            "name": "control-api",
+            "state": "running",
+            "health": "healthy"
+          },
+          {
+            "name": "control-db",
+            "state": "running",
+            "health": "healthy"
+          },
+          {
+            "name": "dashboard",
+            "state": "running",
+            "health": "healthy"
+          },
+          {
+            "name": "gateway",
+            "state": "running",
+            "health": "healthy"
+          },
+          {
+            "name": "github-egress",
+            "state": "running",
+            "health": "not-configured"
+          },
+          {
+            "name": "ingress",
+            "state": "running",
+            "health": "healthy"
+          },
+          {
+            "name": "mock-target",
+            "state": "running",
+            "health": "healthy"
+          },
+          {
+            "name": "opa",
+            "state": "running",
+            "health": "not-configured"
+          },
+          {
+            "name": "target-db",
+            "state": "running",
+            "health": "healthy"
+          },
+          {
+            "name": "volume-init",
+            "state": "exited",
+            "health": "not-configured"
+          }
+        ]
+      }
+    },
+    {
+      "name": "managed-owner-over-tls",
+      "result": "PASS",
+      "observed": "Owner bootstrap succeeded; Secure/HttpOnly/SameSite session; public connection metadata contains no private key."
+    },
+    {
+      "name": "installed-app-identity-ui",
+      "result": "PASS",
+      "observed": "Explicit App target identity and narrowed grant issued through the real HTTPS dashboard; no agent tool call or live GitHub request."
+    },
+    {
+      "name": "installed-https-browser",
+      "result": "PASS",
+      "observed": {
+        "browserErrors": 0,
+        "externalRequests": 0,
+        "localSelfSignedCertificate": true
+      }
+    },
+    {
+      "name": "agent-direct-egress-bypass-denied",
+      "result": "PASS",
+      "observed": [
+        {
+          "host": "172.24.0.2",
+          "blocked": true
+        },
+        {
+          "host": "172.22.0.2",
+          "blocked": true
+        }
+      ]
+    }
+  ],
+  "scope": "Local disposable Docker install with actual TLS/Next/control/Gateway and synthetic App key. GitHub outbound network internal; no real GitHub call or production certificate validation.",
+  "images": [
+    {
+      "ID": "sha256:b55cb0b14c4ec875bcb83cea7df3c7a5843eaaa717144422c6641eaa93f2a380",
+      "ContainerName": "agentbrake-product-verify-candidate-3b214c3d-opa-1",
+      "Repository": "agentbrake-opa",
+      "Tag": "1.22.4-3f9e5f443c6e97aa147e",
+      "Platform": "linux/amd64",
+      "Size": 15574466,
+      "LastTagTime": "2026-11-17T14:04:34.512563992Z"
+    },
+    {
+      "ID": "sha256:e1579b7b1bbeed169cb6b2eea9407ea0d97f5f1ced6b7178a6119baade766617",
+      "ContainerName": "agentbrake-product-verify-candidate-3b214c3d-target-db-1",
+      "Repository": "agentbrake-postgres",
+      "Tag": "18-193f481f609ba4086c53",
+      "Platform": "linux/amd64",
+      "Size": 120256856,
+      "LastTagTime": "2026-11-17T14:04:34.526918488Z"
+    },
+    {
+      "ID": "sha256:de00e84175d77b067ad6d97c8292a6f02e6d83d31ba1a3ec4537e69c7c1f7c28",
+      "ContainerName": "agentbrake-product-verify-candidate-3b214c3d-ingress-1",
+      "Repository": "agentbrake-product-verify-candidate-3b214c3d-runtime",
+      "Tag": "latest",
+      "Platform": "linux/amd64",
+      "Size": 84036157,
+      "LastTagTime": "2026-11-17T14:04:34.525360231Z"
+    },
+    {
+      "ID": "sha256:1314fb30ec37592d5845e5a160d522c0e680972aa534549940b8d73bde88481a",
+      "ContainerName": "agentbrake-product-verify-candidate-3b214c3d-volume-init-1",
+      "Repository": "node",
+      "Tag": "",
+      "Platform": "linux/amd64",
+      "Size": 61381025,
+      "LastTagTime": "2026-11-17T14:00:42.644900666Z"
+    },
+    {
+      "ID": "sha256:de00e84175d77b067ad6d97c8292a6f02e6d83d31ba1a3ec4537e69c7c1f7c28",
+      "ContainerName": "agentbrake-product-verify-candidate-3b214c3d-gateway-1",
+      "Repository": "agentbrake-product-verify-candidate-3b214c3d-runtime",
+      "Tag": "latest",
+      "Platform": "linux/amd64",
+      "Size": 84036157,
+      "LastTagTime": "2026-11-17T14:04:34.525360231Z"
+    },
+    {
+      "ID": "sha256:de00e84175d77b067ad6d97c8292a6f02e6d83d31ba1a3ec4537e69c7c1f7c28",
+      "ContainerName": "agentbrake-product-verify-candidate-3b214c3d-mock-target-1",
+      "Repository": "agentbrake-product-verify-candidate-3b214c3d-runtime",
+      "Tag": "latest",
+      "Platform": "linux/amd64",
+      "Size": 84036157,
+      "LastTagTime": "2026-11-17T14:04:34.525360231Z"
+    },
+    {
+      "ID": "sha256:de00e84175d77b067ad6d97c8292a6f02e6d83d31ba1a3ec4537e69c7c1f7c28",
+      "ContainerName": "agentbrake-product-verify-candidate-3b214c3d-github-egress-1",
+      "Repository": "agentbrake-product-verify-candidate-3b214c3d-runtime",
+      "Tag": "latest",
+      "Platform": "linux/amd64",
+      "Size": 84036157,
+      "LastTagTime": "2026-11-17T14:04:34.525360231Z"
+    },
+    {
+      "ID": "sha256:f442b6f725501f331d7bed0eb5097583a999b8964b7392312cf2286dca7c182a",
+      "ContainerName": "agentbrake-product-verify-candidate-3b214c3d-dashboard-1",
+      "Repository": "agentbrake-product-verify-candidate-3b214c3d-dashboard",
+      "Tag": "latest",
+      "Platform": "linux/amd64",
+      "Size": 84971904,
+      "LastTagTime": "2026-11-17T14:04:34.554605396Z"
+    },
+    {
+      "ID": "sha256:e1579b7b1bbeed169cb6b2eea9407ea0d97f5f1ced6b7178a6119baade766617",
+      "ContainerName": "agentbrake-product-verify-candidate-3b214c3d-control-db-1",
+      "Repository": "agentbrake-postgres",
+      "Tag": "18-193f481f609ba4086c53",
+      "Platform": "linux/amd64",
+      "Size": 120256856,
+      "LastTagTime": "2026-11-17T14:04:34.526918488Z"
+    },
+    {
+      "ID": "sha256:de00e84175d77b067ad6d97c8292a6f02e6d83d31ba1a3ec4537e69c7c1f7c28",
+      "ContainerName": "agentbrake-product-verify-candidate-3b214c3d-agent-1",
+      "Repository": "agentbrake-product-verify-candidate-3b214c3d-runtime",
+      "Tag": "latest",
+      "Platform": "linux/amd64",
+      "Size": 84036157,
+      "LastTagTime": "2026-11-17T14:04:34.525360231Z"
+    },
+    {
+      "ID": "sha256:de00e84175d77b067ad6d97c8292a6f02e6d83d31ba1a3ec4537e69c7c1f7c28",
+      "ContainerName": "agentbrake-product-verify-candidate-3b214c3d-control-api-1",
+      "Repository": "agentbrake-product-verify-candidate-3b214c3d-runtime",
+      "Tag": "latest",
+      "Platform": "linux/amd64",
+      "Size": 84036157,
+      "LastTagTime": "2026-11-17T14:04:34.525360231Z"
+    }
+  ],
+  "imageReferences": {
+    "runtime": "agentbrake-product-verify-candidate-3b214c3d-runtime",
+    "dashboard": "agentbrake-product-verify-candidate-3b214c3d-dashboard",
+    "postgres": "agentbrake-postgres:18-193f481f609ba4086c53",
+    "opa": "agentbrake-opa:1.22.4-3f9e5f443c6e97aa147e"
+  },
+  "cleanup": {
+    "result": "PASS",
+    "containers": 0,
+    "volumes": 0,
+    "networks": 0
+  },
+  "finishedAt": "2026-11-17T14:05:32.600Z"
+}

@@ -1,0 +1,256 @@
+[
+    {
+        "Id": "3f7f92327ad505237768f1990f5ee1fb3f9dcd2c3527ab2b8c57c250c3727422",
+        "Created": "2026-11-17T18:18:14.383243341Z",
+        "Path": "/bin/ollama",
+        "Args": [
+            "serve"
+        ],
+        "State": {
+            "Status": "running",
+            "Running": true,
+            "Paused": false,
+            "Restarting": false,
+            "OOMKilled": false,
+            "Dead": false,
+            "Pid": 70677,
+            "ExitCode": 0,
+            "Error": "",
+            "StartedAt": "2026-11-17T18:18:14.529146492Z",
+            "FinishedAt": "0001-01-01T00:00:00Z"
+        },
+        "Image": "sha256:6c437ef9d364e1712bc7e2342b224369e3669c29d9373f1bbdd68f4601d58fd9",
+        "ResolvConfPath": "/var/lib/docker/containers/3f7f92327ad505237768f1990f5ee1fb3f9dcd2c3527ab2b8c57c250c3727422/resolv.conf",
+        "HostnamePath": "/var/lib/docker/containers/3f7f92327ad505237768f1990f5ee1fb3f9dcd2c3527ab2b8c57c250c3727422/hostname",
+        "HostsPath": "/var/lib/docker/containers/3f7f92327ad505237768f1990f5ee1fb3f9dcd2c3527ab2b8c57c250c3727422/hosts",
+        "LogPath": "",
+        "Name": "/agentbrake-a-e9fba757-local-model-1",
+        "RestartCount": 0,
+        "Driver": "overlay2",
+        "Platform": "linux",
+        "MountLabel": "",
+        "ProcessLabel": "",
+        "AppArmorProfile": "",
+        "ExecIDs": null,
+        "HostConfig": {
+            "Binds": [
+                "F:/project love/AgentBrake/.tools/ollama-models:/models:ro"
+            ],
+            "ContainerIDFile": "",
+            "LogConfig": {
+                "Type": "local",
+                "Config": {}
+            },
+            "NetworkMode": "agentbrake-a-e9fba757_inference",
+            "PortBindings": {},
+            "RestartPolicy": {
+                "Name": "no",
+                "MaximumRetryCount": 0
+            },
+            "AutoRemove": false,
+            "VolumeDriver": "",
+            "VolumesFrom": null,
+            "ConsoleSize": [
+                0,
+                0
+            ],
+            "CapAdd": null,
+            "CapDrop": [
+                "ALL"
+            ],
+            "CgroupnsMode": "private",
+            "Dns": null,
+            "DnsOptions": null,
+            "DnsSearch": null,
+            "ExtraHosts": [],
+            "GroupAdd": null,
+            "IpcMode": "private",
+            "Cgroup": "",
+            "Links": null,
+            "OomScoreAdj": 0,
+            "PidMode": "",
+            "Privileged": false,
+            "PublishAllPorts": false,
+            "ReadonlyRootfs": true,
+            "SecurityOpt": [
+                "no-new-privileges:true"
+            ],
+            "Tmpfs": {
+                "/tmp": "size=256m,mode=1777"
+            },
+            "UTSMode": "",
+            "UsernsMode": "",
+            "ShmSize": 67108864,
+            "Runtime": "runc",
+            "Isolation": "",
+            "CpuShares": 0,
+            "Memory": 6442450944,
+            "NanoCpus": 4000000000,
+            "CgroupParent": "",
+            "BlkioWeight": 0,
+            "BlkioWeightDevice": null,
+            "BlkioDeviceReadBps": null,
+            "BlkioDeviceWriteBps": null,
+            "BlkioDeviceReadIOps": null,
+            "BlkioDeviceWriteIOps": null,
+            "CpuPeriod": 0,
+            "CpuQuota": 0,
+            "CpuRealtimePeriod": 0,
+            "CpuRealtimeRuntime": 0,
+            "CpusetCpus": "",
+            "CpusetMems": "",
+            "Devices": null,
+            "DeviceCgroupRules": null,
+            "DeviceRequests": [
+                {
+                    "Driver": "",
+                    "Count": -1,
+                    "DeviceIDs": null,
+                    "Capabilities": [
+                        [
+                            "gpu"
+                        ]
+                    ],
+                    "Options": null
+                }
+            ],
+            "MemoryReservation": 0,
+            "MemorySwap": 6442450944,
+            "MemorySwappiness": null,
+            "OomKillDisable": null,
+            "PidsLimit": 256,
+            "Ulimits": null,
+            "CpuCount": 0,
+            "CpuPercent": 0,
+            "IOMaximumIOps": 0,
+            "IOMaximumBandwidth": 0,
+            "MaskedPaths": [
+                "/proc/acpi",
+                "/proc/asound",
+                "/proc/interrupts",
+                "/proc/kcore",
+                "/proc/keys",
+                "/proc/latency_stats",
+                "/proc/sched_debug",
+                "/proc/scsi",
+                "/proc/timer_list",
+                "/proc/timer_stats",
+                "/sys/devices/virtual/powercap",
+                "/sys/firmware"
+            ],
+            "ReadonlyPaths": [
+                "/proc/bus",
+                "/proc/fs",
+                "/proc/irq",
+                "/proc/sys",
+                "/proc/sysrq-trigger"
+            ]
+        },
+        "GraphDriver": {
+            "Data": {
+                "ID": "3f7f92327ad505237768f1990f5ee1fb3f9dcd2c3527ab2b8c57c250c3727422",
+                "LowerDir": "/var/lib/docker/overlay2/180e4784a1af393e1cd6c3f96e871127945bd849d04103479e44e12e2a545d05-init/diff:/var/lib/docker/overlay2/9ece65b7d0d9ec80a9719c4b81d12cfdad9386326efffb005b3f305856fc9569/diff:/var/lib/docker/overlay2/cdbcfd93368a0d00552d5c3a68e6e2602e591cbe9b4ca5d875d184c5f44c807e/diff:/var/lib/docker/overlay2/d653a997940ead5359a183fed842a6a1c271e0e15fa2ac50b5601818eaadda7c/diff:/var/lib/docker/overlay2/a3fcea25a2fbbbbb8131cdf8b3e67f24a096c3dab1d03229b07d51f7f09404a5/diff",
+                "MergedDir": "/var/lib/docker/overlay2/180e4784a1af393e1cd6c3f96e871127945bd849d04103479e44e12e2a545d05/merged",
+                "UpperDir": "/var/lib/docker/overlay2/180e4784a1af393e1cd6c3f96e871127945bd849d04103479e44e12e2a545d05/diff",
+                "WorkDir": "/var/lib/docker/overlay2/180e4784a1af393e1cd6c3f96e871127945bd849d04103479e44e12e2a545d05/work"
+            },
+            "Name": "overlay2"
+        },
+        "Mounts": [
+            {
+                "Type": "bind",
+                "Source": "F:/project love/AgentBrake/.tools/ollama-models",
+                "Destination": "/models",
+                "Mode": "ro",
+                "RW": false,
+                "Propagation": "rprivate"
+            }
+        ],
+        "Config": {
+            "Hostname": "3f7f92327ad5",
+            "Domainname": "",
+            "User": "1000:1000",
+            "AttachStdin": false,
+            "AttachStdout": true,
+            "AttachStderr": true,
+            "ExposedPorts": {
+                "11434/tcp": {}
+            },
+            "Tty": false,
+            "OpenStdin": false,
+            "StdinOnce": false,
+            "Env": [
+                "HOME=/tmp",
+                "OLLAMA_GPU_OVERHEAD=2147483648",
+                "OLLAMA_MODELS=/models",
+                "OLLAMA_NUM_PARALLEL=1",
+                "OLLAMA_HOST=0.0.0.0:11434",
+                "OLLAMA_KV_CACHE_TYPE=q8_0",
+                "OLLAMA_MAX_LOADED_MODELS=1",
+                "OLLAMA_FLASH_ATTENTION=1",
+                "OLLAMA_NO_CLOUD=1",
+                "CUDA_VISIBLE_DEVICES=0",
+                "OLLAMA_CONTEXT_LENGTH=8192",
+                "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+                "LD_LIBRARY_PATH=/usr/local/nvidia/lib:/usr/local/nvidia/lib64",
+                "NVIDIA_DRIVER_CAPABILITIES=compute,utility",
+                "NVIDIA_VISIBLE_DEVICES=all"
+            ],
+            "Cmd": [
+                "serve"
+            ],
+            "Image": "ollama/ollama@sha256:910d0d8107b538fb0894e63163eb195de0cc7aefcbc666dc62d3b18f71124592",
+            "Volumes": null,
+            "WorkingDir": "",
+            "Entrypoint": [
+                "/bin/ollama"
+            ],
+            "Labels": {
+                "com.docker.compose.config-hash": "420e1eb1e17223cebc68f35b848f07f22c4d5dc401d176ffb0833e1868989349",
+                "com.docker.compose.container-number": "1",
+                "com.docker.compose.depends_on": "",
+                "com.docker.compose.image": "sha256:6c437ef9d364e1712bc7e2342b224369e3669c29d9373f1bbdd68f4601d58fd9",
+                "com.docker.compose.oneoff": "False",
+                "com.docker.compose.project": "agentbrake-a-e9fba757",
+                "com.docker.compose.project.config_files": "F:\\project love\\AgentBrake\\infra\\local\\compose.yaml,F:\\project love\\AgentBrake\\infra\\local\\codex.compose.yaml,F:\\project love\\AgentBrake\\infra\\local\\codex-gpu.compose.yaml",
+                "com.docker.compose.project.working_dir": "F:\\project love\\AgentBrake\\infra\\local",
+                "com.docker.compose.service": "local-model",
+                "com.docker.compose.version": "5.7.0",
+                "org.opencontainers.image.version": "24.04"
+            }
+        },
+        "NetworkSettings": {
+            "SandboxID": "d619be7e249df22f7dc80777f9a2366b58c12775719a075da506d65b2d363b9d",
+            "SandboxKey": "/var/run/docker/netns/d619be7e249d",
+            "Ports": {
+                "11434/tcp": null
+            },
+            "Networks": {
+                "agentbrake-a-e9fba757_inference": {
+                    "IPAMConfig": null,
+                    "Links": null,
+                    "Aliases": [
+                        "agentbrake-a-e9fba757-local-model-1",
+                        "local-model"
+                    ],
+                    "DriverOpts": null,
+                    "GwPriority": 0,
+                    "NetworkID": "d501eb9dd3dfde91f4565441cd729981d64a013284b59e3e4a9ddc892bf5b94b",
+                    "EndpointID": "d28cf96a2e0bfcb92d2ee868e14989412e86045ab2768ac8e8d6e24edfacfb2a",
+                    "Gateway": "",
+                    "IPAddress": "192.168.32.2",
+                    "MacAddress": "ca:18:e4:4c:bd:1f",
+                    "IPPrefixLen": 20,
+                    "IPv6Gateway": "",
+                    "GlobalIPv6Address": "",
+                    "GlobalIPv6PrefixLen": 0,
+                    "DNSNames": [
+                        "agentbrake-a-e9fba757-local-model-1",
+                        "local-model",
+                        "3f7f92327ad5"
+                    ]
+                }
+            }
+        }
+    }
+]

@@ -1,0 +1,232 @@
+[
+    {
+        "Id": "597fdba6d0701cacaa1298c2216851e6a585b91d7f16452b5c538543a18635d4",
+        "Created": "2026-11-17T08:47:05.881861679Z",
+        "Path": "docker-entrypoint.sh",
+        "Args": [
+            "node",
+            "-e",
+            "setInterval(()=\u003e{},60000)"
+        ],
+        "State": {
+            "Status": "running",
+            "Running": true,
+            "Paused": false,
+            "Restarting": false,
+            "OOMKilled": false,
+            "Dead": false,
+            "Pid": 38943,
+            "ExitCode": 0,
+            "Error": "",
+            "StartedAt": "2026-11-17T08:47:14.081529868Z",
+            "FinishedAt": "0001-01-01T00:00:00Z"
+        },
+        "Image": "sha256:ad962732e785c8d1c07b4d9dcadb45f175907f8614816b313b65536002d415cf",
+        "ResolvConfPath": "/var/lib/docker/containers/597fdba6d0701cacaa1298c2216851e6a585b91d7f16452b5c538543a18635d4/resolv.conf",
+        "HostnamePath": "/var/lib/docker/containers/597fdba6d0701cacaa1298c2216851e6a585b91d7f16452b5c538543a18635d4/hostname",
+        "HostsPath": "/var/lib/docker/containers/597fdba6d0701cacaa1298c2216851e6a585b91d7f16452b5c538543a18635d4/hosts",
+        "LogPath": "",
+        "Name": "/agentbrake-a-a4dcea21-agent-1",
+        "RestartCount": 0,
+        "Driver": "overlay2",
+        "Platform": "linux",
+        "MountLabel": "",
+        "ProcessLabel": "",
+        "AppArmorProfile": "",
+        "ExecIDs": null,
+        "HostConfig": {
+            "Binds": [
+                "F:/project love/AgentBrake/.agentbrake-local/isolation-a4dcea21-a369-4332-ba05-67338e9985fe/agent-credential.json:/run/agent-credential.json:ro"
+            ],
+            "ContainerIDFile": "",
+            "LogConfig": {
+                "Type": "local",
+                "Config": {}
+            },
+            "NetworkMode": "agentbrake-a-a4dcea21_agent",
+            "PortBindings": {},
+            "RestartPolicy": {
+                "Name": "no",
+                "MaximumRetryCount": 0
+            },
+            "AutoRemove": false,
+            "VolumeDriver": "",
+            "VolumesFrom": null,
+            "ConsoleSize": [
+                0,
+                0
+            ],
+            "CapAdd": null,
+            "CapDrop": [
+                "ALL"
+            ],
+            "CgroupnsMode": "private",
+            "Dns": null,
+            "DnsOptions": null,
+            "DnsSearch": null,
+            "ExtraHosts": [],
+            "GroupAdd": null,
+            "IpcMode": "private",
+            "Cgroup": "",
+            "Links": null,
+            "OomScoreAdj": 0,
+            "PidMode": "",
+            "Privileged": false,
+            "PublishAllPorts": false,
+            "ReadonlyRootfs": true,
+            "SecurityOpt": [
+                "no-new-privileges:true"
+            ],
+            "Tmpfs": {
+                "/tmp": "size=64m,mode=1777"
+            },
+            "UTSMode": "",
+            "UsernsMode": "",
+            "ShmSize": 67108864,
+            "Runtime": "runc",
+            "Isolation": "",
+            "CpuShares": 0,
+            "Memory": 536870912,
+            "NanoCpus": 1000000000,
+            "CgroupParent": "",
+            "BlkioWeight": 0,
+            "BlkioWeightDevice": null,
+            "BlkioDeviceReadBps": null,
+            "BlkioDeviceWriteBps": null,
+            "BlkioDeviceReadIOps": null,
+            "BlkioDeviceWriteIOps": null,
+            "CpuPeriod": 0,
+            "CpuQuota": 0,
+            "CpuRealtimePeriod": 0,
+            "CpuRealtimeRuntime": 0,
+            "CpusetCpus": "",
+            "CpusetMems": "",
+            "Devices": null,
+            "DeviceCgroupRules": null,
+            "DeviceRequests": null,
+            "MemoryReservation": 0,
+            "MemorySwap": 1073741824,
+            "MemorySwappiness": null,
+            "OomKillDisable": null,
+            "PidsLimit": 128,
+            "Ulimits": null,
+            "CpuCount": 0,
+            "CpuPercent": 0,
+            "IOMaximumIOps": 0,
+            "IOMaximumBandwidth": 0,
+            "MaskedPaths": [
+                "/proc/acpi",
+                "/proc/asound",
+                "/proc/interrupts",
+                "/proc/kcore",
+                "/proc/keys",
+                "/proc/latency_stats",
+                "/proc/sched_debug",
+                "/proc/scsi",
+                "/proc/timer_list",
+                "/proc/timer_stats",
+                "/sys/devices/virtual/powercap",
+                "/sys/firmware"
+            ],
+            "ReadonlyPaths": [
+                "/proc/bus",
+                "/proc/fs",
+                "/proc/irq",
+                "/proc/sys",
+                "/proc/sysrq-trigger"
+            ]
+        },
+        "GraphDriver": {
+            "Data": {
+                "ID": "597fdba6d0701cacaa1298c2216851e6a585b91d7f16452b5c538543a18635d4",
+                "LowerDir": "/var/lib/docker/overlay2/01e6897934f5883bd2101f6888e494d22b1c1a89ca7c6afeb73dac9c53fa79f2-init/diff:/var/lib/docker/overlay2/0uloav2s4vt8ad4pcvtmvtsjt/diff:/var/lib/docker/overlay2/c6ynyqa51yxhswjlqmv45gojb/diff:/var/lib/docker/overlay2/p1zq4k3h2f964i3cakah7rd97/diff:/var/lib/docker/overlay2/p7av8t2bir2beb7stb22ijq2n/diff:/var/lib/docker/overlay2/p1w6xrvu93oze9y6prcxejsp7/diff:/var/lib/docker/overlay2/fg6kjeunppx76e7diffi89rqw/diff:/var/lib/docker/overlay2/z7qecx0pk5qrdy0tfstza7oa4/diff:/var/lib/docker/overlay2/3fhaodjulcvs1xqsqofxdzlt2/diff:/var/lib/docker/overlay2/ertdmej6w91mmeo3831gmntb8/diff:/var/lib/docker/overlay2/4c503b18177bd9465c4844f8c6a5fe76ac596ad53210afc9c92a271235e9256e/diff:/var/lib/docker/overlay2/f42a8ba268e08b1a76791c1c6aa2155902a6aff10150a689a319d4577c64ada5/diff:/var/lib/docker/overlay2/d0eb61baabd40b4e21c52fd140e3866aff974aebf8485dea56d6067c26eeb633/diff:/var/lib/docker/overlay2/cdd2f4f6cf547dad7f9c2cdb387992f88a0cbcf2d804dc2b92aa06eef8056838/diff:/var/lib/docker/overlay2/86ab68c64f961689b16e07121bfd3a14c9e157e7da16184452cb0bad59d73ed4/diff",
+                "MergedDir": "/var/lib/docker/overlay2/01e6897934f5883bd2101f6888e494d22b1c1a89ca7c6afeb73dac9c53fa79f2/merged",
+                "UpperDir": "/var/lib/docker/overlay2/01e6897934f5883bd2101f6888e494d22b1c1a89ca7c6afeb73dac9c53fa79f2/diff",
+                "WorkDir": "/var/lib/docker/overlay2/01e6897934f5883bd2101f6888e494d22b1c1a89ca7c6afeb73dac9c53fa79f2/work"
+            },
+            "Name": "overlay2"
+        },
+        "Mounts": [
+            {
+                "Type": "bind",
+                "Source": "F:/project love/AgentBrake/.agentbrake-local/isolation-a4dcea21-a369-4332-ba05-67338e9985fe/agent-credential.json",
+                "Destination": "/run/agent-credential.json",
+                "Mode": "ro",
+                "RW": false,
+                "Propagation": "rprivate"
+            }
+        ],
+        "Config": {
+            "Hostname": "597fdba6d070",
+            "Domainname": "",
+            "User": "1000:1000",
+            "AttachStdin": false,
+            "AttachStdout": true,
+            "AttachStderr": true,
+            "Tty": false,
+            "OpenStdin": false,
+            "StdinOnce": false,
+            "Env": [
+                "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+                "NODE_VERSION=22.23.5",
+                "YARN_VERSION=1.22.22"
+            ],
+            "Cmd": [
+                "node",
+                "-e",
+                "setInterval(()=\u003e{},60000)"
+            ],
+            "Image": "agentbrake-a-a4dcea21-runtime",
+            "Volumes": null,
+            "WorkingDir": "/app",
+            "Entrypoint": [
+                "docker-entrypoint.sh"
+            ],
+            "Labels": {
+                "com.agentbrake.fixture": "true",
+                "com.agentbrake.run": "a4dcea21-a369-4332-ba05-67338e9985fe",
+                "com.docker.compose.config-hash": "d8f1fac754d03d3110b850f4f045c5a4ff069b6e926efdfb477670cfd6a5c115",
+                "com.docker.compose.container-number": "1",
+                "com.docker.compose.depends_on": "gateway:service_healthy:false,target-db:service_healthy:false",
+                "com.docker.compose.image": "sha256:ad962732e785c8d1c07b4d9dcadb45f175907f8614816b313b65536002d415cf",
+                "com.docker.compose.oneoff": "False",
+                "com.docker.compose.project": "agentbrake-a-a4dcea21",
+                "com.docker.compose.project.config_files": "F:\\project love\\AgentBrake\\infra\\local\\compose.yaml,F:\\project love\\AgentBrake\\infra\\local\\codex.compose.yaml",
+                "com.docker.compose.project.working_dir": "F:\\project love\\AgentBrake\\infra\\local",
+                "com.docker.compose.service": "agent",
+                "com.docker.compose.version": "5.7.0"
+            }
+        },
+        "NetworkSettings": {
+            "SandboxID": "8a7d71ebb903c3a4ef3581c58874adbf6bcc22aa6c791e7d284b96a8ee3782fc",
+            "SandboxKey": "/var/run/docker/netns/8a7d71ebb903",
+            "Ports": {},
+            "Networks": {
+                "agentbrake-a-a4dcea21_agent": {
+                    "IPAMConfig": null,
+                    "Links": null,
+                    "Aliases": [
+                        "agentbrake-a-a4dcea21-agent-1",
+                        "agent"
+                    ],
+                    "DriverOpts": null,
+                    "GwPriority": 0,
+                    "NetworkID": "539ba3d6af1b158f57bb6c449edf62928a916bf4c5495d7a56e012d7a6040bcd",
+                    "EndpointID": "017bf83804e8cbd0a6b96bf4752715dc55c58b91ff6037be3271f6bea3ddba7f",
+                    "Gateway": "",
+                    "IPAddress": "192.168.0.3",
+                    "MacAddress": "c2:7f:30:0e:56:f4",
+                    "IPPrefixLen": 20,
+                    "IPv6Gateway": "",
+                    "GlobalIPv6Address": "",
+                    "GlobalIPv6PrefixLen": 0,
+                    "DNSNames": [
+                        "agentbrake-a-a4dcea21-agent-1",
+                        "agent",
+                        "597fdba6d070"
+                    ]
+                }
+            }
+        }
+    }
+]

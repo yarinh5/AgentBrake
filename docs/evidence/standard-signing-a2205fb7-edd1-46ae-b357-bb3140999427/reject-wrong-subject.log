@@ -1,0 +1,3 @@
+WARNING: Skipping tlog verification is an insecure practice that lacks transparency and auditability verification for the blob attestation.
+Error: failed to verify signature: provided artifact digests do not match digests in statement
+error during command execution: failed to verify signature: provided artifact digests do not match digests in statement

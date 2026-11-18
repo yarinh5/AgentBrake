@@ -1,0 +1,35 @@
+ Image agentbrake-a-b4262e71-codex Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 689B 0.0s done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Codex.Dockerfile
+#2 transferring dockerfile: 245B done
+#2 WARN: InvalidDefaultArgInFrom: Default value for ARG ${RUNTIME_IMAGE} results in empty or invalid base image name (line 2)
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/agentbrake-a-b4262e71-runtime:latest
+#3 DONE 0.0s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 289B done
+#4 DONE 0.0s
+
+#5 [1/2] FROM docker.io/library/agentbrake-a-b4262e71-runtime:latest
+#5 DONE 0.1s
+
+#6 [2/2] RUN npm install --global --ignore-scripts @openai/codex@0.169.0
+#6 21.07 
+#6 21.07 added 2 packages in 21s
+#6 DONE 21.3s
+
+#7 exporting to image
+#7 exporting layers
+#7 exporting layers 2.6s done
+#7 writing image sha256:b0d1f9955e6423a2fab733275e5f901062b9191f5802b26650e4492f249170d8 done
+#7 naming to docker.io/library/agentbrake-a-b4262e71-codex done
+#7 DONE 2.6s
+
+#8 resolving provenance for metadata file
+#8 DONE 0.0s
+ Image agentbrake-a-b4262e71-codex Built 

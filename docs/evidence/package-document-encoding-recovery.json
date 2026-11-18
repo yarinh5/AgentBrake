@@ -1,0 +1,6 @@
+{
+  "invalidArchive": "agentbrake-0.3.0-rc.1-c043156a9a2f-6a58f921.tar.gz",
+  "reason": "Documentation write failed with UnicodeEncodeError and truncated enterprise matrix; hash inventory did not detect semantic empty document. Archive was never installed.",
+  "recovery": "Restored preserved review-kit matrix and reapplied current status using explicit UTF8 and temporary-file replacement. Superseding archive required.",
+  "priorMatrixSha256": "04761c14ca6450e1383978186fc8a6ff387f1c9663d41ce66dc300b7d3d438dd"
+}

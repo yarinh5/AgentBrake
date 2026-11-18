@@ -1,0 +1,471 @@
+{
+  "at": "2026-11-17T18:48:19.301Z",
+  "result": "LOCAL_RELEASE_VERIFIED_COMMERCIAL_ACCEPTANCE_INCOMPLETE",
+  "sourceHash": "6c5db3b91a0cb7f9e9055bedfee5088a6b075fd4b32491949339693b7dd0a63a",
+  "matchingHostedCommit": null,
+  "states": {
+    "engineeringVerified": "PARTIAL",
+    "integrationAccepted": "NOT_OBTAINED",
+    "operationallyAccepted": "NOT_OBTAINED",
+    "commerciallyAccepted": "NOT_OBTAINED"
+  },
+  "gates": {
+    "native": {
+      "runId": "2c504274-466a-4893-bb59-a96a257f20bc",
+      "result": "PASS_SCOPED"
+    },
+    "isolation": {
+      "runId": "3f5516ea-ce53-483f-8981-7faa7de7bd9f",
+      "result": "PASS",
+      "cleanup": {
+        "result": "PASS",
+        "remaining": {
+          "containers": 0,
+          "networks": 0,
+          "volumes": 0
+        }
+      },
+      "missingBranch": {
+        "case": "missing-feature-branch-no-dispatch-no-approval",
+        "status": "blocked",
+        "correlationId": "ab15253a-6e92-4f03-95fe-cddb19f9704d",
+        "actionId": "3ebc9189-6762-4007-a0b2-33666ae317fd",
+        "executionCalls": 0
+      }
+    },
+    "product": {
+      "runId": "37fabdb5-a33d-496c-b4df-a8f687c33597",
+      "result": "PASS_LOCAL_PRODUCT",
+      "cleanup": {
+        "result": "PASS",
+        "containers": 0,
+        "volumes": 0,
+        "networks": 0
+      }
+    },
+    "service": {
+      "runId": "56593099-76fb-4854-8b5e-959cab32717f",
+      "result": "PASS_LOCAL_SERVICE",
+      "cleanup": [
+        {
+          "project": "agentbrake-product-verify-restore-56593099",
+          "result": "PASS",
+          "containers": 0,
+          "volumes": 0,
+          "networks": 0
+        },
+        {
+          "project": "agentbrake-product-verify-service-56593099",
+          "result": "PASS",
+          "containers": 0,
+          "volumes": 0,
+          "networks": 0
+        }
+      ]
+    },
+    "candidate": {
+      "runId": "1cccaf1b-825c-4a7a-ac0f-8d8971dc7418",
+      "result": "PASS_LOCAL_CANDIDATE",
+      "cleanup": {
+        "result": "PASS",
+        "containers": 0,
+        "volumes": 0,
+        "networks": 0
+      }
+    },
+    "security": {
+      "runId": "ab7356e1-8c72-4df1-819c-5238a46e2181",
+      "result": "PASS_LOCAL_SECURITY_CHECKS"
+    },
+    "enterprise": {
+      "runId": "c53a1e12-a120-4825-b7e0-2b5d915d72be",
+      "result": "PASS_LOCAL_INSTALLED_ENTERPRISE",
+      "cleanup": {
+        "result": "PASS",
+        "containers": 0,
+        "volumes": 0,
+        "networks": 0,
+        "scopedFilesRemoved": true
+      }
+    }
+  },
+  "counts": {
+    "native": {
+      "tests": 282,
+      "pass": 276,
+      "fail": 0,
+      "skipped": 6
+    },
+    "postgres": {
+      "tests": 22,
+      "pass": 22,
+      "fail": 0,
+      "skipped": 0
+    },
+    "git": {
+      "tests": 17,
+      "pass": 17,
+      "fail": 0,
+      "skipped": 0
+    },
+    "workflowCases": 15,
+    "product": 8,
+    "service": 7
+  },
+  "security": {
+    "scanner": "1.184.0",
+    "sast": {
+      "rules": 8,
+      "findings": 0,
+      "scanned": 121
+    },
+    "root": {
+      "components": 156,
+      "vulnerabilities": {
+        "info": 0,
+        "low": 0,
+        "moderate": 0,
+        "high": 0,
+        "critical": 0,
+        "total": 0
+      }
+    },
+    "dashboard": {
+      "components": 61,
+      "vulnerabilities": {
+        "info": 0,
+        "low": 0,
+        "moderate": 0,
+        "high": 0,
+        "critical": 0,
+        "total": 0
+      }
+    }
+  },
+  "images": {
+    "runId": "ff439841-735e-4286-9725-0268c49f9a65",
+    "sourceHash": "6c5db3b91a0cb7f9e9055bedfee5088a6b075fd4b32491949339693b7dd0a63a",
+    "currentSourceHash": "6c5db3b91a0cb7f9e9055bedfee5088a6b075fd4b32491949339693b7dd0a63a",
+    "startedAt": "2026-11-17T18:43:35.039Z",
+    "scanner": {
+      "version": "0.76.2",
+      "image": "aquasec/trivy@sha256:8f6bb947dbc528902e11f2f5be52f7b519f6a39d5d148f41166f2040499768fb",
+      "resolvedAt": "2026-11-16",
+      "source": "https://github.com/aquasecurity/trivy/releases/tag/v0.76.2"
+    },
+    "result": "PASS_IMAGE_SCAN",
+    "images": [
+      {
+        "name": "runtime",
+        "imageId": "sha256:415e4534b5ce08f833316bd4ad2bcc231ca1b17a9f97d5228c6c0ab75333b31c",
+        "reference": "agentbrake-product-verify-candidate-1cccaf1b-runtime",
+        "total": 0,
+        "highCritical": []
+      },
+      {
+        "name": "dashboard",
+        "imageId": "sha256:5ea96c6bd34ad69b20dbea7912983d87a0d9ebc5a9d3e67d0e3e5cfaa509f3bb",
+        "reference": "agentbrake-product-verify-candidate-1cccaf1b-dashboard",
+        "total": 0,
+        "highCritical": []
+      },
+      {
+        "name": "postgres",
+        "imageId": "sha256:7fe1cb5ad34ef1f6d51b01d79055ce5294de2cb9169c47bc701b5a730fec20d3",
+        "reference": "agentbrake-postgres:18-193f481f609ba4086c53",
+        "total": 0,
+        "highCritical": []
+      },
+      {
+        "name": "opa",
+        "imageId": "sha256:52bc0c29b60df89cc4b6b870bf6b6d5ae95dae0138c87ede2e2bd1630b9b583e",
+        "reference": "agentbrake-opa:1.22.4-3f9e5f443c6e97aa147e",
+        "total": 0,
+        "highCritical": []
+      }
+    ],
+    "scope": "Offline Trivy vulnerability scan of locally exported images. Database downloaded separately; no source or image uploaded. Unfixed findings included; no blanket suppression.",
+    "database": {
+      "Version": 2,
+      "NextUpdate": "2026-11-18T13:00:16.23116036Z",
+      "UpdatedAt": "2026-11-17T13:00:16.23116094Z",
+      "DownloadedAt": "2026-11-17T17:27:25.575760954Z"
+    },
+    "finishedAt": "2026-11-17T18:45:22.938Z"
+  },
+  "boundary": {
+    "result": "PASS_SCOPED_ADDITIONAL_BOUNDARIES",
+    "directory": "docs/evidence/additional-boundaries-070695fc-cfb3-48f2-a9e5-ae649b18cbde",
+    "nativeRoutedIpv6": "NOT_TESTED"
+  },
+  "archive": {
+    "archive": "F:\\project love\\AgentBrake\\.agentbrake-local\\releases\\agentbrake-0.3.0-rc.1-6c5db3b91a0c-1c082619.tar.gz",
+    "sha256": "0f9e2300fc830172d0a136e679c83331641bc03a7939c6204e6963f566d7edfa",
+    "bytes": 519590,
+    "version": "0.3.0-rc.1",
+    "sourceHash": "6c5db3b91a0cb7f9e9055bedfee5088a6b075fd4b32491949339693b7dd0a63a",
+    "files": 275
+  },
+  "packedBuild": {
+    "result": "PASS_PACKED_NONROOT_LINUX_BUILD",
+    "sourceHash": "6c5db3b91a0cb7f9e9055bedfee5088a6b075fd4b32491949339693b7dd0a63a",
+    "archiveSha256": "0f9e2300fc830172d0a136e679c83331641bc03a7939c6204e6963f566d7edfa",
+    "files": 275,
+    "uid": 1000,
+    "network": "none",
+    "build": "npm run build (TypeScript and root UI)",
+    "dependencies": "Existing exact-source runtime image root node_modules; no network install; not a clean independent host or Next install",
+    "scope": "Actual gated archive extraction, exact inventory, per-file SHA and recomputed source manifest, nonroot readonly Linux container build; no installed service modified"
+  },
+  "standardSigning": {
+    "directory": "docs/evidence/standard-signing-e950bc11-7411-4e10-b808-a09eb34c439e",
+    "result": "PASS_SCOPED_OFFLINE_STANDARD_SIGNING",
+    "checks": 14,
+    "separateConsumer": "PASS",
+    "trust": "Synthetic disposable key, no external trust or transparency; no SLSA level"
+  },
+  "usefulCoding": {
+    "result": "INCOMPLETE_USEFUL_WORKFLOW",
+    "evidence": "docs/evidence/coding-workflow-assessment.json",
+    "sourceHash": "e9722202db98dfa5804f39c12f8761455f62cb08e1c44c303455b93a08aa3677",
+    "scope": "Earlier e972 model cohorts: local edit/test demonstrated, complete PR failed; final-source preview defect regression does not certify a completed coding workflow"
+  },
+  "benchmark": {
+    "total": 208,
+    "baselineSucceeded": 208,
+    "completed": 192,
+    "falseBlocks": 16,
+    "nonPolicyFailures": 0,
+    "completionVsBaseline": 0.9230769230769231,
+    "falseBlockRate": 0.07692307692307693,
+    "approvalRequired": 96,
+    "measurementResult": "PASS",
+    "usabilityTarget": "NOT_MET",
+    "baselineFailures": 0,
+    "byKind": {
+      "read": {
+        "total": 64,
+        "baselineSucceeded": 64,
+        "completed": 64,
+        "falseBlocks": 0,
+        "nonPolicyFailures": 0,
+        "completionVsBaseline": 1,
+        "falseBlockRate": 0,
+        "approvalRequired": 0
+      },
+      "preview": {
+        "total": 80,
+        "baselineSucceeded": 80,
+        "completed": 64,
+        "falseBlocks": 16,
+        "nonPolicyFailures": 0,
+        "completionVsBaseline": 0.8,
+        "falseBlockRate": 0.2,
+        "approvalRequired": 0
+      },
+      "pr": {
+        "total": 32,
+        "baselineSucceeded": 32,
+        "completed": 32,
+        "falseBlocks": 0,
+        "nonPolicyFailures": 0,
+        "completionVsBaseline": 1,
+        "falseBlockRate": 0,
+        "approvalRequired": 64
+      },
+      "update": {
+        "total": 32,
+        "baselineSucceeded": 32,
+        "completed": 32,
+        "falseBlocks": 0,
+        "nonPolicyFailures": 0,
+        "completionVsBaseline": 1,
+        "falseBlockRate": 0,
+        "approvalRequired": 32
+      }
+    },
+    "timing": {
+      "directBaselineTask": {
+        "count": 208,
+        "p50Ms": 35.64900099999977,
+        "p95Ms": 128.39620100000138
+      },
+      "gatewayTask": {
+        "count": 208,
+        "p50Ms": 55.14110100000016,
+        "p95Ms": 282.91430200000104
+      },
+      "authorization": {
+        "count": 272,
+        "p50Ms": 4.55,
+        "p95Ms": 6.37
+      },
+      "submitRoundTrip": {
+        "count": 272,
+        "p50Ms": 30.97109999999884,
+        "p95Ms": 46.41490099999987
+      },
+      "automatedApprovalRoundTrip": {
+        "count": 96,
+        "p50Ms": 51.12890100000368,
+        "p95Ms": 115.22850100000142
+      }
+    },
+    "humanApprovalWait": "NOT_MEASURED",
+    "corpusHash": "4977504a717538cc20c1bddf5bb7e08df272c6f7c1912925f87405b7a7bfe30c",
+    "scope": "208 prelabelled synthetic tasks; 8 parameter strata of 26 scenarios, including repeated reads and all 16 credential-shaped placeholders; actual direct adapter baseline versus gateway, sequential on one fixture with distinct branch names and per-step state checks; approvals by automated trusted fixture operator; task latency includes HTTP/target/snapshots, not provisioning or human wait; no general population or model-quality rate. Measurement PASS is not achievement of the separate <2% usability target."
+  },
+  "installed": {
+    "sourceHash": "b9c07645e95dca1369636c9fc38a7ed3f777dc15b2a4004b9032f9566a00e60d",
+    "at": "2026-11-17T18:35:54.345Z",
+    "httpHealth": 200,
+    "containers": 9,
+    "upgraded": false
+  },
+  "remainingEngineering": [
+    "Complete useful actual-agent coding workflow with target readback/replay/denial; stop repeated prompt-only4B retries, select and verify a capable client/model profile.",
+    "Safely address16 credential-shaped false blocks; diverse frozen tuning/holdout study and human delay measurement; no relaxed secret/taint exception.",
+    "Final candidate full Ubuntu clean-host install/upgrade/restore; packed nonroot container build is narrower.",
+    "Real PostgreSQL capacity/fault profile and independent evidence consumer acceptance.",
+    "Reviewed final-source hosted CI/integration and organizational release-key/provenance custody."
+  ],
+  "externalAcceptance": [
+    "Named independent human security reviewer and written final-revision retest.",
+    "Approved off-host backup destination, separate key custodian and actual human recovery/alert exercise.",
+    "Named customer/operator, authorized IdP/SCIM/SIEM and CI/downstream topology acceptance.",
+    "Written pilot/support/privacy/legal agreement; interviews/payments/renewal are not fabricated.",
+    "Finite GitHub Sandbox trial already used; further live workflow needs a concrete separately approved scope."
+  ],
+  "evidence": [
+    {
+      "path": "docs/evidence/commercial-final-cc06563d-1d37-45ef-a778-6aee6e907872/validation.json",
+      "sha256": "510113bb605a94206481ad5c1ca7f593d1cd20c199afbedfb584a0088a3cef4f",
+      "bytes": 1129
+    },
+    {
+      "path": "docs/evidence/local-release.json",
+      "sha256": "2eb6303798bb566ba406d97b432b63a0282ea44c4e066b4f1c01c7cd3dd37960",
+      "bytes": 14242
+    },
+    {
+      "path": "docs/evidence/container-scan.json",
+      "sha256": "dedbc39edd88572bfd3e6f6fc91e91cdd8c982c05369bbd32b50e097912eb332",
+      "bytes": 1972
+    },
+    {
+      "path": "docs/evidence/production-readiness.json",
+      "sha256": "eec74b8778de949f4ba5186bbe0d921551d472ccb73f2ad686a5e3ce9abbdf49",
+      "bytes": 1813
+    },
+    {
+      "path": "docs/evidence/release-package.json",
+      "sha256": "f4ea3d35871ecd09f69ad0778c7ffb1acc45e0404ee6888f444acb4b7f852b3a",
+      "bytes": 355
+    },
+    {
+      "path": "docs/evidence/commercial-package-validation.json",
+      "sha256": "dc4411a5a14d30aa0ef2ba2ff929a2395fb2e309e1f7b824e66025a5734513a4",
+      "bytes": 684
+    },
+    {
+      "path": "docs/evidence/latest.json",
+      "sha256": "6ca72158bced071d627ba3904a22c36dc84d40511efc26556659c7ab9b0d010f",
+      "bytes": 149
+    },
+    {
+      "path": "docs/evidence/2c504274-466a-4893-bb59-a96a257f20bc/summary.json",
+      "sha256": "1dde20afdc2cccaf5f2778e42bf280bce0f9780d7ecd1cb8778adc95c1cbf72b",
+      "bytes": 6106
+    },
+    {
+      "path": "docs/evidence/latest-isolation.json",
+      "sha256": "4ca992047fae24dace4985aaa8ea44006adddd4ca635a7532eb4f759de4d9925",
+      "bytes": 142
+    },
+    {
+      "path": "docs/evidence/3f5516ea-ce53-483f-8981-7faa7de7bd9f/isolation-summary.json",
+      "sha256": "739b6469ef3b1bdd3792c2c9bed0522201575ad58d2cd295fbfaf4d3d3260f62",
+      "bytes": 17489059
+    },
+    {
+      "path": "docs/evidence/latest-product.json",
+      "sha256": "ef2548a859f820380f561cade9d21f4c8c636f47750d9e4ecb0c4f0725633022",
+      "bytes": 158
+    },
+    {
+      "path": "docs/evidence/37fabdb5-a33d-496c-b4df-a8f687c33597/product-summary.json",
+      "sha256": "42d457c1de42061309a440347b8d78b1d0b9f4d2ca131d7c7cbd9f7195c99629",
+      "bytes": 3132
+    },
+    {
+      "path": "docs/evidence/latest-service.json",
+      "sha256": "e0343737c290b5a562996f6615a4ed8fecdb6e3f242f6bdb3c6da884ca9f0360",
+      "bytes": 158
+    },
+    {
+      "path": "docs/evidence/56593099-76fb-4854-8b5e-959cab32717f/service-summary.json",
+      "sha256": "611f562526724e2a541b8035537fbf05eec3197bea01efcbb644c16aac112f67",
+      "bytes": 4203
+    },
+    {
+      "path": "docs/evidence/latest-candidate.json",
+      "sha256": "2fc1207c6d3df128d75146ef6fe882161dbac18bed36b2325d34bf9904df8b1f",
+      "bytes": 160
+    },
+    {
+      "path": "docs/evidence/1cccaf1b-825c-4a7a-ac0f-8d8971dc7418/candidate-summary.json",
+      "sha256": "abaf7a0672bb3c8f065e16b0de86d476e5ca145142fa52c35f8b4156c46b0bcf",
+      "bytes": 8444
+    },
+    {
+      "path": "docs/evidence/latest-security.json",
+      "sha256": "4499f369e92e119f939325d5f6dd44b25f69b21097af18915cc2bd3673bcf139",
+      "bytes": 196
+    },
+    {
+      "path": "docs/evidence/ab7356e1-8c72-4df1-819c-5238a46e2181/security-summary.json",
+      "sha256": "a8605cdc2ea921665d509426ffddc71b8b21fe0ee89942c059813484d6d5eb9b",
+      "bytes": 1502
+    },
+    {
+      "path": "docs/evidence/latest-enterprise.json",
+      "sha256": "2fe9ab6c94ad01fde38aea8f358927952c0f288a1592aeae3cf511af702f0554",
+      "bytes": 196
+    },
+    {
+      "path": "docs/evidence/c53a1e12-a120-4825-b7e0-2b5d915d72be/enterprise-summary.json",
+      "sha256": "28cd2a337ca38b51448929f85f5eec8dd5461e668ca1684e4790a6c1608711fd",
+      "bytes": 8223
+    },
+    {
+      "path": "docs/evidence/additional-boundaries-070695fc-cfb3-48f2-a9e5-ae649b18cbde/summary.json",
+      "sha256": "38d3f681ba7ef7f924689d4e471456cadfaf98c68a036f38d8ef3fbf755e0bf8",
+      "bytes": 1974
+    },
+    {
+      "path": "docs/evidence/standard-signing-e950bc11-7411-4e10-b808-a09eb34c439e/summary.json",
+      "sha256": "fc39944a02ce6ee85e952af8f97e7c71059929fdea1acc3b098d8780e4a77909",
+      "bytes": 5301
+    },
+    {
+      "path": "docs/evidence/standard-signing-e950bc11-7411-4e10-b808-a09eb34c439e/separate-consumer.json",
+      "sha256": "7dd8226b09a5cbf7e1e86b81a3e177ae329c0d263e5fc6fd79f8a7be04717d3e",
+      "bytes": 229
+    },
+    {
+      "path": "docs/evidence/packed-linux-build-4a847f6d-b347-41fd-9e95-d48901fb7310/summary.json",
+      "sha256": "0eb3c1b6f6ff201cd6dc7d31ffcf7405b61fd44149611e14ece374d4bdffb635",
+      "bytes": 645
+    },
+    {
+      "path": "docs/evidence/enterprise-installed-final-health.json",
+      "sha256": "1e6dd6a8698027474e328eb9c51a178322359decea826dd75f2947520898eec3",
+      "bytes": 2599
+    },
+    {
+      "path": "docs/evidence/coding-workflow-assessment.json",
+      "sha256": "84c9c2f5e6fffc4e0d342aeab0f98b85923f78a9aefdab4b11af914a0fcc8c2a",
+      "bytes": 2630
+    }
+  ]
+}

@@ -55,7 +55,13 @@ rules:
       - patterns:
           - pattern: $DB.query($SQL, ...)
           - focus-metavariable: $SQL
-      - pattern: $DB.exec($SQL)
+      - patterns:
+          - pattern: $DB.exec($SQL)
+          # A literal RegExp receiver is not a database. Keep named/unknown
+          # receivers and SQL taint checks; do not exempt source files or input.
+          - metavariable-regex:
+              metavariable: $DB
+              regex: '^(?!/(?:\\.|[^/\\\r\n])+/[dgimsuvy]*$)'
   - id: agentbrake-credential-literal
     languages: [generic]
     severity: ERROR

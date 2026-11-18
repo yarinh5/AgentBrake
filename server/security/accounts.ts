@@ -14,17 +14,22 @@ export const accountSchemas = {
     token: z.string().max(200),
 };
 export const safeAccount = ({ id, name, email, role, tenant, active }: Account) => ({ id, name, email, role, tenant, active });
+export type AccountAuthPolicy = { ssoRequired: true; breakGlassAccountId?: string };
 const actorOf = ({ id, name, role, tenant }: Account) => ({ id, name, role, tenant });
 const invalidToken = () => new HttpError(400, "Invalid or expired token");
 const event = (type: string, actorId: string, targetId: string, reason: string) => ({ type: "identity." + type, details: { actorId, targetId, reason } });
 export class ManagedAccounts {
     readonly team = true;
-    constructor(private store: ControlStore, private legacy: LocalOperators) { }
+    constructor(private store: ControlStore, private legacy: LocalOperators, private authPolicy?: AccountAuthPolicy) { }
+    private localOnly() { if (this.authPolicy?.ssoRequired) throw new HttpError(403, "SSO requires federated identity management"); }
     async status() { return { managed: true, initialized: (await this.store.identityState()).initialized }; }
     private account(state: IdentityState, session: OperatorSession, admin = false) {
         const account = state.accounts.find(a => a.id === session.actor.id);
         if (session.authMode !== "account" || !account?.active || account.revision !== session.revision)
             throw new HttpError(401, "Account sign-in required");
+        if (this.authPolicy?.ssoRequired && !(session.assurance?.method === "oidc" ||
+            (session.assurance?.method === "break-glass" && account.id === this.authPolicy.breakGlassAccountId && account.role === "administrator" && !account.federation)))
+            throw new HttpError(401, "SSO federated sign-in required");
         if (admin && account.role !== "administrator")
             throw new HttpError(403, "Administrator access required");
         return account;
@@ -49,6 +54,7 @@ export class ManagedAccounts {
         const state = await this.store.identityState();
         this.pruneInvalidSessions(state);
         if (!state.initialized) {
+            if (this.authPolicy?.ssoRequired) throw new HttpError(401, "SSO requires initialized managed accounts");
             if (session.authMode !== "key")
                 throw new HttpError(401, "Operator sign-in required");
             return session;
@@ -64,6 +70,8 @@ export class ManagedAccounts {
     logout(cookie?: string) { this.legacy.logout(cookie); }
     async login(input: unknown) {
         const state = await this.store.identityState();
+        if (this.authPolicy?.ssoRequired && (!state.initialized || !this.authPolicy.breakGlassAccountId))
+            throw new HttpError(401, "SSO federated sign-in required");
         if (!state.initialized) {
             const key = z.object({ key: z.string().max(200) }).strict().safeParse(input);
             if (!key.success)
@@ -74,6 +82,8 @@ export class ManagedAccounts {
         if (!body.success)
             throw new HttpError(401, "Invalid account credential");
         const found = state.accounts.find(a => a.email === body.data.email && a.active);
+        if (this.authPolicy?.ssoRequired && (!found || found.id !== this.authPolicy.breakGlassAccountId || found.role !== "administrator" || found.federation))
+            throw new HttpError(401, "SSO federated sign-in required");
         // Unknown emails still perform the same bounded asynchronous KDF.
         const credential = found?.passwordHash ?? { salt: "0".repeat(32), hash: "0".repeat(128) };
         const valid = await verifyPassword(body.data.password, credential);
@@ -84,9 +94,18 @@ export class ManagedAccounts {
         const current = latest.accounts.find(a => a.id === found.id);
         if (!current?.active || current.revision !== found.revision)
             throw new HttpError(401, "Invalid account credential");
+        if (this.authPolicy?.ssoRequired) {
+            const verified = await this.store.changeIdentity(state => {
+                const a = state.accounts.find(a => a.id === current.id);
+                if (!a?.active || a.revision !== current.revision || a.role !== "administrator" || a.federation) throw new HttpError(401,"Invalid account credential");
+                return {result:a,audit:event("break-glass-login",a.id,a.id,"explicit-emergency-credential")};
+            });
+            return this.legacy.issue(actorOf(verified),"account",verified.revision,{method:"break-glass"});
+        }
         return this.session(current);
     }
     async setup(input: unknown) {
+        this.localOnly();
         const body = z.object({ key: z.string().max(200), name: accountSchemas.name, email: accountSchemas.email, password: accountSchemas.password }).strict().parse(input);
         if ((await this.store.identityState()).initialized)
             throw new HttpError(409, "Workspace accounts are already initialized");
@@ -109,6 +128,7 @@ export class ManagedAccounts {
     }
     async profile(session: OperatorSession) { return safeAccount(this.account(await this.store.identityState(), session)); }
     async rename(session: OperatorSession, input: unknown) {
+        this.localOnly();
         const { name } = z.object({ name: accountSchemas.name }).strict().parse(input);
         return this.store.changeIdentity(state => {
             const a = this.account(state, session);
@@ -122,6 +142,7 @@ export class ManagedAccounts {
         return { members: state.accounts.map(safeAccount), invitations: state.invitations.filter(i => i.expiresAt > Date.now()).map(({ id, email, role, expiresAt }) => ({ id, email, role, expiresAt })) };
     }
     async invite(session: OperatorSession, input: unknown) {
+        this.localOnly();
         const { email, role } = z.object({ email: accountSchemas.email, role: accountSchemas.role }).strict().parse(input);
         const token = randomBytes(32).toString("hex"), id = randomUUID(), expiresAt = Date.now() + 24 * 3600000;
         return this.store.changeIdentity(state => {
@@ -136,6 +157,7 @@ export class ManagedAccounts {
         });
     }
     async revoke(session: OperatorSession, id: string) {
+        this.localOnly();
         await this.store.changeIdentity(state => {
             const a = this.account(state, session, true);
             if (!state.invitations.some(i => i.id === id)) throw new HttpError(404, "Invitation not found");
@@ -144,6 +166,7 @@ export class ManagedAccounts {
         });
     }
     async accept(input: unknown) {
+        this.localOnly();
         const body = z.object({ token: accountSchemas.token, name: accountSchemas.name, password: accountSchemas.password }).strict().parse(input);
         const tokenHash = digest(body.token);
         const preliminary = await this.store.identityState();
@@ -168,6 +191,7 @@ export class ManagedAccounts {
         } finally { reservation.release(); }
     }
     async changeMember(session: OperatorSession, id: string, input: unknown) {
+        this.localOnly();
         const patch = z.object({ role: accountSchemas.role.optional(), active: z.boolean().optional() }).strict().refine(p => Object.keys(p).length > 0).parse(input);
         const updated = await this.store.changeIdentity(state => {
             const actor = this.account(state, session, true), a = state.accounts.find(a => a.id === id);
@@ -183,6 +207,7 @@ export class ManagedAccounts {
         return updated.member;
     }
     async recovery(session: OperatorSession, id: string, input: unknown) {
+        this.localOnly();
         z.object({}).strict().parse(input);
         const token = randomBytes(32).toString("hex"), expiresAt = Date.now() + 15 * 60000;
         return this.store.changeIdentity(state => {
@@ -195,6 +220,7 @@ export class ManagedAccounts {
         });
     }
     async changePassword(session: OperatorSession, input: unknown) {
+        if (this.authPolicy?.ssoRequired && session.actor.id !== this.authPolicy.breakGlassAccountId) this.localOnly();
         const body = z.object({ currentPassword: accountSchemas.password, password: accountSchemas.password }).strict().parse(input);
         const account = this.account(await this.store.identityState(), session);
         if (!await verifyPassword(body.currentPassword, account.passwordHash))
@@ -210,6 +236,7 @@ export class ManagedAccounts {
         this.pruneAccountSessions(updated.id, updated.revision);
     }
     async reset(input: unknown) {
+        this.localOnly();
         const body = z.object({ token: accountSchemas.token, password: accountSchemas.password }).strict().parse(input);
         const tokenHash = digest(body.token);
         if (!(await this.store.identityState()).recoveries.some(r => r.tokenHash === tokenHash && r.expiresAt > Date.now()))

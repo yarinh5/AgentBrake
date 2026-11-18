@@ -1,0 +1,21 @@
+{
+  "runId": "a10b4e05-dfe9-4938-9bc8-1a52f21603aa",
+  "sourceHash": "b208f6cbbec4a5ab72608d6369423f9973dc7fd50db4188f36e0c2ba2331b84c",
+  "startedAt": "2026-11-17T09:59:30.263Z",
+  "result": "FAIL",
+  "checks": [
+    {
+      "label": "scanner-version",
+      "exitCode": 0
+    },
+    {
+      "label": "sast-rule-tests",
+      "exitCode": 1
+    }
+  ],
+  "limits": "Semgrep OSS with eight local rules, npm advisories and dependency SBOM. Not exhaustive interprocedural analysis, OS image CVE coverage, penetration testing or external human review.",
+  "scannerVersion": "1.184.0",
+  "scannerImage": "semgrep/semgrep@sha256:cc1b68266f267878b39739373ea9985b9a78e5d64497dd875c8de100b22695ed",
+  "error": "sast-rule-tests failed (1)",
+  "finishedAt": "2026-11-17T09:59:37.631Z"
+}

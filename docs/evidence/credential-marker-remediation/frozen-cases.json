@@ -1,0 +1,145 @@
+{
+  "frozenAt": "2026-11-17T19:02:34.494Z",
+  "scope": "Frozen authored regression/holdout cases; synthetic content detector coverage, not repository or customer cohort",
+  "cases": [
+    {
+      "id": "benign-0",
+      "value": "password=example-only-placeholder",
+      "expectedSensitive": false
+    },
+    {
+      "id": "benign-1",
+      "value": "api_key=example-only-placeholder\n",
+      "expectedSensitive": false
+    },
+    {
+      "id": "benign-2",
+      "value": "# config\napi-key: example-only-placeholder\r\n",
+      "expectedSensitive": false
+    },
+    {
+      "id": "benign-3",
+      "value": "PASSWORD = example-only-placeholder\tcomment",
+      "expectedSensitive": false
+    },
+    {
+      "id": "benign-4",
+      "value": "secret: example-only-placeholder",
+      "expectedSensitive": false
+    },
+    {
+      "id": "benign-5",
+      "value": "access_token=example-only-placeholder",
+      "expectedSensitive": false
+    },
+    {
+      "id": "benign-6",
+      "value": "const credential = process.env.CREDENTIAL;",
+      "expectedSensitive": false
+    },
+    {
+      "id": "benign-7",
+      "value": "password=short",
+      "expectedSensitive": false
+    },
+    {
+      "id": "benign-8",
+      "value": "Documentation עברית password=example-only-placeholder\n",
+      "expectedSensitive": false
+    },
+    {
+      "id": "benign-9",
+      "value": {
+        "a": [
+          {
+            "body": "password=example-only-placeholder\nother non-secret text"
+          }
+        ]
+      },
+      "expectedSensitive": false
+    },
+    {
+      "id": "hostile-0",
+      "value": "password=example-only-placeholderX",
+      "expectedSensitive": true
+    },
+    {
+      "id": "hostile-1",
+      "value": "password=Xexample-only-placeholder",
+      "expectedSensitive": true
+    },
+    {
+      "id": "hostile-2",
+      "value": "password=example-only-placeholder/secret",
+      "expectedSensitive": true
+    },
+    {
+      "id": "hostile-3",
+      "value": "password=EXAMPLE-ONLY-PLACEHOLDER",
+      "expectedSensitive": true
+    },
+    {
+      "id": "hostile-4",
+      "value": "password=example-only-placeholder​hidden",
+      "expectedSensitive": true
+    },
+    {
+      "id": "hostile-5",
+      "value": "api_key=example-only-placeholder%20hidden",
+      "expectedSensitive": true
+    },
+    {
+      "id": "hostile-6",
+      "value": "password=example-only-placeholder\nsecret=synthetic-adversarial-value",
+      "expectedSensitive": true
+    },
+    {
+      "id": "hostile-7",
+      "value": "Documentation only: password=synthetic-adversarial-value",
+      "expectedSensitive": true
+    },
+    {
+      "id": "hostile-8",
+      "value": "Test safe example: api_key=synthetic-adversarial-value",
+      "expectedSensitive": true
+    },
+    {
+      "id": "hostile-9",
+      "value": "password=example-only-placeholder\nghp_ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ",
+      "expectedSensitive": true
+    },
+    {
+      "id": "hostile-10",
+      "value": "password=example-only-placeholder\n-----BEGIN RSA PRIVATE KEY-----",
+      "expectedSensitive": true
+    },
+    {
+      "id": "hostile-11",
+      "value": {
+        "a": "password=example-only-placeholder",
+        "b": "access_token=synthetic-adversarial-value"
+      },
+      "expectedSensitive": true
+    },
+    {
+      "id": "hostile-12",
+      "value": {
+        "a": "password=example-only-placeholder",
+        "nested": [
+          "sk-ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ"
+        ]
+      },
+      "expectedSensitive": true
+    },
+    {
+      "id": "hostile-13",
+      "value": "password=example-only-placeholder\\nsecret=synthetic-adversarial-value",
+      "expectedSensitive": true
+    },
+    {
+      "id": "hostile-14",
+      "value": "password=example-only-placeholder;secret=synthetic-adversarial-value",
+      "expectedSensitive": true
+    }
+  ]
+}

@@ -1,0 +1,233 @@
+{
+  "at": "2026-11-17T20:03:47.214833+00:00",
+  "result": "FAIL",
+  "phase": "clean-package-validation2",
+  "sourceHash": "c043156a9a2f69b6d3ddfc0eb6eec315faba38250f8eb38ae2a02f7087f7c999",
+  "baseSource": null,
+  "releaseAcceptance": false,
+  "approval": "User authorized fresh local Ubuntu validation, public free dependencies, synthetic data and resource tuning; no production, paid services or live target credentials.",
+  "seedSha256": "9ed600aaa30cc37cc6fe4fa66352fac885458a11f3c3eb294862689279c74128",
+  "localRawSerialSha256": "b23ef6bbfe9d4889a7fc2c840bda83508284f6a8dc89ea7b4e7660af8065dfb5",
+  "files": [
+    {
+      "name": "guest-report.json",
+      "sha256": "ff683b50d9c32b1cd255004868a3329f153c8c873aa6d1ebecda040cf951c166",
+      "bytes": 77924
+    },
+    {
+      "name": "manifest.json",
+      "sha256": "c4bdeeb1f11d5f0a8572969d86967b9d7f0b19c488c08fe62fcf34df8cc2be4f",
+      "bytes": 561
+    },
+    {
+      "name": "meta-data",
+      "sha256": "36d1f1c501a3c15c7f6b875a02560a802c766ca93c0f7d5c1c6ac96c2a8b3c77",
+      "bytes": 120
+    },
+    {
+      "name": "native-artifact-transfer.json",
+      "sha256": "70d627caaa95b54b71ad07ae9ef28a1b78c52491cbce58b3b41b0afb0090b491",
+      "bytes": 187
+    },
+    {
+      "name": "native-artifacts/0416214f-a2ef-490a-93f6-c7c58011037d/enterprise-summary.json",
+      "sha256": "e44297e55e45b69a1b438a300911ce3e2f35dea016f8616d6758000234b94d42",
+      "bytes": 1753
+    },
+    {
+      "name": "native-artifacts/0416214f-a2ef-490a-93f6-c7c58011037d/source-manifest.json",
+      "sha256": "c149357f21a36257608fda9c15222ba6f3e91f65f44086ad3d7da0308e8c72ea",
+      "bytes": 36302
+    },
+    {
+      "name": "native-artifacts/3482077f-f134-49d9-8ff5-c49c2921fbb1/scanner-version.json",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "name": "native-artifacts/3482077f-f134-49d9-8ff5-c49c2921fbb1/scanner-version.log",
+      "sha256": "553492271cc264c8e61a1e6912f51f9125181868331584bd5da0ef791949c73b",
+      "bytes": 1013
+    },
+    {
+      "name": "native-artifacts/3482077f-f134-49d9-8ff5-c49c2921fbb1/security-summary.json",
+      "sha256": "228d7da86bc2f69d59492a5275202a92edf4d6849aaa5568bf1300508a7b0be1",
+      "bytes": 571
+    },
+    {
+      "name": "native-artifacts/3482077f-f134-49d9-8ff5-c49c2921fbb1/source-manifest.json",
+      "sha256": "c149357f21a36257608fda9c15222ba6f3e91f65f44086ad3d7da0308e8c72ea",
+      "bytes": 36302
+    },
+    {
+      "name": "native-artifacts/6b04f9f0-0994-455b-bc9a-d32fb89c7727/service-summary.json",
+      "sha256": "cbd605326b16e7f42fbfab42156822e9d287ccce239ffe35c063f1b081b7a4dd",
+      "bytes": 614
+    },
+    {
+      "name": "native-artifacts/6b04f9f0-0994-455b-bc9a-d32fb89c7727/source-manifest.json",
+      "sha256": "c149357f21a36257608fda9c15222ba6f3e91f65f44086ad3d7da0308e8c72ea",
+      "bytes": 36302
+    },
+    {
+      "name": "native-artifacts/7626f7b9-4a36-48a1-8706-1f945e2a9b77/cleanup-check-containers.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "name": "native-artifacts/7626f7b9-4a36-48a1-8706-1f945e2a9b77/cleanup-check-networks.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "name": "native-artifacts/7626f7b9-4a36-48a1-8706-1f945e2a9b77/cleanup-check-volumes.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "name": "native-artifacts/7626f7b9-4a36-48a1-8706-1f945e2a9b77/compose-config.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "name": "native-artifacts/7626f7b9-4a36-48a1-8706-1f945e2a9b77/compose-down.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "name": "native-artifacts/7626f7b9-4a36-48a1-8706-1f945e2a9b77/compose-up.log",
+      "sha256": "e4d2639fe6af53d307b3296f06a78d417775a9b8edcc0052a1f4e3ffdca95095",
+      "bytes": 2757
+    },
+    {
+      "name": "native-artifacts/7626f7b9-4a36-48a1-8706-1f945e2a9b77/container-logs.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "name": "native-artifacts/7626f7b9-4a36-48a1-8706-1f945e2a9b77/docker-preflight.log",
+      "sha256": "7b87eab4a4163c0c4fa15dd0dd13348a772c9b3e6e3922c5c29dcc215b6d6a8c",
+      "bytes": 770
+    },
+    {
+      "name": "native-artifacts/7626f7b9-4a36-48a1-8706-1f945e2a9b77/expanded-corpus.json",
+      "sha256": "be01426b69ce70914cdff1556e7e2f451a5e475583638312a1c2eae7533ef9ab",
+      "bytes": 48361
+    },
+    {
+      "name": "native-artifacts/7626f7b9-4a36-48a1-8706-1f945e2a9b77/isolation-summary.json",
+      "sha256": "4653b930a3c4158e46c924e32b9bb4971209656445dce08cb9bee46d2b2e7124",
+      "bytes": 6782
+    },
+    {
+      "name": "native-artifacts/7626f7b9-4a36-48a1-8706-1f945e2a9b77/source-manifest.json",
+      "sha256": "c149357f21a36257608fda9c15222ba6f3e91f65f44086ad3d7da0308e8c72ea",
+      "bytes": 36302
+    },
+    {
+      "name": "native-artifacts/7908f64e-f1e8-47e4-9f53-8830867ee1cb/browser.log",
+      "sha256": "b992f5ba0fc0288c0d62fd59808b7b5f0bb8dcab27d8b70de3b41c0280ea5f6f",
+      "bytes": 3800
+    },
+    {
+      "name": "native-artifacts/7908f64e-f1e8-47e4-9f53-8830867ee1cb/build.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "name": "native-artifacts/7908f64e-f1e8-47e4-9f53-8830867ee1cb/dashboard-build.log",
+      "sha256": "634d26b5c5c7523b8b1d2bb16193eaab975627167d4b980b2d7d45e220f0b3c8",
+      "bytes": 580
+    },
+    {
+      "name": "native-artifacts/7908f64e-f1e8-47e4-9f53-8830867ee1cb/docker-preflight.log",
+      "sha256": "7b87eab4a4163c0c4fa15dd0dd13348a772c9b3e6e3922c5c29dcc215b6d6a8c",
+      "bytes": 770
+    },
+    {
+      "name": "native-artifacts/7908f64e-f1e8-47e4-9f53-8830867ee1cb/node-tests.log",
+      "sha256": "1b0d8e75ee6a66db50a6fd750f920e0d42cca25f1430493f3d87bf917d7c9960",
+      "bytes": 90499
+    },
+    {
+      "name": "native-artifacts/7908f64e-f1e8-47e4-9f53-8830867ee1cb/rego.log",
+      "sha256": "ed799fa76939b283e8df134bae09607ca5f88c266eed4405b54c9b3e552856f3",
+      "bytes": 1285
+    },
+    {
+      "name": "native-artifacts/7908f64e-f1e8-47e4-9f53-8830867ee1cb/source-manifest.json",
+      "sha256": "c149357f21a36257608fda9c15222ba6f3e91f65f44086ad3d7da0308e8c72ea",
+      "bytes": 36302
+    },
+    {
+      "name": "native-artifacts/7908f64e-f1e8-47e4-9f53-8830867ee1cb/summary.json",
+      "sha256": "5f53ffd0d2dc3f2c7b0ebaf2eda586b9f89267980099fe313679673d90e8e515",
+      "bytes": 5903
+    },
+    {
+      "name": "native-artifacts/7908f64e-f1e8-47e4-9f53-8830867ee1cb/typecheck.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "name": "native-artifacts/7908f64e-f1e8-47e4-9f53-8830867ee1cb/upstream-proof.json",
+      "sha256": "bb8049dbb203a66bde4b9f6255103da07eabcd03d232b329b36900546e6f3357",
+      "bytes": 20572
+    },
+    {
+      "name": "native-artifacts/7908f64e-f1e8-47e4-9f53-8830867ee1cb/upstream-proof.log",
+      "sha256": "c3270086d9763a6b3f3559576ba745392e458f32137cad4f7f4303c4e31c74c8",
+      "bytes": 1982
+    },
+    {
+      "name": "native-artifacts/8941e9dc-a1a2-47c7-9c21-f35a43c8af75/cleanup.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "name": "native-artifacts/8941e9dc-a1a2-47c7-9c21-f35a43c8af75/install.log",
+      "sha256": "d507dd8cdf1154175caf1723d259cff1f73480600c8b1790a5ed813c14880d81",
+      "bytes": 8069
+    },
+    {
+      "name": "native-artifacts/8941e9dc-a1a2-47c7-9c21-f35a43c8af75/product-summary.json",
+      "sha256": "380131510c91033fab80a499d9987849e55cf66e147a0d50ba67b9bef0735c44",
+      "bytes": 704
+    },
+    {
+      "name": "native-artifacts/8941e9dc-a1a2-47c7-9c21-f35a43c8af75/source-manifest.json",
+      "sha256": "c149357f21a36257608fda9c15222ba6f3e91f65f44086ad3d7da0308e8c72ea",
+      "bytes": 36302
+    },
+    {
+      "name": "native-artifacts/aggregate/local-release.json",
+      "sha256": "3c8904a7b39c93f163d7558db716e9d1cc749bc602672a35c7136c38f9d78723",
+      "bytes": 14177
+    },
+    {
+      "name": "native-artifacts/dd79c148-9aef-4f3c-88e2-e65d9a27b7d5/candidate-summary.json",
+      "sha256": "b37f49a7fe5751e8fe9aa809a29c924727643f0461096f10d9efc83509e7a7ef",
+      "bytes": 794
+    },
+    {
+      "name": "native-artifacts/dd79c148-9aef-4f3c-88e2-e65d9a27b7d5/source-manifest.json",
+      "sha256": "c149357f21a36257608fda9c15222ba6f3e91f65f44086ad3d7da0308e8c72ea",
+      "bytes": 36302
+    },
+    {
+      "name": "network-config",
+      "sha256": "a3bc4c3619b4e66dd6c60f9b005944e1a7e218dfebcff10398d20e94c08613af",
+      "bytes": 27
+    },
+    {
+      "name": "user-data",
+      "sha256": "9bcc7839fa535e66fb28a729107bdae49c5e90c4dd4325e660b605133cb622cf",
+      "bytes": 9891
+    },
+    {
+      "name": "vm-config-before.txt",
+      "sha256": "0c4598c8f6bb28df1e145e73cdf463dd6288ba46caca1600f40160ad815d41f7",
+      "bytes": 4324
+    }
+  ]
+}

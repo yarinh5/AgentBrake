@@ -1,0 +1,428 @@
+{
+  "schema": 1,
+  "runId": "5b3a2995-be71-43ca-ad55-728626bc4d94",
+  "startedAt": "2026-11-17T09:27:37.966Z",
+  "result": "PASS_BOUNDED_LOCAL_PROFILE",
+  "scope": "Bounded single-process local synthetic HTTP/control-path profile with real OPA and isolated HTTP fixture; not production PostgreSQL, HA, capacity limit or SLA evidence.",
+  "sourceHash": "cad14e08e68caf1406304a4cc171bd0152fb85c8562cb28bed054b86331f496d",
+  "workload": {
+    "requestsPerCell": 48,
+    "concurrency": [
+      1,
+      4,
+      8
+    ],
+    "replayCopies": 4,
+    "workloads": [
+      "read",
+      "replay",
+      "forbidden"
+    ],
+    "httpDeadlineMs": 10000,
+    "policyDeadlineMs": 250,
+    "warmupCalls": 0
+  },
+  "environment": {
+    "node": "v22.13.0",
+    "platform": "win32",
+    "architecture": "x64",
+    "osRelease": "10.0.19045",
+    "cpuModel": "Intel(R) Core(TM) i7-9700K CPU @ 3.60GHz",
+    "logicalCpus": 8,
+    "availableParallelism": 8,
+    "totalMemoryBytes": 68632293376,
+    "freeMemoryBytesAtStart": 22107566080,
+    "controlStore": "disposable file-backed SQLite WAL",
+    "targetStore": "independent in-memory SQLite fixture",
+    "clientAndServersSameNodeProcess": true,
+    "opaSeparateProcess": true
+  },
+  "cells": [
+    {
+      "workload": "read",
+      "concurrency": 1,
+      "observedPeakInFlight": 1,
+      "requests": 48,
+      "expectedUniqueRequests": 48,
+      "expectedStatus": "allowed",
+      "successes": 48,
+      "unexpectedDenials": 0,
+      "unexpectedAllows": 0,
+      "unexpectedOutcomes": 0,
+      "replayResponses": 0,
+      "requestGroupsWithDifferentActionIds": 0,
+      "httpStatuses": {
+        "200": 48
+      },
+      "recordStatuses": {
+        "allowed": 48
+      },
+      "expectedTargetCalls": 48,
+      "observedTargetCalls": 48,
+      "unexpectedDuplicateExecutions": 0,
+      "targetStateUnchanged": true,
+      "targetBeforeHash": "24dacdf1350f702e47e5a39881a7f2e61881b3982df1a46c674d1c5bb36befc5",
+      "targetAfterHash": "24dacdf1350f702e47e5a39881a7f2e61881b3982df1a46c674d1c5bb36befc5",
+      "latencyMs": {
+        "p50": 11.931,
+        "p95": 16.261,
+        "max": 56.596
+      },
+      "elapsedMs": 641.327,
+      "observedRequestsPerSecond": 74.845,
+      "nodeCpuMicroseconds": {
+        "user": 484000,
+        "system": 109000
+      },
+      "nodeRssBefore": 184074240,
+      "nodeRssAfter": 196673536,
+      "auditChainValid": true
+    },
+    {
+      "workload": "replay",
+      "concurrency": 1,
+      "observedPeakInFlight": 1,
+      "requests": 48,
+      "expectedUniqueRequests": 12,
+      "expectedStatus": "allowed",
+      "successes": 48,
+      "unexpectedDenials": 0,
+      "unexpectedAllows": 0,
+      "unexpectedOutcomes": 0,
+      "replayResponses": 36,
+      "requestGroupsWithDifferentActionIds": 0,
+      "httpStatuses": {
+        "200": 48
+      },
+      "recordStatuses": {
+        "allowed": 48
+      },
+      "expectedTargetCalls": 12,
+      "observedTargetCalls": 12,
+      "unexpectedDuplicateExecutions": 0,
+      "targetStateUnchanged": true,
+      "targetBeforeHash": "24dacdf1350f702e47e5a39881a7f2e61881b3982df1a46c674d1c5bb36befc5",
+      "targetAfterHash": "24dacdf1350f702e47e5a39881a7f2e61881b3982df1a46c674d1c5bb36befc5",
+      "latencyMs": {
+        "p50": 2.821,
+        "p95": 14.045,
+        "max": 25.854
+      },
+      "elapsedMs": 267.394,
+      "observedRequestsPerSecond": 179.51,
+      "nodeCpuMicroseconds": {
+        "user": 219000,
+        "system": 31000
+      },
+      "nodeRssBefore": 196755456,
+      "nodeRssAfter": 197873664,
+      "auditChainValid": true
+    },
+    {
+      "workload": "forbidden",
+      "concurrency": 1,
+      "observedPeakInFlight": 1,
+      "requests": 48,
+      "expectedUniqueRequests": 48,
+      "expectedStatus": "blocked",
+      "successes": 48,
+      "unexpectedDenials": 0,
+      "unexpectedAllows": 0,
+      "unexpectedOutcomes": 0,
+      "replayResponses": 0,
+      "requestGroupsWithDifferentActionIds": 0,
+      "httpStatuses": {
+        "200": 48
+      },
+      "recordStatuses": {
+        "blocked": 48
+      },
+      "expectedTargetCalls": 0,
+      "observedTargetCalls": 0,
+      "unexpectedDuplicateExecutions": 0,
+      "targetStateUnchanged": true,
+      "targetBeforeHash": "24dacdf1350f702e47e5a39881a7f2e61881b3982df1a46c674d1c5bb36befc5",
+      "targetAfterHash": "24dacdf1350f702e47e5a39881a7f2e61881b3982df1a46c674d1c5bb36befc5",
+      "latencyMs": {
+        "p50": 4.055,
+        "p95": 5.371,
+        "max": 6.617
+      },
+      "elapsedMs": 203.281,
+      "observedRequestsPerSecond": 236.126,
+      "nodeCpuMicroseconds": {
+        "user": 203000,
+        "system": 16000
+      },
+      "nodeRssBefore": 198148096,
+      "nodeRssAfter": 200400896,
+      "auditChainValid": true
+    },
+    {
+      "workload": "read",
+      "concurrency": 4,
+      "observedPeakInFlight": 4,
+      "requests": 48,
+      "expectedUniqueRequests": 48,
+      "expectedStatus": "allowed",
+      "successes": 48,
+      "unexpectedDenials": 0,
+      "unexpectedAllows": 0,
+      "unexpectedOutcomes": 0,
+      "replayResponses": 0,
+      "requestGroupsWithDifferentActionIds": 0,
+      "httpStatuses": {
+        "200": 48
+      },
+      "recordStatuses": {
+        "allowed": 48
+      },
+      "expectedTargetCalls": 48,
+      "observedTargetCalls": 48,
+      "unexpectedDuplicateExecutions": 0,
+      "targetStateUnchanged": true,
+      "targetBeforeHash": "24dacdf1350f702e47e5a39881a7f2e61881b3982df1a46c674d1c5bb36befc5",
+      "targetAfterHash": "24dacdf1350f702e47e5a39881a7f2e61881b3982df1a46c674d1c5bb36befc5",
+      "latencyMs": {
+        "p50": 42.662,
+        "p95": 57.071,
+        "max": 70.398
+      },
+      "elapsedMs": 525.034,
+      "observedRequestsPerSecond": 91.423,
+      "nodeCpuMicroseconds": {
+        "user": 469000,
+        "system": 31000
+      },
+      "nodeRssBefore": 200568832,
+      "nodeRssAfter": 205729792,
+      "auditChainValid": true
+    },
+    {
+      "workload": "replay",
+      "concurrency": 4,
+      "observedPeakInFlight": 4,
+      "requests": 48,
+      "expectedUniqueRequests": 12,
+      "expectedStatus": "allowed",
+      "successes": 48,
+      "unexpectedDenials": 0,
+      "unexpectedAllows": 0,
+      "unexpectedOutcomes": 0,
+      "replayResponses": 36,
+      "requestGroupsWithDifferentActionIds": 0,
+      "httpStatuses": {
+        "200": 48
+      },
+      "recordStatuses": {
+        "allowed": 48
+      },
+      "expectedTargetCalls": 12,
+      "observedTargetCalls": 12,
+      "unexpectedDuplicateExecutions": 0,
+      "targetStateUnchanged": true,
+      "targetBeforeHash": "24dacdf1350f702e47e5a39881a7f2e61881b3982df1a46c674d1c5bb36befc5",
+      "targetAfterHash": "24dacdf1350f702e47e5a39881a7f2e61881b3982df1a46c674d1c5bb36befc5",
+      "latencyMs": {
+        "p50": 14.013,
+        "p95": 31.818,
+        "max": 32.548
+      },
+      "elapsedMs": 187.914,
+      "observedRequestsPerSecond": 255.436,
+      "nodeCpuMicroseconds": {
+        "user": 125000,
+        "system": 31000
+      },
+      "nodeRssBefore": 206127104,
+      "nodeRssAfter": 208289792,
+      "auditChainValid": true
+    },
+    {
+      "workload": "forbidden",
+      "concurrency": 4,
+      "observedPeakInFlight": 4,
+      "requests": 48,
+      "expectedUniqueRequests": 48,
+      "expectedStatus": "blocked",
+      "successes": 48,
+      "unexpectedDenials": 0,
+      "unexpectedAllows": 0,
+      "unexpectedOutcomes": 0,
+      "replayResponses": 0,
+      "requestGroupsWithDifferentActionIds": 0,
+      "httpStatuses": {
+        "200": 48
+      },
+      "recordStatuses": {
+        "blocked": 48
+      },
+      "expectedTargetCalls": 0,
+      "observedTargetCalls": 0,
+      "unexpectedDuplicateExecutions": 0,
+      "targetStateUnchanged": true,
+      "targetBeforeHash": "24dacdf1350f702e47e5a39881a7f2e61881b3982df1a46c674d1c5bb36befc5",
+      "targetAfterHash": "24dacdf1350f702e47e5a39881a7f2e61881b3982df1a46c674d1c5bb36befc5",
+      "latencyMs": {
+        "p50": 15.209,
+        "p95": 18.495,
+        "max": 19.195
+      },
+      "elapsedMs": 191.739,
+      "observedRequestsPerSecond": 250.34,
+      "nodeCpuMicroseconds": {
+        "user": 219000,
+        "system": 63000
+      },
+      "nodeRssBefore": 208367616,
+      "nodeRssAfter": 210292736,
+      "auditChainValid": true
+    },
+    {
+      "workload": "read",
+      "concurrency": 8,
+      "observedPeakInFlight": 8,
+      "requests": 48,
+      "expectedUniqueRequests": 48,
+      "expectedStatus": "allowed",
+      "successes": 48,
+      "unexpectedDenials": 0,
+      "unexpectedAllows": 0,
+      "unexpectedOutcomes": 0,
+      "replayResponses": 0,
+      "requestGroupsWithDifferentActionIds": 0,
+      "httpStatuses": {
+        "200": 48
+      },
+      "recordStatuses": {
+        "allowed": 48
+      },
+      "expectedTargetCalls": 48,
+      "observedTargetCalls": 48,
+      "unexpectedDuplicateExecutions": 0,
+      "targetStateUnchanged": true,
+      "targetBeforeHash": "24dacdf1350f702e47e5a39881a7f2e61881b3982df1a46c674d1c5bb36befc5",
+      "targetAfterHash": "24dacdf1350f702e47e5a39881a7f2e61881b3982df1a46c674d1c5bb36befc5",
+      "latencyMs": {
+        "p50": 88.317,
+        "p95": 119.118,
+        "max": 133.426
+      },
+      "elapsedMs": 548.665,
+      "observedRequestsPerSecond": 87.485,
+      "nodeCpuMicroseconds": {
+        "user": 359000,
+        "system": 78000
+      },
+      "nodeRssBefore": 210956288,
+      "nodeRssAfter": 215973888,
+      "auditChainValid": true
+    },
+    {
+      "workload": "replay",
+      "concurrency": 8,
+      "observedPeakInFlight": 8,
+      "requests": 48,
+      "expectedUniqueRequests": 12,
+      "expectedStatus": "allowed",
+      "successes": 48,
+      "unexpectedDenials": 0,
+      "unexpectedAllows": 0,
+      "unexpectedOutcomes": 0,
+      "replayResponses": 36,
+      "requestGroupsWithDifferentActionIds": 0,
+      "httpStatuses": {
+        "200": 48
+      },
+      "recordStatuses": {
+        "allowed": 48
+      },
+      "expectedTargetCalls": 12,
+      "observedTargetCalls": 12,
+      "unexpectedDuplicateExecutions": 0,
+      "targetStateUnchanged": true,
+      "targetBeforeHash": "24dacdf1350f702e47e5a39881a7f2e61881b3982df1a46c674d1c5bb36befc5",
+      "targetAfterHash": "24dacdf1350f702e47e5a39881a7f2e61881b3982df1a46c674d1c5bb36befc5",
+      "latencyMs": {
+        "p50": 29.344,
+        "p95": 44.338,
+        "max": 44.544
+      },
+      "elapsedMs": 197.12,
+      "observedRequestsPerSecond": 243.506,
+      "nodeCpuMicroseconds": {
+        "user": 78000,
+        "system": 63000
+      },
+      "nodeRssBefore": 216731648,
+      "nodeRssAfter": 218763264,
+      "auditChainValid": true
+    },
+    {
+      "workload": "forbidden",
+      "concurrency": 8,
+      "observedPeakInFlight": 8,
+      "requests": 48,
+      "expectedUniqueRequests": 48,
+      "expectedStatus": "blocked",
+      "successes": 48,
+      "unexpectedDenials": 0,
+      "unexpectedAllows": 0,
+      "unexpectedOutcomes": 0,
+      "replayResponses": 0,
+      "requestGroupsWithDifferentActionIds": 0,
+      "httpStatuses": {
+        "200": 48
+      },
+      "recordStatuses": {
+        "blocked": 48
+      },
+      "expectedTargetCalls": 0,
+      "observedTargetCalls": 0,
+      "unexpectedDuplicateExecutions": 0,
+      "targetStateUnchanged": true,
+      "targetBeforeHash": "24dacdf1350f702e47e5a39881a7f2e61881b3982df1a46c674d1c5bb36befc5",
+      "targetAfterHash": "24dacdf1350f702e47e5a39881a7f2e61881b3982df1a46c674d1c5bb36befc5",
+      "latencyMs": {
+        "p50": 25.95,
+        "p95": 29.214,
+        "max": 30.399
+      },
+      "elapsedMs": 158.235,
+      "observedRequestsPerSecond": 303.346,
+      "nodeCpuMicroseconds": {
+        "user": 141000,
+        "system": 31000
+      },
+      "nodeRssBefore": 218849280,
+      "nodeRssAfter": 220987392,
+      "auditChainValid": true
+    }
+  ],
+  "cleanup": {
+    "appClosed": true,
+    "targetClosed": true,
+    "opaStopped": true,
+    "temporaryFilesRemoved": true
+  },
+  "policy": {
+    "version": "1.22.4",
+    "hash": "9ac719fef979ee7b37c5c5ef3173621453782a0a02d432727391beeff1234d14",
+    "deadlineMs": 250
+  },
+  "sourceHashAtEnd": "cad14e08e68caf1406304a4cc171bd0152fb85c8562cb28bed054b86331f496d",
+  "sourceStableDuringRun": true,
+  "finishedAt": "2026-11-17T09:27:41.488Z",
+  "resources": {
+    "nodePeakRssBytes": 222183424,
+    "nodeFinalMemory": {
+      "rss": 221253632,
+      "heapTotal": 89309184,
+      "heapUsed": 56652808,
+      "external": 69597178,
+      "arrayBuffers": 65670756
+    },
+    "freeMemoryBytesAtEnd": 21987483648,
+    "measurementScope": "Node client/control/fixture process only; OPA CPU and peak RSS excluded"
+  }
+}

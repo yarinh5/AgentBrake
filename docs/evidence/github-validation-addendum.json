@@ -1,0 +1,14 @@
+{
+  "at": "2026-11-17T11:57:32.052448+00:00",
+  "result": "PASS_LOCAL_REVIEW_ADDENDUM",
+  "archive": "F:\\project love\\AgentBrake\\.agentbrake-local\\releases\\agentbrake-UNRELEASED-github-validation-28f3ddc1.zip",
+  "sha256": "185b6fffe7c77bd19f5bb84841e7499248e5abcf01756beb073dd7c295a0782e",
+  "bytes": 102010,
+  "files": 35,
+  "sourceHash": "855b2915022fae9542d05207f62bec5eb356d942a001a9f3415a738f3b453c8c",
+  "zipReadback": "PASS_EVERY_FILE_SHA256",
+  "patternScan": "PASS_BOUNDED_PRIVATE_KEY_GITHUB_TOKEN_PATTERNS",
+  "originalUnreleasedArchiveUnchanged": true,
+  "releaseEligible": false,
+  "sentExternally": false
+}

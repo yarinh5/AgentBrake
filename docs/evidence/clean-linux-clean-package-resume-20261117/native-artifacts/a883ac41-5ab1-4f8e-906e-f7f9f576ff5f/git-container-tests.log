@@ -1,0 +1,112 @@
+TAP version 13
+# Subtest: PR preview refuses a missing, moved or used feature branch without changing target state
+ok 1 - PR preview refuses a missing, moved or used feature branch without changing target state
+  ---
+  duration_ms: 968.981758
+  type: 'test'
+  ...
+# Subtest: persistent fixture reopens exact branch/PR state and refuses another installation or unmarked repository
+ok 2 - persistent fixture reopens exact branch/PR state and refuses another installation or unmarked repository
+  ---
+  duration_ms: 529.193593
+  type: 'test'
+  ...
+# Subtest: human PR review computes the canonical diff from a full PR request without mutating Git
+ok 3 - human PR review computes the canonical diff from a full PR request without mutating Git
+  ---
+  duration_ms: 281.677041
+  type: 'test'
+  ...
+# Subtest: creates a new real Git fixture with trusted identity, protected main and bounded reads
+ok 4 - creates a new real Git fixture with trusted identity, protected main and bounded reads
+  ---
+  duration_ms: 300.476138
+  type: 'test'
+  ...
+# Subtest: refuses existing directories and repositories without changing their contents
+ok 5 - refuses existing directories and repositories without changing their contents
+  ---
+  duration_ms: 83.073225
+  type: 'test'
+  ...
+# Subtest: canonical proposals return an exact diff and fingerprint without writing Git objects
+ok 6 - canonical proposals return an exact diff and fingerprint without writing Git objects
+  ---
+  duration_ms: 254.596014
+  type: 'test'
+  ...
+# Subtest: proposal diff applies exactly, including empty files and missing terminal newlines
+ok 7 - proposal diff applies exactly, including empty files and missing terminal newlines
+  ---
+  duration_ms: 615.832114
+  type: 'test'
+  ...
+# Subtest: queued requests cannot swap validated branch or content before execution
+ok 8 - queued requests cannot swap validated branch or content before execution
+  ---
+  duration_ms: 232.076422
+  type: 'test'
+  ...
+# Subtest: approved feature branch and mock PR produce one real commit while main remains unchanged
+ok 9 - approved feature branch and mock PR produce one real commit while main remains unchanged
+  ---
+  duration_ms: 378.853719
+  type: 'test'
+  ...
+# Subtest: rejects protected branches, external repos, extra arguments and forbidden tools with no effects
+ok 10 - rejects protected branches, external repos, extra arguments and forbidden tools with no effects
+  ---
+  duration_ms: 89.006892
+  type: 'test'
+  ...
+# Subtest: rejects workflow, secret, traversal and ambiguous paths before reading or writing
+ok 11 - rejects workflow, secret, traversal and ambiguous paths before reading or writing
+  ---
+  duration_ms: 96.582339
+  type: 'test'
+  ...
+# Subtest: enforces file count, UTF-8 bytes, total bytes, duplicate paths and exact nested schemas
+ok 12 - enforces file count, UTF-8 bytes, total bytes, duplicate paths and exact nested schemas
+  ---
+  duration_ms: 116.185483
+  type: 'test'
+  ...
+# Subtest: stale main, stale feature, missing feature and no-op proposals fail before mutation
+ok 13 - stale main, stale feature, missing feature and no-op proposals fail before mutation
+  ---
+  duration_ms: 418.077101
+  type: 'test'
+  ...
+# Subtest: concurrent branch and PR requests produce at most one effect each
+ok 14 - concurrent branch and PR requests produce at most one effect each
+  ---
+  duration_ms: 978.02847
+  type: 'test'
+  ...
+# Subtest: Git tree symlinks are never resolved or overwritten through an allowed path
+ok 15 - Git tree symlinks are never resolved or overwritten through an allowed path
+  ---
+  duration_ms: 180.816922
+  type: 'test'
+  ...
+# Subtest: closing preserves evidence and rejects subsequent execution
+ok 16 - closing preserves evidence and rejects subsequent execution
+  ---
+  duration_ms: 63.193278
+  type: 'test'
+  ...
+# Subtest: fast Git read commands do not fail after an unused stdin pipe closes
+ok 17 - fast Git read commands do not fail after an unused stdin pipe closes
+  ---
+  duration_ms: 917.251572
+  type: 'test'
+  ...
+1..17
+# tests 17
+# suites 0
+# pass 17
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 7446.239601

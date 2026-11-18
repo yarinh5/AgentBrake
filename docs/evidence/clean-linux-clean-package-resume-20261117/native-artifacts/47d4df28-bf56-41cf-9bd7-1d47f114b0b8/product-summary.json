@@ -1,0 +1,21 @@
+{
+  "runId": "47d4df28-bf56-41cf-9bd7-1d47f114b0b8",
+  "sourceHash": "c043156a9a2f69b6d3ddfc0eb6eec315faba38250f8eb38ae2a02f7087f7c999",
+  "startedAt": "2026-11-17T20:10:39.093Z",
+  "installation": {
+    "name": "verify-47d4df28",
+    "id": "078dfc1c-a487-4504-bba4-5f8487699fc1",
+    "port": 4326
+  },
+  "result": "FAIL",
+  "cases": [],
+  "scope": "Local persistent product install; synthetic PostgreSQL/Git, isolated test client. No real GitHub or hosted model. Native process-loss tests are separate evidence.",
+  "error": "Local Docker command deadline exceeded",
+  "cleanup": {
+    "result": "PASS",
+    "containers": 0,
+    "volumes": 0,
+    "networks": 0
+  },
+  "finishedAt": "2026-11-17T20:15:40.006Z"
+}

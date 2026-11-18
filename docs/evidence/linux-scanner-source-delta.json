@@ -1,0 +1,13 @@
+{
+  "fromSource": "52f0a7bfad1233158e2e40256165fbe217ef14f8c320f3da0711668d72a6528b",
+  "toSource": "2ea911ddddb33d9bb2f0a6140da893dfdd416aec0c9e733211b190169f9814e0",
+  "changedFiles": [
+    {
+      "path": "scripts/verify-images.mjs",
+      "before": "cc3ce179c4466c8f937fee38127151b04a067cb65cd4f6b3e894fcf74c0eb776",
+      "after": "57c9fc8d269dd733aea03f1a5c7708f1b0677aa71ec87ea01a91bdd686053cd6"
+    }
+  ],
+  "unchangedSourceFiles": 242,
+  "scope": "Source52 service and Enterprise proofs retain their original hashes. Only the image-scanner operator identity changed; this delta is not a new whole-release or Enterprise test pass."
+}

@@ -1,0 +1,113 @@
+#cloud-config
+users: []
+disable_root: true
+ssh_pwauth: false
+package_update: false
+package_upgrade: false
+write_files:
+  - path: /usr/local/sbin/agentbrake-phase.py
+    permissions: '0700'
+    content: |
+      import json,pathlib,subprocess,traceback,os,time,selectors,signal
+      P=pathlib.Path;root=P('/opt/agentbrake');proxy='http://10.0.2.2:8877'
+      r={'scope':'Separate Ubuntu guest; synthetic product/isolation/restore/candidate/security checks','commands':[],'reports':{},'releaseAcceptance':False}
+      env={**os.environ,'PATH':'/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin','HTTP_PROXY':proxy,'HTTPS_PROXY':proxy,'http_proxy':proxy,'https_proxy':proxy,'NO_PROXY':'localhost,127.0.0.1,::1','no_proxy':'localhost,127.0.0.1,::1','NEXT_TELEMETRY_DISABLED':'1','DEBIAN_FRONTEND':'noninteractive'}
+      def emit(v):
+       with open('/dev/ttyS0','w') as f:f.write('\nAGENTBRAKE_PROGRESS='+json.dumps(v)+'\n')
+      def run(label,args,timeout=1800,asRoot=False):
+       emit({'starting':label});at=time.monotonic()
+       p=subprocess.Popen(args if asRoot else ['runuser','-u','abvalidation','--',*args],stdout=subprocess.PIPE,stderr=subprocess.STDOUT,env=env,cwd=root,start_new_session=True)
+       output=bytearray();selector=selectors.DefaultSelector();selector.register(p.stdout,selectors.EVENT_READ);last=at
+       failure=None;code=None
+       try:
+        while selector.get_map():
+         if time.monotonic()-at>timeout:raise TimeoutError(label+' deadline')
+         for key,_ in selector.select(1):
+          chunk=os.read(key.fd,65536)
+          if chunk:output.extend(chunk)
+          else:selector.unregister(key.fileobj)
+         if len(output)>20*1024*1024:raise RuntimeError(label+' output limit')
+         if time.monotonic()-last>=30:
+          emit({'running':label,'seconds':round(time.monotonic()-at),'outputBytes':len(output)});last=time.monotonic()
+        code=p.wait(timeout=10)
+       except Exception as error:failure=str(error)
+       finally:
+        selector.close()
+        if p.poll() is None:
+         os.killpg(p.pid,signal.SIGTERM)
+         try:p.wait(timeout=10)
+         except subprocess.TimeoutExpired:os.killpg(p.pid,signal.SIGKILL);p.wait(timeout=5)
+       text=output.decode(errors='replace');P('/var/lib/agentbrake-validation/'+label+'.log').write_text(text)
+       r['commands'].append({'label':label,'exitCode':code,'failure':failure,'seconds':round(time.monotonic()-at,2),'outputTail':text[-16000:]});emit({'finished':label,'exitCode':code})
+       if failure or code:raise RuntimeError(label+' failed'+(': '+failure if failure else ''))
+       return text.strip()
+      try:
+       import hashlib,tarfile,io,base64,gzip
+       r['sourceHash']=run('exact-source',['node','--input-type=module','-e',"import {sourceManifest} from './scripts/source-manifest.mjs';console.log((await sourceManifest()).sourceHash)"])
+       assert r['sourceHash']=='52f0a7bfad1233158e2e40256165fbe217ef14f8c320f3da0711668d72a6528b'
+       r['previousCompleted']={}
+       for name in ['service','enterprise']:
+        pointer=json.loads((root/('docs/evidence/latest-'+name+'.json')).read_text());d=(root/pointer['directory']).resolve();summary=json.loads((d/(name+'-summary.json')).read_text());assert summary['sourceHash']==r['sourceHash'];r['previousCompleted'][name]=summary
+       assert r['previousCompleted']['service']['result']=='PASS_LOCAL_SERVICE' and r['previousCompleted']['enterprise']['result']=='PASS_LOCAL_INSTALLED_ENTERPRISE'
+       assert run('guard-active',['systemctl','is-active','ab-dependency-guard'])=='active'
+       probe=root/'.agentbrake-local/scanner-bind-probe.mjs';assert not probe.exists();probe.write_text("import {mkdtemp,rm} from 'node:fs/promises';import {readFileSync} from 'node:fs';import {resolve} from 'node:path';import {spawnSync} from 'node:child_process';\nconst mode=process.argv[2],dir=await mkdtemp(resolve('.agentbrake-local/scanner-bind-probe-')),scanner=JSON.parse(readFileSync('infra/security/trivy.lock.json')).image;\ntry{const r=spawnSync('docker',['--config',resolve('.agentbrake-local/docker-public'),'run','--rm','--network','none','--read-only','--cap-drop','ALL','--security-opt','no-new-privileges:true',...(mode==='operator'?['--user',`${process.getuid()}:${process.getgid()}`]:[]),'--mount','type=bind,src='+resolve('.agentbrake-local/trivy-cache/db/metadata.json')+',dst=/db-metadata,readonly','--mount','type=bind,src='+dir+',dst=/output','--entrypoint','sh',scanner,'-c','id; cat /db-metadata >/dev/null && touch /output/report-probe'],{encoding:'utf8',timeout:30000});console.log(JSON.stringify({mode,operatorUid:process.getuid(),operatorGid:process.getgid(),exitCode:r.status,out:r.stdout,err:r.stderr}));if(mode==='operator'?r.status!==0:r.status===0||!r.stderr.includes('Permission denied'))process.exitCode=1;}finally{await rm(dir,{recursive:true});}\n");os.chown(probe,1100,1100)
+       run('scanner-bind-before',['node','.agentbrake-local/scanner-bind-probe.mjs','original'],60)
+       change=json.loads('{"before": "cc3ce179c4466c8f937fee38127151b04a067cb65cd4f6b3e894fcf74c0eb776", "after": "57c9fc8d269dd733aea03f1a5c7708f1b0677aa71ec87ea01a91bdd686053cd6", "data": "aW1wb3J0IHsgcmVhZEZpbGUsIHdyaXRlRmlsZSwgbWtkaXIsIHJtIH0gZnJvbSAnbm9kZTpmcy9wcm9taXNlcyc7CmltcG9ydCB7IGpvaW4sIHJlc29sdmUgfSBmcm9tICdub2RlOnBhdGgnOwppbXBvcnQgeyByYW5kb21VVUlEIH0gZnJvbSAnbm9kZTpjcnlwdG8nOwppbXBvcnQgeyBzb3VyY2VNYW5pZmVzdCB9IGZyb20gJy4vc291cmNlLW1hbmlmZXN0Lm1qcyc7CmltcG9ydCB7IGRvY2tlclByb2R1Y3QgfSBmcm9tICcuL3Byb2R1Y3QubWpzJzsKaW1wb3J0IHsgdmVyaWZ5SW1hZ2VCaW5kaW5nIH0gZnJvbSAnLi9pbWFnZS1ldmlkZW5jZS5tanMnOwpjb25zdCBydW5JZCA9IHJhbmRvbVVVSUQoKSwgcm9vdCA9IHJlc29sdmUoJy4nKSwgZGlyZWN0b3J5ID0gam9pbihyb290LCAnZG9jcy9ldmlkZW5jZScsIHJ1bklkKSwgY2FjaGUgPSBqb2luKHJvb3QsICcuYWdlbnRicmFrZS1sb2NhbC90cml2eS1jYWNoZScpOwphd2FpdCBta2RpcihkaXJlY3RvcnksIHsgcmVjdXJzaXZlOiB0cnVlIH0pOwpjb25zdCBwb2ludGVyID0gSlNPTi5wYXJzZShhd2FpdCByZWFkRmlsZSgnZG9jcy9ldmlkZW5jZS9sYXRlc3QtY2FuZGlkYXRlLmpzb24nLCAndXRmOCcpKTsKY29uc3QgY2FuZGlkYXRlID0gSlNPTi5wYXJzZShhd2FpdCByZWFkRmlsZShqb2luKHBvaW50ZXIuZGlyZWN0b3J5LCAnY2FuZGlkYXRlLXN1bW1hcnkuanNvbicpLCAndXRmOCcpKTsKY29uc3Qgc291cmNlID0gYXdhaXQgc291cmNlTWFuaWZlc3QoKTsKaWYgKCEvXlthLWYwLTktXXszNn0kLy50ZXN0KGNhbmRpZGF0ZS5ydW5JZCkgfHwgY2FuZGlkYXRlLnJlc3VsdCAhPT0gJ1BBU1NfTE9DQUxfQ0FORElEQVRFJykgdGhyb3cgRXJyb3IoJ0Egc3VjY2Vzc2Z1bCBjYW5kaWRhdGUgaW1hZ2UgYnVpbGQgaXMgcmVxdWlyZWQnKTsKY29uc3Qgc2Nhbm5lciA9IEpTT04ucGFyc2UoYXdhaXQgcmVhZEZpbGUoJ2luZnJhL3NlY3VyaXR5L3RyaXZ5LmxvY2suanNvbicsICd1dGY4JykpOwpjb25zdCBpbWFnZXMgPSBKU09OLnBhcnNlKGF3YWl0IHJlYWRGaWxlKCdpbmZyYS9sb2NhbC9pbWFnZXMubG9jay5qc29uJywgJ3V0ZjgnKSkuaW1hZ2VzOwpjb25zdCBwcm9qZWN0ID0gJ2FnZW50YnJha2UtcHJvZHVjdC12ZXJpZnktY2FuZGlkYXRlLScgKyBjYW5kaWRhdGUucnVuSWQuc2xpY2UoMCwgOCk7CmNvbnN0IGNvbmZpZyA9IHsgZW52OiB7IC4uLnByb2Nlc3MuZW52IH0gfTsKY29uc3QgcmVwb3J0ID0geyBydW5JZCwgc291cmNlSGFzaDogY2FuZGlkYXRlLnNvdXJjZUhhc2gsIGN1cnJlbnRTb3VyY2VIYXNoOiBzb3VyY2Uuc291cmNlSGFzaCwgc3RhcnRlZEF0OiBuZXcgRGF0ZSgpLnRvSVNPU3RyaW5nKCksIHNjYW5uZXIsIHJlc3VsdDogJ05PVF9SVU4nLCBpbWFnZXM6IFtdLAogIHNjb3BlOiAnT2ZmbGluZSBUcml2eSB2dWxuZXJhYmlsaXR5IHNjYW4gb2YgbG9jYWxseSBleHBvcnRlZCBpbWFnZXMuIERhdGFiYXNlIGRvd25sb2FkZWQgc2VwYXJhdGVseTsgbm8gc291cmNlIG9yIGltYWdlIHVwbG9hZGVkLiBVbmZpeGVkIGZpbmRpbmdzIGluY2x1ZGVkOyBubyBibGFua2V0IHN1cHByZXNzaW9uLicgfTsKY29uc3Qgc2NyYXRjaCA9IGpvaW4ocm9vdCwgJy5hZ2VudGJyYWtlLWxvY2FsL2ltYWdlLXNjYW5zJywgcnVuSWQpOyBhd2FpdCBta2RpcihzY3JhdGNoLCB7IHJlY3Vyc2l2ZTogdHJ1ZSB9KTsKdHJ5IHsKICByZXBvcnQuZGF0YWJhc2UgPSBKU09OLnBhcnNlKGF3YWl0IHJlYWRGaWxlKGpvaW4oY2FjaGUsICdkYi9tZXRhZGF0YS5qc29uJyksICd1dGY4JykpOwogIGlmIChEYXRlLm5vdygpIC0gRGF0ZS5wYXJzZShyZXBvcnQuZGF0YWJhc2UuVXBkYXRlZEF0KSA+IDQ4ICogMzYwMDAwMCkgdGhyb3cgRXJyb3IoJ1RyaXZ5IHZ1bG5lcmFiaWxpdHkgZGF0YWJhc2UgaXMgb2xkZXIgdGhhbiA0OCBob3VycycpOwogIGZvciAoY29uc3QgW25hbWUsIHJlZmVyZW5jZV0gb2YgT2JqZWN0LmVudHJpZXMoY2FuZGlkYXRlLmltYWdlUmVmZXJlbmNlcyA/PyB7IHJ1bnRpbWU6IHByb2plY3QgKyAnLXJ1bnRpbWUnLCBkYXNoYm9hcmQ6IHByb2plY3QgKyAnLWRhc2hib2FyZCcsIHBvc3RncmVzOiBpbWFnZXMucG9zdGdyZXMuaW1hZ2UsIG9wYTogaW1hZ2VzLm9wYS5pbWFnZSB9KSkgewogICAgY29uc3QgYXJjaGl2ZSA9IGpvaW4oc2NyYXRjaCwgbmFtZSArICcudGFyJyk7CiAgICBjb25zdCBpbWFnZSA9IEpTT04ucGFyc2UoYXdhaXQgZG9ja2VyUHJvZHVjdChjb25maWcsIFsnaW1hZ2UnLCAnaW5zcGVjdCcsIHJlZmVyZW5jZV0sIHsgY2FwdHVyZTogdHJ1ZSB9KSlbMF07CiAgICB2ZXJpZnlJbWFnZUJpbmRpbmcoY2FuZGlkYXRlLCBuYW1lLCBpbWFnZS5JZCk7CiAgICBhd2FpdCBkb2NrZXJQcm9kdWN0KGNvbmZpZywgWydpbWFnZScsICdzYXZlJywgJy0tb3V0cHV0JywgYXJjaGl2ZSwgaW1hZ2UuSWRdLCB7IGNhcHR1cmU6IHRydWUgfSk7CiAgICB0cnkgewogICAgICBhd2FpdCBkb2NrZXJQcm9kdWN0KGNvbmZpZywgWydydW4nLCAnLS1ybScsICctLW5ldHdvcmsnLCAnbm9uZScsICctLXJlYWQtb25seScsICctLWNhcC1kcm9wJywgJ0FMTCcsICctLXNlY3VyaXR5LW9wdCcsICduby1uZXctcHJpdmlsZWdlczp0cnVlJywgJy0tbWVtb3J5JywgJzJnJywgJy0tcGlkcy1saW1pdCcsICc2NCcsICctLXRtcGZzJywgJy90bXA6c2l6ZT01MTJtJywKICAgICAgICAvLyBMaW51eCBiaW5kIG1vdW50cyBwcmVzZXJ2ZSB0aGUgb3BlcmF0b3IncyBvd25lcnNoaXAuIE1hdGNoIGl0IHNvIHRoZQogICAgICAgIC8vIGNhcGFiaWxpdHktZnJlZSBzY2FubmVyIGNhbiByZWFkIGl0cyBwcml2YXRlIGNhY2hlIGFuZCB3cml0ZSByZXBvcnRzLgogICAgICAgIC4uLihwcm9jZXNzLnBsYXRmb3JtID09PSAnbGludXgnID8gWyctLXVzZXInLCBgJHtwcm9jZXNzLmdldHVpZCgpfToke3Byb2Nlc3MuZ2V0Z2lkKCl9YF0gOiBbXSksICctLWVudicsICdIT01FPS90bXAnLAogICAgICAgICctLW1vdW50JywgYHR5cGU9YmluZCxzcmM9JHtjYWNoZX0sZHN0PS9jYWNoZWAsICctLW1vdW50JywgYHR5cGU9YmluZCxzcmM9JHtzY3JhdGNofSxkc3Q9L2ltYWdlcyxyZWFkb25seWAsICctLW1vdW50JywgYHR5cGU9YmluZCxzcmM9JHtkaXJlY3Rvcnl9LGRzdD0vb3V0cHV0YCwKICAgICAgICBzY2FubmVyLmltYWdlLCAnaW1hZ2UnLCAnLS1jYWNoZS1kaXInLCAnL2NhY2hlJywgJy0tc2tpcC1kYi11cGRhdGUnLCAnLS1za2lwLWphdmEtZGItdXBkYXRlJywgJy0tb2ZmbGluZS1zY2FuJywgJy0tc2Nhbm5lcnMnLCAndnVsbicsICctLW5vLXByb2dyZXNzJywgJy0tZm9ybWF0JywgJ2pzb24nLCAnLS1vdXRwdXQnLCBgL291dHB1dC8ke25hbWV9Lmpzb25gLCAnLS1pbnB1dCcsIGAvaW1hZ2VzLyR7bmFtZX0udGFyYF0sIHsgY2FwdHVyZTogdHJ1ZSwgdGltZW91dE1zOiAzMDAwMDAgfSk7CiAgICAgIGNvbnN0IHJlc3VsdHMgPSBKU09OLnBhcnNlKGF3YWl0IHJlYWRGaWxlKGpvaW4oZGlyZWN0b3J5LCBuYW1lICsgJy5qc29uJyksICd1dGY4JykpOwogICAgICBjb25zdCBmaW5kaW5ncyA9IChyZXN1bHRzLlJlc3VsdHMgPz8gW10pLmZsYXRNYXAociA9PiAoci5WdWxuZXJhYmlsaXRpZXMgPz8gW10pLm1hcCh2ID0+ICh7IHRhcmdldDogci5UYXJnZXQsIHR5cGU6IHIuVHlwZSwgaWQ6IHYuVnVsbmVyYWJpbGl0eUlELCBwYWNrYWdlOiB2LlBrZ05hbWUsCiAgICAgICAgaW5zdGFsbGVkOiB2Lkluc3RhbGxlZFZlcnNpb24sIGZpeGVkOiB2LkZpeGVkVmVyc2lvbiA/PyBudWxsLCBzZXZlcml0eTogdi5TZXZlcml0eSwgdXJsOiB2LlByaW1hcnlVUkwgfSkpKTsKICAgICAgcmVwb3J0LmltYWdlcy5wdXNoKHsgbmFtZSwgaW1hZ2VJZDogaW1hZ2UuSWQsIHJlZmVyZW5jZSwgdG90YWw6IGZpbmRpbmdzLmxlbmd0aCwgaGlnaENyaXRpY2FsOiBmaW5kaW5ncy5maWx0ZXIoZiA9PiBbJ0hJR0gnLCAnQ1JJVElDQUwnXS5pbmNsdWRlcyhmLnNldmVyaXR5KSkgfSk7CiAgICAgIGNvbnNvbGUubG9nKG5hbWUgKyAnOiAnICsgZmluZGluZ3MubGVuZ3RoICsgJyBmaW5kaW5ncywgJyArIHJlcG9ydC5pbWFnZXMuYXQoLTEpLmhpZ2hDcml0aWNhbC5sZW5ndGggKyAnIGhpZ2gvY3JpdGljYWwnKTsKICAgIH0gZmluYWxseSB7IGF3YWl0IHJtKGFyY2hpdmUsIHsgZm9yY2U6IHRydWUgfSk7IH0KICB9CiAgcmVwb3J0LnJlc3VsdCA9IHJlcG9ydC5pbWFnZXMuc29tZShpID0+IGkuaGlnaENyaXRpY2FsLmxlbmd0aCkgPyAnQkxPQ0tFRF9WVUxORVJBQklMSVRJRVMnIDogJ1BBU1NfSU1BR0VfU0NBTic7CiAgaWYgKHJlcG9ydC5yZXN1bHQgIT09ICdQQVNTX0lNQUdFX1NDQU4nKSBwcm9jZXNzLmV4aXRDb2RlID0gMjsKfSBjYXRjaCAoZSkgeyByZXBvcnQucmVzdWx0ID0gJ0ZBSUwnOyByZXBvcnQuZXJyb3IgPSBlLm1lc3NhZ2U7IHByb2Nlc3MuZXhpdENvZGUgPSAxOyB9CmZpbmFsbHkgeyByZXBvcnQuZmluaXNoZWRBdCA9IG5ldyBEYXRlKCkudG9JU09TdHJpbmcoKTsgYXdhaXQgd3JpdGVGaWxlKGpvaW4oZGlyZWN0b3J5LCAnY29udGFpbmVyLXNjYW4uanNvbicpLCBKU09OLnN0cmluZ2lmeShyZXBvcnQsIG51bGwsIDIpKTsKICBhd2FpdCB3cml0ZUZpbGUoJ2RvY3MvZXZpZGVuY2UvY29udGFpbmVyLXNjYW4uanNvbicsIEpTT04uc3RyaW5naWZ5KHJlcG9ydCwgbnVsbCwgMikpOyBjb25zb2xlLmxvZyhKU09OLnN0cmluZ2lmeSh7IHJlc3VsdDogcmVwb3J0LnJlc3VsdCwgcnVuSWQgfSkpOyB9Cg=="}');p=root/'scripts/verify-images.mjs';assert hashlib.sha256(p.read_bytes()).hexdigest()==change['before'];b=root/'.agentbrake-local/verify-images-before-linux-user.mjs';assert not b.exists();b.write_bytes(p.read_bytes());data=base64.b64decode(change['data']);assert hashlib.sha256(data).hexdigest()==change['after'];p.write_bytes(data);os.chown(p,1100,1100)
+       r['sourceHash']=run('patched-source',['node','--input-type=module','-e',"import {sourceManifest} from './scripts/source-manifest.mjs';console.log((await sourceManifest()).sourceHash)"])
+       assert r['sourceHash']=='2ea911ddddb33d9bb2f0a6140da893dfdd416aec0c9e733211b190169f9814e0'
+       run('scanner-bind-after',['node','.agentbrake-local/scanner-bind-probe.mjs','operator'],60)
+       run('current-candidate',['npm','run','verify:candidate'],1800)
+       run('current-image-scan',['npm','run','verify:images'],1800)
+       r['failures']=[]
+       try:run('full-release',['npm','run','verify:release'],7200)
+       except Exception as e:r['failures'].append({'label':'full-release','error':str(e)})
+       if not r['failures']:
+        # Release rebuilt its own candidate. Rebind the scan to those actual image IDs.
+        try:run('final-image-scan',['npm','run','verify:images'],1800)
+        except Exception as e:r['failures'].append({'label':'final-image-scan','error':str(e)})
+       else:
+        try:run('current-security',['npm','run','verify:security'],1800)
+        except Exception as e:r['failures'].append({'label':'current-security','error':str(e)})
+       try:run('production-assessment',['npm','run','verify:production'],120)
+       except Exception as e:r['assessmentExit']=r['commands'][-1]['exitCode']
+       r['result']='COMPLETED_WITH_RECORDED_GATE_RESULTS'
+      except Exception as e:r['result']='FAIL';r['error']=str(e);r['trace']=traceback.format_exc()
+      finally:
+       r['reports']={};files={}
+       for prior in r.get('previousCompleted',{}).values():
+        d=root/'docs/evidence'/prior['runId']
+        for p in d.iterdir():
+         if p.is_file() and p.suffix in ['.json','.log'] and p.stat().st_size<3*1024*1024:files[d.name+'/'+p.name]=p
+       for name,filename in [('isolation','isolation-summary.json'),('product','product-summary.json'),('service','service-summary.json'),('candidate','candidate-summary.json'),('security','security-summary.json'),('enterprise','enterprise-summary.json'),('native','summary.json')]:
+        pointer=root/('docs/evidence/latest'+('' if name=='native' else '-'+name)+'.json')
+        if pointer.exists():
+         data=json.loads(pointer.read_text());directory=(root/data['directory']).resolve();assert directory.is_relative_to(root/'docs/evidence')
+         summary=directory/filename
+         if summary.exists():r['reports'][name]=json.loads(summary.read_text())
+         for p in directory.rglob('*'):
+          if p.is_file() and p.suffix in ['.log','.json','.jsonl'] and p.stat().st_size<3*1024*1024:files[directory.name+'/'+p.relative_to(directory).as_posix()]=p
+       for name in ['container-scan.json','local-release.json','production-readiness.json','milestone-b.json']:
+        p=root/'docs/evidence'/name
+        if p.exists():r['reports'][name]=json.loads(p.read_text());files['aggregate/'+name]=p
+       for summary in [r['reports'].get('container-scan.json',{})]:
+        if summary.get('runId'):
+         d=root/'docs/evidence'/summary['runId']
+         for p in d.glob('*.json'):
+          if p.stat().st_size<3*1024*1024:files[d.name+'/'+p.name]=p
+       out=io.BytesIO()
+       with tarfile.open(fileobj=out,mode='w') as tar:
+        for name,p in files.items():tar.add(p,arcname=name,recursive=False)
+       blob=out.getvalue();assert len(blob)<15*1024*1024
+       r['nativeArtifactTransfer']={'sha256':hashlib.sha256(blob).hexdigest(),'bytes':len(blob),'files':len(files)}
+       P('/var/lib/agentbrake-validation/release-validation.json').write_text(json.dumps(r))
+       with open('/dev/ttyS0','w') as f:
+        f.write('\nAGENTBRAKE_NATIVE_EVIDENCE='+base64.b64encode(blob).decode()+'\n')
+        f.write('\nAGENTBRAKE_PHASE_REPORT_GZIP='+base64.b64encode(gzip.compress(json.dumps(r).encode())).decode()+'\n')
+
+runcmd:
+  - [python3, /usr/local/sbin/agentbrake-phase.py]
+power_state:
+  mode: poweroff
+  delay: now
+  timeout: 30
+  condition: true

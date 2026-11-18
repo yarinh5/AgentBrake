@@ -1,0 +1,1 @@
+{"mediaType":"application/vnd.dev.sigstore.bundle.v0.3+json","verificationMaterial":{"publicKey":{"hint":"roNnG/JLPRP3tawUSGFjj/imAEB8wFbY90+H+CppHdQ="}},"messageSignature":{"messageDigest":{"algorithm":"SHA2_256","digest":"idb3XTOogJQpYGrmNaXXZcj3LYP0/l5igBvqxZIs5tQ="},"signature":"AA=="}}

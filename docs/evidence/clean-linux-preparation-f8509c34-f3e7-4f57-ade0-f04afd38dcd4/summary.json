@@ -1,0 +1,12 @@
+{
+  "id": "f8509c34-f3e7-4f57-ade0-f04afd38dcd4",
+  "startedAt": "2026-11-17T10:27:02.607Z",
+  "result": "FAIL",
+  "source": "https://cloud-images.ubuntu.com/releases/noble/release/",
+  "filename": "noble-server-cloudimg-amd64.ova",
+  "fingerprint": "D2EB44626FDDC30B513D5BB71A5D6C4C7DB87C81",
+  "verificationReference": "https://ubuntu.com/docs/public-images/public-images-how-to/verify-image-checksum/",
+  "scope": "Official Ubuntu24.04 cloud image public download and signature/checksum preparation only. No VM created or started; no installer, customer data, private credentials, paid service or Production access.",
+  "error": "Expected values to be strictly equal:\n\n0 !== 1\n",
+  "finishedAt": "2026-11-17T10:27:03.516Z"
+}

@@ -1,0 +1,92 @@
+{
+  "runId": "99a49dd4-4f23-4f47-8c54-5d26bbd979c9",
+  "startedAt": "2026-11-17T11:39:23.083Z",
+  "result": "PASS_APP_METADATA_PREFLIGHT_TARGET_SETUP_PENDING",
+  "authorization": "User explicitly approved the bounded AgentBrake-Sandbox proposal in this conversation on2026-11-17",
+  "appId": 5796132,
+  "installationId": 182835437,
+  "repository": "yarinh5/AgentBrake-Sandbox",
+  "repositoryId": 1461019528,
+  "requests": [
+    {
+      "method": "GET",
+      "path": "/app",
+      "status": 200,
+      "requestId": "CEBE:8C772:B4E7A5:12C75CD:6AFC3CEA"
+    },
+    {
+      "method": "GET",
+      "path": "/app/installations/182835437",
+      "status": 200,
+      "requestId": "CEBE:8C772:B4E7F7:12C7635:6AFC3CEA"
+    },
+    {
+      "method": "GET",
+      "path": "/app/hook/config",
+      "status": 404,
+      "requestId": "CEBE:8C772:B4E840:12C76A1:6AFC3CEB"
+    },
+    {
+      "method": "POST",
+      "path": "/app/installations/182835437/access_tokens",
+      "status": 201,
+      "requestId": "CEBE:8C772:B4E87A:12C7709:6AFC3CEB"
+    },
+    {
+      "method": "GET",
+      "path": "/installation/repositories?per_page=100",
+      "status": 200,
+      "requestId": "CEC0:0C65:6853E8:ACA9B1:6AFC3CEB"
+    },
+    {
+      "method": "DELETE",
+      "path": "/installation/token",
+      "status": 204,
+      "requestId": "CEBE:8C772:B4E931:12C7840:6AFC3CEB"
+    }
+  ],
+  "scope": "App/installation permission and metadata preflight only. No repository contents/branch/PR/settings write. Metadata-only inspection token revoked at end.",
+  "publicFingerprint": "XbQsMkyTup7vv0oi53Td/wazm2b468w9KsPNAaVh/DA=",
+  "app": {
+    "id": 5796132,
+    "slug": "agentbrake-validation",
+    "ownerId": 87584981,
+    "permissions": {
+      "contents": "write",
+      "metadata": "read",
+      "pull_requests": "write"
+    },
+    "events": []
+  },
+  "installation": {
+    "id": 182835437,
+    "appId": 5796132,
+    "accountId": 87584981,
+    "repositorySelection": "selected",
+    "permissions": {
+      "contents": "write",
+      "metadata": "read",
+      "pull_requests": "write"
+    },
+    "suspended": false
+  },
+  "appWebhookConfigured": false,
+  "webhookEvidence": {
+    "restStatus": 404,
+    "alternative": "docs/evidence/github-app-webhook-ui-20261117.json",
+    "basis": "Fresh authenticated UI Active=false and URL empty; not inference from404"
+  },
+  "inspectionTokenPermissions": {
+    "metadata": "read"
+  },
+  "selectedRepositoryCount": 1,
+  "repositoryVerified": {
+    "id": 1461019528,
+    "ownerId": 87584981,
+    "fullName": "yarinh5/AgentBrake-Sandbox",
+    "defaultBranch": "main",
+    "visibility": "public"
+  },
+  "tokenRevoked": true,
+  "finishedAt": "2026-11-17T11:39:24.938Z"
+}

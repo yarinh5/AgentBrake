@@ -1,0 +1,58 @@
+TAP version 13
+# Subtest: the installed build dependency graph excludes the reproduced unpatched ReDoS dependency
+ok 1 - the installed build dependency graph excludes the reproduced unpatched ReDoS dependency
+  ---
+  duration_ms: 1581.5618
+  ...
+# Subtest: the actual React build emits reachable JS/CSS/favicon without injecting host environment
+not ok 2 - the actual React build emits reachable JS/CSS/favicon without injecting host environment
+  ---
+  duration_ms: 3553.6097
+  location: 'F:\\project love\\AgentBrake\\tests\\enforcement\\ui-build.test.mjs:18:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    node:fs:2787
+          const stats = binding.lstat(base, true, undefined, true /* throwIfNoEntry */);
+                                ^
+    
+    Error: EPERM: operation not permitted, lstat 'C:\Users\Yarin'
+        at Object.realpathSync (node:fs:2787:29)
+        at toRealPath (node:internal/modules/helpers:61:13)
+        at Function._findPath (node:internal/modules/cjs/loader:759:24)
+        at node:internal/modules/cjs/loader:1230:27
+        at node:internal/main/check_syntax:33:20 {
+      errno: -4048,
+      code: 'EPERM',
+      syscall: 'lstat',
+      path: 'C:\\Users\\Yarin'
+    }
+    
+    Node.js v22.13.0
+    
+    
+    1 !== 0
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 0
+  actual: 1
+  operator: 'strictEqual'
+  stack: |-
+    Object.realpathSync (node:fs:2787:29)
+    toRealPath (node:internal/modules/helpers:61:13)
+    Function._findPath (node:internal/modules/cjs/loader:759:24)
+    node:internal/modules/cjs/loader:1230:27
+    node:internal/main/check_syntax:33:20 {
+    TestContext.<anonymous> (file:///F:/project%20love/AgentBrake/tests/enforcement/ui-build.test.mjs:36:12)
+    async Test.run (node:internal/test_runner/test:932:9)
+    async Test.processPendingSubtests (node:internal/test_runner/test:629:7)
+  ...
+1..2
+# tests 2
+# suites 0
+# pass 1
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 5226.5343

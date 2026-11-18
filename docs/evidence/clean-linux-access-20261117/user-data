@@ -1,0 +1,30 @@
+#cloud-config
+users: []
+disable_root: true
+ssh_pwauth: false
+package_update: false
+package_upgrade: false
+write_files:
+  - path: /usr/local/sbin/agentbrake-phase.py
+    permissions: '0700'
+    content: |
+      import pathlib,subprocess,json,traceback
+      source='// Diagnostic of the real installer and rendered Compose caller contract.\nimport {initializeProduct,composeProduct,dockerProduct} from \'../scripts/product.mjs\';\nimport {readFile,stat,rm} from \'node:fs/promises\';\nimport {join,resolve,dirname,basename} from \'node:path\';\nimport {randomUUID} from \'node:crypto\';\nimport assert from \'node:assert/strict\';\nassert.equal(process.platform,\'linux\');assert.notEqual(process.getuid(),1000,\'Require operator/runtime UID separation\');\nconst config=await initializeProduct(\'verify-access-\'+randomUUID().slice(0,8),4338);\nconst r={kind:\'real-product-installer-runtime-file-access\',operatorUid:process.getuid(),operatorGid:process.getgid(),probes:[]};\ntry{\n const recipe=JSON.parse(await composeProduct(config,[\'config\',\'--format\',\'json\'],{capture:true}));\n const gateway=recipe.services.gateway;\n assert.equal(gateway.user,\'1000:1000\');\n const secret=join(config.dir,\'binding-key\');const info=await stat(secret);\n r.secret={uid:info.uid,gid:info.gid,mode:(info.mode&0o777).toString(8)};\n r.directoryMode=((await stat(config.dir)).mode&0o777).toString(8);\n r.runtime={user:gateway.user,groupAdd:gateway.group_add??[]};\n const image=JSON.parse(await readFile(\'infra/local/images.lock.json\',\'utf8\')).images.node.image;\n const js="try{const b=require(\'fs\').readFileSync(\'/run/secrets/binding-key\');process.exit(b.length===64?0:20)}catch(e){console.error(e.code);process.exit(e.code===\'EACCES\'?13:21)}";\n for(const [label,user,groups,expected] of [[\'configured-gateway\',gateway.user,gateway.group_add??[],0],[\'unrelated-runtime\',\'65530:65530\',[],13]]){\n  let actual=0,error=\'\';\n  try{await dockerProduct(config,[\'run\',\'--rm\',\'--network\',\'none\',\'--read-only\',\'--cap-drop\',\'ALL\',\'--security-opt\',\'no-new-privileges\',\'--memory\',\'128m\',\'--user\',user,...groups.flatMap(g=>[\'--group-add\',String(g)]),\'--mount\',`type=bind,src=${secret},dst=/run/secrets/binding-key,readonly`,image,\'node\',\'-e\',js],{capture:true});}\n  catch(e){actual=/EACCES/.test(e.errorOutput??\'\')?13:1;error=(e.errorOutput??e.message).trim();}\n  r.probes.push({label,expected,actual,error,result:actual===expected?\'PASS\':\'FAIL\'});\n }\n r.result=r.probes.every(p=>p.result===\'PASS\')?\'PASS\':\'FAIL\';\n}finally{\n const parent=resolve(\'.agentbrake-local\');assert.equal(dirname(config.dir),parent);assert.match(basename(config.dir),/^product-verify-access-[a-f0-9]{8}$/);\n await rm(config.dir,{recursive:true,force:true});r.cleanup=\'REMOVED_ONLY_GENERATED_DIAGNOSTIC_INSTALLATION\';\n}\nconsole.log(JSON.stringify(r));process.exitCode=r.result===\'PASS\'?0:1;\n'
+      P=pathlib.Path;r={'scope':'Synthetic installer file-access diagnostic, no target connections'}
+      try:
+       p=P('/opt/agentbrake/.agentbrake-local/diagnose-linux-product-access.mjs');p.write_text(source);p.chmod(0o644)
+       run=subprocess.run(['runuser','-u','abvalidation','--','/usr/local/bin/node',str(p)],cwd='/opt/agentbrake',capture_output=True,text=True,timeout=120)
+       r['exitCode']=run.returncode;r['stderr']=run.stderr[-5000:]
+       r['diagnostic']=json.loads(run.stdout.strip().splitlines()[-1]);r['result']=r['diagnostic']['result']
+      except Exception as e:r['result']='FAIL_DIAGNOSTIC';r['error']=str(e);r['trace']=traceback.format_exc()
+      finally:
+       P('/var/lib/agentbrake-validation/access-diagnostic.json').write_text(json.dumps(r))
+       with open('/dev/ttyS0','w') as f:f.write('\nAGENTBRAKE_PHASE_REPORT='+json.dumps(r)+'\n')
+
+runcmd:
+  - [python3, /usr/local/sbin/agentbrake-phase.py]
+power_state:
+  mode: poweroff
+  delay: now
+  timeout: 30
+  condition: true

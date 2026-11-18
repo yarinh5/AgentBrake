@@ -1,0 +1,21 @@
+Unable to find image 'semgrep/semgrep@sha256:cc1b68266f267878b39739373ea9985b9a78e5d64497dd875c8de100b22695ed' locally
+docker.io/semgrep/semgrep@sha256:cc1b68266f267878b39739373ea9985b9a78e5d64497dd875c8de100b22695ed: Pulling from semgrep/semgrep
+678147e73337: Pulling fs layer
+5e9b4a97f639: Pulling fs layer
+21495a98d08f: Pulling fs layer
+777d1f35a34c: Pulling fs layer
+ebe3c1bc793f: Pulling fs layer
+bd9ddc54bea9: Pulling fs layer
+92b52671f041: Pulling fs layer
+a395850e2056: Pulling fs layer
+20970f6e00d7: Pulling fs layer
+d43ffef2f55c: Pulling fs layer
+a19e714f9403: Pulling fs layer
+c51ea70fe996: Pulling fs layer
+4b7fe183b993: Pulling fs layer
+7e9b9e935201: Pulling fs layer
+7a86cee43274: Pulling fs layer
+b6cf1b432f4e: Download complete
+docker: failed to copy: httpReadSeeker: failed open: failed to do request: Get "https://registry-1.docker.io/v2/semgrep/semgrep/blobs/sha256:7a86cee43274af126950998b486b55689496ddf99a7a243139c1c7a857bec62a": unexpected EOF
+
+Run 'docker run --help' for more information

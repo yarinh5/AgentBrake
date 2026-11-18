@@ -1,0 +1,86 @@
+{
+  "kind": "agentbrake-clean-guest-preflight",
+  "os": {
+    "PRETTY_NAME": "\"Ubuntu 24.04.5 LTS\"",
+    "NAME": "\"Ubuntu\"",
+    "VERSION_ID": "\"24.04\"",
+    "VERSION": "\"24.04.5 LTS (Noble Numbat)\"",
+    "VERSION_CODENAME": "noble",
+    "ID": "ubuntu",
+    "ID_LIKE": "debian",
+    "HOME_URL": "\"https://www.ubuntu.com/\"",
+    "SUPPORT_URL": "\"https://help.ubuntu.com/\"",
+    "BUG_REPORT_URL": "\"https://bugs.launchpad.net/ubuntu/\"",
+    "PRIVACY_POLICY_URL": "\"https://www.ubuntu.com/legal/terms-and-policies/privacy-policy\"",
+    "UBUNTU_CODENAME": "noble",
+    "LOGO": "ubuntu-logo"
+  },
+  "kernel": "6.8.0-147-generic",
+  "architecture": "x86_64",
+  "cpuCount": 2,
+  "memory": "MemTotal:        4009928 kB",
+  "blockDevices": {
+    "blockdevices": [
+      {
+        "name": "sda",
+        "type": "disk",
+        "size": 68719476736,
+        "mountpoints": [
+          null
+        ],
+        "children": [
+          {
+            "name": "sda1",
+            "type": "part",
+            "size": 67644669440,
+            "mountpoints": [
+              "/"
+            ]
+          },
+          {
+            "name": "sda14",
+            "type": "part",
+            "size": 4194304,
+            "mountpoints": [
+              null
+            ]
+          },
+          {
+            "name": "sda15",
+            "type": "part",
+            "size": 111149056,
+            "mountpoints": [
+              "/boot/efi"
+            ]
+          },
+          {
+            "name": "sda16",
+            "type": "part",
+            "size": 957350400,
+            "mountpoints": [
+              "/boot"
+            ]
+          }
+        ]
+      },
+      {
+        "name": "sr0",
+        "type": "rom",
+        "size": 69632,
+        "mountpoints": [
+          null
+        ]
+      }
+    ]
+  },
+  "interfaces": [
+    "lo"
+  ],
+  "routes": "",
+  "agentbrakeInstalled": false,
+  "dockerInstalled": false,
+  "nodeInstalled": false,
+  "rootFreeBytes": 63724773376,
+  "cloudInitVersion": "/usr/bin/cloud-init 26.1-0ubuntu1~24.04.1",
+  "result": "PASS_OFFLINE_GUEST_PREFLIGHT_ONLY"
+}

@@ -1,0 +1,107 @@
+#cloud-config
+users: []
+disable_root: true
+ssh_pwauth: false
+package_update: false
+package_upgrade: false
+write_files:
+  - path: /usr/local/sbin/agentbrake-final-security-resume.py
+    permissions: '0700'
+    content: |
+      PACKAGE_SHA='89d6f75d33a8809429606ae635a5d765c8f72d83f4fe5e62801beac5922ce6d4'
+      EXPECTED_SOURCE='2d8df354e16dacbdda4802a04dd875d6166f053f63a5a3b897a2bf41d358032e'
+      import json,pathlib,subprocess,traceback,os,time,selectors,signal
+      P=pathlib.Path;root=P('/opt/agentbrake-final-2d8df354');proxy='http://10.0.2.2:8877'
+      r={'scope':'Separate Ubuntu guest; synthetic product/isolation/restore/candidate/security checks','commands':[],'reports':{},'releaseAcceptance':False,'packageSha256':PACKAGE_SHA,'expectedSource':EXPECTED_SOURCE}
+      env={**os.environ,'PATH':'/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin','HTTP_PROXY':proxy,'HTTPS_PROXY':proxy,'http_proxy':proxy,'https_proxy':proxy,'NO_PROXY':'localhost,127.0.0.1,::1','no_proxy':'localhost,127.0.0.1,::1','NEXT_TELEMETRY_DISABLED':'1','DEBIAN_FRONTEND':'noninteractive'}
+      def emit(v):
+       with open('/dev/ttyS0','w') as f:f.write('\nAGENTBRAKE_PROGRESS='+json.dumps(v)+'\n')
+      def run(label,args,timeout=1800,asRoot=False):
+       emit({'starting':label});at=time.monotonic()
+       p=subprocess.Popen(args if asRoot else ['runuser','-u','abvalidation','--',*args],stdout=subprocess.PIPE,stderr=subprocess.STDOUT,env=env,cwd=root,start_new_session=True)
+       output=bytearray();selector=selectors.DefaultSelector();selector.register(p.stdout,selectors.EVENT_READ);last=at
+       failure=None;code=None
+       try:
+        while selector.get_map():
+         if time.monotonic()-at>timeout:raise TimeoutError(label+' deadline')
+         for key,_ in selector.select(1):
+          chunk=os.read(key.fd,65536)
+          if chunk:output.extend(chunk)
+          else:selector.unregister(key.fileobj)
+         if len(output)>20*1024*1024:raise RuntimeError(label+' output limit')
+         if time.monotonic()-last>=30:
+          emit({'running':label,'seconds':round(time.monotonic()-at),'outputBytes':len(output)});last=time.monotonic()
+        code=p.wait(timeout=10)
+       except Exception as error:failure=str(error)
+       finally:
+        selector.close()
+        if p.poll() is None:
+         os.killpg(p.pid,signal.SIGTERM)
+         try:p.wait(timeout=10)
+         except subprocess.TimeoutExpired:os.killpg(p.pid,signal.SIGKILL);p.wait(timeout=5)
+       text=output.decode(errors='replace');P('/var/lib/agentbrake-validation/'+label+'.log').write_text(text)
+       r['commands'].append({'label':label,'exitCode':code,'failure':failure,'seconds':round(time.monotonic()-at,2),'outputTail':text[-16000:]});emit({'finished':label,'exitCode':code})
+       if failure or code:raise RuntimeError(label+' failed'+(': '+failure if failure else ''))
+       return text.strip()
+      import hashlib, tarfile, socket, io, base64, gzip
+      try:
+       assert root.is_dir(), 'Expected preserved exact-package application directory'
+       r['os']=P('/etc/os-release').read_text();r['uid']=run('operator-identity',['id'])
+       assert 'uid=1100' in r['uid'] and 'gid=1100' in r['uid']
+       assert run('guard-active',['systemctl','is-active','ab-dependency-guard'])=='active'
+       r['guard']=run('guard-rules',['nft','list','table','inet','ab_dependency_guard'],asRoot=True)
+       r['deniedProbes']=[]
+       for host,port in [('10.0.2.2',8878),('198.51.100.1',443),('10.0.2.3',53)]:
+        s=socket.socket();s.settimeout(3)
+        try:s.connect((host,port));raise AssertionError('Unexpected direct egress')
+        except OSError as e:r['deniedProbes'].append({'host':host,'port':port,'errno':e.errno})
+        finally:s.close()
+       assert run('public-dependency-positive',['curl','--silent','--show-error','--max-time','30','--proxy',proxy,'--noproxy','','--output','/dev/null','--write-out','%{http_code}','https://registry.npmjs.org/-/ping'])=='200'
+       for target in ['api.github.com:443','api.openai.com:443','127.0.0.1:8878']:
+        probe=subprocess.run(['curl','--silent','--max-time','5','--proxy',proxy,'--noproxy','','--output','/dev/null','--write-out','%{http_connect}','https://'+target+'/'],capture_output=True,text=True,env=env)
+        assert probe.returncode==56 and probe.stdout=='403';r['deniedProbes'].append({'proxyTarget':target,'result':'DENIED_403'})
+       P('/mnt/ab-package').mkdir(exist_ok=True)
+       run('mount-package',['mount','-o','ro','/dev/sr0','/mnt/ab-package'],asRoot=True)
+       candidate=P('/mnt/ab-package/package.tar.gz')
+       assert hashlib.file_digest(candidate.open('rb'),'sha256').hexdigest()==PACKAGE_SHA
+       with tarfile.open(candidate) as tar:
+        release=json.loads(tar.extractfile(next(m for m in tar.getmembers() if m.name.removeprefix('./')=='RELEASE.json')).read())
+        assert release['sourceHash']==EXPECTED_SOURCE
+       r['packageFileCount']=len(release['files'])
+       r['sourceHash']=run('packed-source',['node','--input-type=module','-e',"import {sourceManifest} from './scripts/source-manifest.mjs'; console.log((await sourceManifest()).sourceHash)"])
+       assert r['sourceHash']==EXPECTED_SOURCE
+       r['failures']=[]
+       try:run('security',['npm','run','verify:security'],1800)
+       except Exception as error:r['failures'].append({'label':'security','error':str(error)})
+       r['sourceHashAtEnd']=run('source-at-end',['node','--input-type=module','-e',"import {sourceManifest} from './scripts/source-manifest.mjs'; console.log((await sourceManifest()).sourceHash)"])
+       assert r['sourceHashAtEnd']==EXPECTED_SOURCE
+       r['result']='PASS_FINAL_UBUNTU_SECURITY_RESUME' if not r['failures'] else 'FAIL'
+       r['limits']='Continuation of the preserved exact-package Ubuntu install after the first harness invoked Node directly instead of the required npm script. All earlier gates remain in the immutable failed-at-security report; this run proves only the corrected security gate and repeated package/source/network checks.'
+      except Exception as error:r['result']='FAIL';r['error']=str(error);r['trace']=traceback.format_exc()
+
+      finally:
+       r['reports']={};files={}
+       for name,filename in [('isolation','isolation-summary.json'),('product','product-summary.json'),('service','service-summary.json'),('candidate','candidate-summary.json'),('security','security-summary.json'),('enterprise','enterprise-summary.json'),('native','summary.json')]:
+        pointer=root/('docs/evidence/latest'+('' if name=='native' else '-'+name)+'.json')
+        if pointer.exists():
+         data=json.loads(pointer.read_text());directory=(root/data['directory']).resolve();assert directory.is_relative_to(root/'docs/evidence')
+         summary=directory/filename
+         if summary.exists():r['reports'][name]=json.loads(summary.read_text())
+         for p in directory.rglob('*'):
+          if p.is_file() and p.suffix in ['.log','.json','.jsonl'] and p.stat().st_size<3*1024*1024:files[directory.name+'/'+p.relative_to(directory).as_posix()]=p
+       for name in ['container-scan.json','local-release.json','production-readiness.json','milestone-b.json']:
+        p=root/'docs/evidence'/name
+        if p.exists():r['reports'][name]=json.loads(p.read_text());files['aggregate/'+name]=p
+       out=io.BytesIO()
+       with tarfile.open(fileobj=out,mode='w') as tar:
+        for name,p in files.items():tar.add(p,arcname=name,recursive=False)
+       blob=out.getvalue();assert len(blob)<15*1024*1024
+       r['nativeArtifactTransfer']={'sha256':hashlib.sha256(blob).hexdigest(),'bytes':len(blob),'files':len(files)}
+       P('/var/lib/agentbrake-validation/final-validation.json').write_text(json.dumps(r))
+       with open('/dev/ttyS0','w') as f:
+        f.write('\nAGENTBRAKE_NATIVE_EVIDENCE_GZIP='+base64.b64encode(gzip.compress(blob)).decode()+'\n')
+        f.write('\nAGENTBRAKE_PHASE_REPORT_GZIP='+base64.b64encode(gzip.compress(json.dumps(r).encode())).decode()+'\n')
+
+runcmd:
+  - [python3, /usr/local/sbin/agentbrake-final-security-resume.py]
+power_state: {mode: poweroff, delay: now, timeout: 30, condition: true}

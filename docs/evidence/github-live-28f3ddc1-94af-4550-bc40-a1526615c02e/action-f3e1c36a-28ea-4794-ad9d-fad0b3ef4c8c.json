@@ -1,0 +1,102 @@
+{
+  "schemaVersion": 1,
+  "action": {
+    "id": "f3e1c36a-28ea-4794-ad9d-fad0b3ef4c8c",
+    "agentId": "67b557b6-7994-4b35-bea9-b07b27bad5ad",
+    "requestId": "e4b81f9b-1144-48ef-917d-36b35973c733",
+    "tool": "github_list_repo",
+    "destination": "036b2fb6793194e59e5a9745f1715aa277cc1238a53ccd1080d2d0207a24e271",
+    "correlationId": "b667b553-5e3a-4318-87d4-ccae643a7c18",
+    "grantId": "659ca1ff-4e0f-4b6b-a8f7-6f6b40f652ef",
+    "grantFingerprint": "e22750667a9be1711ad42006a1cb55550529d4510f82bc6e2840f8a6a19677b6",
+    "policyRevision": 1,
+    "policyDecisionId": "cb74924d-1676-4cd5-b1c5-a8b3e571f66b",
+    "policyVersion": "stage2.v1",
+    "policyHash": "9ac719fef979ee7b37c5c5ef3173621453782a0a02d432727391beeff1234d14",
+    "policyEffect": "ALLOW",
+    "arguments": {},
+    "status": "allowed",
+    "rule": "approved-reads",
+    "reason": "Executed through the enforced gateway.",
+    "resource": "yarinh5/AgentBrake-Sandbox",
+    "sandbox": false,
+    "createdAt": "2026-11-17T11:50:19.100Z",
+    "expiresAt": "2026-11-17T12:05:19.100Z",
+    "durationMs": 50.58,
+    "executionOutcome": "adapter-reported",
+    "resultDisclosure": "released"
+  },
+  "decision": {
+    "id": "cb74924d-1676-4cd5-b1c5-a8b3e571f66b",
+    "policyHash": "9ac719fef979ee7b37c5c5ef3173621453782a0a02d432727391beeff1234d14",
+    "version": "stage2.v1",
+    "revision": 1,
+    "effect": "ALLOW",
+    "reason": "Executed through the enforced gateway."
+  },
+  "review": {},
+  "execution": {
+    "status": "allowed",
+    "observation": "adapter-reported",
+    "outcome": "adapter-reported",
+    "resultDisclosure": "released",
+    "resultRetained": true,
+    "summary": {},
+    "correlationId": "b667b553-5e3a-4318-87d4-ccae643a7c18"
+  },
+  "audit": {
+    "valid": true,
+    "redacted": true,
+    "entries": [
+      {
+        "seq": 6,
+        "data": {
+          "type": "action.queued",
+          "details": {
+            "actionId": "f3e1c36a-28ea-4794-ad9d-fad0b3ef4c8c",
+            "agentId": "67b557b6-7994-4b35-bea9-b07b27bad5ad",
+            "tool": "github_list_repo",
+            "rule": "approved-reads",
+            "correlationId": "b667b553-5e3a-4318-87d4-ccae643a7c18",
+            "grantId": "659ca1ff-4e0f-4b6b-a8f7-6f6b40f652ef",
+            "decisionId": "cb74924d-1676-4cd5-b1c5-a8b3e571f66b",
+            "policyHash": "9ac719fef979ee7b37c5c5ef3173621453782a0a02d432727391beeff1234d14",
+            "policyRevision": 1,
+            "effect": "ALLOW"
+          },
+          "at": "2026-11-17T11:50:19.108Z"
+        },
+        "previous_hash": "612e5bafc27d069dcc6fff4e227809e7a74168643400398a81b9a5b65a8af7ce",
+        "hash": "91344acddd0ee6299c0a97c77b346fe125433341266c094eaebea1626f68edcc"
+      },
+      {
+        "seq": 7,
+        "data": {
+          "type": "execution.started",
+          "details": {
+            "actionId": "f3e1c36a-28ea-4794-ad9d-fad0b3ef4c8c"
+          },
+          "at": "2026-11-17T11:50:19.118Z"
+        },
+        "previous_hash": "91344acddd0ee6299c0a97c77b346fe125433341266c094eaebea1626f68edcc",
+        "hash": "c406cb7d7762b56d265801b28bb135112fb8d17bdfa2bf069c8fecde96ef0a76"
+      },
+      {
+        "seq": 8,
+        "data": {
+          "type": "execution.allowed",
+          "details": {
+            "actionId": "f3e1c36a-28ea-4794-ad9d-fad0b3ef4c8c",
+            "outcome": "adapter-reported",
+            "resultDisclosure": "released"
+          },
+          "at": "2026-11-17T11:50:20.012Z"
+        },
+        "previous_hash": "c406cb7d7762b56d265801b28bb135112fb8d17bdfa2bf069c8fecde96ef0a76",
+        "hash": "1a492a2200a14f9bf07b44e652c2d62daaf46a8b57a0425fee4aea6282212192"
+      }
+    ],
+    "verification": "Hash chain checked against stored records before redaction; this filtered redacted export is not an independent full-chain proof."
+  },
+  "coverage": "Local synthetic fixture. Adapter response is not independent target verification. UNKNOWN requires target reconciliation; never retry automatically."
+}

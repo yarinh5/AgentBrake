@@ -16,6 +16,7 @@ const scenario = process.argv[2];
 assert.ok(["build-failure", "recovery-failure", "success", "minimal-success", "minimal-image-mismatch", "unknown-profile", "ordinary-start"].includes(scenario));
 const name = "verify-recovery-" + randomUUID().slice(0, 8);
 const dir = join(root, ".agentbrake-local", "product-" + name);
+await mkdir(join(root, '.agentbrake-local'), { recursive: true, mode: 0o700 });
 const scratch = await mkdtemp(join(root, ".agentbrake-local/recovery-test-"));
 const barrier = join(dir, "recovery-incomplete.json");
 const installationId = randomUUID();
@@ -111,10 +112,9 @@ try {
   await module.evaluate();
   const { restoreProduct, startProduct, withMaintenance } = module.namespace;
   if (scenario === "ordinary-start") {
-    await mkdir(dir);
-    await writeFile(join(dir, "installation.json"), JSON.stringify({ name, port: 4335, id: installationId }));
-    await writeFile(join(dir, "opa-token"), "synthetic");
-    const config = await productConfig(name);
+    // A normal start needs a complete installation. Docker remains simulated,
+    // but real preparation must see the same files the real installer creates.
+    const config = await product.initializeProduct(name, 4335);
     await withMaintenance(config, () => startProduct(config, { build: false }));
     assert.equal(composeCalls.filter(fullStartup).length, 1);
   } else if (scenario === "minimal-image-mismatch" || scenario === "unknown-profile") {

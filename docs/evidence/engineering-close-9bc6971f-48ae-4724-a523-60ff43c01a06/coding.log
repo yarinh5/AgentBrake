@@ -1,0 +1,12 @@
+
+> agentbrake@0.3.0-rc.1 verify:coding
+> node scripts/verify-isolation.mjs --milestone-b --coding-workflow
+
+Building and starting the isolated AgentBrake fixture project…
+Expanded measurement PASS; usability target: MET_SYNTHETIC_ONLY
+{"label":"container-logs","codes":[],"locations":[],"categories":["permissionDenied"],"protectedFiles":[],"failedTests":0}
+Expected values to be strictly equal:
+
+1 !== 0
+
+Isolation FAIL: docs/evidence/f6ff23d3-31f2-4e59-8c2d-4e0483fc6210

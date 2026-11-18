@@ -1,0 +1,47 @@
+services:
+  control-api:
+    environment:
+      AGENTBRAKE_ENTERPRISE: '1'
+      AGENTBRAKE_INSTALLATION_ID: ${INSTALLATION_ID}
+    networks:
+      enterprise-private: {}
+    volumes:
+      - ${INSTALL_DIR}/enterprise.json:/run/secrets/enterprise.json:ro
+      - ${INSTALL_DIR}/enterprise-manifest.json:/run/config/enterprise-manifest.json:ro
+      - enterprise-state:/var/lib/agentbrake/enterprise
+    depends_on:
+      enterprise-init: { condition: service_completed_successfully }
+      enterprise-egress: { condition: service_started }
+  enterprise-init:
+    image: ${NODE_IMAGE}
+    user: '0:0'
+    read_only: true
+    cap_drop: [ALL]
+    cap_add: [CHOWN, DAC_OVERRIDE, FOWNER]
+    security_opt: [no-new-privileges:true]
+    network_mode: none
+    command: [sh, -c, 'chown 1000:1000 /enterprise && chmod 700 /enterprise']
+    volumes: [enterprise-state:/enterprise]
+    labels: { com.agentbrake.product: '${INSTALLATION_ID}' }
+  enterprise-egress:
+    image: ${COMPOSE_PROJECT_NAME}-runtime
+    command: [node, infra/product/enterprise-egress.mjs]
+    user: '1000:1000'
+    group_add: ['${PRODUCT_RUNTIME_GID:-1000}']
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    pids_limit: 64
+    mem_limit: 128m
+    networks: [enterprise-private, enterprise-outbound]
+    volumes:
+      - ${INSTALL_DIR}/enterprise-egress.json:/run/config/enterprise-egress.json:ro
+    labels: { com.agentbrake.product: '${INSTALLATION_ID}' }
+    logging:
+      driver: json-file
+      options: { max-size: '10m', max-file: '3' }
+networks:
+  enterprise-private: { internal: true }
+  enterprise-outbound: {}
+volumes:
+  enterprise-state: {}

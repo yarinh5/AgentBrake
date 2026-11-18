@@ -1,0 +1,73 @@
+{
+  "schemaVersion": 1,
+  "action": {
+    "id": "d3a16d28-dafa-427c-b734-0fb99c4ccb06",
+    "agentId": "67b557b6-7994-4b35-bea9-b07b27bad5ad",
+    "requestId": "dec6f44c-96a6-4e75-ba89-cd2e63988ad1",
+    "tool": "github_read_file",
+    "destination": "036b2fb6793194e59e5a9745f1715aa277cc1238a53ccd1080d2d0207a24e271",
+    "correlationId": "a3f49667-110f-4188-bdf9-51b8e19d39b3",
+    "grantId": "cd885da9-6273-4a38-b2c0-87416be26eed",
+    "grantFingerprint": "62172b211987c21b9d8f706b8a5f4fac4aa5ba89f3bff716f634ef310f9731d1",
+    "policyRevision": 1,
+    "policyDecisionId": "c3d6e660-1031-4092-a118-3033a3e0edcf",
+    "policyVersion": "stage2.v1",
+    "policyHash": "9ac719fef979ee7b37c5c5ef3173621453782a0a02d432727391beeff1234d14",
+    "policyEffect": "DENY",
+    "arguments": {},
+    "status": "blocked",
+    "rule": "grant-revoked",
+    "reason": "This task grant has been revoked.",
+    "resource": "restricted",
+    "sandbox": false,
+    "createdAt": "2026-11-17T11:50:57.701Z",
+    "expiresAt": "2026-11-17T12:05:57.701Z",
+    "durationMs": 1.84
+  },
+  "decision": {
+    "id": "c3d6e660-1031-4092-a118-3033a3e0edcf",
+    "policyHash": "9ac719fef979ee7b37c5c5ef3173621453782a0a02d432727391beeff1234d14",
+    "version": "stage2.v1",
+    "revision": 1,
+    "effect": "DENY",
+    "reason": "This task grant has been revoked."
+  },
+  "review": {},
+  "execution": {
+    "status": "blocked",
+    "observation": "not-dispatched",
+    "outcome": "not-dispatched",
+    "resultDisclosure": "unrecorded",
+    "resultRetained": false,
+    "correlationId": "a3f49667-110f-4188-bdf9-51b8e19d39b3"
+  },
+  "audit": {
+    "valid": true,
+    "redacted": true,
+    "entries": [
+      {
+        "seq": 30,
+        "data": {
+          "type": "action.blocked",
+          "details": {
+            "actionId": "d3a16d28-dafa-427c-b734-0fb99c4ccb06",
+            "agentId": "67b557b6-7994-4b35-bea9-b07b27bad5ad",
+            "tool": "github_read_file",
+            "rule": "grant-revoked",
+            "correlationId": "a3f49667-110f-4188-bdf9-51b8e19d39b3",
+            "grantId": "cd885da9-6273-4a38-b2c0-87416be26eed",
+            "decisionId": "c3d6e660-1031-4092-a118-3033a3e0edcf",
+            "policyHash": "9ac719fef979ee7b37c5c5ef3173621453782a0a02d432727391beeff1234d14",
+            "policyRevision": 1,
+            "effect": "DENY"
+          },
+          "at": "2026-11-17T11:50:57.704Z"
+        },
+        "previous_hash": "1e603735fd13ea488550a74212bbd85d369b9b76b3ace9675706a19ee8d582e7",
+        "hash": "c9403dc721a14542535f05150cdaf2f084792761e09f815f614d4a647f333e6a"
+      }
+    ],
+    "verification": "Hash chain checked against stored records before redaction; this filtered redacted export is not an independent full-chain proof."
+  },
+  "coverage": "Local synthetic fixture. Adapter response is not independent target verification. UNKNOWN requires target reconciliation; never retry automatically."
+}

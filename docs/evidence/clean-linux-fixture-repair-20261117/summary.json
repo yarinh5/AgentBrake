@@ -1,0 +1,152 @@
+{
+  "at": "2026-11-17T13:36:17.161805+00:00",
+  "result": "PASS_FOCUSED_LINUX_ACCESS_AND_RECOVERY",
+  "phase": "fixture-repair",
+  "sourceHash": "fb5b65ff91880bb711f5de632f9d0cc9610232094e567dd21accaa9004606fe3",
+  "baseSource": "855b2915022fae9542d05207f62bec5eb356d942a001a9f3415a738f3b453c8c",
+  "releaseAcceptance": false,
+  "approval": "User approved the UNRELEASED base for development testing and authorized necessary local fixes; changed revisions are recorded separately.",
+  "seedSha256": "c66b4183dbffc9cd90a4248d87029862684ef98b534cb0b9a41d00dd09ecd40f",
+  "files": [
+    {
+      "name": "guest-report.json",
+      "sha256": "2447879b78537264afb323367e41b7887ad7e87c4224b62cdff5fa3d8295461c",
+      "bytes": 15926
+    },
+    {
+      "name": "meta-data",
+      "sha256": "adb48f46118ae667fe40f4df584e4d8ff51d96031b13ad2b84cfce06202d1f47",
+      "bytes": 103
+    },
+    {
+      "name": "native-artifact-transfer.json",
+      "sha256": "317fee70662d9ed02405689bc3e313bc6083db9ec4d86f61e49b7d5ea2b27dbc",
+      "bytes": 170
+    },
+    {
+      "name": "native-artifacts/49e7097a-14fe-458b-8895-41bbd2fdac02/browser.log",
+      "sha256": "3b789810bd6322dcaeea8a6bff3341dda2070ad4cc852e9867600ba4656ff2b3",
+      "bytes": 3800
+    },
+    {
+      "name": "native-artifacts/49e7097a-14fe-458b-8895-41bbd2fdac02/build.log",
+      "sha256": "2d0b7d1ee0178430451ec3eb052e436ce68ed6574f6a1ded2d3791ef3e3c2bd8",
+      "bytes": 330
+    },
+    {
+      "name": "native-artifacts/49e7097a-14fe-458b-8895-41bbd2fdac02/dashboard-build.log",
+      "sha256": "f740230f098c1c83196ed263c04b87e50475866f518d974081413722a52c7c6c",
+      "bytes": 578
+    },
+    {
+      "name": "native-artifacts/49e7097a-14fe-458b-8895-41bbd2fdac02/docker-preflight.log",
+      "sha256": "7b87eab4a4163c0c4fa15dd0dd13348a772c9b3e6e3922c5c29dcc215b6d6a8c",
+      "bytes": 770
+    },
+    {
+      "name": "native-artifacts/49e7097a-14fe-458b-8895-41bbd2fdac02/node-tests.log",
+      "sha256": "e867ae96f36ce2a601951bc539d75c962fd3ade9df4ff324684b32f9f3558200",
+      "bytes": 87069
+    },
+    {
+      "name": "native-artifacts/49e7097a-14fe-458b-8895-41bbd2fdac02/rego.log",
+      "sha256": "1a299b94923fd51eb064e06954dff9fbd29ffc526ba5928317aac6fcf4fe9715",
+      "bytes": 1288
+    },
+    {
+      "name": "native-artifacts/49e7097a-14fe-458b-8895-41bbd2fdac02/source-manifest.json",
+      "sha256": "43b7d073f1a5fe57ed5b11338ab6ceb529090ea7d59d8d9828b1873a7aa1c39a",
+      "bytes": 35043
+    },
+    {
+      "name": "native-artifacts/49e7097a-14fe-458b-8895-41bbd2fdac02/summary.json",
+      "sha256": "93ad0af1842acd743092982d3687346169c389be964afba68e9348d79856c5c1",
+      "bytes": 5718
+    },
+    {
+      "name": "native-artifacts/49e7097a-14fe-458b-8895-41bbd2fdac02/typecheck.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "name": "native-artifacts/49e7097a-14fe-458b-8895-41bbd2fdac02/upstream-proof.json",
+      "sha256": "a6c58906925ffc778117c0c58a6eaea3f44cfecdeec9583a8f340f807e2ff0b1",
+      "bytes": 20572
+    },
+    {
+      "name": "native-artifacts/49e7097a-14fe-458b-8895-41bbd2fdac02/upstream-proof.log",
+      "sha256": "e8b5af65baa11c8311011a07eecc9e9863c05be6dde6c3b0d181044c3bba1a3a",
+      "bytes": 1982
+    },
+    {
+      "name": "native-artifacts/9e9e482b-8255-42bd-b354-a0f266b9c47f/browser.log",
+      "sha256": "d0ff09a06b780b5a5da1aa362bb7cee38d21590487b0a925a0d2d98dbc5a9b9c",
+      "bytes": 3800
+    },
+    {
+      "name": "native-artifacts/9e9e482b-8255-42bd-b354-a0f266b9c47f/build.log",
+      "sha256": "142a76dbbce0474300df1830d3ab7d3e945bdf0e884ab1f59aadec8876f89525",
+      "bytes": 330
+    },
+    {
+      "name": "native-artifacts/9e9e482b-8255-42bd-b354-a0f266b9c47f/dashboard-build.log",
+      "sha256": "48d6f2d2b3b148aefec31cf63c380cdc1435ed4b0d0e74f316569da84b0cce1e",
+      "bytes": 580
+    },
+    {
+      "name": "native-artifacts/9e9e482b-8255-42bd-b354-a0f266b9c47f/docker-preflight.log",
+      "sha256": "7b87eab4a4163c0c4fa15dd0dd13348a772c9b3e6e3922c5c29dcc215b6d6a8c",
+      "bytes": 770
+    },
+    {
+      "name": "native-artifacts/9e9e482b-8255-42bd-b354-a0f266b9c47f/node-tests.log",
+      "sha256": "bf8865c222fd759c419b511c6e7f7496d160df53716c5f7c505c57d69702b49d",
+      "bytes": 84593
+    },
+    {
+      "name": "native-artifacts/9e9e482b-8255-42bd-b354-a0f266b9c47f/rego.log",
+      "sha256": "06635352c7226101a80b6535a80378f0fa3405080639b02b72e77e5af36bc8f9",
+      "bytes": 1288
+    },
+    {
+      "name": "native-artifacts/9e9e482b-8255-42bd-b354-a0f266b9c47f/source-manifest.json",
+      "sha256": "4747d219e9bd3fbbb6df8844445aa332febd0c99a9a9dfe2d35922c3b109b35b",
+      "bytes": 34883
+    },
+    {
+      "name": "native-artifacts/9e9e482b-8255-42bd-b354-a0f266b9c47f/summary.json",
+      "sha256": "e3932fd808f6d4b7dd1399cdcbd0bee888e58f95c69134b3efd2e39389b27c61",
+      "bytes": 5678
+    },
+    {
+      "name": "native-artifacts/9e9e482b-8255-42bd-b354-a0f266b9c47f/typecheck.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "name": "native-artifacts/9e9e482b-8255-42bd-b354-a0f266b9c47f/upstream-proof.json",
+      "sha256": "08770052209e075cba5f2f0518244d1a4a6ce2fb8ad596364908084a9e7305c1",
+      "bytes": 20572
+    },
+    {
+      "name": "native-artifacts/9e9e482b-8255-42bd-b354-a0f266b9c47f/upstream-proof.log",
+      "sha256": "cef1dcb2316fff5d2a411feca9303b2775de486052f9f1a2211c3c1a01b8cc67",
+      "bytes": 1982
+    },
+    {
+      "name": "network-config",
+      "sha256": "a3bc4c3619b4e66dd6c60f9b005944e1a7e218dfebcff10398d20e94c08613af",
+      "bytes": 27
+    },
+    {
+      "name": "serial.log",
+      "sha256": "194f6f67c32a7572594426e47be48f3f1a4bb458c28b0a763997e43ca4a2e305",
+      "bytes": 178928
+    },
+    {
+      "name": "user-data",
+      "sha256": "28e08744b519a408fb375340ef1a95e6cb40ebf0f21ef22b7b5b85eb148b5df5",
+      "bytes": 34385
+    }
+  ]
+}

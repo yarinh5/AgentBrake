@@ -1,0 +1,9 @@
+{
+  "observedAt": "2026-11-17T11:38:20Z",
+  "source": "Authenticated GitHub settings DOM and screenshot observed through CUA",
+  "url": "https://github.com/settings/apps/agentbrake-validation",
+  "appId": 5796132,
+  "active": false,
+  "webhookUrl": "",
+  "scope": "Direct observation of Active unchecked and URL empty. GET /app/hook/config returned404; that response alone is not treated as proof of no webhook."
+}

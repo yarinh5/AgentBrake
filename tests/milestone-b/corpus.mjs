@@ -69,6 +69,62 @@ export const legitimate = [
     content: "Fake configuration example: api_key=example-only-placeholder\n",
   },
 ];
+// Eight parameter strata, including the unchanged historical cohort. Repeated
+// schema/repository reads are explicit; this is NOT 208 independent field tasks.
+export const expandedLegitimate = Array.from({ length: 8 }, (_, cohort) =>
+  legitimate.map((item) => {
+    const copy = structuredClone(item);
+    copy.cohort = cohort;
+    if (!cohort) return copy;
+    copy.id = `c${cohort}-${item.id}`;
+    if (item.tool === 'database_read') copy.args.limit = Math.min(100, item.args.limit + cohort * 3);
+    if (item.kind === 'update') copy.args.status = cohort % 2 ? 'active' : 'paused';
+    if (item.path) {
+      // The approved root-level file is exactly README.md; variants may rename
+      // files only within the already allowed docs/ and src/ directories.
+      copy.path = item.path === 'README.md' ? item.path : item.path.replace(/([^/]+)$/, `sample-${cohort}-$1`);
+      copy.content = item.path.endsWith('.json')
+        ? JSON.stringify({ fixture: true, cohort, values: [cohort, null, false] }) + '\n'
+        : item.content + [
+          '// Unicode documentation: שלום κόσμε 日本語\n',
+          '// CRLF fixture\r\n',
+          '// Escaped quotes: "value" and backslash \\\n',
+          '// Multi-line description\n// Second line\n',
+          '// Punctuation: [] {} <> & ;\n',
+          '// Bounded long fixture: ' + 'x'.repeat(1024) + '\n',
+          '// Trailing whitespace fixture   \n',
+        ][cohort - 1];
+    }
+    return copy;
+  }),
+).flat();
+
+function distribution(values) {
+  const sorted = values.filter(v => Number.isFinite(v) && v >= 0).sort((a, b) => a - b);
+  const percentile = p => sorted.length ? sorted[Math.ceil(sorted.length * p) - 1] : null;
+  return { count: sorted.length, p50Ms: percentile(0.5), p95Ms: percentile(0.95) };
+}
+
+export function measurementReport(observations) {
+  const summary = metrics(observations);
+  const baselineFailures = summary.total - summary.baselineSucceeded;
+  const valid = summary.total > 0 && baselineFailures === 0 && summary.nonPolicyFailures === 0;
+  const actions = observations.flatMap(o => o.actions ?? []);
+  return {
+    measurementResult: valid ? 'PASS' : 'FAIL',
+    usabilityTarget: !summary.total ? 'INSUFFICIENT_SAMPLE' : !valid ? 'NOT_MET' : summary.baselineSucceeded < 200 ? 'INSUFFICIENT_SAMPLE' : summary.falseBlockRate < 0.02 ? 'MET_SYNTHETIC_ONLY' : 'NOT_MET',
+    baselineFailures,
+    byKind: Object.fromEntries([...new Set(observations.map(o => o.kind))].map(kind => [kind, metrics(observations.filter(o => o.kind === kind))])),
+    timing: {
+      directBaselineTask: distribution(observations.map(o => o.baselineMs)),
+      gatewayTask: distribution(observations.map(o => o.gatewayMs)),
+      authorization: distribution(actions.map(a => a.authorizationMs)),
+      submitRoundTrip: distribution(actions.map(a => a.requestMs)),
+      automatedApprovalRoundTrip: distribution(actions.map(a => a.approvalMs)),
+    },
+    humanApprovalWait: 'NOT_MEASURED',
+  };
+}
 export function metrics(observations) {
   const total = observations.length,
     baselineSucceeded = observations.filter((x) => x.baselineSucceeded).length;

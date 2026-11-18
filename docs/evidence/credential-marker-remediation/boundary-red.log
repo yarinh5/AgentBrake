@@ -1,0 +1,36 @@
+TAP version 13
+# (node:41816) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# Subtest: public-marker classification accepts only the complete literal, never credential suffixes
+not ok 1 - public-marker classification accepts only the complete literal, never credential suffixes
+  ---
+  duration_ms: 22.8492
+  location: 'F:\\project love\\AgentBrake\\tests\\enforcement\\credential-marker-boundaries.test.ts:1:111'
+  failureType: 'testCodeFailure'
+  error: |-
+    ",opaque-suffix"
+    + actual - expected
+    
+    + 'pending'
+    - 'blocked'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'blocked'
+  actual: 'pending'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (F:\project love\AgentBrake\tests\enforcement\credential-marker-boundaries.test.ts:11:14)
+    async Test.run (node:internal/test_runner/test:932:9)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 839.633

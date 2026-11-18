@@ -1,0 +1,307 @@
+local-model-1  | print_info: EOG token             = 151662 '<|fim_pad|>'
+local-model-1  | print_info: EOG token             = 151663 '<|repo_name|>'
+local-model-1  | print_info: EOG token             = 151664 '<|file_sep|>'
+target-db-1    | GRANT
+target-db-1    | INSERT 0 1
+target-db-1    | COMMIT
+target-db-1    | BEGIN
+target-db-1    | DO
+gateway-1      | (node:1) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+control-db-1   | 
+control-db-1   |     pg_ctl -D /var/lib/postgresql/data/pgdata -l logfile start
+local-model-1  | print_info: max token length      = 256
+local-model-1  | load_tensors: loading model tensors, this can take a while... (load_mode = none)
+local-model-1  | load_tensors:          CPU model buffer size =   692.63 MiB
+local-model-1  | load_tensors:   CPU_REPACK model buffer size =  1683.28 MiB
+local-model-1  | cmn  common_init_: added </s> logit bias = -inf
+local-model-1  | cmn  common_init_: added <|endoftext|> logit bias = -inf
+gateway-1      | (Use `node --trace-warnings ...` to show where the warning was created)
+gateway-1      | responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+gateway-1      | Isolated AgentBrake gateway ready
+local-model-1  | cmn  common_init_: added <|im_end|> logit bias = -inf
+local-model-1  | cmn  common_init_: added <|fim_pad|> logit bias = -inf
+local-model-1  | cmn  common_init_: added <|repo_name|> logit bias = -inf
+control-db-1   | 
+local-model-1  | cmn  common_init_: added <|file_sep|> logit bias = -inf
+local-model-1  | llama_context: constructing llama_context
+local-model-1  | llama_context: n_seq_max             = 1
+local-model-1  | llama_context: n_ctx                 = 32768
+local-model-1  | llama_context: n_ctx_seq             = 32768
+local-model-1  | llama_context: n_batch               = 1024
+local-model-1  | llama_context: n_ubatch              = 1024
+control-db-1   | initdb: warning: enabling "trust" authentication for local connections
+target-db-1    | CREATE FUNCTION
+target-db-1    | GRANT
+target-db-1    | ALTER FUNCTION
+control-db-1   | initdb: hint: You can change this by editing pg_hba.conf or using the option -A, or --auth-local and --auth-host, the next time you run initdb.
+target-db-1    | REVOKE
+target-db-1    | REVOKE
+target-db-1    | REVOKE
+target-db-1    | GRANT
+target-db-1    | INSERT 0 1
+target-db-1    | COMMIT
+target-db-1    | 
+local-model-1  | llama_context: causal_attn           = 1
+local-model-1  | llama_context: flash_attn            = enabled
+local-model-1  | llama_context: kv_unified            = false
+local-model-1  | llama_context: freq_base             = 5000000.0
+local-model-1  | llama_context: freq_scale            = 1
+local-model-1  | llama_context: n_rs_seq              = 0
+local-model-1  | llama_context: n_outputs_max         = 1
+local-model-1  | llama_context: n_outputs_max_per_seq = 1
+control-db-1   | waiting for server to start....2026-11-17 09:00:04.414 UTC [28] LOG:  starting PostgreSQL 18.7 on x86_64-pc-linux-musl, compiled by gcc (Alpine 15.2.0) 15.2.0, 64-bit
+local-model-1  | llama_context: n_ctx_seq (32768) < n_ctx_train (262144) -- the full capacity of the model will not be utilized
+local-model-1  | llama_context:        CPU  output buffer size =     0.58 MiB
+local-model-1  | llama_kv_cache:        CPU KV buffer size =  2448.00 MiB
+local-model-1  | llama_kv_cache: size = 2448.00 MiB ( 32768 cells,  36 layers,  1/1 seqs), K (q8_0): 1224.00 MiB, V (q8_0): 1224.00 MiB
+control-db-1   | 2026-11-17 09:00:04.414 UTC [28] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+control-db-1   | 2026-11-17 09:00:04.417 UTC [34] LOG:  database system was shut down at 2026-11-17 09:00:04 UTC
+control-db-1   | 2026-11-17 09:00:04.420 UTC [28] LOG:  database system is ready to accept connections
+control-db-1   |  done
+control-db-1   | server started
+control-db-1   | CREATE DATABASE
+control-db-1   | 
+control-db-1   | 
+control-db-1   | /usr/local/bin/docker-entrypoint.sh: running /docker-entrypoint-initdb.d/010-control-fixture.sh
+control-db-1   | DO
+control-db-1   | BEGIN
+local-model-1  | llama_kv_cache: n_rot_k = 128, n_embd_head_k_all = 128
+control-db-1   | REVOKE
+control-db-1   | GRANT
+control-db-1   | REVOKE
+control-db-1   | GRANT
+control-db-1   | CREATE TABLE
+control-db-1   | INSERT 0 1
+control-db-1   | CREATE TABLE
+control-db-1   | INSERT 0 1
+control-db-1   | CREATE TABLE
+local-model-1  | llama_kv_cache: n_rot_v = 64, n_embd_head_k_all = 128
+control-db-1   | CREATE TABLE
+control-db-1   | CREATE TABLE
+control-db-1   | REVOKE
+control-db-1   | REVOKE
+local-model-1  | init_rotation:        CPU rotation buffer size =     2.81 MiB
+local-model-1  | sched_reserve: reserving ...
+local-model-1  | resolve_fused_ops: resolving fused DeepSeek V4 HC support:
+local-model-1  | resolve_fused_ops: fused DeepSeek V4 HC pre enabled
+target-db-1    | waiting for server to shut down....2026-11-17 09:00:05.108 UTC [28] LOG:  received fast shutdown request
+local-model-1  | resolve_fused_ops: fused DeepSeek V4 HC comb enabled
+control-db-1   | GRANT
+control-db-1   | GRANT
+control-db-1   | GRANT
+control-db-1   | GRANT
+target-db-1    | 2026-11-17 09:00:05.108 UTC [28] LOG:  aborting any active transactions
+target-db-1    | 2026-11-17 09:00:05.111 UTC [28] LOG:  background worker "logical replication launcher" (PID 37) exited with exit code 1
+target-db-1    | 2026-11-17 09:00:05.113 UTC [32] LOG:  shutting down
+target-db-1    | 2026-11-17 09:00:05.113 UTC [32] LOG:  checkpoint starting: shutdown immediate
+local-model-1  | resolve_fused_ops: fused DeepSeek V4 HC post enabled
+target-db-1    | 2026-11-17 09:00:05.122 UTC [32] LOG:  checkpoint complete: wrote 975 buffers (6.0%), wrote 3 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.008 s, sync=0.001 s, total=0.009 s; sync files=318, longest=0.001 s, average=0.000 s; distance=4509 kB, estimate=4509 kB; lsn=0/1BDFB28, redo lsn=0/1BDFB28
+control-db-1   | GRANT
+local-model-1  | sched_reserve:        CPU compute buffer size =   228.04 MiB
+local-model-1  | sched_reserve: graph: nodes = 1701, splits = 1, input objects = 4, input tensors = 9
+local-model-1  | sched_reserve: reserve took 7.99 ms, sched copies = 1
+local-model-1  | cmn          init: llama threadpool init, n_threads = 8
+local-model-1  | cmn  common_init_: warming up the model with an empty run - please wait ... (--no-warmup to disable)
+control-db-1   | COMMIT
+local-model-1  | srv    load_model: initializing, n_slots = 1, n_ctx_slot = 32768, kv_unified = 'false'
+target-db-1    | 2026-11-17 09:00:05.133 UTC [28] LOG:  database system is shut down
+target-db-1    |  done
+local-model-1  | spec common_specu: no implementations specified for speculative decoding
+local-model-1  | slot   load_model: id  0 | task -1 | new slot, n_ctx = 32768
+local-model-1  | srv    load_model: prompt cache is enabled, size limit: 8192 MiB
+local-model-1  | srv    load_model: use `--cache-ram 0` to disable the prompt cache
+target-db-1    | server stopped
+local-model-1  | srv    load_model: for more info see https://github.com/ggml-org/llama.cpp/pull/16391
+control-db-1   | BEGIN
+control-db-1   | CREATE TABLE
+control-db-1   | INSERT 0 1
+control-db-1   | REVOKE
+local-model-1  | srv    load_model: context checkpoints enabled, max = 32, min spacing = 8192
+local-model-1  | srv          init: idle slots will be saved to prompt cache upon starting a new task
+control-db-1   | GRANT
+local-model-1  | srv          init: init: chat template, example_format: '<|im_start|>system
+target-db-1    | 
+target-db-1    | PostgreSQL init process complete; ready for start up.
+control-db-1   | COMMIT
+control-db-1   | 
+target-db-1    | 
+local-model-1  | You are a helpful assistant<|im_end|>
+local-model-1  | <|im_start|>user
+local-model-1  | Hello<|im_end|>
+local-model-1  | <|im_start|>assistant
+local-model-1  | Hi there<|im_end|>
+target-db-1    | 2026-11-17 09:00:05.230 UTC [1] LOG:  starting PostgreSQL 18.7 on x86_64-pc-linux-musl, compiled by gcc (Alpine 15.2.0) 15.2.0, 64-bit
+target-db-1    | 2026-11-17 09:00:05.230 UTC [1] LOG:  listening on IPv4 address "0.0.0.0", port 5432
+target-db-1    | 2026-11-17 09:00:05.230 UTC [1] LOG:  listening on IPv6 address "::", port 5432
+target-db-1    | 2026-11-17 09:00:05.230 UTC [1] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+target-db-1    | 2026-11-17 09:00:05.233 UTC [59] LOG:  database system was shut down at 2026-11-17 09:00:05 UTC
+local-model-1  | <|im_start|>user
+local-model-1  | How are you?<|im_end|>
+local-model-1  | <|im_start|>assistant
+local-model-1  | '
+local-model-1  | srv          init: init: chat template, thinking = 1
+local-model-1  | srv          init: preserve_reasoning kwarg: not supported by template
+local-model-1  | srv  server_run_i: model loaded
+control-db-1   | waiting for server to shut down....2026-11-17 09:00:04.691 UTC [28] LOG:  received fast shutdown request
+local-model-1  | srv  server_on_li: listening on http://127.0.0.1:33279
+control-db-1   | 2026-11-17 09:00:04.691 UTC [28] LOG:  aborting any active transactions
+control-db-1   | 2026-11-17 09:00:04.693 UTC [28] LOG:  background worker "logical replication launcher" (PID 37) exited with exit code 1
+control-db-1   | 2026-11-17 09:00:04.698 UTC [32] LOG:  shutting down
+local-model-1  | srv  update_slots: all slots are idle
+local-model-1  | time=2026-11-17T09:02:36.681Z level=INFO source=llama_server.go:1418 msg="llama-server started in 27.75 seconds"
+target-db-1    | 2026-11-17 09:00:05.236 UTC [1] LOG:  database system is ready to accept connections
+target-db-1    | 2026-11-17 09:00:35.494 UTC [171] ERROR:  permission denied for function agentbrake_update_customer
+target-db-1    | 2026-11-17 09:00:35.494 UTC [171] STATEMENT:  SELECT * FROM public.agentbrake_update_customer(3,'active')
+target-db-1    | 2026-11-17 09:00:35.619 UTC [178] ERROR:  permission denied for table agentbrake_customers
+local-model-1  | time=2026-11-17T09:02:36.681Z level=INFO source=images.go:431 msg="template selection" model=registry.ollama.ai/library/qwen3:4b-instruct selected=gguf_chat_template renderer="" parser="" go_template="[completion tools]" chat_template="[tools thinking completion]" harmony=null renderer_parser=null
+local-model-1  | time=2026-11-17T09:02:36.681Z level=INFO source=sched.go:775 msg="loaded runners" count=1
+local-model-1  | time=2026-11-17T09:02:36.681Z level=INFO source=llama_server.go:1351 msg="waiting for llama-server to start responding"
+local-model-1  | time=2026-11-17T09:02:36.681Z level=INFO source=llama_server.go:1418 msg="llama-server started in 27.76 seconds"
+control-db-1   | 2026-11-17 09:00:04.698 UTC [32] LOG:  checkpoint starting: shutdown immediate
+local-model-1  | srv  server_strea: conv_id= (empty=1)
+control-db-1   | 2026-11-17 09:00:04.707 UTC [32] LOG:  checkpoint complete: wrote 990 buffers (6.0%), wrote 3 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.009 s, sync=0.001 s, total=0.010 s; sync files=342, longest=0.001 s, average=0.001 s; distance=4617 kB, estimate=4617 kB; lsn=0/1BFAA08, redo lsn=0/1BFAA08
+control-db-1   | 2026-11-17 09:00:04.721 UTC [28] LOG:  database system is shut down
+control-db-1   |  done
+control-db-1   | server stopped
+target-db-1    | 2026-11-17 09:00:35.619 UTC [178] STATEMENT:  UPDATE public.agentbrake_customers SET status='paused'
+target-db-1    | 2026-11-17 09:00:35.621 UTC [178] ERROR:  permission denied for table agentbrake_customers
+target-db-1    | 2026-11-17 09:00:35.621 UTC [178] STATEMENT:  DELETE FROM public.agentbrake_customers
+target-db-1    | 2026-11-17 09:00:35.622 UTC [178] ERROR:  permission denied for table agentbrake_customers
+local-model-1  | slot get_availabl: id  0 | task -1 |  - skipping, slot is empty
+target-db-1    | 2026-11-17 09:00:35.622 UTC [178] STATEMENT:  TRUNCATE public.agentbrake_customers
+control-db-1   | 
+control-db-1   | PostgreSQL init process complete; ready for start up.
+control-db-1   | 
+control-db-1   | 2026-11-17 09:00:04.836 UTC [1] LOG:  starting PostgreSQL 18.7 on x86_64-pc-linux-musl, compiled by gcc (Alpine 15.2.0) 15.2.0, 64-bit
+local-model-1  | slot get_availabl: id  0 | task -1 | selected slot by LRU, n_tokens = 0, t_last = -1
+local-model-1  | srv  get_availabl: updating prompt cache
+target-db-1    | 2026-11-17 09:00:35.623 UTC [178] ERROR:  must be owner of table agentbrake_customers
+target-db-1    | 2026-11-17 09:00:35.623 UTC [178] STATEMENT:  DROP TABLE public.agentbrake_customers
+control-db-1   | 2026-11-17 09:00:04.836 UTC [1] LOG:  listening on IPv4 address "0.0.0.0", port 5432
+control-db-1   | 2026-11-17 09:00:04.836 UTC [1] LOG:  listening on IPv6 address "::", port 5432
+control-db-1   | 2026-11-17 09:00:04.837 UTC [1] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+control-db-1   | 2026-11-17 09:00:04.846 UTC [57] LOG:  database system was shut down at 2026-11-17 09:00:04 UTC
+control-db-1   | 2026-11-17 09:00:04.855 UTC [1] LOG:  database system is ready to accept connections
+control-db-1   | 2026-11-17 09:00:33.420 UTC [166] ERROR:  permission denied for table audit
+control-db-1   | 2026-11-17 09:00:33.420 UTC [166] STATEMENT:  INSERT INTO audit(data,previous_hash,hash) VALUES ($1,$2,$3)
+control-db-1   | 2026-11-17 09:00:33.422 UTC [166] ERROR:  permission denied for table audit
+target-db-1    | 2026-11-17 09:00:35.624 UTC [178] ERROR:  permission denied for schema public at character 14
+target-db-1    | 2026-11-17 09:00:35.624 UTC [178] STATEMENT:  CREATE TABLE public.must_not_exist(id integer)
+target-db-1    | 2026-11-17 09:00:35.626 UTC [178] ERROR:  permission denied to create temporary tables in database "agentbrake_target_fixture" at character 19
+target-db-1    | 2026-11-17 09:00:35.626 UTC [178] STATEMENT:  CREATE TEMP TABLE must_not_exist(id integer)
+local-model-1  | srv          load:  - looking for better prompt, base f_keep = -1.000, f_sim = 0.000
+target-db-1    | 2026-11-17 09:00:35.629 UTC [178] ERROR:  permission denied to create extension "hstore"
+control-db-1   | 2026-11-17 09:00:33.422 UTC [166] STATEMENT:  INSERT INTO audit(data,previous_hash,hash) VALUES ($1,$2,$3)
+control-db-1   | 2026-11-17 09:00:33.768 UTC [141] ERROR:  duplicate key value violates unique constraint "actions_agent_id_request_id_key"
+control-db-1   | 2026-11-17 09:00:33.768 UTC [141] DETAIL:  Key (agent_id, request_id)=(2ae7b92a-2f4c-4090-8b37-4c73363370f2, ec0ccece-d11d-42b4-a8b2-e5f7056927b3) already exists.
+control-db-1   | 2026-11-17 09:00:33.768 UTC [141] STATEMENT:  INSERT INTO actions(id,agent_id,request_id,status,data) VALUES ($1,$2,$3,$4,$5)
+local-model-1  | srv        update:  - cache state: 0 prompts, 0.000 MiB (limits: 8192.000 MiB, 32768 tokens, 8589934592 est)
+local-model-1  | srv  get_availabl: prompt cache update took 0.01 ms
+control-db-1   | 2026-11-17 09:00:33.869 UTC [171] ERROR:  permission denied for table audit
+control-db-1   | 2026-11-17 09:00:33.869 UTC [171] STATEMENT:  INSERT INTO audit(data,previous_hash,hash) VALUES ($1,$2,$3)
+control-db-1   | 2026-11-17 09:00:33.876 UTC [171] ERROR:  permission denied for table audit
+control-db-1   | 2026-11-17 09:00:33.876 UTC [171] STATEMENT:  INSERT INTO audit(data,previous_hash,hash) VALUES ($1,$2,$3)
+target-db-1    | 2026-11-17 09:00:35.629 UTC [178] HINT:  Must have CREATE privilege on current database to create this extension.
+target-db-1    | 2026-11-17 09:00:35.629 UTC [178] STATEMENT:  CREATE EXTENSION hstore
+target-db-1    | 2026-11-17 09:00:35.633 UTC [178] ERROR:  permission denied to alter role
+target-db-1    | 2026-11-17 09:00:35.633 UTC [178] DETAIL:  Only roles with the SUPERUSER attribute may change the SUPERUSER attribute.
+local-model-1  | slot launch_slot_: id  0 | task -1 | sampler chain: logits -> ?penalties -> ?dry -> ?top-n-sigma -> top-k -> ?typical -> top-p -> ?min-p -> ?xtc -> temp-ext -> dist 
+local-model-1  | slot launch_slot_: id  0 | task -1 | sampler params: 
+target-db-1    | 2026-11-17 09:00:35.633 UTC [178] STATEMENT:  ALTER ROLE fixture_reader SUPERUSER
+target-db-1    | 2026-11-17 09:00:35.636 UTC [178] ERROR:  permission denied to grant role "fixture_owner"
+target-db-1    | 2026-11-17 09:00:35.636 UTC [178] DETAIL:  Only roles with the SUPERUSER attribute may grant roles with the SUPERUSER attribute.
+target-db-1    | 2026-11-17 09:00:35.636 UTC [178] STATEMENT:  GRANT fixture_owner TO fixture_reader
+target-db-1    | 2026-11-17 09:00:35.637 UTC [178] ERROR:  permission denied to set role "fixture_data_owner"
+control-db-1   | 2026-11-17 09:00:33.881 UTC [171] ERROR:  permission denied for table audit
+control-db-1   | 2026-11-17 09:00:33.881 UTC [171] STATEMENT:  INSERT INTO audit(data,previous_hash,hash) VALUES ($1,$2,$3)
+control-db-1   | 2026-11-17 09:00:33.886 UTC [171] ERROR:  permission denied for table audit
+target-db-1    | 2026-11-17 09:00:35.637 UTC [178] STATEMENT:  SET ROLE fixture_data_owner
+target-db-1    | 2026-11-17 09:00:35.638 UTC [178] ERROR:  permission denied to COPY to or from an external program
+local-model-1  | 	repeat_last_n = 64, repeat_penalty = 1.000, frequency_penalty = 0.000, presence_penalty = 0.000
+target-db-1    | 2026-11-17 09:00:35.638 UTC [178] DETAIL:  Only roles with privileges of the "pg_execute_server_program" role may COPY to or from an external program.
+control-db-1   | 2026-11-17 09:00:33.886 UTC [171] STATEMENT:  INSERT INTO audit(data,previous_hash,hash) VALUES ($1,$2,$3)
+local-model-1  | 	dry_multiplier = 0.000, dry_base = 1.750, dry_allowed_length = 2, dry_penalty_last_n = 64
+local-model-1  | 	top_k = 20, top_p = 0.800, min_p = 0.000, xtc_probability = 0.000, xtc_threshold = 0.100, typical_p = 1.000, top_n_sigma = -1.000, temp = 0.700
+local-model-1  | 	mirostat = 0, mirostat_lr = 0.100, mirostat_ent = 5.000, adaptive_target = -1.000, adaptive_decay = 0.900
+local-model-1  | slot launch_slot_: id  0 | task 0 | processing task, is_child = 0
+local-model-1  | slot   operator(): id  0 | task 0 | new prompt, n_ctx_slot = 32768, n_keep = 4, task.n_tokens = 4969
+control-db-1   | 2026-11-17 09:00:33.889 UTC [171] ERROR:  permission denied for table audit
+control-db-1   | 2026-11-17 09:00:33.889 UTC [171] STATEMENT:  INSERT INTO audit(data,previous_hash,hash) VALUES ($1,$2,$3)
+control-db-1   | 2026-11-17 09:00:33.893 UTC [171] ERROR:  permission denied for table audit
+control-db-1   | 2026-11-17 09:00:33.893 UTC [171] STATEMENT:  INSERT INTO audit(data,previous_hash,hash) VALUES ($1,$2,$3)
+control-db-1   | 2026-11-17 09:00:33.896 UTC [171] ERROR:  permission denied for table audit
+control-db-1   | 2026-11-17 09:00:33.896 UTC [171] STATEMENT:  INSERT INTO audit(data,previous_hash,hash) VALUES ($1,$2,$3)
+local-model-1  | slot   operator(): id  0 | task 0 | cached n_tokens = 0, memory_seq_rm [0, end)
+local-model-1  | slot print_timing: id  0 | task 0 | prompt processing, n_tokens =   1024, progress = 0.21, t =  41.71 s / 24.55 tokens per second
+local-model-1  | slot   operator(): id  0 | task 0 | cached n_tokens = 1024, memory_seq_rm [1024, end)
+local-model-1  | slot print_timing: id  0 | task 0 | prompt processing, n_tokens =   2048, progress = 0.41, t = 108.38 s / 18.90 tokens per second
+local-model-1  | slot   operator(): id  0 | task 0 | cached n_tokens = 2048, memory_seq_rm [2048, end)
+local-model-1  | slot print_timing: id  0 | task 0 | prompt processing, n_tokens =   3072, progress = 0.62, t = 194.41 s / 15.80 tokens per second
+target-db-1    | 2026-11-17 09:00:35.638 UTC [178] HINT:  Anyone can COPY to stdout or from stdin. psql's \copy command also works for anyone.
+local-model-1  | slot   operator(): id  0 | task 0 | cached n_tokens = 3072, memory_seq_rm [3072, end)
+control-db-1   | 2026-11-17 09:00:33.948 UTC [172] ERROR:  permission denied for table audit
+target-db-1    | 2026-11-17 09:00:35.638 UTC [178] STATEMENT:  COPY (SELECT 1) TO PROGRAM 'true'
+target-db-1    | 2026-11-17 09:00:35.648 UTC [179] ERROR:  permission denied for table agentbrake_customers
+local-model-1  | slot print_timing: id  0 | task 0 | prompt processing, n_tokens =   4096, progress = 0.82, t = 336.22 s / 12.18 tokens per second
+local-model-1  | slot   operator(): id  0 | task 0 | cached n_tokens = 4096, memory_seq_rm [4096, end)
+local-model-1  | slot init_sampler: id  0 | task 0 | init sampler, took 11.84 ms, tokens: text = 4969, total = 4969
+local-model-1  | [GIN] 2026/11/17 - 09:12:07 | 200 |    9m50s |    192.168.32.3 | POST     "/v1/responses"
+control-db-1   | 2026-11-17 09:00:33.948 UTC [172] STATEMENT:  UPDATE audit SET hash='changed'
+local-model-1  | time=2026-11-17T09:12:07.868Z level=ERROR source=routes.go:2649 msg="streamResponse failed to encode json error" error="write tcp 192.168.32.2:11434->192.168.32.3:57430: write: broken pipe"
+target-db-1    | 2026-11-17 09:00:35.648 UTC [179] STATEMENT:  UPDATE public.agentbrake_customers SET status='paused'
+target-db-1    | 2026-11-17 09:00:35.649 UTC [179] ERROR:  permission denied for table agentbrake_customers
+target-db-1    | 2026-11-17 09:00:35.649 UTC [179] STATEMENT:  DELETE FROM public.agentbrake_customers
+target-db-1    | 2026-11-17 09:00:35.650 UTC [179] ERROR:  permission denied for table agentbrake_customers
+local-model-1  | [GIN] 2026/11/17 - 09:12:07 | 200 | 172.063µs |    192.168.32.3 | GET      "/api/ps"
+target-db-1    | 2026-11-17 09:00:35.650 UTC [179] STATEMENT:  TRUNCATE public.agentbrake_customers
+control-db-1   | 2026-11-17 09:00:33.963 UTC [173] ERROR:  permission denied for table audit
+control-db-1   | 2026-11-17 09:00:33.963 UTC [173] STATEMENT:  DELETE FROM audit
+control-db-1   | 2026-11-17 09:00:33.975 UTC [174] ERROR:  permission denied for table audit
+control-db-1   | 2026-11-17 09:00:33.975 UTC [174] STATEMENT:  TRUNCATE audit
+control-db-1   | 2026-11-17 09:00:33.992 UTC [175] ERROR:  permission denied for schema public at character 14
+control-db-1   | 2026-11-17 09:00:33.992 UTC [175] STATEMENT:  CREATE TABLE public.forbidden_control_table(id integer)
+control-db-1   | 2026-11-17 09:00:34.019 UTC [176] ERROR:  permission denied to create temporary tables in database "agentbrake_control_fixture" at character 19
+control-db-1   | 2026-11-17 09:00:34.019 UTC [176] STATEMENT:  CREATE TEMP TABLE forbidden_control_temp(id integer)
+control-db-1   | 2026-11-17 09:00:34.044 UTC [177] ERROR:  must be owner of table audit
+control-db-1   | 2026-11-17 09:00:34.044 UTC [177] STATEMENT:  ALTER TABLE audit ADD COLUMN forbidden integer
+control-db-1   | 2026-11-17 09:00:34.053 UTC [178] ERROR:  must be owner of table audit
+control-db-1   | 2026-11-17 09:00:34.053 UTC [178] STATEMENT:  ALTER TABLE audit DISABLE TRIGGER ALL
+control-db-1   | 2026-11-17 09:00:34.066 UTC [179] ERROR:  permission denied to set role "control_owner"
+control-db-1   | 2026-11-17 09:00:34.066 UTC [179] STATEMENT:  SET ROLE control_owner
+control-db-1   | 2026-11-17 09:05:04.944 UTC [55] LOG:  checkpoint starting: time
+control-db-1   | 2026-11-17 09:05:43.753 UTC [55] LOG:  checkpoint complete: wrote 386 buffers (2.4%), wrote 4 SLRU buffers; 1 WAL file(s) added, 0 removed, 0 recycled; write=38.800 s, sync=0.001 s, total=38.809 s; sync files=56, longest=0.001 s, average=0.000 s; distance=3867 kB, estimate=3867 kB; lsn=0/1FC1808, redo lsn=0/1FC1778
+target-db-1    | 2026-11-17 09:00:35.651 UTC [179] ERROR:  must be owner of table agentbrake_customers
+target-db-1    | 2026-11-17 09:00:35.651 UTC [179] STATEMENT:  DROP TABLE public.agentbrake_customers
+target-db-1    | 2026-11-17 09:00:35.652 UTC [179] ERROR:  permission denied for schema public at character 14
+target-db-1    | 2026-11-17 09:00:35.652 UTC [179] STATEMENT:  CREATE TABLE public.must_not_exist(id integer)
+target-db-1    | 2026-11-17 09:00:35.653 UTC [179] ERROR:  permission denied to create temporary tables in database "agentbrake_target_fixture" at character 19
+target-db-1    | 2026-11-17 09:00:35.653 UTC [179] STATEMENT:  CREATE TEMP TABLE must_not_exist(id integer)
+target-db-1    | 2026-11-17 09:00:35.655 UTC [179] ERROR:  permission denied to create extension "hstore"
+target-db-1    | 2026-11-17 09:00:35.655 UTC [179] HINT:  Must have CREATE privilege on current database to create this extension.
+target-db-1    | 2026-11-17 09:00:35.655 UTC [179] STATEMENT:  CREATE EXTENSION hstore
+target-db-1    | 2026-11-17 09:00:35.657 UTC [179] ERROR:  permission denied to alter role
+target-db-1    | 2026-11-17 09:00:35.657 UTC [179] DETAIL:  Only roles with the SUPERUSER attribute may change the SUPERUSER attribute.
+target-db-1    | 2026-11-17 09:00:35.657 UTC [179] STATEMENT:  ALTER ROLE fixture_writer SUPERUSER
+target-db-1    | 2026-11-17 09:00:35.660 UTC [179] ERROR:  permission denied to grant role "fixture_owner"
+target-db-1    | 2026-11-17 09:00:35.660 UTC [179] DETAIL:  Only roles with the SUPERUSER attribute may grant roles with the SUPERUSER attribute.
+target-db-1    | 2026-11-17 09:00:35.660 UTC [179] STATEMENT:  GRANT fixture_owner TO fixture_writer
+target-db-1    | 2026-11-17 09:00:35.662 UTC [179] ERROR:  permission denied to set role "fixture_data_owner"
+target-db-1    | 2026-11-17 09:00:35.662 UTC [179] STATEMENT:  SET ROLE fixture_data_owner
+target-db-1    | 2026-11-17 09:00:35.663 UTC [179] ERROR:  permission denied to COPY to or from an external program
+target-db-1    | 2026-11-17 09:00:35.663 UTC [179] DETAIL:  Only roles with privileges of the "pg_execute_server_program" role may COPY to or from an external program.
+target-db-1    | 2026-11-17 09:00:35.663 UTC [179] HINT:  Anyone can COPY to stdout or from stdin. psql's \copy command also works for anyone.
+target-db-1    | 2026-11-17 09:00:35.663 UTC [179] STATEMENT:  COPY (SELECT 1) TO PROGRAM 'true'
+target-db-1    | 2026-11-17 09:00:35.664 UTC [178] ERROR:  permission denied for function agentbrake_update_customer_checked
+target-db-1    | 2026-11-17 09:00:35.664 UTC [178] STATEMENT:  SELECT * FROM public.agentbrake_update_customer_checked(1,'paused',0)
+target-db-1    | 2026-11-17 09:00:35.666 UTC [179] ERROR:  Invalid reviewed update arguments
+target-db-1    | 2026-11-17 09:00:35.666 UTC [179] CONTEXT:  PL/pgSQL function public.agentbrake_update_customer_checked(integer,text,integer) line 4 at RAISE
+target-db-1    | 2026-11-17 09:00:35.666 UTC [179] STATEMENT:  SELECT * FROM public.agentbrake_update_customer_checked(1,'deleted',0)
+target-db-1    | 2026-11-17 09:00:37.195 UTC [180] ERROR:  canceling statement due to statement timeout
+target-db-1    | 2026-11-17 09:00:37.195 UTC [180] STATEMENT:  SELECT pg_sleep(4)
+target-db-1    | 2026-11-17 09:00:38.696 UTC [181] ERROR:  canceling statement due to statement timeout
+target-db-1    | 2026-11-17 09:00:38.696 UTC [181] STATEMENT:  SELECT pg_sleep(4)
+target-db-1    | 2026-11-17 09:05:05.328 UTC [57] LOG:  checkpoint starting: time
+target-db-1    | 2026-11-17 09:05:13.402 UTC [57] LOG:  checkpoint complete: wrote 80 buffers (0.5%), wrote 3 SLRU buffers; 1 WAL file(s) added, 0 removed, 0 recycled; write=8.069 s, sync=0.001 s, total=8.075 s; sync files=39, longest=0.001 s, average=0.000 s; distance=514 kB, estimate=514 kB; lsn=0/1C60530, redo lsn=0/1C604A0
+mock-target-1  | (node:1) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+mock-target-1  | (Use `node --trace-warnings ...` to show where the warning was created)
+mock-target-1  | Synthetic target ready

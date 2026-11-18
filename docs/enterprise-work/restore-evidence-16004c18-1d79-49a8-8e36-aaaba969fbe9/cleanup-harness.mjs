@@ -1,0 +1,13 @@
+import assert from 'node:assert/strict';
+import {readFile,rm,writeFile} from 'node:fs/promises';
+import {resolve,join} from 'node:path';
+import {productConfig,composeProduct,dockerProduct} from '../scripts/product.mjs';
+const name='verify-ent-src-16004c18',c=await productConfig(name),expected=resolve('.agentbrake-local','product-'+name);
+assert.equal(resolve(c.dir),expected);assert.equal(c.name,name);assert.equal(c.project,'agentbrake-product-'+name);
+const owner=JSON.parse(await readFile(join(c.dir,'installation.json'),'utf8'));assert.equal(owner.id,c.id);assert.equal(owner.name,name);
+await composeProduct(c,['--profile','agent','down','--volumes','--remove-orphans'],{capture:true});
+const filter='label=com.docker.compose.project='+c.project;
+for(const args of [['ps','--all','--quiet','--filter',filter],['volume','ls','--quiet','--filter',filter],['network','ls','--quiet','--filter',filter]])assert.equal((await dockerProduct(c,args,{capture:true})).trim(),'');
+await rm(expected,{recursive:true});
+await writeFile('docs/enterprise-work/restore-evidence-16004c18-1d79-49a8-8e36-aaaba969fbe9/cleanup-followup.json',JSON.stringify({result:'PASS',at:new Date().toISOString(),name,containers:0,volumes:0,networks:0,scopedFilesRemoved:true},null,2),{flag:'wx'});
+console.log('Exact failed-attempt cleanup passed');

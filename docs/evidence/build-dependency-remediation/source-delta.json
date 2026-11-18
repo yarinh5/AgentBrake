@@ -1,0 +1,57 @@
+{
+  "at": "2026-11-17T17:55:03.321Z",
+  "prior": "3ea2c8eb9d847d6213333172121d0e235fb0ef0e4efe44946108d0f4e18fb0c6",
+  "current": "e9722202db98dfa5804f39c12f8761455f62cb08e1c44c303455b93a08aa3677",
+  "changes": [
+    {
+      "path": "package-lock.json",
+      "before": "da669c9819cee0c399ce91b16dd946ddf20e6f9c5e78c395228de332929f86d5",
+      "after": "8c1ba11c95b3be0a5ba6a4871bf78055add1dd2eeb16721632c84d75786aaa71"
+    },
+    {
+      "path": "package.json",
+      "before": "2014580661ed613c92c667553a47fe62746b9c6c60d95e0aaaaea2d3920f0b88",
+      "after": "a50cad03261f138ac4e78d1527ba116356b16682cbeff8d5c3a1903c4ebd2221"
+    },
+    {
+      "path": "scripts/build-ui.mjs",
+      "before": null,
+      "after": "6317a9a84c069be1b93cb04778272957e5c9f650a9961c83fb26c4305fb53e73"
+    },
+    {
+      "path": "scripts/source-manifest.mjs",
+      "before": "1ab41d3486c8263a04d7e1874f92c0c77a16bc3a3882844e2c34c8626fa040da",
+      "after": "a24ff1f090c296ebefd97405df4c68538dda944f37cd628270a16b40255f4d45"
+    },
+    {
+      "path": "scripts/verify-stage1.mjs",
+      "before": "93ddddaca3a920569be11802736bd16f308396689a6d14df44159b2dd5bbf1c3",
+      "after": "a793ba93b4da1caa475e39ac8768736c356b11a60dd687ff2e877dad1403a066"
+    },
+    {
+      "path": "server/index.ts",
+      "before": "6e491d82bb1de53e4733bef1b3709e1342e821dfdf3ccfa953dc6ac11a7c3568",
+      "after": "a5c0d8d18993eec5d7ad3b7f402773e3a72e6cef6748ccac3439c103077c7177"
+    },
+    {
+      "path": "server/stage1.ts",
+      "before": "8dc7731796a890c2293438469da6d556e6a978409bac6a5c1e00d4477971f045",
+      "after": "b3aee7d33b4b2a33a2e9eba3f9defbe5839d74dd2d65fb3df7fdc5789cd3a7eb"
+    },
+    {
+      "path": "tests/enforcement/ui-build.test.mjs",
+      "before": null,
+      "after": "587032e510fa3cc2f2bf4362754e60ab33cd691db2288d26636dbf3e5a4a9aea"
+    },
+    {
+      "path": "tsconfig.json",
+      "before": "7b222790ac9f914ad2e9da8cff51f89b17e84c0b5e58edee875dcba904757615",
+      "after": "5ab4c4bc23a16361a40d8bf862706b044b0d111f4c7d03ce777c8dbf56892734"
+    },
+    {
+      "path": "vite.config.ts",
+      "before": "99fbb8ce7e92c85f103f41fad1ab7a8a8f0fd70393e47a162064c7d4adf002da",
+      "after": null
+    }
+  ]
+}

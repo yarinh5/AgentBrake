@@ -17,3 +17,15 @@ localStorage.setItem('token','fixture');
 console.log(req.headers.authorization);
 // ruleid: agentbrake-request-sql
 db.query(req.body.sql);
+// ruleid: agentbrake-request-sql
+db.exec(req.body.sql);
+// ruleid: agentbrake-request-sql
+pool.connection.exec(req.query.sql);
+// ok: agentbrake-request-sql
+/^(id|externalId) eq "([^"\\]{1,256})"$/.exec(req.query.filter);
+// ok: agentbrake-request-sql
+db.query('SELECT id FROM fixture WHERE id = $1', [req.params.id]);
+// ruleid: agentbrake-request-sql
+db.exec('SELECT * FROM fixture WHERE id = ' + req.params.id);
+// ok: agentbrake-request-sql
+/^path\/([a-z]+)$/i.exec(req.query.filter);

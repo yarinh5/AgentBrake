@@ -1,0 +1,9 @@
+{
+  "scope": "Summary exceeded the raw-artifact transport size limit. This JSON is materialized from the checksum-recorded guest report; not original file bytes. Public download URL queries were redacted by the report recorder. Original run/source/result remain unchanged.",
+  "parent": "docs/evidence/clean-linux-final-readiness-validation-20261117/guest-report.json",
+  "parentSha256": "9b1e1d8785f3f85a3bbe054dfa5fe513cbf45da88f49c48693a8d064013db70c",
+  "field": "reports.isolation",
+  "sourceHash": "2642bd1356660a8c91b157f2870bfb787e8088d83eca2544886f0784deed06bc",
+  "runId": "cdc601e9-adef-44d5-9bde-0a6d806e16da",
+  "summarySha256": "53775529a5555cc45f666a85d4eb97e0865e6b624076e32c7cfeb0c8f06e9b94"
+}

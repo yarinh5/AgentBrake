@@ -1,0 +1,18 @@
+{
+  "at": "2026-11-17T19:46:09.288935+00:00",
+  "result": "PASS_FRESH_OFFLINE_TOOLCHAIN",
+  "phase": "clean-package-bootstrap2",
+  "sourceHash": null,
+  "baseSource": null,
+  "releaseAcceptance": false,
+  "approval": "User authorized fresh local Ubuntu validation, public free dependencies, synthetic data and resource tuning; no production, paid services or live target credentials.",
+  "seedSha256": "cf2006da9c5273b6e25e361018a9af98a754195e5804dc573eeb87f6f0feaa44",
+  "localRawSerialSha256": "ecd9c9de19d63c68d19bee988cf914dd3431a937d6c215d71f43c37ef07004b6",
+  "files": [
+    {
+      "name": "guest-report.json",
+      "sha256": "b521ed000642c650835927f609eaa6f5426c7ea6535fc2462dcee95bdc62f213",
+      "bytes": 15455
+    }
+  ]
+}

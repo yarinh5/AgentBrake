@@ -1,0 +1,23 @@
+{
+  "args": [
+    "run",
+    "--rm",
+    "--pull",
+    "never",
+    "--network",
+    "container:agentbrake-model-diag-26a5c819",
+    "--read-only",
+    "--cap-drop",
+    "ALL",
+    "--security-opt",
+    "no-new-privileges:true",
+    "library/node@sha256:e9f565d32859f0cbfb52125eafe8be39390f24dac302dc3cdf566e8ba3ab21ee",
+    "node",
+    "--input-type=module",
+    "-e",
+    "let ready=false;for(let i=0;i<60;i++){try{ready=(await fetch('http://127.0.0.1:11434/api/tags')).ok;if(ready)break;}catch{}await new Promise(r=>setTimeout(r,500));}if(!ready)throw Error('Not ready');const results=[];for(let i=0;i<2;i++){const start=Date.now();const r=await fetch('http://127.0.0.1:11434/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'qwen3:4b-instruct',prompt:'Write the positive integers from one to twenty in English.',stream:false,think:false,options:{num_predict:24,seed:42,temperature:0,num_ctx:32768}}),signal:AbortSignal.timeout(240000)});if(!r.ok)throw Error('Model HTTP '+r.status);const b=await r.json();results.push({wallMs:Date.now()-start,load_duration:b.load_duration,prompt_eval_count:b.prompt_eval_count,prompt_eval_duration:b.prompt_eval_duration,eval_count:b.eval_count,eval_duration:b.eval_duration,done:b.done});}console.log(JSON.stringify(results));"
+  ],
+  "message": "Local Docker command failed (1)",
+  "stderr": "node:internal/deps/undici/undici:15456\n      Error.captureStackTrace(err);\n            ^\n\nTypeError: fetch failed\n    at node:internal/deps/undici/undici:15456:13\n    at async file:////[eval1]:1:269 {\n  [cause]: SocketError: other side closed\n      at Socket.<anonymous> (node:internal/deps/undici/undici:6569:28)\n      at Socket.emit (node:events:531:35)\n      at endReadableNT (node:internal/streams/readable:1698:12)\n      at process.processTicksAndRejections (node:internal/process/task_queues:89:21) {\n    code: 'UND_ERR_SOCKET',\n    socket: {\n      localAddress: '127.0.0.1',\n      localPort: 55088,\n      remoteAddress: '127.0.0.1',\n      remotePort: 11434,\n      remoteFamily: 'IPv4',\n      timeout: undefined,\n      bytesWritten: 435,\n      bytesRead: 0\n    },\n    [Symbol(undici.error.UND_ERR)]: true,\n    [Symbol(undici.error.UND_ERR_SOCKET)]: true\n  }\n}\n\nNode.js v22.23.5\n",
+  "stdout": ""
+}

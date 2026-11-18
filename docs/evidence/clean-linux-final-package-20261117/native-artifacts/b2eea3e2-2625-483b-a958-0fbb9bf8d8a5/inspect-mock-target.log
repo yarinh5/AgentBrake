@@ -1,0 +1,311 @@
+[
+    {
+        "Id": "cc022ed9e6590cb321fc3d5ae649c8b4eea5182f6fae42a8267eb9a04d8c9661",
+        "Created": "2026-11-17T21:20:20.726270698Z",
+        "Path": "docker-entrypoint.sh",
+        "Args": [
+            "node",
+            "--import",
+            "tsx",
+            "infra/local/mock-target.ts"
+        ],
+        "State": {
+            "Status": "running",
+            "Running": true,
+            "Paused": false,
+            "Restarting": false,
+            "OOMKilled": false,
+            "Dead": false,
+            "Pid": 6206,
+            "ExitCode": 0,
+            "Error": "",
+            "StartedAt": "2026-11-17T21:20:26.46313958Z",
+            "FinishedAt": "0001-01-01T00:00:00Z",
+            "Health": {
+                "Status": "healthy",
+                "FailingStreak": 0,
+                "Log": [
+                    {
+                        "Start": "2026-11-17T21:20:28.756265558Z",
+                        "End": "2026-11-17T21:20:28.963177015Z",
+                        "ExitCode": 0,
+                        "Output": "{\"ok\":true,\"fixture\":true}"
+                    },
+                    {
+                        "Start": "2026-11-17T21:20:30.968063431Z",
+                        "End": "2026-11-17T21:20:31.194581246Z",
+                        "ExitCode": 0,
+                        "Output": "{\"ok\":true,\"fixture\":true}"
+                    },
+                    {
+                        "Start": "2026-11-17T21:20:33.195627737Z",
+                        "End": "2026-11-17T21:20:33.349053159Z",
+                        "ExitCode": 0,
+                        "Output": "{\"ok\":true,\"fixture\":true}"
+                    }
+                ]
+            }
+        },
+        "Image": "sha256:c9f95005407864dd3798e09eff603f43bf1f285b62c81c7f2bf721844cee2dc2",
+        "ResolvConfPath": "/var/lib/docker/containers/cc022ed9e6590cb321fc3d5ae649c8b4eea5182f6fae42a8267eb9a04d8c9661/resolv.conf",
+        "HostnamePath": "/var/lib/docker/containers/cc022ed9e6590cb321fc3d5ae649c8b4eea5182f6fae42a8267eb9a04d8c9661/hostname",
+        "HostsPath": "/var/lib/docker/containers/cc022ed9e6590cb321fc3d5ae649c8b4eea5182f6fae42a8267eb9a04d8c9661/hosts",
+        "LogPath": "/var/lib/docker/containers/cc022ed9e6590cb321fc3d5ae649c8b4eea5182f6fae42a8267eb9a04d8c9661/cc022ed9e6590cb321fc3d5ae649c8b4eea5182f6fae42a8267eb9a04d8c9661-json.log",
+        "Name": "/agentbrake-a-b2eea3e2-mock-target-1",
+        "RestartCount": 0,
+        "Driver": "overlayfs",
+        "Platform": "linux",
+        "MountLabel": "",
+        "ProcessLabel": "",
+        "AppArmorProfile": "docker-default",
+        "ExecIDs": null,
+        "HostConfig": {
+            "Binds": [
+                "/opt/agentbrake-final-2d8df354/.agentbrake-local/isolation-b2eea3e2-2625-483b-a958-0fbb9bf8d8a5/target-token:/run/secrets/target-token:ro",
+                "/opt/agentbrake-final-2d8df354/.agentbrake-local/isolation-b2eea3e2-2625-483b-a958-0fbb9bf8d8a5/observer-token:/run/secrets/observer-token:ro",
+                "/opt/agentbrake-final-2d8df354/.agentbrake-local/isolation-b2eea3e2-2625-483b-a958-0fbb9bf8d8a5/target-read-password:/run/secrets/target-read-password:ro",
+                "/opt/agentbrake-final-2d8df354/.agentbrake-local/isolation-b2eea3e2-2625-483b-a958-0fbb9bf8d8a5/target-write-password:/run/secrets/target-write-password:ro"
+            ],
+            "ContainerIDFile": "",
+            "LogConfig": {
+                "Type": "json-file",
+                "Config": {}
+            },
+            "NetworkMode": "agentbrake-a-b2eea3e2_protected",
+            "PortBindings": {},
+            "RestartPolicy": {
+                "Name": "no",
+                "MaximumRetryCount": 0
+            },
+            "AutoRemove": false,
+            "VolumeDriver": "",
+            "VolumesFrom": null,
+            "ConsoleSize": [
+                0,
+                0
+            ],
+            "CapAdd": null,
+            "CapDrop": [
+                "ALL"
+            ],
+            "CgroupnsMode": "private",
+            "Dns": null,
+            "DnsOptions": null,
+            "DnsSearch": null,
+            "ExtraHosts": [],
+            "GroupAdd": [
+                "1100"
+            ],
+            "IpcMode": "private",
+            "Cgroup": "",
+            "Links": null,
+            "OomScoreAdj": 0,
+            "PidMode": "",
+            "Privileged": false,
+            "PublishAllPorts": false,
+            "ReadonlyRootfs": true,
+            "SecurityOpt": [
+                "no-new-privileges:true"
+            ],
+            "Tmpfs": {
+                "/tmp": "size=64m,mode=1777"
+            },
+            "UTSMode": "",
+            "UsernsMode": "",
+            "ShmSize": 67108864,
+            "Runtime": "runc",
+            "Isolation": "",
+            "CpuShares": 0,
+            "Memory": 536870912,
+            "NanoCpus": 1000000000,
+            "CgroupParent": "",
+            "BlkioWeight": 0,
+            "BlkioWeightDevice": null,
+            "BlkioDeviceReadBps": null,
+            "BlkioDeviceWriteBps": null,
+            "BlkioDeviceReadIOps": null,
+            "BlkioDeviceWriteIOps": null,
+            "CpuPeriod": 0,
+            "CpuQuota": 0,
+            "CpuRealtimePeriod": 0,
+            "CpuRealtimeRuntime": 0,
+            "CpusetCpus": "",
+            "CpusetMems": "",
+            "Devices": null,
+            "DeviceCgroupRules": null,
+            "DeviceRequests": null,
+            "MemoryReservation": 0,
+            "MemorySwap": 1073741824,
+            "MemorySwappiness": null,
+            "OomKillDisable": null,
+            "PidsLimit": 128,
+            "Ulimits": null,
+            "CpuCount": 0,
+            "CpuPercent": 0,
+            "IOMaximumIOps": 0,
+            "IOMaximumBandwidth": 0,
+            "MaskedPaths": [
+                "/proc/acpi",
+                "/proc/asound",
+                "/proc/interrupts",
+                "/proc/kcore",
+                "/proc/keys",
+                "/proc/latency_stats",
+                "/proc/sched_debug",
+                "/proc/scsi",
+                "/proc/timer_list",
+                "/proc/timer_stats",
+                "/sys/devices/virtual/powercap",
+                "/sys/firmware"
+            ],
+            "ReadonlyPaths": [
+                "/proc/bus",
+                "/proc/fs",
+                "/proc/irq",
+                "/proc/sys",
+                "/proc/sysrq-trigger"
+            ]
+        },
+        "Storage": {
+            "RootFS": {
+                "Snapshot": {
+                    "Name": "overlayfs"
+                }
+            }
+        },
+        "Mounts": [
+            {
+                "Type": "bind",
+                "Source": "/opt/agentbrake-final-2d8df354/.agentbrake-local/isolation-b2eea3e2-2625-483b-a958-0fbb9bf8d8a5/target-token",
+                "Destination": "/run/secrets/target-token",
+                "Mode": "ro",
+                "RW": false,
+                "Propagation": "rprivate"
+            },
+            {
+                "Type": "bind",
+                "Source": "/opt/agentbrake-final-2d8df354/.agentbrake-local/isolation-b2eea3e2-2625-483b-a958-0fbb9bf8d8a5/observer-token",
+                "Destination": "/run/secrets/observer-token",
+                "Mode": "ro",
+                "RW": false,
+                "Propagation": "rprivate"
+            },
+            {
+                "Type": "bind",
+                "Source": "/opt/agentbrake-final-2d8df354/.agentbrake-local/isolation-b2eea3e2-2625-483b-a958-0fbb9bf8d8a5/target-read-password",
+                "Destination": "/run/secrets/target-read-password",
+                "Mode": "ro",
+                "RW": false,
+                "Propagation": "rprivate"
+            },
+            {
+                "Type": "bind",
+                "Source": "/opt/agentbrake-final-2d8df354/.agentbrake-local/isolation-b2eea3e2-2625-483b-a958-0fbb9bf8d8a5/target-write-password",
+                "Destination": "/run/secrets/target-write-password",
+                "Mode": "ro",
+                "RW": false,
+                "Propagation": "rprivate"
+            }
+        ],
+        "Config": {
+            "Hostname": "cc022ed9e659",
+            "Domainname": "",
+            "User": "1000:1000",
+            "AttachStdin": false,
+            "AttachStdout": true,
+            "AttachStderr": true,
+            "Tty": false,
+            "OpenStdin": false,
+            "StdinOnce": false,
+            "Env": [
+                "no_proxy=localhost,127.0.0.1,::1",
+                "HTTP_PROXY=http://10.0.2.2:8877",
+                "http_proxy=http://10.0.2.2:8877",
+                "HTTPS_PROXY=http://10.0.2.2:8877",
+                "https_proxy=http://10.0.2.2:8877",
+                "NO_PROXY=localhost,127.0.0.1,::1",
+                "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+                "NODE_VERSION=22.23.5",
+                "YARN_VERSION=1.22.22"
+            ],
+            "Cmd": [
+                "node",
+                "--import",
+                "tsx",
+                "infra/local/mock-target.ts"
+            ],
+            "Healthcheck": {
+                "Test": [
+                    "CMD",
+                    "curl",
+                    "--fail",
+                    "--silent",
+                    "http://127.0.0.1:8080/health"
+                ],
+                "Interval": 2000000000,
+                "Timeout": 2000000000,
+                "Retries": 20
+            },
+            "Image": "agentbrake-a-b2eea3e2-runtime",
+            "Volumes": null,
+            "WorkingDir": "/app",
+            "Entrypoint": [
+                "docker-entrypoint.sh"
+            ],
+            "Labels": {
+                "com.agentbrake.fixture": "true",
+                "com.agentbrake.run": "b2eea3e2-2625-483b-a958-0fbb9bf8d8a5",
+                "com.docker.compose.config-hash": "3c6bb34ba34a8ef3693e9bb58e9209e89dc4a38ccc1629917121b739aff7f51a",
+                "com.docker.compose.container-number": "1",
+                "com.docker.compose.depends_on": "target-db:service_healthy:false",
+                "com.docker.compose.image": "sha256:c9f95005407864dd3798e09eff603f43bf1f285b62c81c7f2bf721844cee2dc2",
+                "com.docker.compose.oneoff": "False",
+                "com.docker.compose.project": "agentbrake-a-b2eea3e2",
+                "com.docker.compose.project.config_files": "/opt/agentbrake-final-2d8df354/infra/local/compose.yaml",
+                "com.docker.compose.project.working_dir": "/opt/agentbrake-final-2d8df354/infra/local",
+                "com.docker.compose.service": "mock-target",
+                "com.docker.compose.version": "2.40.3"
+            }
+        },
+        "NetworkSettings": {
+            "SandboxID": "4e9e59cfa645f1b3346fcd77659e56e69db60acad8f15be929968bcd3d8dcd32",
+            "SandboxKey": "/var/run/docker/netns/4e9e59cfa645",
+            "Ports": {},
+            "Networks": {
+                "agentbrake-a-b2eea3e2_protected": {
+                    "IPAMConfig": null,
+                    "Links": null,
+                    "Aliases": [
+                        "agentbrake-a-b2eea3e2-mock-target-1",
+                        "mock-target"
+                    ],
+                    "DriverOpts": null,
+                    "GwPriority": 0,
+                    "NetworkID": "6a9cbeb0fe2f6a647a61b718f856501f987f0b5a3973e110599d4a2558d15710",
+                    "EndpointID": "dd0c43005b7e9207954cadb4b52f09bf1932c72b7a38b6781100f24415c6563a",
+                    "Gateway": "",
+                    "IPAddress": "172.19.0.5",
+                    "MacAddress": "3e:c3:7f:09:a0:ae",
+                    "IPPrefixLen": 16,
+                    "IPv6Gateway": "",
+                    "GlobalIPv6Address": "",
+                    "GlobalIPv6PrefixLen": 0,
+                    "DNSNames": [
+                        "agentbrake-a-b2eea3e2-mock-target-1",
+                        "mock-target",
+                        "cc022ed9e659"
+                    ]
+                }
+            }
+        },
+        "ImageManifestDescriptor": {
+            "mediaType": "application/vnd.oci.image.manifest.v1+json",
+            "digest": "sha256:4e0a17d8a5fd760935dc28b6eb5fd34f0ec7149f7865255c0352b224431152ac",
+            "size": 2957,
+            "platform": {
+                "architecture": "amd64",
+                "os": "linux"
+            }
+        }
+    }
+]

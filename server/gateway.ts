@@ -31,6 +31,22 @@ import {
 } from "./security/approval.js";
 const secretPattern =
   /(?:gh[pousr]_[A-Za-z0-9]{20,}|github_pat_[A-Za-z0-9_]{20,}|sk-[A-Za-z0-9_-]{20,}|AKIA[A-Z0-9]{16}|-----BEGIN [A-Z ]*PRIVATE KEY-----|(?:password|api[_-]?key|secret|access[_-]?token)\s*[=:]\s*\S{8,})/i;
+function hasCredentialLikeContent(value: unknown) {
+  // This finite public literal has no confidential entropy. Only source review
+  // can change it; neither a path nor an agent claim grants an exception.
+  // Match before JSON escaping: a literal backslash-n is NOT a value boundary.
+  // Preserve the original detector for all remaining bytes, including keys.
+  const reviewed = JSON.stringify(value, (_key, item: unknown) => {
+    if (typeof item !== "string") return item;
+    return item.replace(
+      /(?:password|api[_-]?key|secret|access[_-]?token)\s*[=:]\s*/gi,
+      (prefix, offset: number) =>
+        /^example-only-placeholder(?=$|\s)/.test(item.slice(offset + prefix.length))
+          ? "[public-example] " : prefix,
+    );
+  });
+  return secretPattern.test(reviewed);
+}
 const secretPath =
   /(?:^|\/)(?:\.env(?:\.[^/]*)?|\.ssh|\.aws|\.git|credentials[^/]*|secrets?[^/]*|id_rsa|id_ed25519)(?:\/|$)|\.(?:pem|key|p12)$/i;
 function agentRecord(record: ActionRecord): ActionRecord {
@@ -116,7 +132,7 @@ export class Gateway {
         "live-integration-disabled",
         "Real service execution is disabled in this stage.",
       );
-    if (secretPattern.test(JSON.stringify(args)))
+    if (hasCredentialLikeContent(args))
       return deny(
         "secret-protection",
         "Credential-like content detected. Raw arguments were discarded.",
@@ -419,7 +435,7 @@ export class Gateway {
         record.preview = actionPreviewSchema.parse(
           await this.connectors.preview(record),
         );
-        if (secretPattern.test(JSON.stringify(record.preview)))
+        if (hasCredentialLikeContent(record.preview))
           throw Error("Sensitive preview");
         record.review = issueReview(record);
       } catch {
@@ -641,7 +657,7 @@ export class Gateway {
       const result = await this.connectors.execute(record);
       record.status = "allowed";
       record.executionOutcome = "adapter-reported";
-      if (secretPattern.test(JSON.stringify(result))) {
+      if (hasCredentialLikeContent(result)) {
         record.resultDisclosure = "withheld";
         delete record.result;
         record.reason = "The adapter reported execution; credential-like output was withheld. This does not undo the action. Do not resubmit; reconcile target state if needed.";

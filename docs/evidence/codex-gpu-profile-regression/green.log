@@ -1,0 +1,45 @@
+TAP version 13
+# Subtest: inference selection preserves the CPU default and rejects unknown profiles
+ok 1 - inference selection preserves the CPU default and rejects unknown profiles
+  ---
+  duration_ms: 1.9816
+  ...
+# Subtest: cpu-32k renders a confined model without granting GPU access to the agent
+ok 2 - cpu-32k renders a confined model without granting GPU access to the agent
+  ---
+  duration_ms: 236.2378
+  ...
+# Subtest: gpu-8k renders a confined model without granting GPU access to the agent
+ok 3 - gpu-8k renders a confined model without granting GPU access to the agent
+  ---
+  duration_ms: 259.4357
+  ...
+# Subtest: isolation preserves image ownership and final database readiness
+ok 4 - isolation preserves image ownership and final database readiness
+  ---
+  duration_ms: 232.4866
+  ...
+# Subtest: product preserves image ownership and final database readiness
+ok 5 - product preserves image ownership and final database readiness
+  ---
+  duration_ms: 252.3916
+  ...
+# Subtest: minimal product preserves image ownership and final database readiness
+ok 6 - minimal product preserves image ownership and final database readiness
+  ---
+  duration_ms: 240.4674
+  ...
+# Subtest: Codex verification renders a one-CPU limit on a one-CPU test host
+ok 7 - Codex verification renders a one-CPU limit on a one-CPU test host
+  ---
+  duration_ms: 233.6263
+  ...
+1..7
+# tests 7
+# suites 0
+# pass 7
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1056.1655

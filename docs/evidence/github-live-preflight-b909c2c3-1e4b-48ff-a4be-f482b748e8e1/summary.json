@@ -1,0 +1,37 @@
+{
+  "runId": "b909c2c3-1e4b-48ff-a4be-f482b748e8e1",
+  "startedAt": "2026-11-17T11:04:54.800Z",
+  "result": "BLOCKED_PREFLIGHT",
+  "authorization": "User explicitly approved the bounded AgentBrake-Sandbox proposal in this conversation on2026-11-17",
+  "appId": 5796132,
+  "installationId": 182835437,
+  "repository": "yarinh5/AgentBrake-Sandbox",
+  "repositoryId": 1461019528,
+  "requests": [
+    {
+      "method": "GET",
+      "path": "/app",
+      "status": 200,
+      "requestId": "E155:25325A:AC15AB:11EED85:6AFC34D6"
+    }
+  ],
+  "scope": "App/installation permission and metadata preflight only. No repository contents/branch/PR/settings write. Metadata-only inspection token revoked at end.",
+  "publicFingerprint": "XbQsMkyTup7vv0oi53Td/wazm2b468w9KsPNAaVh/DA=",
+  "app": {
+    "id": 5796132,
+    "slug": "agentbrake-validation",
+    "ownerId": 87584981,
+    "permissions": {
+      "contents": "write",
+      "metadata": "read",
+      "pull_requests": "write",
+      "repository_custom_properties": "write"
+    },
+    "events": []
+  },
+  "failure": {
+    "phase": "app",
+    "code": "APP_PERMISSION_MISMATCH"
+  },
+  "finishedAt": "2026-11-17T11:04:55.176Z"
+}

@@ -1,0 +1,46 @@
+{
+  "at": "2026-11-17T12:45:50.799526+00:00",
+  "result": "PASS_OFFLINE_DEVELOPMENT_TOOLCHAIN_SOURCE_ONLY",
+  "phase": "bootstrap",
+  "sourceHash": "855b2915022fae9542d05207f62bec5eb356d942a001a9f3415a738f3b453c8c",
+  "releaseAcceptance": false,
+  "approval": "User explicitly approved this UNRELEASED build for development testing in the named isolated VM.",
+  "seedSha256": "f794e50eaadd643dde8af80feee73dcdaa5d0e9528ee76f23ba2c01a5cceed12",
+  "files": [
+    {
+      "name": "failed-start-16g.log",
+      "sha256": "136c99ac141552da8360cb580087b036c61aea237e74aed599bb522f12f9fed9",
+      "bytes": 38813
+    },
+    {
+      "name": "guest-report.json",
+      "sha256": "293fd2a18ed5f0fd56bb81e64d56b7c206720b6f0233d3e7ea88dee6aca35d4c",
+      "bytes": 16998
+    },
+    {
+      "name": "manifest.json",
+      "sha256": "8bb89db04f077183f8c9271e95a6ded1860291372c04d1c5dbf129d8a382744a",
+      "bytes": 16023
+    },
+    {
+      "name": "meta-data",
+      "sha256": "e81de347f7de6cd74de19bd2b57cca98cc041df1346f495bca329c018a9dec49",
+      "bytes": 107
+    },
+    {
+      "name": "network-config",
+      "sha256": "639b6f419a9ac49312b218e12395dc7e7d623d96202c3315a92dcd19d6fa02ba",
+      "bytes": 25
+    },
+    {
+      "name": "serial.log",
+      "sha256": "315f5d4710d4bfea7d759377b01e652b206844d3c3207aeb860d157f4857ac29",
+      "bytes": 104208
+    },
+    {
+      "name": "user-data",
+      "sha256": "efa2974fce88616bcd904565c7c5c353a7822642b36a661245d914e952bd04c2",
+      "bytes": 3717
+    }
+  ]
+}

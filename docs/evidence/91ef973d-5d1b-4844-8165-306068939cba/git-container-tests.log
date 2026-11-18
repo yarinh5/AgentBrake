@@ -1,0 +1,108 @@
+ Container agentbrake-a-91ef973d-verifier-run-0c02903eba42 Creating 
+ Container agentbrake-a-91ef973d-verifier-run-0c02903eba42 Created 
+TAP version 13
+# Subtest: persistent fixture reopens exact branch/PR state and refuses another installation or unmarked repository
+ok 1 - persistent fixture reopens exact branch/PR state and refuses another installation or unmarked repository
+  ---
+  duration_ms: 330.206362
+  type: 'test'
+  ...
+# Subtest: human PR review computes the canonical diff from a full PR request without mutating Git
+ok 2 - human PR review computes the canonical diff from a full PR request without mutating Git
+  ---
+  duration_ms: 97.346019
+  type: 'test'
+  ...
+# Subtest: creates a new real Git fixture with trusted identity, protected main and bounded reads
+ok 3 - creates a new real Git fixture with trusted identity, protected main and bounded reads
+  ---
+  duration_ms: 140.449548
+  type: 'test'
+  ...
+# Subtest: refuses existing directories and repositories without changing their contents
+ok 4 - refuses existing directories and repositories without changing their contents
+  ---
+  duration_ms: 51.584519
+  type: 'test'
+  ...
+# Subtest: canonical proposals return an exact diff and fingerprint without writing Git objects
+ok 5 - canonical proposals return an exact diff and fingerprint without writing Git objects
+  ---
+  duration_ms: 164.455261
+  type: 'test'
+  ...
+# Subtest: proposal diff applies exactly, including empty files and missing terminal newlines
+ok 6 - proposal diff applies exactly, including empty files and missing terminal newlines
+  ---
+  duration_ms: 221.942223
+  type: 'test'
+  ...
+# Subtest: queued requests cannot swap validated branch or content before execution
+ok 7 - queued requests cannot swap validated branch or content before execution
+  ---
+  duration_ms: 169.166649
+  type: 'test'
+  ...
+# Subtest: approved feature branch and mock PR produce one real commit while main remains unchanged
+ok 8 - approved feature branch and mock PR produce one real commit while main remains unchanged
+  ---
+  duration_ms: 253.301048
+  type: 'test'
+  ...
+# Subtest: rejects protected branches, external repos, extra arguments and forbidden tools with no effects
+ok 9 - rejects protected branches, external repos, extra arguments and forbidden tools with no effects
+  ---
+  duration_ms: 67.223465
+  type: 'test'
+  ...
+# Subtest: rejects workflow, secret, traversal and ambiguous paths before reading or writing
+ok 10 - rejects workflow, secret, traversal and ambiguous paths before reading or writing
+  ---
+  duration_ms: 69.61867
+  type: 'test'
+  ...
+# Subtest: enforces file count, UTF-8 bytes, total bytes, duplicate paths and exact nested schemas
+ok 11 - enforces file count, UTF-8 bytes, total bytes, duplicate paths and exact nested schemas
+  ---
+  duration_ms: 77.724101
+  type: 'test'
+  ...
+# Subtest: stale main, stale feature, missing feature and no-op proposals fail before mutation
+ok 12 - stale main, stale feature, missing feature and no-op proposals fail before mutation
+  ---
+  duration_ms: 247.165856
+  type: 'test'
+  ...
+# Subtest: concurrent branch and PR requests produce at most one effect each
+ok 13 - concurrent branch and PR requests produce at most one effect each
+  ---
+  duration_ms: 425.775956
+  type: 'test'
+  ...
+# Subtest: Git tree symlinks are never resolved or overwritten through an allowed path
+ok 14 - Git tree symlinks are never resolved or overwritten through an allowed path
+  ---
+  duration_ms: 154.353536
+  type: 'test'
+  ...
+# Subtest: closing preserves evidence and rejects subsequent execution
+ok 15 - closing preserves evidence and rejects subsequent execution
+  ---
+  duration_ms: 49.950579
+  type: 'test'
+  ...
+# Subtest: fast Git read commands do not fail after an unused stdin pipe closes
+ok 16 - fast Git read commands do not fail after an unused stdin pipe closes
+  ---
+  duration_ms: 518.332364
+  type: 'test'
+  ...
+1..16
+# tests 16
+# suites 0
+# pass 16
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 3583.394344

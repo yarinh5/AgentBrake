@@ -1,0 +1,48 @@
+{
+  "result": "BLOCKED",
+  "sourceHash": "0d00cd87460a49e11cfb36a183fd353ad482942ee88becbb4065067017f9aa49",
+  "gates": [
+    {
+      "id": "local-release",
+      "description": "Full local release gate for the exact source revision",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "https-candidate",
+      "description": "Actual local TLS, installed UI and agent network boundary",
+      "status": "PASS"
+    },
+    {
+      "id": "container-vulnerabilities",
+      "description": "Offline scan of built runtime/dashboard and pinned PostgreSQL/OPA images",
+      "status": "PASS"
+    },
+    {
+      "id": "live-github",
+      "status": "NOT_OBTAINED",
+      "description": "Named disposable repository, selected-repository GitHub App and real approved/denied workflow evidence"
+    },
+    {
+      "id": "clean-host",
+      "status": "NOT_OBTAINED",
+      "description": "Independent clean Linux host installation, certificate validation, backup restore and isolation proof"
+    },
+    {
+      "id": "human-security-review",
+      "status": "NOT_OBTAINED",
+      "description": "Independent human review of this revision, threat boundaries and acceptance evidence; critical/high findings resolved"
+    },
+    {
+      "id": "deployment-authorization",
+      "status": "NOT_OBTAINED",
+      "description": "Named host/account, DNS/TLS, private access path and explicit deployment/budget approval"
+    },
+    {
+      "id": "operations-owner",
+      "status": "NOT_OBTAINED",
+      "description": "Named incident/patch owner, external encrypted backup destination and tested restore/revocation procedure"
+    }
+  ],
+  "limitation": "External gates require actual separately reviewed evidence. This command has no flag to relabel an offline fixture as live or approve deployment.",
+  "at": "2026-11-17T15:24:54.261Z"
+}

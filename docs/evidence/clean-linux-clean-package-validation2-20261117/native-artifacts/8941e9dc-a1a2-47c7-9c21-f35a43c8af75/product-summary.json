@@ -1,0 +1,21 @@
+{
+  "runId": "8941e9dc-a1a2-47c7-9c21-f35a43c8af75",
+  "sourceHash": "c043156a9a2f69b6d3ddfc0eb6eec315faba38250f8eb38ae2a02f7087f7c999",
+  "startedAt": "2026-11-17T20:01:35.638Z",
+  "installation": {
+    "name": "verify-8941e9dc",
+    "id": "987ee32d-ef39-47b4-85c4-33e92109b3cc",
+    "port": 4326
+  },
+  "result": "FAIL",
+  "cases": [],
+  "scope": "Local persistent product install; synthetic PostgreSQL/Git, isolated test client. No real GitHub or hosted model. Native process-loss tests are separate evidence.",
+  "error": "Local Docker command failed (1)",
+  "cleanup": {
+    "result": "PASS",
+    "containers": 0,
+    "volumes": 0,
+    "networks": 0
+  },
+  "finishedAt": "2026-11-17T20:01:49.223Z"
+}

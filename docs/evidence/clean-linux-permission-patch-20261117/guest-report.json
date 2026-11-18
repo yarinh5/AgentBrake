@@ -1,0 +1,28 @@
+{
+  "scope": "Demonstrated Linux runtime secret-read permission repair; no target/network access",
+  "expectedSource": "1ebb20fdfb823e94ccc22564efe978130a8903e108399c88a3f60099e89aa909",
+  "commands": [
+    {
+      "label": "patched-source",
+      "exitCode": 0,
+      "seconds": 1.3617831799999998,
+      "outputTail": "1ebb20fdfb823e94ccc22564efe978130a8903e108399c88a3f60099e89aa909\n"
+    },
+    {
+      "label": "product-access-green",
+      "exitCode": 0,
+      "seconds": 8.569031818000003,
+      "outputTail": "TAP version 13\n# Subtest: fixture permissions preserve private parent and authorize only the runtime group on Linux\nok 1 - fixture permissions preserve private parent and authorize only the runtime group on Linux\n  ---\n  duration_ms: 2728.944765\n  type: 'test'\n  ...\n# Subtest: Linux product installer permits mounted runtime secrets only to configured service identities\nok 2 - Linux product installer permits mounted runtime secrets only to configured service identities\n  ---\n  duration_ms: 5181.325792\n  type: 'test'\n  ...\n1..2\n# tests 2\n# suites 0\n# pass 2\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 8482.26574\n"
+    },
+    {
+      "label": "patched-native-stage1",
+      "exitCode": 1,
+      "seconds": 514.474959437,
+      "outputTail": "rego: PASS (exit 0)\n{\"label\":\"node-tests\",\"codes\":[\"ENOENT\",\"ERR_ASSERTION\"],\"locations\":[\"tests/enforcement/product-recovery.test.mjs:7:3\",\"scripts/fixture-file-access.mjs:13:44\",\"scripts/product.mjs:178:18\",\"tests/enforcement/service-restore-orchestration.mjs:119:5\",\"tests/enforcement/product-recovery.test.mjs:13:12\"],\"categories\":[\"permissionDenied\",\"missingFile\",\"assertion\"],\"protectedFiles\":[],\"failedTests\":1}\nnode-tests: FAIL (exit 1)\ntypecheck: PASS (exit 0)\nbuild: PASS (exit 0)\ndashboard-build: PASS (exit 0)\nbrowser: PASS (exit 0)\nupstream-proof: PASS (exit 0)\ndocker-preflight: PASS (exit 0)\nEvidence: docs/evidence/49e7097a-14fe-458b-8895-41bbd2fdac02\nFAIL; Container evidence is reported separately.\n"
+    }
+  ],
+  "sourceHash": "1ebb20fdfb823e94ccc22564efe978130a8903e108399c88a3f60099e89aa909",
+  "result": "FAIL",
+  "error": "patched-native-stage1 failed",
+  "trace": "Traceback (most recent call last):\n  File \"/usr/local/sbin/agentbrake-phase.py\", line 29, in <module>\n    run('patched-native-stage1',['/usr/local/bin/node','scripts/verify-stage1.mjs'],1800)\n  File \"/usr/local/sbin/agentbrake-phase.py\", line 12, in run\n    if p.returncode:raise RuntimeError(label+' failed')\n                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nRuntimeError: patched-native-stage1 failed\n"
+}

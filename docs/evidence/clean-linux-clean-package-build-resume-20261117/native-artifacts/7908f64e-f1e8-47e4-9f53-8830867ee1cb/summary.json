@@ -1,0 +1,98 @@
+{
+  "runId": "7908f64e-f1e8-47e4-9f53-8830867ee1cb",
+  "startedAt": "2026-11-17T19:53:09.619Z",
+  "finishedAt": "2026-11-17T20:01:30.054Z",
+  "gitCommit": null,
+  "gitReason": "Workspace is not a Git repository; no commit fabricated.",
+  "sourceHash": "c043156a9a2f69b6d3ddfc0eb6eec315faba38250f8eb38ae2a02f7087f7c999",
+  "policyHash": "9ac719fef979ee7b37c5c5ef3173621453782a0a02d432727391beeff1234d14",
+  "environment": {
+    "platform": "linux",
+    "architecture": "x64",
+    "node": "v22.23.5",
+    "opa": "1.22.4",
+    "packageLockHash": "8c1ba11c95b3be0a5ba6a4871bf78055add1dd2eeb16721632c84d75786aaa71"
+  },
+  "environmentHash": "852958ceb69813c411d7809d0b243327012438e7837434b746603feac83936bf",
+  "commands": [
+    {
+      "label": "rego",
+      "command": ".tools/opa test services/policy -v",
+      "startedAt": "2026-11-17T19:53:10.208Z",
+      "finishedAt": "2026-11-17T19:53:10.273Z",
+      "exitCode": 0,
+      "result": "PASS",
+      "log": "rego.log"
+    },
+    {
+      "label": "node-tests",
+      "command": "../../usr/local/bin/node --import tsx --test --test-concurrency=1 tests/enforcement/accounts.test.ts tests/enforcement/approval-preview.test.ts tests/enforcement/backup-format.test.mjs tests/enforcement/benchmark-metrics.test.ts tests/enforcement/ci-failure-diagnostics.test.mjs tests/enforcement/codex-inference-profile.test.mjs tests/enforcement/compose-build-ownership.test.mjs tests/enforcement/compose-environment.test.mjs tests/enforcement/control-audit.test.ts tests/enforcement/control-experience.test.ts tests/enforcement/core.test.ts tests/enforcement/credential-marker-boundaries.test.ts tests/enforcement/execution-outcome.test.ts tests/enforcement/fixture-file-access.test.mjs tests/enforcement/gateway-bridge.test.ts tests/enforcement/mcp-local-config.test.ts tests/enforcement/mcp-protocol.test.ts tests/enforcement/pilot-measurement.test.mjs tests/enforcement/product-file-access.test.mjs tests/enforcement/product-recovery.test.mjs tests/enforcement/remote-fixture.test.ts tests/enforcement/rest-audit.test.ts tests/enforcement/retention.test.ts tests/enforcement/review-regressions.test.ts tests/enforcement/source-package.test.mjs tests/enforcement/stage2-races.test.ts tests/enforcement/task-grants.test.ts tests/enforcement/team-approvals.test.ts tests/enforcement/telemetry.test.ts tests/enforcement/transport-restart.test.ts tests/enforcement/ui-build.test.mjs tests/enforcement/volume-archive.test.mjs tests/enterprise/application.test.ts tests/enterprise/audit-delivery.test.ts tests/enterprise/auth-ui.test.ts tests/enterprise/config.test.ts tests/enterprise/egress.test.mjs tests/enterprise/full-http.test.ts tests/enterprise/identity-policy.test.ts tests/enterprise/identity.test.ts tests/enterprise/operations.test.mjs tests/enterprise/proxy.test.ts tests/enterprise/restore-authority.test.mjs tests/enterprise/signing.test.mjs tests/failure-cases.test.ts tests/gateway.test.ts tests/mcp.test.ts tests/policy/pdp.test.ts tests/product-ui/proxy.test.ts tests/production/candidate-config.test.mjs tests/production/ci-contract.test.mjs tests/production/github-app.test.ts tests/production/github-control.test.ts tests/production/github-egress.test.mjs tests/production/github-gateway.test.ts tests/production/https-proxy.test.ts tests/production/https.test.mjs tests/production/image-evidence.test.mjs tests/production/readiness.test.mjs tests/stage2/git-fixture.test.ts tests/stage2/postgres-target.test.ts",
+      "startedAt": "2026-11-17T19:53:10.274Z",
+      "finishedAt": "2026-11-17T19:58:04.597Z",
+      "exitCode": 0,
+      "result": "PASS",
+      "log": "node-tests.log"
+    },
+    {
+      "label": "typecheck",
+      "command": "../../usr/local/bin/node node_modules/typescript/bin/tsc --noEmit",
+      "startedAt": "2026-11-17T19:58:04.597Z",
+      "finishedAt": "2026-11-17T19:58:23.106Z",
+      "exitCode": 0,
+      "result": "PASS",
+      "log": "typecheck.log"
+    },
+    {
+      "label": "build",
+      "command": "../../usr/local/bin/node scripts/build-ui.mjs",
+      "startedAt": "2026-11-17T19:58:23.106Z",
+      "finishedAt": "2026-11-17T19:58:23.858Z",
+      "exitCode": 0,
+      "result": "PASS",
+      "log": "build.log"
+    },
+    {
+      "label": "dashboard-build",
+      "command": "../../usr/local/bin/node scripts/build-dashboard.mjs",
+      "startedAt": "2026-11-17T19:58:23.861Z",
+      "finishedAt": "2026-11-17T19:59:34.521Z",
+      "exitCode": 0,
+      "result": "PASS",
+      "log": "dashboard-build.log"
+    },
+    {
+      "label": "browser",
+      "command": "../../usr/local/bin/node tests/product-ui/run.mjs",
+      "startedAt": "2026-11-17T19:59:34.521Z",
+      "finishedAt": "2026-11-17T20:01:28.488Z",
+      "exitCode": 0,
+      "result": "PASS",
+      "log": "browser.log"
+    },
+    {
+      "label": "upstream-proof",
+      "command": "../../usr/local/bin/node --import tsx tests/evidence-scenarios.ts /opt/agentbrake/docs/evidence/7908f64e-f1e8-47e4-9f53-8830867ee1cb/upstream-proof.json",
+      "startedAt": "2026-11-17T20:01:28.488Z",
+      "finishedAt": "2026-11-17T20:01:30.015Z",
+      "exitCode": 0,
+      "result": "PASS",
+      "log": "upstream-proof.log"
+    },
+    {
+      "label": "docker-preflight",
+      "command": "docker --config /opt/agentbrake/.agentbrake-local/docker-public version --format {{json .Server}}",
+      "startedAt": "2026-11-17T20:01:30.015Z",
+      "finishedAt": "2026-11-17T20:01:30.053Z",
+      "exitCode": 0,
+      "result": "PASS",
+      "log": "docker-preflight.log"
+    }
+  ],
+  "scope": "Authenticated native OPA; loopback HTTP/MCP; counted synthetic SQLite/repository fixture adapters. No external GitHub or PostgreSQL calls.",
+  "isolation": {
+    "T20": "NOT RUN",
+    "reason": "Run verify:isolation separately; native tests do not prove container isolation."
+  },
+  "milestoneA": "See separate native+isolation milestone evidence",
+  "result": "PASS_SCOPED"
+}

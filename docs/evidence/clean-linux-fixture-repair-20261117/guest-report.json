@@ -1,0 +1,122 @@
+{
+  "scope": "Repair incomplete simulated-start fixture; keep Linux permissions enforcement and preserve non-Linux behavior",
+  "commands": [
+    {
+      "label": "source",
+      "exitCode": 0,
+      "output": "fb5b65ff91880bb711f5de632f9d0cc9610232094e567dd21accaa9004606fe3\n"
+    },
+    {
+      "label": "access-and-recovery",
+      "exitCode": 0,
+      "output": "TAP version 13\n# Subtest: fixture permissions preserve private parent and authorize only the runtime group on Linux\nok 1 - fixture permissions preserve private parent and authorize only the runtime group on Linux\n  ---\n  duration_ms: 2253.592006\n  type: 'test'\n  ...\n# Subtest: Linux product installer permits mounted runtime secrets only to configured service identities\nok 2 - Linux product installer permits mounted runtime secrets only to configured service identities\n  ---\n  duration_ms: 5405.267784\n  type: 'test'\n  ...\n# Subtest: actual restore/start orchestration: build-failure (simulated Docker)\nok 3 - actual restore/start orchestration: build-failure (simulated Docker)\n  ---\n  duration_ms: 274.17741\n  type: 'test'\n  ...\n# Subtest: actual restore/start orchestration: recovery-failure (simulated Docker)\nok 4 - actual restore/start orchestration: recovery-failure (simulated Docker)\n  ---\n  duration_ms: 301.41428\n  type: 'test'\n  ...\n# Subtest: actual restore/start orchestration: success (simulated Docker)\nok 5 - actual restore/start orchestration: success (simulated Docker)\n  ---\n  duration_ms: 256.45781\n  type: 'test'\n  ...\n# Subtest: actual restore/start orchestration: minimal-success (simulated Docker)\nok 6 - actual restore/start orchestration: minimal-success (simulated Docker)\n  ---\n  duration_ms: 239.238308\n  type: 'test'\n  ...\n# Subtest: actual restore/start orchestration: minimal-image-mismatch (simulated Docker)\nok 7 - actual restore/start orchestration: minimal-image-mismatch (simulated Docker)\n  ---\n  duration_ms: 211.786593\n  type: 'test'\n  ...\n# Subtest: actual restore/start orchestration: unknown-profile (simulated Docker)\nok 8 - actual restore/start orchestration: unknown-profile (simulated Docker)\n  ---\n  duration_ms: 229.39984\n  type: 'test'\n  ...\n# Subtest: actual restore/start orchestration: ordinary-start (simulated Docker)\nok 9 - actual restore/start orchestration: ordinary-start (simulated Docker)\n  ---\n  duration_ms: 284.273801\n  type: 'test'\n  ...\n1..9\n# tests 9\n# suites 0\n# pass 9\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 10113.866259\n"
+    }
+  ],
+  "previousNativeSummary": {
+    "runId": "49e7097a-14fe-458b-8895-41bbd2fdac02",
+    "startedAt": "2026-11-17T13:21:57.133Z",
+    "finishedAt": "2026-11-17T13:30:31.527Z",
+    "gitCommit": null,
+    "gitReason": "Workspace is not a Git repository; no commit fabricated.",
+    "sourceHash": "1ebb20fdfb823e94ccc22564efe978130a8903e108399c88a3f60099e89aa909",
+    "policyHash": "9ac719fef979ee7b37c5c5ef3173621453782a0a02d432727391beeff1234d14",
+    "environment": {
+      "platform": "linux",
+      "architecture": "x64",
+      "node": "v22.23.5",
+      "opa": "1.22.4",
+      "packageLockHash": "da669c9819cee0c399ce91b16dd946ddf20e6f9c5e78c395228de332929f86d5"
+    },
+    "environmentHash": "2ae6e324b676c4b05537d8677eb1238ea72fc804b9ddab00c45c98b231fe78d0",
+    "commands": [
+      {
+        "label": "rego",
+        "command": ".tools/opa test services/policy -v",
+        "startedAt": "2026-11-17T13:21:58.536Z",
+        "finishedAt": "2026-11-17T13:21:58.712Z",
+        "exitCode": 0,
+        "result": "PASS",
+        "log": "rego.log"
+      },
+      {
+        "label": "node-tests",
+        "command": "../../usr/local/bin/node --import tsx --test --test-concurrency=1 tests/enforcement/accounts.test.ts tests/enforcement/approval-preview.test.ts tests/enforcement/backup-format.test.mjs tests/enforcement/benchmark-metrics.test.ts tests/enforcement/ci-failure-diagnostics.test.mjs tests/enforcement/compose-environment.test.mjs tests/enforcement/control-audit.test.ts tests/enforcement/control-experience.test.ts tests/enforcement/core.test.ts tests/enforcement/execution-outcome.test.ts tests/enforcement/fixture-file-access.test.mjs tests/enforcement/gateway-bridge.test.ts tests/enforcement/mcp-local-config.test.ts tests/enforcement/mcp-protocol.test.ts tests/enforcement/pilot-measurement.test.mjs tests/enforcement/product-file-access.test.mjs tests/enforcement/product-recovery.test.mjs tests/enforcement/remote-fixture.test.ts tests/enforcement/rest-audit.test.ts tests/enforcement/retention.test.ts tests/enforcement/review-regressions.test.ts tests/enforcement/source-package.test.mjs tests/enforcement/stage2-races.test.ts tests/enforcement/task-grants.test.ts tests/enforcement/team-approvals.test.ts tests/enforcement/telemetry.test.ts tests/enforcement/transport-restart.test.ts tests/enforcement/volume-archive.test.mjs tests/enterprise/application.test.ts tests/enterprise/audit-delivery.test.ts tests/enterprise/auth-ui.test.ts tests/enterprise/config.test.ts tests/enterprise/egress.test.mjs tests/enterprise/full-http.test.ts tests/enterprise/identity-policy.test.ts tests/enterprise/identity.test.ts tests/enterprise/operations.test.mjs tests/enterprise/proxy.test.ts tests/enterprise/restore-authority.test.mjs tests/enterprise/signing.test.mjs tests/failure-cases.test.ts tests/gateway.test.ts tests/mcp.test.ts tests/policy/pdp.test.ts tests/product-ui/proxy.test.ts tests/production/candidate-config.test.mjs tests/production/ci-contract.test.mjs tests/production/github-app.test.ts tests/production/github-control.test.ts tests/production/github-egress.test.mjs tests/production/github-gateway.test.ts tests/production/https-proxy.test.ts tests/production/https.test.mjs tests/production/image-evidence.test.mjs tests/production/readiness.test.mjs tests/stage2/git-fixture.test.ts tests/stage2/postgres-target.test.ts",
+        "startedAt": "2026-11-17T13:21:58.714Z",
+        "finishedAt": "2026-11-17T13:26:56.066Z",
+        "exitCode": 1,
+        "result": "FAIL",
+        "log": "node-tests.log"
+      },
+      {
+        "label": "typecheck",
+        "command": "../../usr/local/bin/node node_modules/typescript/bin/tsc --noEmit",
+        "startedAt": "2026-11-17T13:26:56.066Z",
+        "finishedAt": "2026-11-17T13:27:19.096Z",
+        "exitCode": 0,
+        "result": "PASS",
+        "log": "typecheck.log"
+      },
+      {
+        "label": "build",
+        "command": "../../usr/local/bin/node node_modules/vite/bin/vite.js build",
+        "startedAt": "2026-11-17T13:27:19.096Z",
+        "finishedAt": "2026-11-17T13:27:26.571Z",
+        "exitCode": 0,
+        "result": "PASS",
+        "log": "build.log"
+      },
+      {
+        "label": "dashboard-build",
+        "command": "../../usr/local/bin/node scripts/build-dashboard.mjs",
+        "startedAt": "2026-11-17T13:27:26.571Z",
+        "finishedAt": "2026-11-17T13:28:36.124Z",
+        "exitCode": 0,
+        "result": "PASS",
+        "log": "dashboard-build.log"
+      },
+      {
+        "label": "browser",
+        "command": "../../usr/local/bin/node tests/product-ui/run.mjs",
+        "startedAt": "2026-11-17T13:28:36.124Z",
+        "finishedAt": "2026-11-17T13:30:29.500Z",
+        "exitCode": 0,
+        "result": "PASS",
+        "log": "browser.log"
+      },
+      {
+        "label": "upstream-proof",
+        "command": "../../usr/local/bin/node --import tsx tests/evidence-scenarios.ts /opt/agentbrake/docs/evidence/49e7097a-14fe-458b-8895-41bbd2fdac02/upstream-proof.json",
+        "startedAt": "2026-11-17T13:30:29.500Z",
+        "finishedAt": "2026-11-17T13:30:31.481Z",
+        "exitCode": 0,
+        "result": "PASS",
+        "log": "upstream-proof.log"
+      },
+      {
+        "label": "docker-preflight",
+        "command": "docker --config /opt/agentbrake/.agentbrake-local/docker-public version --format {{json .Server}}",
+        "startedAt": "2026-11-17T13:30:31.481Z",
+        "finishedAt": "2026-11-17T13:30:31.526Z",
+        "exitCode": 0,
+        "result": "PASS",
+        "log": "docker-preflight.log"
+      }
+    ],
+    "scope": "Authenticated native OPA; loopback HTTP/MCP; counted synthetic SQLite/repository fixture adapters. No external GitHub or PostgreSQL calls.",
+    "isolation": {
+      "T20": "NOT RUN",
+      "reason": "Run verify:isolation separately; native tests do not prove container isolation."
+    },
+    "milestoneA": "See separate native+isolation milestone evidence",
+    "result": "FAIL"
+  },
+  "previousFailure": " ...\n# Subtest: actual restore/start orchestration: unknown-profile (simulated Docker)\nok 85 - actual restore/start orchestration: unknown-profile (simulated Docker)\n  ---\n  duration_ms: 202.480205\n  type: 'test'\n  ...\n# Subtest: actual restore/start orchestration: ordinary-start (simulated Docker)\nnot ok 86 - actual restore/start orchestration: ordinary-start (simulated Docker)\n  ---\n  duration_ms: 202.484818\n  type: 'test'\n  location: '/opt/agentbrake/tests/enforcement/product-recovery.test.mjs:7:3'\n  failureType: 'testCodeFailure'\n  error: |-\n    (node:3297) ExperimentalWarning: VM Modules is an experimental feature and might change at any time\n    (Use `node --trace-warnings ...` to show where the warning was created)\n    node:internal/fs/promises:1028\n      const result = await PromisePrototypeThen(\n                     ^\n    \n    Error: ENOENT: no such file or directory, lstat '/opt/agentbrake/.agentbrake-local/product-verify-recovery-a8487dd9/operators.json'\n        at async lstat (node:internal/fs/promises:1028:18)\n        at async prepareFixtureAccess (file:///opt/agentbrake/scripts/fixture-file-access.mjs:13:44)\n        at async prepareProduct (file:///opt/agentbrake/scripts/product.mjs:178:18)\n        at async startProduct (vm:module(0):217:3)\n        at async withMaintenance (vm:module(0):82:12)\n        at async file:///opt/agentbrake/tests/enforcement/service-restore-orchestration.mjs:119:5 {\n      errno: -2,\n      code: 'ENOENT',\n      syscall: 'lstat',\n      path: '/opt/agentbrake/.agentbrake-local/product-verify-recovery-a8487dd9/operators.json'\n    }\n    \n    Node.js v22.23.5\n    \n    \n    1 !== 0\n    \n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  expected: 0\n  actual: 1\n  operator: 'strictEqual'\n  stack: |-\n    async lstat (node:internal/fs/promises:1028:18)\n    async prepareFixtureAccess (file:///opt/agentbrake/scripts/fixture-file-access.mjs:13:44)\n    async prepareProduct (file:///opt/agentbrake/scripts/product.mjs:178:18)\n    async startProduct (vm:module(0):217:3)\n    async withMaintenance (vm:module(0):82:12)\n    async file:///opt/agentbrake/tests/enforcement/service-restore-orchestration.mjs:119:5 {\n    TestContext.<anonymous> (file:///opt/agentbrake/tests/enforcement/product-recovery.test.mjs:13:12)\n    Test.runInAsyncScope (node:async_hooks:214:14)\n    Test.run (node:internal/test_runner/test:1047:25)\n    Test.processPendingSubtests (node:internal/test_runner/test:744:18)\n    Test.postRun (node:internal/test_runner/test:1173:19)\n    Test.run (node:internal/test_runner/test:1101:12)\n    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)\n  ...\n# (node:3309) ExperimentalWarning: SQLite is an experimental feature and might change at any time\n# (Use `node --trace-warnings ...` to show where the warning was created)\n# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.\n# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.\n# Subtest: separate HTTP target observes real mediated read, zero blocked writes, and no credential forwarding\nok 87 - separate HTTP target observes real mediated read, zero blocked writes, and no credential forwarding\n  ---\n  duration_ms: 264.403539\n  type: 'test'\n  ...\n# Subtest: unavailable configured fixture cannot silently fall back to local data\nok 88 - unavailable configured fixture cannot silently fall back to local data\n  ---\n  duration_ms: 26.943464\n  type: 'test'\n  ...\n# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.\n# (node:3326) ExperimentalWarning: SQLite is an experimental feature and might change at any time\n# (Use `node --trace-warnings ...` to show where the warning was created)\n# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.\n# Subtest: REST json rejection has one redacted correlated audit event and zero calls\nok 89 - REST json rejection has one redacted correlated audit event and zero calls\n  ---\n  duration_ms: 151.897511\n  type: 'test'\n  ...\n# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.\n# Subtest: REST envelope rejection has one redacted correlated audit event and zero calls\nok 90 - REST envelope rejection has one redacted correlated audit event and zero calls\n  ---\n  duration_ms: 32.216536\n  type: 'test'\n  ...\n# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.\n# Subtest: REST depth rejection has one redacted correlated audit event and zero calls\nok 91 - REST depth rejection has one redacted correlated audit event and zero calls\n  ---\n  duration_ms: 14.929947\n  type: 'test'\n  ...\n# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are a",
+  "previousTestTail": "\n  ...\n# Subtest: PostgreSQL reviewed update has an atomic version condition and removes the unversioned writer entry point\nok 267 - PostgreSQL reviewed update has an atomic version condition and removes the unversioned writer entry point # SKIP Requires the dedicated local Docker target runner (POSTGRES_TARGET_TEST=1).\n  ---\n  duration_ms: 0.130526\n  type: 'test'\n  ...\n# Subtest: PostgreSQL target preserves state on denied operations and changes only the approved fixture row\nok 268 - PostgreSQL target preserves state on denied operations and changes only the approved fixture row # SKIP Requires the dedicated local Docker target runner (POSTGRES_TARGET_TEST=1).\n  ---\n  duration_ms: 0.277172\n  type: 'test'\n  ...\n# Subtest: PostgreSQL target roles deny broad writes, DDL, privilege escalation and program execution\nok 269 - PostgreSQL target roles deny broad writes, DDL, privilege escalation and program execution # SKIP Requires the dedicated local Docker target runner (POSTGRES_TARGET_TEST=1).\n  ---\n  duration_ms: 0.105499\n  type: 'test'\n  ...\n# Subtest: PostgreSQL target default read-only mode and statement timeout are active on the server\nok 270 - PostgreSQL target default read-only mode and statement timeout are active on the server # SKIP Requires the dedicated local Docker target runner (POSTGRES_TARGET_TEST=1).\n  ---\n  duration_ms: 0.185294\n  type: 'test'\n  ...\n1..270\n# tests 270\n# suites 0\n# pass 265\n# fail 1\n# cancelled 0\n# skipped 4\n# todo 0\n# duration_ms 297271.799802\n",
+  "nativeArtifactTransfer": {
+    "bytes": 64256,
+    "sha256": "7499308187eebaf88bfba8871161ddeaef5748efa33ec8bc864dba70f40ba6ff"
+  },
+  "sourceHash": "fb5b65ff91880bb711f5de632f9d0cc9610232094e567dd21accaa9004606fe3",
+  "result": "PASS_FOCUSED_LINUX_ACCESS_AND_RECOVERY",
+  "fullNativeForThisSource": "NOT_RUN_YET"
+}

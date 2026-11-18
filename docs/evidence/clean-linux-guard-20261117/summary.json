@@ -1,0 +1,51 @@
+{
+  "at": "2026-11-17T12:54:27.525560+00:00",
+  "result": "PASS_OFFLINE_GUARD_PREPARATION_ONLY",
+  "phase": "guard",
+  "sourceHash": "855b2915022fae9542d05207f62bec5eb356d942a001a9f3415a738f3b453c8c",
+  "releaseAcceptance": false,
+  "approval": "User explicitly approved this UNRELEASED build for development testing in the named isolated VM.",
+  "seedSha256": "6f8f1f9cb9d31016bbe409d548346a293085985f181107e29de61b329d37e759",
+  "files": [
+    {
+      "name": "aborted-smp-serial.log",
+      "sha256": "5442b2b99da707f3043d90e75b3f5c060825cec89d6220fa817dc2c02214f887",
+      "bytes": 34273
+    },
+    {
+      "name": "aborted-smp-vbox.log",
+      "sha256": "9045fa29c8bcb8544c832de4bcedfbcdd0377e05e159d03b0ffc4c4cb441de1e",
+      "bytes": 81450
+    },
+    {
+      "name": "guest-report.json",
+      "sha256": "76fcfc855342603059e2bbf1240c650ad1940d48b4c1c7ad060a179117f3a336",
+      "bytes": 3619
+    },
+    {
+      "name": "meta-data",
+      "sha256": "d3b930c6509d4d28da8f049c5250635a1929f3bab2cff918d97ea8a0c0168a69",
+      "bytes": 91
+    },
+    {
+      "name": "network-config",
+      "sha256": "639b6f419a9ac49312b218e12395dc7e7d623d96202c3315a92dcd19d6fa02ba",
+      "bytes": 25
+    },
+    {
+      "name": "serial-single-cpu.log",
+      "sha256": "01b606376ba0ea7d26c86d4f784b49a5e73c5e38f3d2e6c5342b80c180261f15",
+      "bytes": 82029
+    },
+    {
+      "name": "serial.log",
+      "sha256": "01b606376ba0ea7d26c86d4f784b49a5e73c5e38f3d2e6c5342b80c180261f15",
+      "bytes": 82029
+    },
+    {
+      "name": "user-data",
+      "sha256": "8ff1d79d1ccc1f0185ffac511169f32984fd2f6589b66dccd6b60691770142bd",
+      "bytes": 4752
+    }
+  ]
+}

@@ -1,6 +1,10 @@
 # AgentBrake
 
-עדכון אימות מסחרי (17.11.2026): בקוד המקור הופרדו תוצאת הביצוע וסינון הפלט, ונוספו תצורת CI וערכות אימות לפיילוט. [תוכנית ותוצאות](docs/PLAN_COMMERCIAL_READINESS.md), [גבולות האכיפה](docs/ENFORCEMENT_BOUNDARIES.md), [התקנת Linux נקייה](docs/CLEAN_LINUX_VALIDATION.md), [פערי Enterprise](docs/ENTERPRISE_GAP_ANALYSIS.md), [מוכנות לפיילוט](docs/PILOT_READINESS.md). ההתקנה `product-local` נשארה על הבנייה הקודמת; תיקוני המקור אינם שדרוג אוטומטי שלה. אין אישור Production או פיילוט חיצוני.
+עדכון Enterprise מקומי (17.11.2026): נוסף מצב אופציונלי עם כניסה ארגונית OIDC, אכיפת דרישות MFA וטריות האימות, ניהול משתמשים ב־SCIM, מסירת אירועי ביקורת עם אישור ושמירת מצב, וכלי גיבוי, ניטור וחתימת חבילות. [הוראות והיקף התמיכה](docs/ENTERPRISE_OPERATIONS.md), [בדיקת התקנה מבודדת בפועל](docs/enterprise-work/container.md). אלה שינויים בקוד המקור; ההתקנה הקיימת `product-local` לא שודרגה ולא חוברה לספק זהות או SIEM. תמיכה בלקוח אמיתי, SAML מקומי, KMS ושרידות אינם מוכרזים כמושלמים.
+
+המשך אימות הפערים: נוספו בקרות Enterprise ונבדקו בהתקנה מקומית מבודדת. שער השחרור של המקור החדש **חסום**: בדיקת Codex על CPU נעצרה אחרי 20 דקות, לאחר קריאת README ולפני השלמת משימת הקריאה. הצלחת Codex בגרסה הקודמת אינה מאמתת את המקור החדש. במדגם 208 המשימות הסינתטיות נמדדו 16 חסימות שווא (7.7%); יעד פחות מ־2% טרם הושג. [תוצאות וגבולות האימות](docs/SECURITY_EVIDENCE.md). ההתקנה הקיימת לא שודרגה; חיבור App חי וכתיבות בריפו הניסוי ממתינים לאישור מפורש.
+
+עדכון אימות מסחרי (17.11.2026): הופרדו תוצאת הביצוע וסינון הפלט, ונוספו תצורת CI וערכות אימות לפיילוט. [תוכנית ותוצאות](docs/PLAN_COMMERCIAL_READINESS.md), [גבולות האכיפה](docs/ENFORCEMENT_BOUNDARIES.md), [התקנת Linux נקייה](docs/CLEAN_LINUX_VALIDATION.md), [פערי Enterprise](docs/ENTERPRISE_GAP_ANALYSIS.md), [מוכנות לפיילוט](docs/PILOT_READINESS.md). ההתקנה `product-local` שודרגה באישור מפורש לבנייה `b9c07645e95d`, עם גיבוי, שחזור ניסיוני ושמירת הנתונים. [דוח השדרוג](docs/evidence/local-commercial-upgrade-11dabb79-3125-4047-9f64-9d32cd65ba9a/installation.json). אין אישור Production או פיילוט חיצוני.
 
 מערכת מקומית לאכיפת פעולות סוכני פיתוח לפני ביצוע: MCP Gateway, מנוע OPA/Rego נפרד, אישור של משתמש אחר, PostgreSQL נפרד לבקרה וליעד, Git מקומי וממשק Next.js.
 
@@ -68,12 +72,14 @@ npm run verify:service
 npm run verify:security
 npm run setup:codex-local
 npm run verify:release
+npm run verify:enterprise
+npm run verify:capacity
 npm run verify:images
 npm run verify:production
 npm run package:release
 ```
 
-Chromium נדרש לבדיקות הדפדפן (`npx playwright install chromium` אם חסר). תהליך Codex משתמש ב־CLI רשמי ו־Qwen3:4b מקומי, מטמון מודל מאומת ופרופיל NVIDIA GPU; אינו פונה למודל ענן. מדידת חסימות השווא היא מדגם נפרד של26משימות דרך לקוח בדיקה.
+Chromium נדרש לבדיקות הדפדפן (`npx playwright install chromium` אם חסר). תהליך Codex משתמש ב־CLI רשמי ו־Qwen3:4b מקומי, במטמון מודל מאומת ובהרצת CPU מבודדת; אינו פונה למודל ענן. פרופיל ה־CPU מחליף את התלות הקודמת ב־GPU לאחר כשל הקצאת זיכרון שנצפה. מדידת חסימות השווא כוללת מדגם נפרד של26משימות והרחבה סינתטית ל־208משימות דרך לקוח בדיקה.
 
 `verify:release` מריץ native/OPA/דפדפן, PG/Git ובידוד, Codex אמיתי, benchmark, התקנה חדשה ואתחול, חשבונות משתמשים וגיבוי/שחזור מוצפן, Semgrep מקומי, SBOM וסריקת תלויות. נדרש hash מקור זהה בכל הדוחות וניקוי משאבי הבדיקה. אין Git repository ולכן אין commit SHA מומצא. חבילת המקור נוצרת רק לאחר האימות, עם manifest ו־SHA-256; היא אינה כוללת מפתחות, נתוני ריצה, מודלים או node_modules. פריסה חיצונית, שירות ציבורי ומערכות אמיתיות אינם מופעלים בחבילה זו.
 

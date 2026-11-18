@@ -1,0 +1,175 @@
+{
+  "schemaVersion": 1,
+  "action": {
+    "id": "16bb78a7-f61f-4032-bcf7-a11e059464e3",
+    "agentId": "67b557b6-7994-4b35-bea9-b07b27bad5ad",
+    "requestId": "7d780f1a-a4ec-471d-84a5-34eb36662b62",
+    "tool": "github_create_branch",
+    "destination": "036b2fb6793194e59e5a9745f1715aa277cc1238a53ccd1080d2d0207a24e271",
+    "correlationId": "94036b49-3816-4d3d-b6a2-23f1004f91d3",
+    "grantId": "cd885da9-6273-4a38-b2c0-87416be26eed",
+    "grantFingerprint": "dc6ec20a7b2eac094e7c5affba8301e40db49122b48b88ab2c65dd4f279ef89d",
+    "policyRevision": 1,
+    "policyDecisionId": "a4e03bc6-9299-4cc1-89bd-120cf8cbdf9d",
+    "policyVersion": "stage2.v1",
+    "policyHash": "9ac719fef979ee7b37c5c5ef3173621453782a0a02d432727391beeff1234d14",
+    "policyEffect": "REQUIRE_APPROVAL",
+    "arguments": {
+      "repo": "yarinh5/AgentBrake-Sandbox",
+      "baseSha": "7d7873af0fa09e12f12217a40e6030df5bcd8058",
+      "branch": "agentbrake/validation-28f3ddc1"
+    },
+    "status": "allowed",
+    "rule": "github-writes",
+    "reason": "Executed through the enforced gateway.",
+    "resource": "yarinh5/AgentBrake-Sandbox",
+    "sandbox": false,
+    "createdAt": "2026-11-17T11:50:37.843Z",
+    "expiresAt": "2026-11-17T12:05:37.843Z",
+    "durationMs": 7.85,
+    "preview": {
+      "kind": "git-branch",
+      "summary": "Create a reviewed GitHub feature branch",
+      "details": {
+        "repositoryId": 1461019528,
+        "ownerId": 87584981,
+        "repo": "yarinh5/AgentBrake-Sandbox",
+        "defaultBranch": "main",
+        "baseSha": "7d7873af0fa09e12f12217a40e6030df5bcd8058",
+        "branch": "agentbrake/validation-28f3ddc1",
+        "branchSha": null
+      }
+    },
+    "review": {
+      "nonce": "[REDACTED]",
+      "fingerprint": "7e86c5083e8f3b21cb8d4bdcc5a55395f03ba6bc3d2d92b02db8119bb2d9e75c"
+    },
+    "approvalReceipt": {
+      "actorId": "ace37093-1188-4771-82f8-22d31efc5c32",
+      "tenant": "local",
+      "decision": "approve",
+      "at": "2026-11-17T11:50:42.082Z",
+      "proof": {
+        "nonce": "[REDACTED]",
+        "fingerprint": "7e86c5083e8f3b21cb8d4bdcc5a55395f03ba6bc3d2d92b02db8119bb2d9e75c"
+      }
+    },
+    "executionOutcome": "adapter-reported",
+    "resultDisclosure": "released"
+  },
+  "decision": {
+    "id": "a4e03bc6-9299-4cc1-89bd-120cf8cbdf9d",
+    "policyHash": "9ac719fef979ee7b37c5c5ef3173621453782a0a02d432727391beeff1234d14",
+    "version": "stage2.v1",
+    "revision": 1,
+    "effect": "REQUIRE_APPROVAL",
+    "reason": "Executed through the enforced gateway."
+  },
+  "review": {
+    "fingerprint": "7e86c5083e8f3b21cb8d4bdcc5a55395f03ba6bc3d2d92b02db8119bb2d9e75c",
+    "receipt": {
+      "actorId": "ace37093-1188-4771-82f8-22d31efc5c32",
+      "tenant": "local",
+      "decision": "approve",
+      "at": "2026-11-17T11:50:42.082Z",
+      "proof": {
+        "nonce": "[REDACTED]",
+        "fingerprint": "7e86c5083e8f3b21cb8d4bdcc5a55395f03ba6bc3d2d92b02db8119bb2d9e75c"
+      }
+    },
+    "preview": {
+      "kind": "git-branch",
+      "summary": "Create a reviewed GitHub feature branch",
+      "details": {
+        "repositoryId": 1461019528,
+        "ownerId": 87584981,
+        "repo": "yarinh5/AgentBrake-Sandbox",
+        "defaultBranch": "main",
+        "baseSha": "7d7873af0fa09e12f12217a40e6030df5bcd8058",
+        "branch": "agentbrake/validation-28f3ddc1",
+        "branchSha": null
+      }
+    }
+  },
+  "execution": {
+    "status": "allowed",
+    "observation": "adapter-reported",
+    "outcome": "adapter-reported",
+    "resultDisclosure": "released",
+    "resultRetained": true,
+    "summary": {
+      "branch": "agentbrake/validation-28f3ddc1"
+    },
+    "correlationId": "94036b49-3816-4d3d-b6a2-23f1004f91d3"
+  },
+  "audit": {
+    "valid": true,
+    "redacted": true,
+    "entries": [
+      {
+        "seq": 20,
+        "data": {
+          "type": "action.pending",
+          "details": {
+            "actionId": "16bb78a7-f61f-4032-bcf7-a11e059464e3",
+            "agentId": "67b557b6-7994-4b35-bea9-b07b27bad5ad",
+            "tool": "github_create_branch",
+            "rule": "github-writes",
+            "correlationId": "94036b49-3816-4d3d-b6a2-23f1004f91d3",
+            "grantId": "cd885da9-6273-4a38-b2c0-87416be26eed",
+            "decisionId": "f27ab1db-734d-4390-98be-761ce4d0c2a6",
+            "policyHash": "9ac719fef979ee7b37c5c5ef3173621453782a0a02d432727391beeff1234d14",
+            "policyRevision": 1,
+            "effect": "REQUIRE_APPROVAL"
+          },
+          "at": "2026-11-17T11:50:39.561Z"
+        },
+        "previous_hash": "227cfec11670c8c096a19a19299106802120e7044608cc1fdab1cbc1223b02da",
+        "hash": "f660bde34f8a657640e3194058d48d2b24c6131ebc04f9fee515b5b125bf9896"
+      },
+      {
+        "seq": 22,
+        "data": {
+          "type": "approval.granted",
+          "details": {
+            "actionId": "16bb78a7-f61f-4032-bcf7-a11e059464e3",
+            "actor": "ace37093-1188-4771-82f8-22d31efc5c32",
+            "fingerprint": "7e86c5083e8f3b21cb8d4bdcc5a55395f03ba6bc3d2d92b02db8119bb2d9e75c"
+          },
+          "at": "2026-11-17T11:50:43.716Z"
+        },
+        "previous_hash": "04d174ef06d75244de03af9f701b6e3bfb7f3fc3a79460b01c0d645b11c1d9ad",
+        "hash": "1d9cb784ea2a712457f259ab86b1a2f8e88978f208bcab61cce2a55900e625dc"
+      },
+      {
+        "seq": 23,
+        "data": {
+          "type": "execution.started",
+          "details": {
+            "actionId": "16bb78a7-f61f-4032-bcf7-a11e059464e3",
+            "approverId": "ace37093-1188-4771-82f8-22d31efc5c32"
+          },
+          "at": "2026-11-17T11:50:43.723Z"
+        },
+        "previous_hash": "1d9cb784ea2a712457f259ab86b1a2f8e88978f208bcab61cce2a55900e625dc",
+        "hash": "3fdde2c4179a1fba27ab47c4d8fe3adfb8d97ee7e25292ad094615473950f516"
+      },
+      {
+        "seq": 24,
+        "data": {
+          "type": "execution.allowed",
+          "details": {
+            "actionId": "16bb78a7-f61f-4032-bcf7-a11e059464e3",
+            "outcome": "adapter-reported",
+            "resultDisclosure": "released"
+          },
+          "at": "2026-11-17T11:50:46.016Z"
+        },
+        "previous_hash": "3fdde2c4179a1fba27ab47c4d8fe3adfb8d97ee7e25292ad094615473950f516",
+        "hash": "a7719376d5256c94a5cfa99ac3c9df4bee74cece166177f042c40e006abf59c2"
+      }
+    ],
+    "verification": "Hash chain checked against stored records before redaction; this filtered redacted export is not an independent full-chain proof."
+  },
+  "coverage": "Local synthetic fixture. Adapter response is not independent target verification. UNKNOWN requires target reconciliation; never retry automatically."
+}

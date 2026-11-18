@@ -83,8 +83,8 @@ export type Actor = {
   tenant: string;
   role: "administrator" | "operator" | "approver" | "viewer";
 };
-export type Session = { actor: Actor; csrfToken: string; teamMode: boolean; authMode?: "key" | "account" };
-export type Setup = { managed: boolean; initialized: boolean };
+export type Session = { actor: Actor; csrfToken: string; teamMode: boolean; authMode?: "key" | "account"; assurance?: {method:'oidc'|'break-glass'} };
+export type Setup = { managed: boolean; initialized: boolean; enterprise?: {enabled:true;providerLabel:string;breakGlassEnabled:boolean} };
 export type Account = Actor & { email: string; active: boolean };
 export type Invitation = { id: string; email: string; role: Actor["role"]; expiresAt: number };
 export type Team = { members: Account[]; invitations: Invitation[] };

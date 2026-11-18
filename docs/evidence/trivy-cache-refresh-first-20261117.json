@@ -1,0 +1,14 @@
+{
+  "at": "2026-11-17T17:23:51.636Z",
+  "result": "FAIL",
+  "backup": "F:\\project love\\AgentBrake\\.agentbrake-local\\trivy-cache-before-7b1cdb53-af4c-432d-aaed-2ce508388499",
+  "scope": "Public vulnerability database refresh only. Existing cache copied intact first; no source, images, credentials or runtime data uploaded.",
+  "before": {
+    "Version": 2,
+    "NextUpdate": "2026-11-17T13:03:44.830426014Z",
+    "UpdatedAt": "2026-11-16T13:03:44.830426244Z",
+    "DownloadedAt": "2026-11-16T19:02:52.831437722Z"
+  },
+  "error": "Local Docker command failed (1)",
+  "finishedAt": "2026-11-17T17:24:09.598Z"
+}

@@ -1,0 +1,199 @@
+{
+  "runId": "1fbc9fdc-9f46-4832-b110-3a6a5a696ca3",
+  "sourceHash": "2d8df354e16dacbdda4802a04dd875d6166f053f63a5a3b897a2bf41d358032e",
+  "startedAt": "2026-11-17T21:31:39.400Z",
+  "result": "PASS_LOCAL_INSTALLED_ENTERPRISE",
+  "cases": [
+    {
+      "name": "managed-owner-bootstrap",
+      "result": "PASS",
+      "observed": "Production HTTPS/Next/control/PostgreSQL managed-account bootstrap completed before enabling enterprise mode."
+    },
+    {
+      "name": "compose-enterprise-isolation",
+      "result": "PASS",
+      "observed": "Control/agent/protected/dashboard/enterprise networks internal; existing dedicated publication bridge joins only fixed ingress, with only loopback port published; enterprise secret only control, fixture secret only fixture."
+    },
+    {
+      "name": "installed-signed-oidc-scim",
+      "result": "PASS",
+      "observed": "SCIM created a bound user and mapped operator group; signed RSA code/PKCE exchange traversed production enterprise egress; missing-cookie and replay callbacks denied."
+    },
+    {
+      "name": "installed-offboarding",
+      "result": "PASS",
+      "observed": "Bodyless SCIM DELETE over HTTPS immediately revoked the issued application session."
+    },
+    {
+      "name": "installed-audit-ack-restart",
+      "result": "PASS",
+      "observed": {
+        "acknowledgedSequence": "7",
+        "uniqueSinkEvents": 7,
+        "checkpointUnchangedOnRestart": true,
+        "operatorStatus": true
+      }
+    },
+    {
+      "name": "installed-agent-enterprise-denial",
+      "result": "PASS",
+      "observed": {
+        "attempts": 5,
+        "allBlocked": true,
+        "noSecrets": true,
+        "gatewayEnterpriseRoutes": [
+          404,
+          404
+        ]
+      }
+    },
+    {
+      "name": "installed-browser-enterprise",
+      "result": "PASS",
+      "observed": {
+        "ssoButton": true,
+        "ordinaryPasswordHidden": true,
+        "manualIdentityControlsHidden": true,
+        "expectedSyntheticIdpNavigation": true,
+        "browserErrors": 0
+      }
+    }
+  ],
+  "scope": "Disposable minimal Docker installation; synthetic TLS IdP and audit sink; internal control/agent/enterprise networks with existing dedicated fixed-ingress publication bridge; real customer acceptance excluded.",
+  "images": [
+    {
+      "ID": "sha256:defa12e8d08df47a9fbb75e5bd6592459efabe050d2eaa8e9c6ef6b14cc735d9",
+      "ContainerName": "agentbrake-product-verify-enterprise-1fbc9fdc-dashboard-1",
+      "Repository": "agentbrake-product-verify-enterprise-1fbc9fdc-dashboard",
+      "Tag": "latest",
+      "Platform": "linux/amd64",
+      "Size": 84971898,
+      "LastTagTime": "2026-11-17T21:31:42.700891476Z"
+    },
+    {
+      "ID": "sha256:fd1e900181538d912904d7105f43722569fbea72542bb1a7bed138718c92cab3",
+      "ContainerName": "agentbrake-product-verify-enterprise-1fbc9fdc-control-db-1",
+      "Repository": "agentbrake-postgres",
+      "Tag": "18-193f481f609ba4086c53",
+      "Platform": "linux/amd64",
+      "Size": 120256857,
+      "LastTagTime": "2026-11-17T21:31:41.352790814Z"
+    },
+    {
+      "ID": "sha256:fd1e900181538d912904d7105f43722569fbea72542bb1a7bed138718c92cab3",
+      "ContainerName": "agentbrake-product-verify-enterprise-1fbc9fdc-target-db-1",
+      "Repository": "agentbrake-postgres",
+      "Tag": "18-193f481f609ba4086c53",
+      "Platform": "linux/amd64",
+      "Size": 120256857,
+      "LastTagTime": "2026-11-17T21:31:41.352790814Z"
+    },
+    {
+      "ID": "sha256:1dc97d8103692b02c9999dc42830749e25abd32618ce779b2d7e6920e76ed8a3",
+      "ContainerName": "agentbrake-product-verify-enterprise-1fbc9fdc-agent-1",
+      "Repository": "agentbrake-product-verify-enterprise-1fbc9fdc-runtime",
+      "Tag": "latest",
+      "Platform": "linux/amd64",
+      "Size": 84029531,
+      "LastTagTime": "2026-11-17T21:31:42.135877651Z"
+    },
+    {
+      "ID": "sha256:1dc97d8103692b02c9999dc42830749e25abd32618ce779b2d7e6920e76ed8a3",
+      "ContainerName": "agentbrake-product-verify-enterprise-1fbc9fdc-enterprise-fixture-1",
+      "Repository": "agentbrake-product-verify-enterprise-1fbc9fdc-runtime",
+      "Tag": "latest",
+      "Platform": "linux/amd64",
+      "Size": 84029531,
+      "LastTagTime": "2026-11-17T21:31:42.135877651Z"
+    },
+    {
+      "ID": "sha256:1dc97d8103692b02c9999dc42830749e25abd32618ce779b2d7e6920e76ed8a3",
+      "ContainerName": "agentbrake-product-verify-enterprise-1fbc9fdc-control-api-1",
+      "Repository": "agentbrake-product-verify-enterprise-1fbc9fdc-runtime",
+      "Tag": "latest",
+      "Platform": "linux/amd64",
+      "Size": 84029531,
+      "LastTagTime": "2026-11-17T21:31:42.135877651Z"
+    },
+    {
+      "ID": "sha256:1dc97d8103692b02c9999dc42830749e25abd32618ce779b2d7e6920e76ed8a3",
+      "ContainerName": "agentbrake-product-verify-enterprise-1fbc9fdc-mock-target-1",
+      "Repository": "agentbrake-product-verify-enterprise-1fbc9fdc-runtime",
+      "Tag": "latest",
+      "Platform": "linux/amd64",
+      "Size": 84029531,
+      "LastTagTime": "2026-11-17T21:31:42.135877651Z"
+    },
+    {
+      "ID": "sha256:1dc97d8103692b02c9999dc42830749e25abd32618ce779b2d7e6920e76ed8a3",
+      "ContainerName": "agentbrake-product-verify-enterprise-1fbc9fdc-gateway-1",
+      "Repository": "agentbrake-product-verify-enterprise-1fbc9fdc-runtime",
+      "Tag": "latest",
+      "Platform": "linux/amd64",
+      "Size": 84029531,
+      "LastTagTime": "2026-11-17T21:31:42.135877651Z"
+    },
+    {
+      "ID": "sha256:4379c5e32f8b8158fd4659b749e0b95d91e239e25f3dd6f3346763897cce3f7b",
+      "ContainerName": "agentbrake-product-verify-enterprise-1fbc9fdc-opa-1",
+      "Repository": "agentbrake-opa",
+      "Tag": "1.22.4-3f9e5f443c6e97aa147e",
+      "Platform": "linux/amd64",
+      "Size": 15574467,
+      "LastTagTime": "2026-11-17T21:31:41.287200587Z"
+    },
+    {
+      "ID": "sha256:1dc97d8103692b02c9999dc42830749e25abd32618ce779b2d7e6920e76ed8a3",
+      "ContainerName": "agentbrake-product-verify-enterprise-1fbc9fdc-enterprise-egress-1",
+      "Repository": "agentbrake-product-verify-enterprise-1fbc9fdc-runtime",
+      "Tag": "latest",
+      "Platform": "linux/amd64",
+      "Size": 84029531,
+      "LastTagTime": "2026-11-17T21:31:42.135877651Z"
+    },
+    {
+      "ID": "sha256:1dc97d8103692b02c9999dc42830749e25abd32618ce779b2d7e6920e76ed8a3",
+      "ContainerName": "agentbrake-product-verify-enterprise-1fbc9fdc-ingress-1",
+      "Repository": "agentbrake-product-verify-enterprise-1fbc9fdc-runtime",
+      "Tag": "latest",
+      "Platform": "linux/amd64",
+      "Size": 84029531,
+      "LastTagTime": "2026-11-17T21:31:42.135877651Z"
+    },
+    {
+      "ID": "sha256:1314fb30ec37592d5845e5a160d522c0e680972aa534549940b8d73bde88481a",
+      "ContainerName": "agentbrake-product-verify-enterprise-1fbc9fdc-volume-init-1",
+      "Repository": "node",
+      "Tag": "",
+      "Platform": "linux/amd64",
+      "Size": 61381025,
+      "LastTagTime": "2026-11-17T20:01:46.573754636Z"
+    },
+    {
+      "ID": "sha256:1314fb30ec37592d5845e5a160d522c0e680972aa534549940b8d73bde88481a",
+      "ContainerName": "agentbrake-product-verify-enterprise-1fbc9fdc-enterprise-init-1",
+      "Repository": "node",
+      "Tag": "",
+      "Platform": "linux/amd64",
+      "Size": 61381025,
+      "LastTagTime": "2026-11-17T20:01:46.573754636Z"
+    }
+  ],
+  "cleanup": {
+    "result": "PASS",
+    "containers": 0,
+    "volumes": 0,
+    "networks": 0,
+    "scopedFilesRemoved": true
+  },
+  "finishedAt": "2026-11-17T21:33:36.060Z",
+  "secretScan": {
+    "result": "PASS",
+    "knownValuesChecked": 41,
+    "artifacts": [
+      "enterprise-summary.json",
+      "source-manifest.json",
+      "enterprise-evidence.json.gz"
+    ]
+  }
+}

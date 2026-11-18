@@ -1,0 +1,34 @@
+{
+  "startedAt": "2026-11-17T20:49:50.2983250Z",
+  "sourceHash": "2d8df354e16dacbdda4802a04dd875d6166f053f63a5a3b897a2bf41d358032e",
+  "profile": "gpu-8k",
+  "result": "PASS_LOCAL_RELEASE_EXTERNAL_GATES_OPEN",
+  "stages": [
+    {
+      "log": "docs\\evidence\\engineering-final-d0f25655-2637-41a6-b56d-89b5f63d0ef2/enterprise.log",
+      "seconds": 93.61,
+      "name": "enterprise",
+      "exitCode": 0
+    },
+    {
+      "log": "docs\\evidence\\engineering-final-d0f25655-2637-41a6-b56d-89b5f63d0ef2/release.log",
+      "seconds": 985.68,
+      "name": "release",
+      "exitCode": 0
+    },
+    {
+      "log": "docs\\evidence\\engineering-final-d0f25655-2637-41a6-b56d-89b5f63d0ef2/images.log",
+      "seconds": 108.83,
+      "name": "images",
+      "exitCode": 0
+    },
+    {
+      "log": "docs\\evidence\\engineering-final-d0f25655-2637-41a6-b56d-89b5f63d0ef2/production.log",
+      "expected": 2,
+      "name": "production",
+      "exitCode": 2
+    }
+  ],
+  "sourceHashAtEnd": "2d8df354e16dacbdda4802a04dd875d6166f053f63a5a3b897a2bf41d358032e",
+  "finishedAt": "2026-11-17T21:09:39.5070273Z"
+}

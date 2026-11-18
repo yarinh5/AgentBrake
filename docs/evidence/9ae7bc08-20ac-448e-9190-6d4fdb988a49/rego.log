@@ -1,0 +1,26 @@
+services\policy\agentbrake_test.rego:19:
+data.agentbrake_test.test_wrong_tenant: PASS (1.6794ms)
+services\policy\agentbrake_test.rego:18:
+data.agentbrake_test.test_wrong_identity: PASS (2.3228ms)
+services\policy\agentbrake_test.rego:15:
+data.agentbrake_test.test_expired_grant: PASS (3.7233ms)
+services\policy\agentbrake_test.rego:20:
+data.agentbrake_test.test_wrong_audience: PASS (1.7827ms)
+services\policy\agentbrake_test.rego:21:
+data.agentbrake_test.test_revoked: PASS (2.298ms)
+services\policy\agentbrake_test.rego:24:
+data.agentbrake_test.test_missing_context: PASS (4.429ms)
+services\policy\agentbrake_test.rego:16:
+data.agentbrake_test.test_outside_resource: PASS (8.7681ms)
+services\policy\agentbrake_test.rego:23:
+data.agentbrake_test.test_row_budget: PASS (3.8331ms)
+services\policy\agentbrake_test.rego:22:
+data.agentbrake_test.test_quota: PASS (8.2577ms)
+services\policy\agentbrake_test.rego:17:
+data.agentbrake_test.test_unknown_tool: PASS (10.8748ms)
+services\policy\agentbrake_test.rego:13:
+data.agentbrake_test.test_allowed_read: PASS (11.8754ms)
+services\policy\agentbrake_test.rego:14:
+data.agentbrake_test.test_write_requires_review: PASS (14.877ms)
+--------------------------------------------------------------------------------
+PASS: 12/12

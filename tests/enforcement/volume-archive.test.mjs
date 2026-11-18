@@ -19,6 +19,7 @@ import {
   restoreVolume,
   validateSnapshot,
 } from "../../infra/product/volume-archive.mjs";
+await mkdir(resolve('.agentbrake-local'), { recursive: true, mode: 0o700 });
 test("cold volume roundtrip preserves binary data and refuses nonempty restore", async () => {
   const dir = await mkdtemp(resolve(".agentbrake-local/archive-test-"));
   try {

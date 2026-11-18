@@ -1,0 +1,1147 @@
+{
+  "scope": "Separate Ubuntu guest; synthetic product/isolation/restore/candidate/security checks",
+  "commands": [
+    {
+      "label": "operator-identity",
+      "exitCode": 0,
+      "failure": null,
+      "seconds": 0.05,
+      "outputTail": "uid=1100(abvalidation) gid=1100(abvalidation) groups=1100(abvalidation),112(docker)\n"
+    },
+    {
+      "label": "guard-active",
+      "exitCode": 0,
+      "failure": null,
+      "seconds": 0.03,
+      "outputTail": "active\n"
+    },
+    {
+      "label": "guard-rules",
+      "exitCode": 0,
+      "failure": null,
+      "seconds": 0.01,
+      "outputTail": "table inet ab_dependency_guard {\n\tchain output {\n\t\ttype filter hook output priority filter - 10; policy drop;\n\t\toifname \"lo\" accept\n\t\toifname \"docker0\" accept\n\t\toifname \"br-*\" accept\n\t\tct state established,related accept\n\t\toifname \"abegress0\" ip daddr 10.0.2.2 tcp dport 8877 counter packets 0 bytes 0 accept\n\t\tcounter packets 0 bytes 0 reject with icmpx admin-prohibited\n\t}\n\n\tchain forward {\n\t\ttype filter hook forward priority filter - 10; policy accept;\n\t\toifname \"abegress0\" ip daddr 10.0.2.2 tcp dport 8877 counter packets 0 bytes 0 accept\n\t\toifname \"abegress0\" counter packets 0 bytes 0 reject with icmpx admin-prohibited\n\t}\n\n\tchain input {\n\t\ttype filter hook input priority filter - 10; policy drop;\n\t\tiifname \"lo\" accept\n\t\tiifname \"docker0\" accept\n\t\tiifname \"br-*\" accept\n\t\tct state established,related accept\n\t\tcounter packets 0 bytes 0 reject with icmpx admin-prohibited\n\t}\n}\n"
+    },
+    {
+      "label": "public-dependency-positive",
+      "exitCode": 0,
+      "failure": null,
+      "seconds": 0.37,
+      "outputTail": "200"
+    },
+    {
+      "label": "mount-package",
+      "exitCode": 0,
+      "failure": null,
+      "seconds": 0.04,
+      "outputTail": ""
+    },
+    {
+      "label": "packed-source",
+      "exitCode": 0,
+      "failure": null,
+      "seconds": 1.18,
+      "outputTail": "c043156a9a2f69b6d3ddfc0eb6eec315faba38250f8eb38ae2a02f7087f7c999\n"
+    },
+    {
+      "label": "npm-root",
+      "exitCode": 0,
+      "failure": null,
+      "seconds": 16.27,
+      "outputTail": "\nadded 130 packages, and audited 131 packages in 16s\n\n35 packages are looking for funding\n  run `npm fund` for details\n\nfound 0 vulnerabilities\nnpm notice\nnpm notice New major version of npm available! 10.9.9 -> 12.2.2\nnpm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.2\nnpm notice To update run: npm install -g npm@12.2.2\nnpm notice\n"
+    },
+    {
+      "label": "npm-dashboard",
+      "exitCode": 0,
+      "failure": null,
+      "seconds": 55.78,
+      "outputTail": "\nadded 34 packages, and audited 35 packages in 56s\n\n8 packages are looking for funding\n  run `npm fund` for details\n\nfound 0 vulnerabilities\n"
+    },
+    {
+      "label": "opa-install",
+      "exitCode": 0,
+      "failure": null,
+      "seconds": 20.68,
+      "outputTail": "(node:1332) [UNDICI-EHPA] Warning: EnvHttpProxyAgent is experimental, expect them to change at any time.\n(Use `node --trace-warnings ...` to show where the warning was created)\nOPA 1.22.4 verified: 35e3b352e715e80624ead6c89930d8585f6f7d94cdc409eb2a9fe36620dcccba; local binary /opt/agentbrake/.tools/opa\n"
+    },
+    {
+      "label": "browser-os-dependencies",
+      "exitCode": 0,
+      "failure": null,
+      "seconds": 93.05,
+      "outputTail": "sound2-data (1.2.11-1ubuntu0.3) ...\r\nSelecting previously unselected package libasound2t64:amd64.\r\nPreparing to unpack .../14-libasound2t64_1.2.11-1ubuntu0.3_amd64.deb ...\r\nUnpacking libasound2t64:amd64 (1.2.11-1ubuntu0.3) ...\r\nSelecting previously unselected package libatk1.0-0t64:amd64.\r\nPreparing to unpack .../15-libatk1.0-0t64_2.52.0-1build1_amd64.deb ...\r\nUnpacking libatk1.0-0t64:amd64 (2.52.0-1build1) ...\r\nSelecting previously unselected package libxi6:amd64.\r\nPreparing to unpack .../16-libxi6_2%3a1.8.1-1build1_amd64.deb ...\r\nUnpacking libxi6:amd64 (2:1.8.1-1build1) ...\r\nSelecting previously unselected package libatspi2.0-0t64:amd64.\r\nPreparing to unpack .../17-libatspi2.0-0t64_2.52.0-1build1_amd64.deb ...\r\nUnpacking libatspi2.0-0t64:amd64 (2.52.0-1build1) ...\r\nSelecting previously unselected package libatk-bridge2.0-0t64:amd64.\r\nPreparing to unpack .../18-libatk-bridge2.0-0t64_2.52.0-1build1_amd64.deb ...\r\nUnpacking libatk-bridge2.0-0t64:amd64 (2.52.0-1build1) ...\r\nSelecting previously unselected package libavahi-common-data:amd64.\r\nPreparing to unpack .../19-libavahi-common-data_0.8-13ubuntu6.2_amd64.deb ...\r\nUnpacking libavahi-common-data:amd64 (0.8-13ubuntu6.2) ...\r\nSelecting previously unselected package libavahi-common3:amd64.\r\nPreparing to unpack .../20-libavahi-common3_0.8-13ubuntu6.2_amd64.deb ...\r\nUnpacking libavahi-common3:amd64 (0.8-13ubuntu6.2) ...\r\nSelecting previously unselected package libavahi-client3:amd64.\r\nPreparing to unpack .../21-libavahi-client3_0.8-13ubuntu6.2_amd64.deb ...\r\nUnpacking libavahi-client3:amd64 (0.8-13ubuntu6.2) ...\r\nSelecting previously unselected package libpixman-1-0:amd64.\r\nPreparing to unpack .../22-libpixman-1-0_0.42.2-1build1_amd64.deb ...\r\nUnpacking libpixman-1-0:amd64 (0.42.2-1build1) ...\r\nSelecting previously unselected package libxcb-render0:amd64.\r\nPreparing to unpack .../23-libxcb-render0_1.15-1ubuntu2_amd64.deb ...\r\nUnpacking libxcb-render0:amd64 (1.15-1ubuntu2) ...\r\nSelecting previously unselected package libxcb-shm0:amd64.\r\nPreparing to unpack .../24-libxcb-shm0_1.15-1ubuntu2_amd64.deb ...\r\nUnpacking libxcb-shm0:amd64 (1.15-1ubuntu2) ...\r\nSelecting previously unselected package libxrender1:amd64.\r\nPreparing to unpack .../25-libxrender1_1%3a0.9.10-1.1build1_amd64.deb ...\r\nUnpacking libxrender1:amd64 (1:0.9.10-1.1build1) ...\r\nSelecting previously unselected package libcairo2:amd64.\r\nPreparing to unpack .../26-libcairo2_1.18.0-3build1_amd64.deb ...\r\nUnpacking libcairo2:amd64 (1.18.0-3build1) ...\r\nSelecting previously unselected package libcups2t64:amd64.\r\nPreparing to unpack .../27-libcups2t64_2.4.7-1.2ubuntu7.14_amd64.deb ...\r\nUnpacking libcups2t64:amd64 (2.4.7-1.2ubuntu7.14) ...\r\nSelecting previously unselected package libdatrie1:amd64.\r\nPreparing to unpack .../28-libdatrie1_0.2.13-3build1_amd64.deb ...\r\nUnpacking libdatrie1:amd64 (0.2.13-3build1) ...\r\nSelecting previously unselected package libpciaccess0:amd64.\r\nPreparing to unpack .../29-libpciaccess0_0.17-3ubuntu0.24.04.3_amd64.deb ...\r\nUnpacking libpciaccess0:amd64 (0.17-3ubuntu0.24.04.3) ...\r\nSelecting previously unselected package libdrm-intel1:amd64.\r\nPreparing to unpack .../30-libdrm-intel1_2.4.125-1ubuntu0.1~24.04.2_amd64.deb ...\r\nUnpacking libdrm-intel1:amd64 (2.4.125-1ubuntu0.1~24.04.2) ...\r\nSelecting previously unselected package libfontenc1:amd64.\r\nPreparing to unpack .../31-libfontenc1_1%3a1.1.8-1build1_amd64.deb ...\r\nUnpacking libfontenc1:amd64 (1:1.1.8-1build1) ...\r\nSelecting previously unselected package libllvm20:amd64.\r\nPreparing to unpack .../32-libllvm20_1%3a20.1.2-0ubuntu1~24.04.3_amd64.deb ...\r\nUnpacking libllvm20:amd64 (1:20.1.2-0ubuntu1~24.04.3) ...\r\nSelecting previously unselected package libx11-xcb1:amd64.\r\nPreparing to unpack .../33-libx11-xcb1_2%3a1.8.7-1ubuntu0.1_amd64.deb ...\r\nUnpacking libx11-xcb1:amd64 (2:1.8.7-1ubuntu0.1) ...\r\nSelecting previously unselected package libxcb-dri3-0:amd64.\r\nPreparing to unpack .../34-libxcb-dri3-0_1.15-1ubuntu2_amd64.deb ...\r\nUnpacking libxcb-dri3-0:amd64 (1.15-1ubuntu2) ...\r\nSelecting previously unselected package libxcb-present0:amd64.\r\nPreparing to unpack .../35-libxcb-present0_1.15-1ubuntu2_amd64.deb ...\r\nUnpacking libxcb-present0:amd64 (1.15-1ubuntu2) ...\r\nSelecting previously unselected package libxcb-randr0:amd64.\r\nPreparing to unpack .../36-libxcb-randr0_1.15-1ubuntu2_amd64.deb ...\r\nUnpacking libxcb-randr0:amd64 (1.15-1ubuntu2) ...\r\nSelecting previously unselected package libxcb-sync1:amd64.\r\nPreparing to unpack .../37-libxcb-sync1_1.15-1ubuntu2_amd64.deb ...\r\nUnpacking libxcb-sync1:amd64 (1.15-1ubuntu2) ...\r\nSelecting previously unselected package libxcb-xfixes0:amd64.\r\nPreparing to unpack .../38-libxcb-xfixes0_1.15-1ubuntu2_amd64.deb ...\r\nUnpacking libxcb-xfixes0:amd64 (1.15-1ubuntu2) ...\r\nSelecting previously unselected package libxshmfence1:amd64.\r\nPreparing to unpack .../39-libxshmfence1_1.3-1build5_amd64.deb ...\r\nUnpacking libxshmfence1:amd64 (1.3-1build5) ...\r\nSelecting previously unselected package mesa-libgallium:amd64.\r\nPreparing to unpack .../40-mesa-libgallium_25.2.8-0ubuntu0.24.04.5_amd64.deb ...\r\nUnpacking mesa-libgallium:amd64 (25.2.8-0ubuntu0.24.04.5) ...\r\nSelecting previously unselected package libgbm1:amd64.\r\nPreparing to unpack .../41-libgbm1_25.2.8-0ubuntu0.24.04.5_amd64.deb ...\r\nUnpacking libgbm1:amd64 (25.2.8-0ubuntu0.24.04.5) ...\r\nSelecting previously unselected package libvulkan1:amd64.\r\nPreparing to unpack .../42-libvulkan1_1.3.275.0-1build1_amd64.deb ...\r\nUnpacking libvulkan1:amd64 (1.3.275.0-1build1) ...\r\nSelecting previously unselected package libgl1-mesa-dri:amd64.\r\nPreparing to unpack .../43-libgl1-mesa-dri_25.2.8-0ubuntu0.24.04.5_amd64.deb ...\r\nUnpacking libgl1-mesa-dri:amd64 (25.2.8-0ubuntu0.24.04.5) ...\r\nSelecting previously unselected package libxcb-glx0:amd64.\r\nPreparing to unpack .../44-libxcb-glx0_1.15-1ubuntu2_amd64.deb ...\r\nUnpacking libxcb-glx0:amd64 (1.15-1ubuntu2) ...\r\nSelecting previously unselected package libxxf86vm1:amd64.\r\nPreparing to unpack .../45-libxxf86vm1_1%3a1.1.4-1build4_amd64.deb ...\r\nUnpacking libxxf86vm1:amd64 (1:1.1.4-1build4) ...\r\nSelecting previously unselected package libglx-mesa0:amd64.\r\nPreparing to unpack .../46-libglx-mesa0_25.2.8-0ubuntu0.24.04.5_amd64.deb ...\r\nUnpacking libglx-mesa0:amd64 (25.2.8-0ubuntu0.24.04.5) ...\r\nSelecting previously unselected package libgraphite2-3:amd64.\r\nPreparing to unpack .../47-libgraphite2-3_1.3.14-2ubuntu0.24.04.1_amd64.deb ...\r\nUnpacking libgraphite2-3:amd64 (1.3.14-2ubuntu0.24.04.1) ...\r\nSelecting previously unselected package libharfbuzz0b:amd64.\r\nPreparing to unpack .../48-libharfbuzz0b_8.3.0-2build2_amd64.deb ...\r\nUnpacking libharfbuzz0b:amd64 (8.3.0-2build2) ...\r\nSelecting previously unselected package x11-common.\r\nPreparing to unpack .../49-x11-common_1%3a7.7+23ubuntu3_all.deb ...\r\nUnpacking x11-common (1:7.7+23ubuntu3) ...\r\nSelecting previously unselected package libice6:amd64.\r\nPreparing to unpack .../50-libice6_2%3a1.0.10-1build3_amd64.deb ...\r\nUnpacking libice6:amd64 (2:1.0.10-1build3) ...\r\nPreparing to unpack .../51-libnss3_2%3a3.98-1ubuntu0.3_amd64.deb ...\r\nUnpacking libnss3:amd64 (2:3.98-1ubuntu0.3) over (2:3.98-1ubuntu0.2) ...\r\nSelecting previously unselected package libthai-data.\r\nPreparing to unpack .../52-libthai-data_0.1.29-2build1_all.deb ...\r\nUnpacking libthai-data (0.1.29-2build1) ...\r\nSelecting previously unselected package libthai0:amd64.\r\nPreparing to unpack .../53-libthai0_0.1.29-2build1_amd64.deb ...\r\nUnpacking libthai0:amd64 (0.1.29-2build1) ...\r\nSelecting previously unselected package libpango-1.0-0:amd64.\r\nPreparing to unpack .../54-libpango-1.0-0_1.52.1+ds-1build1_amd64.deb ...\r\nUnpacking libpango-1.0-0:amd64 (1.52.1+ds-1build1) ...\r\nSelecting previously unselected package libsm6:amd64.\r\nPreparing to unpack .../55-libsm6_2%3a1.2.3-1build3_amd64.deb ...\r\nUnpacking libsm6:amd64 (2:1.2.3-1build3) ...\r\nSelecting previously unselected package libxt6t64:amd64.\r\nPreparing to unpack .../56-libxt6t64_1%3a1.2.1-1.2build1_amd64.deb ...\r\nUnpacking libxt6t64:amd64 (1:1.2.1-1.2build1) ...\r\nSelecting previously unselected package libxmu6:amd64.\r\nPreparing to unpack .../57-libxmu6_2%3a1.1.3-3build2_amd64.deb ...\r\nUnpacking libxmu6:amd64 (2:1.1.3-3build2) ...\r\nSelecting previously unselected package libxaw7:amd64.\r\nPreparing to unpack .../58-libxaw7_2%3a1.0.14-1build2_amd64.deb ...\r\nUnpacking libxaw7:amd64 (2:1.0.14-1build2) ...\r\nSelecting previously unselected package libxcomposite1:amd64.\r\nPreparing to unpack .../59-libxcomposite1_1%3a0.4.5-1build3_amd64.deb ...\r\nUnpacking libxcomposite1:amd64 (1:0.4.5-1build3) ...\r\nSelecting previously unselected package libxdamage1:amd64.\r\nPreparing to unpack .../60-libxdamage1_1%3a1.1.6-1build1_amd64.deb ...\r\nUnpacking libxdamage1:amd64 (1:1.1.6-1build1) ...\r\nSelecting previously unselected package libxfixes3:amd64.\r\nPreparing to unpack .../61-libxfixes3_1%3a6.0.0-2build1_amd64.deb ...\r\nUnpacking libxfixes3:amd64 (1:6.0.0-2build1) ...\r\nSelecting previously unselected package libxfont2:amd64.\r\nPreparing to unpack .../62-libxfont2_1%3a2.0.6-1+deb13u1build0.24.04.2_amd64.deb ...\r\nUnpacking libxfont2:amd64 (1:2.0.6-1+deb13u1build0.24.04.2) ...\r\nSelecting previously unselected package libxkbfile1:amd64.\r\nPreparing to unpack .../63-libxkbfile1_1%3a1.1.0-1build4_amd64.deb ...\r\nUnpacking libxkbfile1:amd64 (1:1.1.0-1build4) ...\r\nSelecting previously unselected package libxrandr2:amd64.\r\nPreparing to unpack .../64-libxrandr2_2%3a1.5.2-2build1_amd64.deb ...\r\nUnpacking libxrandr2:amd64 (2:1.5.2-2build1) ...\r\nSelecting previously unselected package x11-xkb-utils.\r\nPreparing to unpack .../65-x11-xkb-utils_7.7+8build2_amd64.deb ...\r\nUnpacking x11-xkb-utils (7.7+8build2) ...\r\nSelecting previously unselected package xfonts-encodings.\r\nPreparing to unpack .../66-xfonts-encodings_1%3a1.0.5-0ubuntu2_all.deb ...\r\nUnpacking xfonts-encodings (1:1.0.5-0ubuntu2) ...\r\nSelecting previously unselected package xfonts-utils.\r\nPreparing to unpack .../67-xfonts-utils_1%3a7.7+6build3_amd64.deb ...\r\nUnpacking xfonts-utils (1:7.7+6build3) ...\r\nSelecting previously unselected package xfonts-cyrillic.\r\nPreparing to unpack .../68-xfonts-cyrillic_1%3a1.0.5+nmu1_all.deb ...\r\nUnpacking xfonts-cyrillic (1:1.0.5+nmu1) ...\r\nSelecting previously unselected package xfonts-scalable.\r\nPreparing to unpack .../69-xfonts-scalable_1%3a1.0.3-1.3_all.deb ...\r\nUnpacking xfonts-scalable (1:1.0.3-1.3) ...\r\nSelecting previously unselected package xserver-common.\r\nPreparing to unpack .../70-xserver-common_2%3a21.1.12-1ubuntu1.9_all.deb ...\r\nUnpacking xserver-common (2:21.1.12-1ubuntu1.9) ...\r\nSelecting previously unselected package libglvnd0:amd64.\r\nPreparing to unpack .../71-libglvnd0_1.7.0-1build1_amd64.deb ...\r\nUnpacking libglvnd0:amd64 (1.7.0-1build1) ...\r\nSelecting previously unselected package libglx0:amd64.\r\nPreparing to unpack .../72-libglx0_1.7.0-1build1_amd64.deb ...\r\nUnpacking libglx0:amd64 (1.7.0-1build1) ...\r\nSelecting previously unselected package libgl1:amd64.\r\nPreparing to unpack .../73-libgl1_1.7.0-1build1_amd64.deb ...\r\nUnpacking libgl1:amd64 (1.7.0-1build1) ...\r\nSelecting previously unselected package xvfb.\r\nPreparing to unpack .../74-xvfb_2%3a21.1.12-1ubuntu1.9_amd64.deb ...\r\nUnpacking xvfb (2:21.1.12-1ubuntu1.9) ...\r\nSetting up libgraphite2-3:amd64 (1.3.14-2ubuntu0.24.04.1) ...\r\nSetting up libxcb-dri3-0:amd64 (1.15-1ubuntu2) ...\r\nSetting up libpixman-1-0:amd64 (0.42.2-1build1) ...\r\nSetting up libx11-xcb1:amd64 (2:1.8.7-1ubuntu0.1) ...\r\nSetting up libpciaccess0:amd64 (0.17-3ubuntu0.24.04.3) ...\r\nSetting up fontconfig (2.15.0-1.1ubuntu2) ...\r\nRegenerating fonts cache... done.\r\nSetting up libxdamage1:amd64 (1:1.1.6-1build1) ...\r\nSetting up libxcb-xfixes0:amd64 (1.15-1ubuntu2) ...\r\nSetting up libxi6:amd64 (2:1.8.1-1build1) ...\r\nSetting up libxrender1:amd64 (1:0.9.10-1.1build1) ...\r\nSetting up libdatrie1:amd64 (0.2.13-3build1) ...\r\nSetting up fonts-noto-color-emoji (2.047-0ubuntu0.24.04.1) ...\r\nSetting up libxcb-render0:amd64 (1.15-1ubuntu2) ...\r\nSetting up libglvnd0:amd64 (1.7.0-1build1) ...\r\nSetting up libxcb-glx0:amd64 (1.15-1ubuntu2) ...\r\nSetting up libdrm-intel1:amd64 (2.4.125-1ubuntu0.1~24.04.2) ...\r\nSetting up x11-common (1:7.7+23ubuntu3) ...\r\nSetting up fonts-wqy-zenhei (0.9.45-8) ...\r\nSetting up fonts-freefont-ttf (20211204+svn4273-2) ...\r\nSetting up libnss3:amd64 (2:3.98-1ubuntu0.3) ...\r\nSetting up libxcb-shm0:amd64 (1.15-1ubuntu2) ...\r\nSetting up libcairo2:amd64 (1.18.0-3build1) ...\r\nSetting up libxxf86vm1:amd64 (1:1.1.4-1build4) ...\r\nSetting up libxcb-present0:amd64 (1.15-1ubuntu2) ...\r\nSetting up libasound2-data (1.2.11-1ubuntu0.3) ...\r\nSetting up libfontenc1:amd64 (1:1.1.8-1build1) ...\r\nSetting up libglib2.0-0t64:amd64 (2.80.0-6ubuntu3.10) ...\r\nNo schema files found: doing nothing.\r\nSetting up libglib2.0-data (2.80.0-6ubuntu3.10) ...\r\nSetting up libasound2t64:amd64 (1.2.11-1ubuntu0.3) ...\r\nSetting up fonts-tlwg-loma-otf (1:0.7.3-1) ...\r\nSetting up libxfixes3:amd64 (1:6.0.0-2build1) ...\r\nSetting up libxcb-sync1:amd64 (1.15-1ubuntu2) ...\r\nSetting up libavahi-common-data:amd64 (0.8-13ubuntu6.2) ...\r\nSetting up libatspi2.0-0t64:amd64 (2.52.0-1build1) ...\r\nSetting up xfonts-encodings (1:1.0.5-0ubuntu2) ...\r\nSetting up libxrandr2:amd64 (2:1.5.2-2build1) ...\r\nSetting up libllvm20:amd64 (1:20.1.2-0ubuntu1~24.04.3) ...\r\nSetting up gir1.2-glib-2.0:amd64 (2.80.0-6ubuntu3.10) ...\r\nSetting up libvulkan1:amd64 (1.3.275.0-1build1) ...\r\nSetting up fonts-ipafont-gothic (00303-21ubuntu1) ...\r\nupdate-alternatives: using /usr/share/fonts/opentype/ipafont-gothic/ipag.ttf to provide /usr/share/fonts/truetype/fonts-japanese-gothic.ttf (fonts-japanese-gothic.ttf) in auto mode\r\nSetting up libxshmfence1:amd64 (1.3-1build5) ...\r\nSetting up at-spi2-common (2.52.0-1build1) ...\r\nSetting up libxcb-randr0:amd64 (1.15-1ubuntu2) ...\r\nSetting up fonts-liberation (1:2.1.5-3) ...\r\nSetting up libharfbuzz0b:amd64 (8.3.0-2build2) ...\r\nSetting up libthai-data (0.1.29-2build1) ...\r\nSetting up libxkbfile1:amd64 (1:1.1.0-1build4) ...\r\nSetting up libxcomposite1:amd64 (1:0.4.5-1build3) ...\r\nSetting up libxfont2:amd64 (1:2.0.6-1+deb13u1build0.24.04.2) ...\r\nSetting up fonts-unifont (1:15.1.01-1build1) ...\r\nSetting up libice6:amd64 (2:1.0.10-1build3) ...\r\nSetting up mesa-libgallium:amd64 (25.2.8-0ubuntu0.24.04.5) ...\r\nSetting up libatk1.0-0t64:amd64 (2.52.0-1build1) ...\r\nSetting up libgbm1:amd64 (25.2.8-0ubuntu0.24.04.5) ...\r\nSetting up libgl1-mesa-dri:amd64 (25.2.8-0ubuntu0.24.04.5) ...\r\nSetting up libavahi-common3:amd64 (0.8-13ubuntu6.2) ...\r\nSetting up libglib2.0-bin (2.80.0-6ubuntu3.10) ...\r\nSetting up xfonts-utils (1:7.7+6build3) ...\r\nSetting up libthai0:amd64 (0.1.29-2build1) ...\r\nSetting up xfonts-cyrillic (1:1.0.5+nmu1) ...\r\nSetting up libsm6:amd64 (2:1.2.3-1build3) ...\r\nSetting up libavahi-client3:amd64 (0.8-13ubuntu6.2) ...\r\nSetting up xfonts-scalable (1:1.0.3-1.3) ...\r\nSetting up libatk-bridge2.0-0t64:amd64 (2.52.0-1build1) ...\r\nSetting up libglx-mesa0:amd64 (25.2.8-0ubuntu0.24.04.5) ...\r\nSetting up libglx0:amd64 (1.7.0-1build1) ...\r\nSetting up libpango-1.0-0:amd64 (1.52.1+ds-1build1) ...\r\nSetting up libgl1:amd64 (1.7.0-1build1) ...\r\nSetting up libxt6t64:amd64 (1:1.2.1-1.2build1) ...\r\nSetting up libcups2t64:amd64 (2.4.7-1.2ubuntu7.14) ...\r\nSetting up libxmu6:amd64 (2:1.1.3-3build2) ...\r\nSetting up libxaw7:amd64 (2:1.0.14-1build2) ...\r\nSetting up x11-xkb-utils (7.7+8build2) ...\r\nSetting up xserver-common (2:21.1.12-1ubuntu1.9) ...\r\nSetting up xvfb (2:21.1.12-1ubuntu1.9) ...\r\nProcessing triggers for man-db (2.12.0-4build2) ...\r\nProcessing triggers for libc-bin (2.39-0ubuntu8.9) ...\r\n\nRunning kernel seems to be up-to-date.\n\nRestarting services...\n systemctl restart packagekit.service polkit.service udisks2.service\n\nService restarts being deferred:\n systemctl restart ModemManager.service\n systemctl restart cloud-final.service\n systemctl restart unattended-upgrades.service\n\nNo containers need to be restarted.\n\nNo user sessions are running outdated binaries.\n\nNo VM guests are running outdated hypervisor (qemu) binaries on this host.\n"
+    },
+    {
+      "label": "browser-download",
+      "exitCode": 0,
+      "failure": null,
+      "seconds": 39.67,
+      "outputTail": "Downloading Chrome for Testing 159.0.8154.6 (playwright chromium v1255) from https://cdn.playwright.dev/builds/cft/159.0.8154.6/linux64/chrome-linux64.zip\n|                                                                                |   0% of 199.3 MiB\n|\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0                                                                        |  10% of 199.3 MiB\n|\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0                                                                |  20% of 199.3 MiB\n|\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0                                                        |  30% of 199.3 MiB\n|\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0                                                |  40% of 199.3 MiB\n|\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0                                        |  50% of 199.3 MiB\n|\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0                                |  60% of 199.3 MiB\n|\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0                        |  70% of 199.3 MiB\n|\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0                |  80% of 199.3 MiB\n|\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0        |  90% of 199.3 MiB\n|\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0| 100% of 199.3 MiB\nChrome for Testing 159.0.8154.6 (playwright chromium v1255) downloaded to /home/abvalidation/.cache/ms-playwright/chromium-1255\nDownloading FFmpeg (playwright ffmpeg v1013) from https://cdn.playwright.dev/dbazure/download/playwright/builds/ffmpeg/1013/ffmpeg-linux.zip\n|                                                                                |   0% of 2.2 MiB\n|\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0                                                                        |  10% of 2.2 MiB\n|\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0                                                                |  20% of 2.2 MiB\n|\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0                                                        |  30% of 2.2 MiB\n|\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0                                                |  40% of 2.2 MiB\n|\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0                                        |  50% of 2.2 MiB\n|\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0                                |  60% of 2.2 MiB\n|\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0                        |  70% of 2.2 MiB\n|\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0                |  80% of 2.2 MiB\n|\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0        |  90% of 2.2 MiB\n|\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0| 100% of 2.2 MiB\nFFmpeg (playwright ffmpeg v1013) downloaded to /home/abvalidation/.cache/ms-playwright/ffmpeg-1013\nDownloading Chrome Headless Shell 159.0.8154.6 (playwright chromium-headless-shell v1255) from https://cdn.playwright.dev/builds/cft/159.0.8154.6/linux64/chrome-headless-shell-linux64.zip\n|                                                                                |   0% of 125.7 MiB\n|\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0                                                                        |  10% of 125.7 MiB\n|\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0                                                                |  20% of 125.7 MiB\n|\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0                                                        |  30% of 125.7 MiB\n|\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0                                                |  40% of 125.7 MiB\n|\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0                                        |  50% of 125.7 MiB\n|\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0                                |  60% of 125.7 MiB\n|\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0                        |  70% of 125.7 MiB\n|\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0                |  80% of 125.7 MiB\n|\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0        |  90% of 125.7 MiB\n|\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0\u25a0| 100% of 125.7 MiB\nChrome Headless Shell 159.0.8154.6 (playwright chromium-headless-shell v1255) downloaded to /home/abvalidation/.cache/ms-playwright/chromium_headless_shell-1255\n"
+    },
+    {
+      "label": "native",
+      "exitCode": 0,
+      "failure": null,
+      "seconds": 500.52,
+      "outputTail": "rego: PASS (exit 0)\nnode-tests: PASS (exit 0)\ntypecheck: PASS (exit 0)\nbuild: PASS (exit 0)\ndashboard-build: PASS (exit 0)\nbrowser: PASS (exit 0)\nupstream-proof: PASS (exit 0)\ndocker-preflight: PASS (exit 0)\nEvidence: docs/evidence/7908f64e-f1e8-47e4-9f53-8830867ee1cb\nPASS_SCOPED; Container evidence is reported separately.\n"
+    },
+    {
+      "label": "isolation",
+      "exitCode": 1,
+      "failure": null,
+      "seconds": 5.31,
+      "outputTail": "Building and starting the isolated AgentBrake fixture project\u2026\n{\"label\":\"compose-up\",\"codes\":[],\"locations\":[],\"categories\":[],\"protectedFiles\":[],\"failedTests\":0}\n{\"label\":\"container-logs\",\"codes\":[],\"locations\":[],\"categories\":[],\"protectedFiles\":[],\"failedTests\":0}\ncompose-up failed (exit 1); see log\nIsolation FAIL: docs/evidence/7626f7b9-4a36-48a1-8706-1f945e2a9b77\n"
+    },
+    {
+      "label": "product",
+      "exitCode": 1,
+      "failure": null,
+      "seconds": 13.84,
+      "outputTail": "Local Docker command failed (1)\nFAIL: docs/evidence/8941e9dc-a1a2-47c7-9c21-f35a43c8af75\n"
+    },
+    {
+      "label": "service",
+      "exitCode": 1,
+      "failure": null,
+      "seconds": 2.32,
+      "outputTail": "time=\"2026-11-17T20:01:50Z\" level=warning msg=\"Docker Compose is configured to build using Bake, but buildx isn't installed\"\n#0 building with \"default\" instance using docker driver\n\n#1 [control-db internal] load build definition from Postgres.Dockerfile\n#1 transferring dockerfile: 316B done\n#1 WARN: InvalidDefaultArgInFrom: Default value for ARG ${POSTGRES_BASE_IMAGE} results in empty or invalid base image name (line 2)\n#1 DONE 0.0s\n\n#2 [opa internal] load build definition from Opa.Dockerfile\n#2 transferring dockerfile: 918B done\n#2 DONE 0.0s\n\n#3 [control-db internal] load metadata for docker.io/library/postgres@sha256:b6972e1115a4ff8eba5d7f7d19184926d1e16d7d1136ae1e1a7ebf286da0f015\n#3 DONE 0.1s\n\n#4 [opa internal] load metadata for docker.io/library/golang@sha256:70bd7ddea8b6cbe5d6943cde279d6b67feb10cc924fb9100d1d8757c1575b280\n#4 ...\n\n#5 [control-db internal] load .dockerignore\n#5 transferring context: 289B done\n#5 DONE 0.0s\n\n#6 [control-db 1/2] FROM docker.io/library/postgres@sha256:b6972e1115a4ff8eba5d7f7d19184926d1e16d7d1136ae1e1a7ebf286da0f015\n#6 resolve docker.io/library/postgres@sha256:b6972e1115a4ff8eba5d7f7d19184926d1e16d7d1136ae1e1a7ebf286da0f015 0.0s done\n#6 sha256:a8a2131d1a0200e4043297f891ac2c853818d67d11de5ab1abf8ea3980cc6c93 0B / 185B 0.2s\n#6 sha256:a0b9759db243617fd09b261638ffd70ec108f56ba73759f36e97d5a464046be3 0B / 129B 0.2s\n#6 sha256:34ee25c9c2878b09bb5f16c542983c0ffc627be14308e1932d86059fb4dd5a92 0B / 19.01kB 0.2s\n#6 sha256:03e7aa2637ca194688cff3fb4b809a40941d478bcd2a47588728dbcb70c2760a 0B / 115.46MB 0.2s\n#6 DONE 0.4s\n\n#7 [control-db 2/2] RUN rm -f /usr/local/bin/gosu\n#7 ERROR: failed to copy: httpReadSeeker: failed open: failed to do request: Get \"https://production.cloudfront.docker.com/registry-v2/docker/registry/v2/blobs/sha256/a8/a8a2131d1a0200e4043297f891ac2c853818d67d11de5ab1abf8ea3980cc6c93/data?[PUBLIC_DOWNLOAD_QUERY_REDACTED]\": unexpected EOF\n\n#4 [opa internal] load metadata for docker.io/library/golang@sha256:70bd7ddea8b6cbe5d6943cde279d6b67feb10cc924fb9100d1d8757c1575b280\n#4 CANCELED\n------\n > [control-db 2/2] RUN rm -f /usr/local/bin/gosu:\n------\nfailed to solve: failed to compute cache key: failed to copy: httpReadSeeker: failed open: failed to do request: Get \"https://production.cloudfront.docker.com/registry-v2/docker/registry/v2/blobs/sha256/a8/a8a2131d1a0200e4043297f891ac2c853818d67d11de5ab1abf8ea3980cc6c93/data?[PUBLIC_DOWNLOAD_QUERY_REDACTED]\": unexpected EOF\nLocal Docker command failed (1)\nFAIL: docs/evidence/6b04f9f0-0994-455b-bc9a-d32fb89c7727\n"
+    },
+    {
+      "label": "candidate",
+      "exitCode": 1,
+      "failure": null,
+      "seconds": 3.31,
+      "outputTail": "PASS compose-boundaries\ntime=\"2026-11-17T20:01:53Z\" level=warning msg=\"Docker Compose is configured to build using Bake, but buildx isn't installed\"\n#0 building with \"default\" instance using docker driver\n\n#1 [opa internal] load build definition from Opa.Dockerfile\n#1 transferring dockerfile: 918B done\n#1 DONE 0.0s\n\n#2 [control-db internal] load build definition from Postgres.Dockerfile\n#2 transferring dockerfile: 316B done\n#2 WARN: InvalidDefaultArgInFrom: Default value for ARG ${POSTGRES_BASE_IMAGE} results in empty or invalid base image name (line 2)\n#2 DONE 0.0s\n\n#3 [control-db internal] load metadata for docker.io/library/postgres@sha256:b6972e1115a4ff8eba5d7f7d19184926d1e16d7d1136ae1e1a7ebf286da0f015\n#3 DONE 0.1s\n\n#4 [opa internal] load metadata for docker.io/library/golang@sha256:70bd7ddea8b6cbe5d6943cde279d6b67feb10cc924fb9100d1d8757c1575b280\n#4 ...\n\n#5 [control-db internal] load .dockerignore\n#5 transferring context: 289B done\n#5 DONE 0.0s\n\n#6 [control-db 1/2] FROM docker.io/library/postgres@sha256:b6972e1115a4ff8eba5d7f7d19184926d1e16d7d1136ae1e1a7ebf286da0f015\n#6 resolve docker.io/library/postgres@sha256:b6972e1115a4ff8eba5d7f7d19184926d1e16d7d1136ae1e1a7ebf286da0f015 0.0s done\n#6 sha256:a8a2131d1a0200e4043297f891ac2c853818d67d11de5ab1abf8ea3980cc6c93 0B / 185B 0.2s\n#6 sha256:a0b9759db243617fd09b261638ffd70ec108f56ba73759f36e97d5a464046be3 0B / 129B 0.2s\n#6 sha256:34ee25c9c2878b09bb5f16c542983c0ffc627be14308e1932d86059fb4dd5a92 0B / 19.01kB 0.2s\n#6 sha256:03e7aa2637ca194688cff3fb4b809a40941d478bcd2a47588728dbcb70c2760a 0B / 115.46MB 0.2s\n#6 ...\n\n#7 [control-db 2/2] RUN rm -f /usr/local/bin/gosu\n#7 ERROR: failed to copy: httpReadSeeker: failed open: failed to do request: Get \"https://production.cloudfront.docker.com/registry-v2/docker/registry/v2/blobs/sha256/a8/a8a2131d1a0200e4043297f891ac2c853818d67d11de5ab1abf8ea3980cc6c93/data?[PUBLIC_DOWNLOAD_QUERY_REDACTED]\": unexpected EOF\n\n#4 [opa internal] load metadata for docker.io/library/golang@sha256:70bd7ddea8b6cbe5d6943cde279d6b67feb10cc924fb9100d1d8757c1575b280\n#4 CANCELED\n------\n > [control-db 2/2] RUN rm -f /usr/local/bin/gosu:\n------\nfailed to solve: failed to compute cache key: failed to copy: httpReadSeeker: failed open: failed to do request: Get \"https://production.cloudfront.docker.com/registry-v2/docker/registry/v2/blobs/sha256/a8/a8a2131d1a0200e4043297f891ac2c853818d67d11de5ab1abf8ea3980cc6c93/data?[PUBLIC_DOWNLOAD_QUERY_REDACTED]\": unexpected EOF\nLocal Docker command failed (1)\n{\"runId\":\"dd79c148-9aef-4f3c-88e2-e65d9a27b7d5\",\"result\":\"FAIL\",\"directory\":\"docs/evidence/dd79c148-9aef-4f3c-88e2-e65d9a27b7d5\"}\n"
+    },
+    {
+      "label": "enterprise",
+      "exitCode": 1,
+      "failure": null,
+      "seconds": 3.88,
+      "outputTail": "(node:6821) ExperimentalWarning: SQLite is an experimental feature and might change at any time\n(Use `node --trace-warnings ...` to show where the warning was created)\nSTAGE build disposable images\nFAIL build: Local Docker command failed (1)\n{\"runId\":\"0416214f-a2ef-490a-93f6-c7c58011037d\",\"result\":\"FAIL\",\"directory\":\"/opt/agentbrake/docs/evidence/0416214f-a2ef-490a-93f6-c7c58011037d\"}\n"
+    },
+    {
+      "label": "security",
+      "exitCode": 1,
+      "failure": null,
+      "seconds": 4.36,
+      "outputTail": "scanner-version failed (125)\nFAIL: /opt/agentbrake/docs/evidence/3482077f-f134-49d9-8ff5-c49c2921fbb1\n"
+    },
+    {
+      "label": "source-at-end",
+      "exitCode": 0,
+      "failure": null,
+      "seconds": 0.25,
+      "outputTail": "c043156a9a2f69b6d3ddfc0eb6eec315faba38250f8eb38ae2a02f7087f7c999\n"
+    }
+  ],
+  "reports": {
+    "isolation": {
+      "runId": "7626f7b9-4a36-48a1-8706-1f945e2a9b77",
+      "startedAt": "2026-11-17T20:01:30.233Z",
+      "project": "agentbrake-a-7626f7b9",
+      "sourceHash": "c043156a9a2f69b6d3ddfc0eb6eec315faba38250f8eb38ae2a02f7087f7c999",
+      "gitCommit": null,
+      "result": "FAIL",
+      "cases": [],
+      "commands": [
+        {
+          "label": "docker-preflight",
+          "command": [
+            "docker",
+            "--config",
+            "/opt/agentbrake/.agentbrake-local/docker-public",
+            "version",
+            "--format",
+            "{{json .Server}}"
+          ],
+          "startedAt": "2026-11-17T20:01:30.233Z",
+          "exitCode": 0,
+          "timedOut": false,
+          "log": "docker-preflight.log"
+        },
+        {
+          "label": "compose-config",
+          "command": [
+            "docker",
+            "--config",
+            "/opt/agentbrake/.agentbrake-local/docker-public",
+            "compose",
+            "--project-name",
+            "agentbrake-a-7626f7b9",
+            "-f",
+            "infra/local/compose.yaml",
+            "config",
+            "--quiet"
+          ],
+          "startedAt": "2026-11-17T20:01:30.277Z",
+          "exitCode": 0,
+          "timedOut": false,
+          "log": "compose-config.log"
+        },
+        {
+          "label": "compose-up",
+          "command": [
+            "docker",
+            "--config",
+            "/opt/agentbrake/.agentbrake-local/docker-public",
+            "compose",
+            "--project-name",
+            "agentbrake-a-7626f7b9",
+            "-f",
+            "infra/local/compose.yaml",
+            "up",
+            "-d",
+            "--build",
+            "--wait",
+            "--wait-timeout",
+            "120"
+          ],
+          "startedAt": "2026-11-17T20:01:30.416Z",
+          "exitCode": 1,
+          "timedOut": false,
+          "log": "compose-up.log"
+        },
+        {
+          "label": "container-logs",
+          "command": [
+            "docker",
+            "--config",
+            "/opt/agentbrake/.agentbrake-local/docker-public",
+            "compose",
+            "--project-name",
+            "agentbrake-a-7626f7b9",
+            "-f",
+            "infra/local/compose.yaml",
+            "--profile",
+            "*",
+            "logs",
+            "--no-color",
+            "--tail",
+            "100"
+          ],
+          "startedAt": "2026-11-17T20:01:34.928Z",
+          "exitCode": 0,
+          "timedOut": false,
+          "log": "container-logs.log"
+        },
+        {
+          "label": "compose-down",
+          "command": [
+            "docker",
+            "--config",
+            "/opt/agentbrake/.agentbrake-local/docker-public",
+            "compose",
+            "--project-name",
+            "agentbrake-a-7626f7b9",
+            "-f",
+            "infra/local/compose.yaml",
+            "--profile",
+            "*",
+            "down",
+            "--volumes",
+            "--remove-orphans"
+          ],
+          "startedAt": "2026-11-17T20:01:35.150Z",
+          "exitCode": 0,
+          "timedOut": false,
+          "log": "compose-down.log"
+        },
+        {
+          "label": "cleanup-check-containers",
+          "command": [
+            "docker",
+            "--config",
+            "/opt/agentbrake/.agentbrake-local/docker-public",
+            "ps",
+            "-aq",
+            "--filter",
+            "label=com.docker.compose.project=agentbrake-a-7626f7b9"
+          ],
+          "startedAt": "2026-11-17T20:01:35.302Z",
+          "exitCode": 0,
+          "timedOut": false,
+          "log": "cleanup-check-containers.log"
+        },
+        {
+          "label": "cleanup-check-networks",
+          "command": [
+            "docker",
+            "--config",
+            "/opt/agentbrake/.agentbrake-local/docker-public",
+            "network",
+            "ls",
+            "-q",
+            "--filter",
+            "label=com.docker.compose.project=agentbrake-a-7626f7b9"
+          ],
+          "startedAt": "2026-11-17T20:01:35.326Z",
+          "exitCode": 0,
+          "timedOut": false,
+          "log": "cleanup-check-networks.log"
+        },
+        {
+          "label": "cleanup-check-volumes",
+          "command": [
+            "docker",
+            "--config",
+            "/opt/agentbrake/.agentbrake-local/docker-public",
+            "volume",
+            "ls",
+            "-q",
+            "--filter",
+            "label=com.docker.compose.project=agentbrake-a-7626f7b9"
+          ],
+          "startedAt": "2026-11-17T20:01:35.351Z",
+          "exitCode": 0,
+          "timedOut": false,
+          "log": "cleanup-check-volumes.log"
+        }
+      ],
+      "limitations": [
+        "Synthetic local targets only. No host-admin or kernel-escape guarantee. Stage 2 target/control PostgreSQL and Git mock; no real GitHub or host-agent interception."
+      ],
+      "engine": {
+        "Platform": {
+          "Name": ""
+        },
+        "Version": "29.1.3",
+        "ApiVersion": "1.52",
+        "MinAPIVersion": "1.44",
+        "Os": "linux",
+        "Arch": "amd64",
+        "Components": [
+          {
+            "Name": "Engine",
+            "Version": "29.1.3",
+            "Details": {
+              "ApiVersion": "1.52",
+              "Arch": "amd64",
+              "BuildTime": "Wed Apr 29 16:41:06 2026",
+              "Experimental": "false",
+              "GitCommit": "29.1.3-0ubuntu3~24.04.2",
+              "GoVersion": "go1.24.4",
+              "KernelVersion": "6.8.0-147-generic",
+              "MinAPIVersion": "1.44",
+              "Os": "linux"
+            }
+          },
+          {
+            "Name": "containerd",
+            "Version": "2.2.1",
+            "Details": {
+              "GitCommit": ""
+            }
+          },
+          {
+            "Name": "runc",
+            "Version": "1.3.4-0ubuntu1~24.04.1",
+            "Details": {
+              "GitCommit": ""
+            }
+          },
+          {
+            "Name": "docker-init",
+            "Version": "0.19.0",
+            "Details": {
+              "GitCommit": ""
+            }
+          }
+        ],
+        "GitCommit": "29.1.3-0ubuntu3~24.04.2",
+        "GoVersion": "go1.24.4",
+        "KernelVersion": "6.8.0-147-generic",
+        "BuildTime": "2026-04-29T16:41:06.000000000+00:00"
+      },
+      "images": {
+        "resolvedAt": "2026-11-16T10:17:10.426Z",
+        "images": {
+          "node": {
+            "tag": "library/node:22-bookworm-slim",
+            "image": "library/node@sha256:e9f565d32859f0cbfb52125eafe8be39390f24dac302dc3cdf566e8ba3ab21ee"
+          },
+          "postgres": {
+            "tag": "library/postgres:18-alpine",
+            "image": "library/postgres@sha256:b6972e1115a4ff8eba5d7f7d19184926d1e16d7d1136ae1e1a7ebf286da0f015"
+          },
+          "opa": {
+            "tag": "openpolicyagent/opa:1.22.4-static",
+            "image": "openpolicyagent/opa@sha256:12cecac5a174368f7d3f09d3a19d040ebe0c91d576e520335ae7a985a26e39d3"
+          }
+        }
+      },
+      "policyHash": "9ac719fef979ee7b37c5c5ef3173621453782a0a02d432727391beeff1234d14",
+      "fixtureAccess": {
+        "group": "1100",
+        "scope": "Private host directory; owner and explicitly added runtime group only; agent mounts remain read-only"
+      },
+      "error": "compose-up failed (exit 1); see log",
+      "cleanup": {
+        "result": "PASS",
+        "remaining": {
+          "containers": 0,
+          "networks": 0,
+          "volumes": 0
+        }
+      },
+      "credentialScan": {
+        "result": "PASS",
+        "files": 11,
+        "knownSyntheticSecrets": 9,
+        "contaminated": [],
+        "scope": "Exact known fixture credentials; operator separately scans issued credentials. Not a universal DLP scan."
+      },
+      "finishedAt": "2026-11-17T20:01:35.381Z"
+    },
+    "product": {
+      "runId": "8941e9dc-a1a2-47c7-9c21-f35a43c8af75",
+      "sourceHash": "c043156a9a2f69b6d3ddfc0eb6eec315faba38250f8eb38ae2a02f7087f7c999",
+      "startedAt": "2026-11-17T20:01:35.638Z",
+      "installation": {
+        "name": "verify-8941e9dc",
+        "id": "987ee32d-ef39-47b4-85c4-33e92109b3cc",
+        "port": 4326
+      },
+      "result": "FAIL",
+      "cases": [],
+      "scope": "Local persistent product install; synthetic PostgreSQL/Git, isolated test client. No real GitHub or hosted model. Native process-loss tests are separate evidence.",
+      "error": "Local Docker command failed (1)",
+      "cleanup": {
+        "result": "PASS",
+        "containers": 0,
+        "volumes": 0,
+        "networks": 0
+      },
+      "finishedAt": "2026-11-17T20:01:49.223Z"
+    },
+    "service": {
+      "runId": "6b04f9f0-0994-455b-bc9a-d32fb89c7727",
+      "sourceHash": "c043156a9a2f69b6d3ddfc0eb6eec315faba38250f8eb38ae2a02f7087f7c999",
+      "startedAt": "2026-11-17T20:01:50.186Z",
+      "result": "FAIL",
+      "cases": [],
+      "scope": "Local synthetic service maintenance; encrypted cold snapshot, new-installation restore and authority suspension.",
+      "error": "Local Docker command failed (1)",
+      "cleanup": [
+        {
+          "project": "agentbrake-product-verify-service-6b04f9f0",
+          "result": "PASS",
+          "containers": 0,
+          "volumes": 0,
+          "networks": 0
+        }
+      ],
+      "finishedAt": "2026-11-17T20:01:51.550Z"
+    },
+    "candidate": {
+      "runId": "dd79c148-9aef-4f3c-88e2-e65d9a27b7d5",
+      "sourceHash": "c043156a9a2f69b6d3ddfc0eb6eec315faba38250f8eb38ae2a02f7087f7c999",
+      "startedAt": "2026-11-17T20:01:52.686Z",
+      "result": "FAIL",
+      "cases": [
+        {
+          "name": "compose-boundaries",
+          "result": "PASS",
+          "observed": "Agent has one internal network; GitHub test egress internal; only loopback HTTPS port published."
+        }
+      ],
+      "scope": "Local disposable Docker install with actual TLS/Next/control/Gateway and synthetic App key. GitHub outbound network internal; no real GitHub call or production certificate validation.",
+      "error": "Local Docker command failed (1)",
+      "cleanup": {
+        "result": "PASS",
+        "containers": 0,
+        "volumes": 0,
+        "networks": 0
+      },
+      "finishedAt": "2026-11-17T20:01:54.868Z"
+    },
+    "security": {
+      "runId": "3482077f-f134-49d9-8ff5-c49c2921fbb1",
+      "sourceHash": "c043156a9a2f69b6d3ddfc0eb6eec315faba38250f8eb38ae2a02f7087f7c999",
+      "startedAt": "2026-11-17T20:01:58.943Z",
+      "result": "FAIL",
+      "checks": [
+        {
+          "label": "scanner-version",
+          "exitCode": 125
+        }
+      ],
+      "limits": "Semgrep OSS with eight local rules, npm advisories and dependency SBOM. Not exhaustive interprocedural analysis, OS image CVE coverage, penetration testing or external human review.",
+      "error": "scanner-version failed (125)",
+      "finishedAt": "2026-11-17T20:02:03.133Z"
+    },
+    "enterprise": {
+      "runId": "0416214f-a2ef-490a-93f6-c7c58011037d",
+      "sourceHash": "c043156a9a2f69b6d3ddfc0eb6eec315faba38250f8eb38ae2a02f7087f7c999",
+      "startedAt": "2026-11-17T20:01:56.321Z",
+      "result": "FAIL",
+      "cases": [],
+      "scope": "Disposable minimal Docker installation; synthetic TLS IdP and audit sink; internal control/agent/enterprise networks with existing dedicated fixed-ingress publication bridge; real customer acceptance excluded.",
+      "failure": {
+        "stage": "build",
+        "message": "Local Docker command failed (1)",
+        "diagnostic": "time=\"2026-11-17T20:01:57Z\" level=warning msg=\"Docker Compose is configured to build using Bake, but buildx isn't installed\"\nfailed to solve: failed to compute cache key: failed to copy: httpReadSeeker: failed open: failed to do request: Get \"https://production.cloudfront.docker.com/registry-v2/docker/registry/v2/blobs/sha256/a8/a8a2131d1a0200e4043297f891ac2c853818d67d11de5ab1abf8ea3980cc6c93/data?[PUBLIC_DOWNLOAD_QUERY_REDACTED]\": unexpected EOF\n"
+      },
+      "cleanup": {
+        "result": "PASS",
+        "containers": 0,
+        "volumes": 0,
+        "networks": 0,
+        "scopedFilesRemoved": true
+      },
+      "finishedAt": "2026-11-17T20:01:58.744Z",
+      "secretScan": {
+        "result": "PASS",
+        "knownValuesChecked": 29,
+        "artifacts": [
+          "enterprise-summary.json",
+          "source-manifest.json",
+          "enterprise-evidence.json.gz"
+        ]
+      }
+    },
+    "native": {
+      "runId": "7908f64e-f1e8-47e4-9f53-8830867ee1cb",
+      "startedAt": "2026-11-17T19:53:09.619Z",
+      "finishedAt": "2026-11-17T20:01:30.054Z",
+      "gitCommit": null,
+      "gitReason": "Workspace is not a Git repository; no commit fabricated.",
+      "sourceHash": "c043156a9a2f69b6d3ddfc0eb6eec315faba38250f8eb38ae2a02f7087f7c999",
+      "policyHash": "9ac719fef979ee7b37c5c5ef3173621453782a0a02d432727391beeff1234d14",
+      "environment": {
+        "platform": "linux",
+        "architecture": "x64",
+        "node": "v22.23.5",
+        "opa": "1.22.4",
+        "packageLockHash": "8c1ba11c95b3be0a5ba6a4871bf78055add1dd2eeb16721632c84d75786aaa71"
+      },
+      "environmentHash": "852958ceb69813c411d7809d0b243327012438e7837434b746603feac83936bf",
+      "commands": [
+        {
+          "label": "rego",
+          "command": ".tools/opa test services/policy -v",
+          "startedAt": "2026-11-17T19:53:10.208Z",
+          "finishedAt": "2026-11-17T19:53:10.273Z",
+          "exitCode": 0,
+          "result": "PASS",
+          "log": "rego.log"
+        },
+        {
+          "label": "node-tests",
+          "command": "../../usr/local/bin/node --import tsx --test --test-concurrency=1 tests/enforcement/accounts.test.ts tests/enforcement/approval-preview.test.ts tests/enforcement/backup-format.test.mjs tests/enforcement/benchmark-metrics.test.ts tests/enforcement/ci-failure-diagnostics.test.mjs tests/enforcement/codex-inference-profile.test.mjs tests/enforcement/compose-build-ownership.test.mjs tests/enforcement/compose-environment.test.mjs tests/enforcement/control-audit.test.ts tests/enforcement/control-experience.test.ts tests/enforcement/core.test.ts tests/enforcement/credential-marker-boundaries.test.ts tests/enforcement/execution-outcome.test.ts tests/enforcement/fixture-file-access.test.mjs tests/enforcement/gateway-bridge.test.ts tests/enforcement/mcp-local-config.test.ts tests/enforcement/mcp-protocol.test.ts tests/enforcement/pilot-measurement.test.mjs tests/enforcement/product-file-access.test.mjs tests/enforcement/product-recovery.test.mjs tests/enforcement/remote-fixture.test.ts tests/enforcement/rest-audit.test.ts tests/enforcement/retention.test.ts tests/enforcement/review-regressions.test.ts tests/enforcement/source-package.test.mjs tests/enforcement/stage2-races.test.ts tests/enforcement/task-grants.test.ts tests/enforcement/team-approvals.test.ts tests/enforcement/telemetry.test.ts tests/enforcement/transport-restart.test.ts tests/enforcement/ui-build.test.mjs tests/enforcement/volume-archive.test.mjs tests/enterprise/application.test.ts tests/enterprise/audit-delivery.test.ts tests/enterprise/auth-ui.test.ts tests/enterprise/config.test.ts tests/enterprise/egress.test.mjs tests/enterprise/full-http.test.ts tests/enterprise/identity-policy.test.ts tests/enterprise/identity.test.ts tests/enterprise/operations.test.mjs tests/enterprise/proxy.test.ts tests/enterprise/restore-authority.test.mjs tests/enterprise/signing.test.mjs tests/failure-cases.test.ts tests/gateway.test.ts tests/mcp.test.ts tests/policy/pdp.test.ts tests/product-ui/proxy.test.ts tests/production/candidate-config.test.mjs tests/production/ci-contract.test.mjs tests/production/github-app.test.ts tests/production/github-control.test.ts tests/production/github-egress.test.mjs tests/production/github-gateway.test.ts tests/production/https-proxy.test.ts tests/production/https.test.mjs tests/production/image-evidence.test.mjs tests/production/readiness.test.mjs tests/stage2/git-fixture.test.ts tests/stage2/postgres-target.test.ts",
+          "startedAt": "2026-11-17T19:53:10.274Z",
+          "finishedAt": "2026-11-17T19:58:04.597Z",
+          "exitCode": 0,
+          "result": "PASS",
+          "log": "node-tests.log"
+        },
+        {
+          "label": "typecheck",
+          "command": "../../usr/local/bin/node node_modules/typescript/bin/tsc --noEmit",
+          "startedAt": "2026-11-17T19:58:04.597Z",
+          "finishedAt": "2026-11-17T19:58:23.106Z",
+          "exitCode": 0,
+          "result": "PASS",
+          "log": "typecheck.log"
+        },
+        {
+          "label": "build",
+          "command": "../../usr/local/bin/node scripts/build-ui.mjs",
+          "startedAt": "2026-11-17T19:58:23.106Z",
+          "finishedAt": "2026-11-17T19:58:23.858Z",
+          "exitCode": 0,
+          "result": "PASS",
+          "log": "build.log"
+        },
+        {
+          "label": "dashboard-build",
+          "command": "../../usr/local/bin/node scripts/build-dashboard.mjs",
+          "startedAt": "2026-11-17T19:58:23.861Z",
+          "finishedAt": "2026-11-17T19:59:34.521Z",
+          "exitCode": 0,
+          "result": "PASS",
+          "log": "dashboard-build.log"
+        },
+        {
+          "label": "browser",
+          "command": "../../usr/local/bin/node tests/product-ui/run.mjs",
+          "startedAt": "2026-11-17T19:59:34.521Z",
+          "finishedAt": "2026-11-17T20:01:28.488Z",
+          "exitCode": 0,
+          "result": "PASS",
+          "log": "browser.log"
+        },
+        {
+          "label": "upstream-proof",
+          "command": "../../usr/local/bin/node --import tsx tests/evidence-scenarios.ts /opt/agentbrake/docs/evidence/7908f64e-f1e8-47e4-9f53-8830867ee1cb/upstream-proof.json",
+          "startedAt": "2026-11-17T20:01:28.488Z",
+          "finishedAt": "2026-11-17T20:01:30.015Z",
+          "exitCode": 0,
+          "result": "PASS",
+          "log": "upstream-proof.log"
+        },
+        {
+          "label": "docker-preflight",
+          "command": "docker --config /opt/agentbrake/.agentbrake-local/docker-public version --format {{json .Server}}",
+          "startedAt": "2026-11-17T20:01:30.015Z",
+          "finishedAt": "2026-11-17T20:01:30.053Z",
+          "exitCode": 0,
+          "result": "PASS",
+          "log": "docker-preflight.log"
+        }
+      ],
+      "scope": "Authenticated native OPA; loopback HTTP/MCP; counted synthetic SQLite/repository fixture adapters. No external GitHub or PostgreSQL calls.",
+      "isolation": {
+        "T20": "NOT RUN",
+        "reason": "Run verify:isolation separately; native tests do not prove container isolation."
+      },
+      "milestoneA": "See separate native+isolation milestone evidence",
+      "result": "PASS_SCOPED"
+    },
+    "local-release.json": {
+      "result": "LOCAL_MVP_VERIFIED_EXTERNAL_GATES_OPEN",
+      "startedAt": "2026-11-17T19:19:54.744Z",
+      "finishedAt": "2026-11-17T19:34:29.851Z",
+      "sourceHash": "c043156a9a2f69b6d3ddfc0eb6eec315faba38250f8eb38ae2a02f7087f7c999",
+      "gitCommit": null,
+      "milestoneC": "PASS_LOCAL",
+      "milestoneD": "LOCAL_ENGINEERING_VERIFIED_EXTERNAL_SIGNOFF_PENDING",
+      "baseline": {
+        "result": "PASS_BOUNDED",
+        "stage": "Milestone B",
+        "startedAt": "2026-11-17T19:19:54.808Z",
+        "finishedAt": "2026-11-17T19:27:51.696Z",
+        "sourceHash": "c043156a9a2f69b6d3ddfc0eb6eec315faba38250f8eb38ae2a02f7087f7c999",
+        "gitCommit": null,
+        "nativeRun": "c637313c-60f7-4ee9-80bd-80bb3d3046c0",
+        "isolationRun": "c0fa4cba-70e7-4cd2-b445-dbbeab2fc2d9",
+        "nativeTests": {
+          "tests": 287,
+          "pass": 281,
+          "fail": 0,
+          "skipped": 6
+        },
+        "postgresTests": {
+          "tests": 22,
+          "pass": 22,
+          "fail": 0,
+          "skipped": 0
+        },
+        "workflowCases": 15,
+        "expandedBenchmark": {
+          "total": 208,
+          "baselineSucceeded": 208,
+          "completed": 208,
+          "falseBlocks": 0,
+          "nonPolicyFailures": 0,
+          "completionVsBaseline": 1,
+          "falseBlockRate": 0,
+          "approvalRequired": 96,
+          "measurementResult": "PASS",
+          "usabilityTarget": "MET_SYNTHETIC_ONLY",
+          "baselineFailures": 0,
+          "byKind": {
+            "read": {
+              "total": 64,
+              "baselineSucceeded": 64,
+              "completed": 64,
+              "falseBlocks": 0,
+              "nonPolicyFailures": 0,
+              "completionVsBaseline": 1,
+              "falseBlockRate": 0,
+              "approvalRequired": 0
+            },
+            "preview": {
+              "total": 80,
+              "baselineSucceeded": 80,
+              "completed": 80,
+              "falseBlocks": 0,
+              "nonPolicyFailures": 0,
+              "completionVsBaseline": 1,
+              "falseBlockRate": 0,
+              "approvalRequired": 0
+            },
+            "pr": {
+              "total": 32,
+              "baselineSucceeded": 32,
+              "completed": 32,
+              "falseBlocks": 0,
+              "nonPolicyFailures": 0,
+              "completionVsBaseline": 1,
+              "falseBlockRate": 0,
+              "approvalRequired": 64
+            },
+            "update": {
+              "total": 32,
+              "baselineSucceeded": 32,
+              "completed": 32,
+              "falseBlocks": 0,
+              "nonPolicyFailures": 0,
+              "completionVsBaseline": 1,
+              "falseBlockRate": 0,
+              "approvalRequired": 32
+            }
+          },
+          "timing": {
+            "directBaselineTask": {
+              "count": 208,
+              "p50Ms": 28.251001000000542,
+              "p95Ms": 101.10509899999943
+            },
+            "gatewayTask": {
+              "count": 208,
+              "p50Ms": 46.242401999999856,
+              "p95Ms": 228.9081010000009
+            },
+            "authorization": {
+              "count": 272,
+              "p50Ms": 4.07,
+              "p95Ms": 5.37
+            },
+            "submitRoundTrip": {
+              "count": 272,
+              "p50Ms": 27.62409999999909,
+              "p95Ms": 38.116800000000694
+            },
+            "automatedApprovalRoundTrip": {
+              "count": 96,
+              "p50Ms": 44.6615010000005,
+              "p95Ms": 84.07490300000063
+            }
+          },
+          "humanApprovalWait": "NOT_MEASURED",
+          "corpusHash": "4977504a717538cc20c1bddf5bb7e08df272c6f7c1912925f87405b7a7bfe30c",
+          "scope": "208 prelabelled synthetic tasks; 8 parameter strata of 26 scenarios, including repeated reads and all 16 credential-shaped placeholders; actual direct adapter baseline versus gateway, sequential on one fixture with distinct branch names and per-step state checks; approvals by automated trusted fixture operator; task latency includes HTTP/target/snapshots, not provisioning or human wait; no general population or model-quality rate. Measurement PASS is not achievement of the separate <2% usability target."
+        },
+        "gitContainerTests": {
+          "tests": 17,
+          "pass": 17,
+          "fail": 0,
+          "skipped": 0
+        },
+        "benchmark": {
+          "total": 26,
+          "baselineSucceeded": 26,
+          "completed": 26,
+          "falseBlocks": 0,
+          "nonPolicyFailures": 0,
+          "completionVsBaseline": 1,
+          "falseBlockRate": 0,
+          "approvalRequired": 12,
+          "authorizationP50Ms": 3.94,
+          "authorizationP95Ms": 9.61,
+          "corpusHash": "6d5c6529807d270e0cb3eb0e0e8c6ce16ca854d8d1d98f5e6dec0bd76ad77289"
+        },
+        "codex": {
+          "version": "codex-cli 0.169.0",
+          "binarySha256": "b452ca20f838a8855a88a41050ee4a694033fff4ea3ecdad5633e6e0e8d13f2b",
+          "model": [
+            {
+              "name": "qwen3:4b-instruct",
+              "model": "qwen3:4b-instruct",
+              "modified_at": "2026-11-16T11:18:30.6952146Z",
+              "size": 2497293803,
+              "digest": "0edcdef34593eac1aa2be9c7d06c432dcf81945adca5eca2f27662c18f168ba0",
+              "details": {
+                "parent_model": "",
+                "format": "gguf",
+                "family": "qwen3",
+                "families": [
+                  "qwen3"
+                ],
+                "parameter_size": "4.0B",
+                "quantization_level": "Q4_K_M",
+                "context_length": 262144,
+                "embedding_length": 2560,
+                "runner": "ggml"
+              },
+              "capabilities": [
+                "tools",
+                "thinking",
+                "completion"
+              ]
+            }
+          ],
+          "inferenceProfile": {
+            "name": "gpu-8k",
+            "context": 8192,
+            "compact": 6500,
+            "gpu": true,
+            "memoryBytes": 6442450944
+          },
+          "actualActions": 2,
+          "replayedReads": 2,
+          "forbiddenReplayRule": "task-scope"
+        },
+        "environmentHash": "a232034a53a1e2f818453a7e0d1294d35d1d57c0e3d7e4ff2bcbef1044695529",
+        "cleanup": {
+          "result": "PASS",
+          "remaining": {
+            "containers": 0,
+            "networks": 0,
+            "volumes": 0
+          }
+        },
+        "credentialScan": {
+          "result": "PASS",
+          "files": 53,
+          "knownSyntheticSecrets": 12,
+          "contaminated": [],
+          "scope": "Exact known fixture credentials; operator separately scans issued credentials. Not a universal DLP scan."
+        },
+        "scope": "Local official Codex CLI with actual Qwen inference, gateway/MCP/OPA, synthetic PostgreSQL/Git mock PR, injection replay and curated test-client benchmark. No hosted OpenAI model or live GitHub; not production or statistical model reliability."
+      },
+      "productRun": "28b9be0d-d412-4a7f-bb96-29553773f67d",
+      "service": {
+        "runId": "f956355d-600a-4b9b-87ea-05a5dbd6da95",
+        "result": "PASS_LOCAL_SERVICE",
+        "cases": [
+          {
+            "name": "managed owner bootstrap and invited reviewer work through installed proxy",
+            "result": "PASS",
+            "observed": {
+              "legacyKeysDenied": true,
+              "reviewerRole": "approver",
+              "reviewerTeamAccessDenied": true
+            }
+          },
+          {
+            "name": "installed browser account, team and settings workflow",
+            "result": "PASS",
+            "observed": {
+              "accountLogin": true,
+              "persistedReviewerVisible": true,
+              "profileVisible": true,
+              "signedOut": true,
+              "browserErrors": 0,
+              "externalRequests": 0,
+              "credentialStorage": {
+                "local": [],
+                "session": []
+              }
+            }
+          },
+          {
+            "name": "encrypted consistent backup resumes original installation",
+            "result": "PASS",
+            "observed": {
+              "bytes": 25970217,
+              "sourceResumed": true
+            }
+          },
+          {
+            "name": "oversized backup fails without publishing and resumes source",
+            "result": "PASS",
+            "observed": {
+              "rejectedOversizedSnapshot": true,
+              "artifactNotPublished": true,
+              "sourceResumed": true,
+              "originalContainersPreserved": true
+            }
+          },
+          {
+            "name": "wrong key and existing destination rejected without damage",
+            "result": "PASS",
+            "observed": {
+              "sourceTargetUnchanged": true,
+              "newDestinationAbsent": true
+            }
+          },
+          {
+            "name": "foreign exact-name volumes refused without content or metadata changes",
+            "result": "PASS",
+            "observed": {
+              "cases": [
+                {
+                  "suffix": "control-data",
+                  "labels": "no Compose label",
+                  "before": {
+                    "uid": 0,
+                    "gid": 0,
+                    "mode": 489,
+                    "sentinel": "synthetic collision sentinel"
+                  },
+                  "after": {
+                    "uid": 0,
+                    "gid": 0,
+                    "mode": 489,
+                    "sentinel": "synthetic collision sentinel"
+                  },
+                  "destinationAbsent": true
+                },
+                {
+                  "suffix": "target-data",
+                  "labels": "foreign Compose label",
+                  "before": {
+                    "uid": 0,
+                    "gid": 0,
+                    "mode": 489,
+                    "sentinel": "synthetic collision sentinel"
+                  },
+                  "after": {
+                    "uid": 0,
+                    "gid": 0,
+                    "mode": 489,
+                    "sentinel": "synthetic collision sentinel"
+                  },
+                  "destinationAbsent": true
+                },
+                {
+                  "suffix": "git-data",
+                  "labels": "foreign Compose label",
+                  "before": {
+                    "uid": 0,
+                    "gid": 0,
+                    "mode": 489,
+                    "sentinel": "synthetic collision sentinel"
+                  },
+                  "after": {
+                    "uid": 0,
+                    "gid": 0,
+                    "mode": 489,
+                    "sentinel": "synthetic collision sentinel"
+                  },
+                  "destinationAbsent": true
+                }
+              ]
+            }
+          },
+          {
+            "name": "full restore preserves target and audit but suspends old authority",
+            "result": "PASS",
+            "observed": {
+              "agentId": "372deda5-b62f-46fe-9db4-e9bd5436ccc4",
+              "oldTokenDenied": true,
+              "pendingBlocked": true,
+              "auditPrefixPreserved": true,
+              "paused": true,
+              "accountsPreserved": true,
+              "invitationAndRecoveryTokensInvalidated": true
+            }
+          }
+        ],
+        "cleanup": [
+          {
+            "project": "agentbrake-product-verify-restore-f956355d",
+            "result": "PASS",
+            "containers": 0,
+            "volumes": 0,
+            "networks": 0
+          },
+          {
+            "project": "agentbrake-product-verify-service-f956355d",
+            "result": "PASS",
+            "containers": 0,
+            "volumes": 0,
+            "networks": 0
+          }
+        ]
+      },
+      "securityRun": "7475b1f1-4dc8-4f6e-8e8e-3df5d9832a25",
+      "candidateRun": "f1eaf5c3-a4fb-45fd-976c-2d2b3d0a4dbe",
+      "productCases": [
+        {
+          "name": "separate process topology, internal networks, credentials and loopback publication",
+          "result": "PASS",
+          "observed": {
+            "services": [
+              "agent",
+              "control-api",
+              "control-db",
+              "dashboard",
+              "gateway",
+              "ingress",
+              "mock-target",
+              "opa",
+              "target-db"
+            ],
+            "internalNetworks": 4,
+            "loopbackIngressNetworks": 1,
+            "deniedNetworkProbes": 14,
+            "agentSecrets": 0
+          }
+        },
+        {
+          "name": "permitted read succeeds and rejected SQL has zero upstream execution and unchanged target",
+          "result": "PASS",
+          "observed": {
+            "readCalls": 1,
+            "deniedCalls": 0,
+            "denialRule": "invalid-arguments"
+          }
+        },
+        {
+          "name": "preview, CSRF, role, no-self-review and exact fingerprint gate the real DB write",
+          "result": "PASS",
+          "observed": {
+            "deniedAttempts": 4,
+            "deniedCalls": 0,
+            "concurrentStatuses": [
+              200,
+              409
+            ],
+            "mutations": 1
+          }
+        },
+        {
+          "name": "PostgreSQL activity/history and honest evidence export",
+          "result": "PASS",
+          "observed": {
+            "filteredTotal": 2,
+            "actor": "approver",
+            "auditValid": true,
+            "observation": "adapter-reported"
+          }
+        },
+        {
+          "name": "full installation restart preserves DB, Git branch, audit and pending review proofs",
+          "result": "PASS",
+          "observed": {
+            "pendingProofsPreserved": 2,
+            "mainUnchanged": true,
+            "mockPRs": 1,
+            "auditValid": true,
+            "trustedActorPreserved": true,
+            "csvActorPreserved": true
+          }
+        },
+        {
+          "name": "policy change, task revoke and stop withdraw pending authority with no execution",
+          "result": "PASS",
+          "observed": {
+            "policyDenial": true,
+            "revocationDenial": true,
+            "emergencyStopDenial": true,
+            "executionCalls": 0,
+            "crossOwnerRevoker": "operator"
+          }
+        },
+        {
+          "name": "PDP outage fails closed through the product Gateway",
+          "result": "PASS",
+          "observed": {
+            "status": "blocked",
+            "rule": "pdp-timeout",
+            "calls": 0
+          }
+        },
+        {
+          "name": "persistent mock PR survives target process restart",
+          "result": "PASS",
+          "observed": {
+            "mockPRs": 1
+          }
+        }
+      ],
+      "security": {
+        "scanner": "1.184.0",
+        "sast": {
+          "rules": 8,
+          "findings": 0,
+          "scanned": 121
+        },
+        "root": {
+          "components": 156,
+          "vulnerabilities": {
+            "info": 0,
+            "low": 0,
+            "moderate": 0,
+            "high": 0,
+            "critical": 0,
+            "total": 0
+          }
+        },
+        "dashboard": {
+          "components": 61,
+          "vulnerabilities": {
+            "info": 0,
+            "low": 0,
+            "moderate": 0,
+            "high": 0,
+            "critical": 0,
+            "total": 0
+          }
+        }
+      },
+      "externalGates": {
+        "independentCleanMachine": "NOT_RUN",
+        "externalHumanSecuritySignoff": "NOT_OBTAINED",
+        "liveGitHubApp": "OPT_IN_OFFLINE_CONTRACTS_VERIFIED_LIVE_NOT_RUN",
+        "productionDeployment": "NOT_AUTHORIZED_NOT_RUN",
+        "marketInterviews": "NOT_RUN"
+      },
+      "scope": "Local synthetic service and HTTPS/GitHub-App candidate contract verification only; no paid inference, real target credentials or external deployment. Actual Codex uses local Qwen in the separate isolated verification profile."
+    }
+  },
+  "releaseAcceptance": false,
+  "packageSha256": "f292228b0c036a0f38fcffef1c99eb224b6b0cbc67777f7240bf1f921c0c7dd3",
+  "expectedSource": "c043156a9a2f69b6d3ddfc0eb6eec315faba38250f8eb38ae2a02f7087f7c999",
+  "os": "PRETTY_NAME=\"Ubuntu 24.04.5 LTS\"\nNAME=\"Ubuntu\"\nVERSION_ID=\"24.04\"\nVERSION=\"24.04.5 LTS (Noble Numbat)\"\nVERSION_CODENAME=noble\nID=ubuntu\nID_LIKE=debian\nHOME_URL=\"https://www.ubuntu.com/\"\nSUPPORT_URL=\"https://help.ubuntu.com/\"\nBUG_REPORT_URL=\"https://bugs.launchpad.net/ubuntu/\"\nPRIVACY_POLICY_URL=\"https://www.ubuntu.com/legal/terms-and-policies/privacy-policy\"\nUBUNTU_CODENAME=noble\nLOGO=ubuntu-logo\n",
+  "uid": "uid=1100(abvalidation) gid=1100(abvalidation) groups=1100(abvalidation),112(docker)",
+  "guard": "table inet ab_dependency_guard {\n\tchain output {\n\t\ttype filter hook output priority filter - 10; policy drop;\n\t\toifname \"lo\" accept\n\t\toifname \"docker0\" accept\n\t\toifname \"br-*\" accept\n\t\tct state established,related accept\n\t\toifname \"abegress0\" ip daddr 10.0.2.2 tcp dport 8877 counter packets 0 bytes 0 accept\n\t\tcounter packets 0 bytes 0 reject with icmpx admin-prohibited\n\t}\n\n\tchain forward {\n\t\ttype filter hook forward priority filter - 10; policy accept;\n\t\toifname \"abegress0\" ip daddr 10.0.2.2 tcp dport 8877 counter packets 0 bytes 0 accept\n\t\toifname \"abegress0\" counter packets 0 bytes 0 reject with icmpx admin-prohibited\n\t}\n\n\tchain input {\n\t\ttype filter hook input priority filter - 10; policy drop;\n\t\tiifname \"lo\" accept\n\t\tiifname \"docker0\" accept\n\t\tiifname \"br-*\" accept\n\t\tct state established,related accept\n\t\tcounter packets 0 bytes 0 reject with icmpx admin-prohibited\n\t}\n}",
+  "deniedProbes": [
+    {
+      "host": "10.0.2.2",
+      "port": 8878,
+      "errno": 113
+    },
+    {
+      "host": "198.51.100.1",
+      "port": 443,
+      "errno": 113
+    },
+    {
+      "host": "10.0.2.3",
+      "port": 53,
+      "errno": 113
+    },
+    {
+      "proxyTarget": "api.github.com:443",
+      "result": "DENIED_403"
+    },
+    {
+      "proxyTarget": "api.openai.com:443",
+      "result": "DENIED_403"
+    },
+    {
+      "proxyTarget": "127.0.0.1:8878",
+      "result": "DENIED_403"
+    }
+  ],
+  "packageFileCount": 278,
+  "sourceHash": "c043156a9a2f69b6d3ddfc0eb6eec315faba38250f8eb38ae2a02f7087f7c999",
+  "failures": [
+    {
+      "label": "isolation",
+      "error": "isolation failed"
+    },
+    {
+      "label": "product",
+      "error": "product failed"
+    },
+    {
+      "label": "service",
+      "error": "service failed"
+    },
+    {
+      "label": "candidate",
+      "error": "candidate failed"
+    },
+    {
+      "label": "enterprise",
+      "error": "enterprise failed"
+    },
+    {
+      "label": "security",
+      "error": "security failed"
+    }
+  ],
+  "sourceHashAtEnd": "c043156a9a2f69b6d3ddfc0eb6eec315faba38250f8eb38ae2a02f7087f7c999",
+  "result": "FAIL",
+  "limits": "Fresh separate Ubuntu guest on the same physical host. Operator UID1100. Codex/GPU model remains a separately verified Windows Docker profile. No independent human/customer acceptance; no live integration.",
+  "nativeArtifactTransfer": {
+    "sha256": "e35d3d068fc9e5b6c7fd54d3abe4e5fb64402c51e76dc2070950d0880830a1df",
+    "bytes": 532480,
+    "files": 37
+  }
+}

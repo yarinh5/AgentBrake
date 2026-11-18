@@ -6,18 +6,17 @@ import { resolve } from "node:path";
 import { createApp } from "./app.js";
 const adminKey = randomBytes(32).toString("hex");
 const system = createApp({ databasePath: ":memory:", adminKey });
-let vite:
-  Awaited<ReturnType<(typeof import("vite"))["createServer"]>> | undefined;
+// @ts-expect-error Shared Node build tooling is JavaScript.
+import { developmentUi } from "../scripts/build-ui.mjs";
+let ui: Awaited<ReturnType<typeof developmentUi>> | undefined;
 if (process.argv.includes("--built")) {
   system.app.use(express.static(resolve("dist")));
   system.app.get("/{*path}", (_req, res) =>
     res.sendFile(resolve("dist/index.html")),
   );
 } else {
-  vite = await (
-    await import("vite")
-  ).createServer({ server: { middlewareMode: true }, appType: "spa" });
-  system.app.use(vite.middlewares);
+  ui = await developmentUi();
+  system.app.use(ui.middleware);
 }
 const server = system.app.listen(4312, "127.0.0.1");
 await new Promise<void>((res, rej) => {
@@ -44,7 +43,7 @@ console.log(
 );
 async function shutdown() {
   server.close();
-  await vite?.close();
+  await ui?.close();
   await system.close();
   await unlink(accessPath).catch(() => {});
   process.exit(0);

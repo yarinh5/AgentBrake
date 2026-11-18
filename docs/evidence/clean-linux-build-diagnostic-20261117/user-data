@@ -1,0 +1,24 @@
+#cloud-config
+users: []
+disable_root: true
+ssh_pwauth: false
+package_update: false
+package_upgrade: false
+write_files:
+  - path: /usr/local/sbin/agentbrake-phase.py
+    permissions: '0700'
+    content: |
+      import pathlib,json
+      root=pathlib.Path('/opt/agentbrake');d=root/'docs/evidence/b9f9b1c2-3ebc-45dd-97aa-3c27d233625f'
+      r={'result':'DIAGNOSTIC_ONLY','logs':{}}
+      for name in ['compose-up.log','container-logs.log']:
+       r['logs'][name]=(d/name).read_text()[-24000:]
+      with open('/dev/ttyS0','w') as f:f.write('\nAGENTBRAKE_PHASE_REPORT='+json.dumps(r)+'\n')
+
+runcmd:
+  - [python3, /usr/local/sbin/agentbrake-phase.py]
+power_state:
+  mode: poweroff
+  delay: now
+  timeout: 30
+  condition: true

@@ -1,0 +1,9 @@
+{
+  "result": "PASS",
+  "at": "2026-11-17T08:22:40.959Z",
+  "name": "verify-ent-src-16004c18",
+  "containers": 0,
+  "volumes": 0,
+  "networks": 0,
+  "scopedFilesRemoved": true
+}

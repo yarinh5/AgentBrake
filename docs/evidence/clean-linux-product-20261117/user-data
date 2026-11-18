@@ -1,0 +1,92 @@
+#cloud-config
+users: []
+disable_root: true
+ssh_pwauth: false
+package_update: false
+package_upgrade: false
+write_files:
+  - path: /usr/local/sbin/agentbrake-phase.py
+    permissions: '0700'
+    content: |
+      import json,pathlib,subprocess,traceback,os,time,selectors,signal
+      P=pathlib.Path;root=P('/opt/agentbrake');proxy='http://10.0.2.2:8877'
+      r={'scope':'Separate Ubuntu guest; synthetic product/isolation/restore/candidate/security checks','commands':[],'reports':{},'releaseAcceptance':False}
+      env={**os.environ,'PATH':'/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin','HTTP_PROXY':proxy,'HTTPS_PROXY':proxy,'http_proxy':proxy,'https_proxy':proxy,'NO_PROXY':'localhost,127.0.0.1,::1','no_proxy':'localhost,127.0.0.1,::1','NEXT_TELEMETRY_DISABLED':'1','DEBIAN_FRONTEND':'noninteractive'}
+      def emit(v):
+       with open('/dev/ttyS0','w') as f:f.write('\nAGENTBRAKE_PROGRESS='+json.dumps(v)+'\n')
+      def run(label,args,timeout=1800,asRoot=False):
+       emit({'starting':label});at=time.monotonic()
+       p=subprocess.Popen(args if asRoot else ['runuser','-u','abvalidation','--',*args],stdout=subprocess.PIPE,stderr=subprocess.STDOUT,env=env,cwd=root,start_new_session=True)
+       output=bytearray();selector=selectors.DefaultSelector();selector.register(p.stdout,selectors.EVENT_READ);last=at
+       failure=None;code=None
+       try:
+        while selector.get_map():
+         if time.monotonic()-at>timeout:raise TimeoutError(label+' deadline')
+         for key,_ in selector.select(1):
+          chunk=os.read(key.fd,65536)
+          if chunk:output.extend(chunk)
+          else:selector.unregister(key.fileobj)
+         if len(output)>20*1024*1024:raise RuntimeError(label+' output limit')
+         if time.monotonic()-last>=30:
+          emit({'running':label,'seconds':round(time.monotonic()-at),'outputBytes':len(output)});last=time.monotonic()
+        code=p.wait(timeout=10)
+       except Exception as error:failure=str(error)
+       finally:
+        selector.close()
+        if p.poll() is None:
+         os.killpg(p.pid,signal.SIGTERM)
+         try:p.wait(timeout=10)
+         except subprocess.TimeoutExpired:os.killpg(p.pid,signal.SIGKILL);p.wait(timeout=5)
+       text=output.decode(errors='replace');P('/var/lib/agentbrake-validation/'+label+'.log').write_text(text)
+       r['commands'].append({'label':label,'exitCode':code,'failure':failure,'seconds':round(time.monotonic()-at,2),'outputTail':text[-16000:]});emit({'finished':label,'exitCode':code})
+       if failure or code:raise RuntimeError(label+' failed'+(': '+failure if failure else ''))
+       return text.strip()
+      try:
+       native=json.loads(P('/var/lib/agentbrake-validation/native.json').read_text())
+       assert native['result']=='PASS_CLEAN_GUEST_NATIVE_ONLY'
+       assert native['networkBoundary']=='PASS_DEFINED_GUEST_AND_CONTAINER_PROBES'
+       patched=json.loads(P('/var/lib/agentbrake-validation/fixture-repair.json').read_text())
+       assert patched['result']=='PASS_FOCUSED_LINUX_ACCESS_AND_RECOVERY'
+       r['sourceHash']=run('exact-source',['node','--input-type=module','-e',"import {sourceManifest} from './scripts/source-manifest.mjs'; console.log((await sourceManifest()).sourceHash)"])
+       assert r['sourceHash']==patched['sourceHash']=='fb5b65ff91880bb711f5de632f9d0cc9610232094e567dd21accaa9004606fe3'
+       assert run('guard-active',['systemctl','is-active','ab-dependency-guard'])=='active'
+       check=subprocess.run(['docker','buildx','version'],capture_output=True,text=True)
+       r['buildxPreflight']={'exitCode':check.returncode,'output':check.stdout+check.stderr}
+       if check.returncode:
+        run('apt-index',['apt-get','update'],900,True)
+        run('buildx-install',['apt-get','install','-y','--no-install-recommends','docker-buildx'],900,True)
+       run('buildx-version',['docker','buildx','version'])
+       images=json.loads(run('image-recipes',['node','--input-type=module','-e',"import {productImages} from './scripts/product.mjs'; console.log(JSON.stringify((await productImages('minimal-v1')).env))"]))
+       # Record cold builds separately; existing runtime/health/authorization deadlines
+       # and verifier assertions stay unchanged on this one-vCPU diagnostic host.
+       docker=['docker','--config',str(root/'.agentbrake-local/docker-public')]
+       for label,recipe,tag,args in [
+        ('cold-opa','infra/product/Opa.Dockerfile',images['OPA_IMAGE'],[]),
+        ('cold-postgres','infra/product/Postgres.Dockerfile',images['POSTGRES_IMAGE'],['--build-arg','POSTGRES_BASE_IMAGE='+images['POSTGRES_BASE_IMAGE']]),
+        ('cold-runtime','infra/product/Dockerfile','abvalidation-runtime',['--build-arg','NODE_IMAGE='+images['NODE_IMAGE']]),
+        ('cold-dashboard','apps/dashboard/Dockerfile','abvalidation-dashboard',['--build-arg','NODE_IMAGE='+images['NODE_IMAGE']])]:
+        run(label,[*docker,'build','--progress=plain','--file',recipe,'--tag',tag,'--build-arg','HTTP_PROXY='+proxy,'--build-arg','HTTPS_PROXY='+proxy,'--build-arg','http_proxy='+proxy,'--build-arg','https_proxy='+proxy,*args,'.'],2400)
+       for label,script in [('benchmark','verify-isolation.mjs'),('product','verify-product.mjs'),('service','verify-service.mjs'),('candidate','verify-candidate.mjs'),('security','verify-security.mjs'),('enterprise','verify-enterprise.mjs')]:
+        run(label,['node','scripts/'+script,*(['--expanded-benchmark'] if label=='benchmark' else [])],2400)
+       run('final-native',['node','scripts/verify-stage1.mjs'],1800)
+       pointer=json.loads((root/'docs/evidence/latest.json').read_text());r['finalNativeSummary']=json.loads((root/pointer['directory']/'summary.json').read_text())
+       assert r['finalNativeSummary']['sourceHash']==r['sourceHash'] and r['finalNativeSummary']['result']=='PASS_SCOPED'
+       r['result']='PASS_CLEAN_GUEST_SCOPED_PRODUCT_CHECKS'
+      except Exception as e:r['result']='FAIL';r['error']=str(e);r['trace']=traceback.format_exc()
+      finally:
+       for name,filename in [('isolation','isolation-summary.json'),('product','product-summary.json'),('service','service-summary.json'),('candidate','candidate-summary.json'),('security','security-summary.json'),('enterprise','enterprise-summary.json')]:
+        pointer=root/('docs/evidence/latest-'+name+'.json')
+        if pointer.exists():
+         data=json.loads(pointer.read_text());directory=(root/data['directory']).resolve();assert directory.is_relative_to(root/'docs/evidence')
+         summary=directory/filename
+         if summary.exists():r['reports'][name]=json.loads(summary.read_text())
+       P('/var/lib/agentbrake-validation/product-phase.json').write_text(json.dumps(r))
+       with open('/dev/ttyS0','w') as f:f.write('\nAGENTBRAKE_PHASE_REPORT='+json.dumps(r)+'\n')
+
+runcmd:
+  - [python3, /usr/local/sbin/agentbrake-phase.py]
+power_state:
+  mode: poweroff
+  delay: now
+  timeout: 30
+  condition: true

@@ -1,0 +1,1030 @@
+
+> agentbrake@0.3.0-rc.1 verify:release
+> node scripts/verify-release.mjs
+
+rego: PASS (exit 0)
+node-tests: PASS (exit 0)
+typecheck: PASS (exit 0)
+build: PASS (exit 0)
+dashboard-build: PASS (exit 0)
+browser: PASS (exit 0)
+upstream-proof: PASS (exit 0)
+docker-preflight: PASS (exit 0)
+Evidence: docs\evidence\c637313c-60f7-4ee9-80bd-80bb3d3046c0
+PASS_SCOPED; Container evidence is reported separately.
+Building and starting the isolated AgentBrake fixture project…
+Expanded measurement PASS; usability target: MET_SYNTHETIC_ONLY
+Isolated direct access denied; mediated read reached upstream once.
+Isolation PASS: docs/evidence/c0fa4cba-70e7-4cd2-b445-dbbeab2fc2d9
+{
+  "result": "PASS_BOUNDED",
+  "stage": "Milestone B",
+  "startedAt": "2026-11-17T19:19:54.808Z",
+  "finishedAt": "2026-11-17T19:27:51.696Z",
+  "sourceHash": "c043156a9a2f69b6d3ddfc0eb6eec315faba38250f8eb38ae2a02f7087f7c999",
+  "gitCommit": null,
+  "nativeRun": "c637313c-60f7-4ee9-80bd-80bb3d3046c0",
+  "isolationRun": "c0fa4cba-70e7-4cd2-b445-dbbeab2fc2d9",
+  "nativeTests": {
+    "tests": 287,
+    "pass": 281,
+    "fail": 0,
+    "skipped": 6
+  },
+  "postgresTests": {
+    "tests": 22,
+    "pass": 22,
+    "fail": 0,
+    "skipped": 0
+  },
+  "workflowCases": 15,
+  "expandedBenchmark": {
+    "total": 208,
+    "baselineSucceeded": 208,
+    "completed": 208,
+    "falseBlocks": 0,
+    "nonPolicyFailures": 0,
+    "completionVsBaseline": 1,
+    "falseBlockRate": 0,
+    "approvalRequired": 96,
+    "measurementResult": "PASS",
+    "usabilityTarget": "MET_SYNTHETIC_ONLY",
+    "baselineFailures": 0,
+    "byKind": {
+      "read": {
+        "total": 64,
+        "baselineSucceeded": 64,
+        "completed": 64,
+        "falseBlocks": 0,
+        "nonPolicyFailures": 0,
+        "completionVsBaseline": 1,
+        "falseBlockRate": 0,
+        "approvalRequired": 0
+      },
+      "preview": {
+        "total": 80,
+        "baselineSucceeded": 80,
+        "completed": 80,
+        "falseBlocks": 0,
+        "nonPolicyFailures": 0,
+        "completionVsBaseline": 1,
+        "falseBlockRate": 0,
+        "approvalRequired": 0
+      },
+      "pr": {
+        "total": 32,
+        "baselineSucceeded": 32,
+        "completed": 32,
+        "falseBlocks": 0,
+        "nonPolicyFailures": 0,
+        "completionVsBaseline": 1,
+        "falseBlockRate": 0,
+        "approvalRequired": 64
+      },
+      "update": {
+        "total": 32,
+        "baselineSucceeded": 32,
+        "completed": 32,
+        "falseBlocks": 0,
+        "nonPolicyFailures": 0,
+        "completionVsBaseline": 1,
+        "falseBlockRate": 0,
+        "approvalRequired": 32
+      }
+    },
+    "timing": {
+      "directBaselineTask": {
+        "count": 208,
+        "p50Ms": 28.251001000000542,
+        "p95Ms": 101.10509899999943
+      },
+      "gatewayTask": {
+        "count": 208,
+        "p50Ms": 46.242401999999856,
+        "p95Ms": 228.9081010000009
+      },
+      "authorization": {
+        "count": 272,
+        "p50Ms": 4.07,
+        "p95Ms": 5.37
+      },
+      "submitRoundTrip": {
+        "count": 272,
+        "p50Ms": 27.62409999999909,
+        "p95Ms": 38.116800000000694
+      },
+      "automatedApprovalRoundTrip": {
+        "count": 96,
+        "p50Ms": 44.6615010000005,
+        "p95Ms": 84.07490300000063
+      }
+    },
+    "humanApprovalWait": "NOT_MEASURED",
+    "corpusHash": "4977504a717538cc20c1bddf5bb7e08df272c6f7c1912925f87405b7a7bfe30c",
+    "scope": "208 prelabelled synthetic tasks; 8 parameter strata of 26 scenarios, including repeated reads and all 16 credential-shaped placeholders; actual direct adapter baseline versus gateway, sequential on one fixture with distinct branch names and per-step state checks; approvals by automated trusted fixture operator; task latency includes HTTP/target/snapshots, not provisioning or human wait; no general population or model-quality rate. Measurement PASS is not achievement of the separate <2% usability target."
+  },
+  "gitContainerTests": {
+    "tests": 17,
+    "pass": 17,
+    "fail": 0,
+    "skipped": 0
+  },
+  "benchmark": {
+    "total": 26,
+    "baselineSucceeded": 26,
+    "completed": 26,
+    "falseBlocks": 0,
+    "nonPolicyFailures": 0,
+    "completionVsBaseline": 1,
+    "falseBlockRate": 0,
+    "approvalRequired": 12,
+    "authorizationP50Ms": 3.94,
+    "authorizationP95Ms": 9.61,
+    "corpusHash": "6d5c6529807d270e0cb3eb0e0e8c6ce16ca854d8d1d98f5e6dec0bd76ad77289"
+  },
+  "codex": {
+    "version": "codex-cli 0.169.0",
+    "binarySha256": "b452ca20f838a8855a88a41050ee4a694033fff4ea3ecdad5633e6e0e8d13f2b",
+    "model": [
+      {
+        "name": "qwen3:4b-instruct",
+        "model": "qwen3:4b-instruct",
+        "modified_at": "2026-11-16T11:18:30.6952146Z",
+        "size": 2497293803,
+        "digest": "0edcdef34593eac1aa2be9c7d06c432dcf81945adca5eca2f27662c18f168ba0",
+        "details": {
+          "parent_model": "",
+          "format": "gguf",
+          "family": "qwen3",
+          "families": [
+            "qwen3"
+          ],
+          "parameter_size": "4.0B",
+          "quantization_level": "Q4_K_M",
+          "context_length": 262144,
+          "embedding_length": 2560,
+          "runner": "ggml"
+        },
+        "capabilities": [
+          "tools",
+          "thinking",
+          "completion"
+        ]
+      }
+    ],
+    "inferenceProfile": {
+      "name": "gpu-8k",
+      "context": 8192,
+      "compact": 6500,
+      "gpu": true,
+      "memoryBytes": 6442450944
+    },
+    "actualActions": 2,
+    "replayedReads": 2,
+    "forbiddenReplayRule": "task-scope"
+  },
+  "environmentHash": "a232034a53a1e2f818453a7e0d1294d35d1d57c0e3d7e4ff2bcbef1044695529",
+  "cleanup": {
+    "result": "PASS",
+    "remaining": {
+      "containers": 0,
+      "networks": 0,
+      "volumes": 0
+    }
+  },
+  "credentialScan": {
+    "result": "PASS",
+    "files": 53,
+    "knownSyntheticSecrets": 12,
+    "contaminated": [],
+    "scope": "Exact known fixture credentials; operator separately scans issued credentials. Not a universal DLP scan."
+  },
+  "scope": "Local official Codex CLI with actual Qwen inference, gateway/MCP/OPA, synthetic PostgreSQL/Git mock PR, injection replay and curated test-client benchmark. No hosted OpenAI model or live GitHub; not production or statistical model reliability."
+}
+PASS separate process topology, internal networks, credentials and loopback publication
+PASS permitted read succeeds and rejected SQL has zero upstream execution and unchanged target
+PASS preview, CSRF, role, no-self-review and exact fingerprint gate the real DB write
+PASS PostgreSQL activity/history and honest evidence export
+PASS full installation restart preserves DB, Git branch, audit and pending review proofs
+PASS policy change, task revoke and stop withdraw pending authority with no execution
+PASS PDP outage fails closed through the product Gateway
+PASS_LOCAL_PRODUCT: docs\evidence\28b9be0d-d412-4a7f-bb96-29553773f67d
+ Image agentbrake-product-verify-service-f956355d-runtime Building 
+ Image agentbrake-postgres:18-193f481f609ba4086c53 Building 
+ Image agentbrake-product-verify-service-f956355d-dashboard Building 
+ Image agentbrake-opa:1.22.4-3f9e5f443c6e97aa147e Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 2.57kB 0.0s done
+#1 DONE 0.0s
+
+#2 [control-api internal] load build definition from Dockerfile
+#2 transferring dockerfile: 568B done
+#2 WARN: InvalidDefaultArgInFrom: Default value for ARG ${NODE_IMAGE} results in empty or invalid base image name (line 2)
+#2 DONE 0.0s
+
+#3 [control-db internal] load build definition from Postgres.Dockerfile
+#3 transferring dockerfile: 316B 0.0s done
+#3 WARN: InvalidDefaultArgInFrom: Default value for ARG ${POSTGRES_BASE_IMAGE} results in empty or invalid base image name (line 2)
+#3 DONE 0.0s
+
+#4 [dashboard internal] load build definition from Dockerfile
+#4 transferring dockerfile: 1.37kB 0.0s done
+#4 DONE 0.0s
+
+#5 [opa internal] load build definition from Opa.Dockerfile
+#5 transferring dockerfile: 918B 0.0s done
+#5 DONE 0.1s
+
+#6 [control-db internal] load metadata for docker.io/library/postgres@sha256:b6972e1115a4ff8eba5d7f7d19184926d1e16d7d1136ae1e1a7ebf286da0f015
+#6 DONE 0.0s
+
+#7 [dashboard internal] load metadata for docker.io/library/node@sha256:1314fb30ec37592d5845e5a160d522c0e680972aa534549940b8d73bde88481a
+#7 DONE 0.0s
+
+#8 [opa internal] load metadata for docker.io/library/golang@sha256:70bd7ddea8b6cbe5d6943cde279d6b67feb10cc924fb9100d1d8757c1575b280
+#8 DONE 0.0s
+
+#9 [dashboard internal] load .dockerignore
+#9 transferring context: 289B done
+#9 DONE 0.0s
+
+#10 [opa build 2/6] ADD --checksum=sha256:4eddbf690f65d6ca440fa8c1f2ce2a3439070cdf5d42c7aa8669a9e1552fbd59 https://github.com/open-policy-agent/opa/archive/refs/tags/v1.22.4.tar.gz /tmp/opa.tar.gz
+#10 DONE 0.0s
+
+#11 [opa build 1/6] FROM docker.io/library/golang@sha256:70bd7ddea8b6cbe5d6943cde279d6b67feb10cc924fb9100d1d8757c1575b280
+#11 DONE 0.0s
+
+#12 [opa build 2/6] ADD --checksum=sha256:4eddbf690f65d6ca440fa8c1f2ce2a3439070cdf5d42c7aa8669a9e1552fbd59 https://github.com/open-policy-agent/opa/archive/refs/tags/v1.22.4.tar.gz /tmp/opa.tar.gz
+#12 CACHED
+
+#13 [opa stage-1 2/3] COPY --from=build /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt
+#13 CACHED
+
+#14 [opa build 6/6] RUN go test golang.org/x/net/html && go build -trimpath -tags=opa_wasm -ldflags='-s -w' -o /out/opa .
+#14 CACHED
+
+#15 [opa build 4/6] RUN tar -xzf /tmp/opa.tar.gz --strip-components=1 -C /src
+#15 CACHED
+
+#16 [opa build 5/6] RUN go get golang.org/x/net@v0.62.0 && go mod verify
+#16 CACHED
+
+#17 [opa stage-1 1/3] COPY --from=build /out/opa /opa
+#17 CACHED
+
+#18 [opa build 3/6] WORKDIR /src
+#18 CACHED
+
+#19 [opa stage-1 3/3] COPY --from=build /src/LICENSE /licenses/OPA-LICENSE
+#19 CACHED
+
+#20 [control-db 1/2] FROM docker.io/library/postgres@sha256:b6972e1115a4ff8eba5d7f7d19184926d1e16d7d1136ae1e1a7ebf286da0f015
+#20 DONE 0.0s
+
+#21 [control-api 1/9] FROM docker.io/library/node@sha256:1314fb30ec37592d5845e5a160d522c0e680972aa534549940b8d73bde88481a
+#21 DONE 0.0s
+
+#22 [control-db 2/2] RUN rm -f /usr/local/bin/gosu
+#22 CACHED
+
+#23 [control-db] exporting to image
+#23 exporting layers done
+#23 writing image sha256:9edf8f2a827b5db5e6004ad591228be8fb2bc23de85b5ec025b0e533fa01cd37
+#23 ...
+
+#24 [opa] exporting to image
+#24 exporting layers done
+#24 writing image sha256:afe180152bce1c36a944467edbe5bdb6b23f41ac02cc43b95d108b9254447323 done
+#24 naming to docker.io/library/agentbrake-opa:1.22.4-3f9e5f443c6e97aa147e 0.0s done
+#24 DONE 0.1s
+
+#25 [dashboard internal] load build context
+#25 transferring context: 194.68kB 0.1s done
+#25 DONE 0.1s
+
+#26 [dashboard build 7/8] COPY src ./src
+#26 CACHED
+
+#27 [dashboard build 6/8] COPY apps/dashboard ./apps/dashboard
+#27 CACHED
+
+#28 [dashboard build 3/8] COPY apps/dashboard/package.json apps/dashboard/package-lock.json ./apps/dashboard/
+#28 CACHED
+
+#29 [dashboard build 5/8] RUN ln -s apps/dashboard/node_modules /workspace/node_modules
+#29 CACHED
+
+#30 [dashboard runtime 3/6] RUN rm -rf /usr/local/lib/node_modules/npm /usr/local/lib/node_modules/corepack /opt/yarn* && rm -f /usr/local/bin/npm /usr/local/bin/npx /usr/local/bin/yarn /usr/local/bin/yarnpkg /usr/local/bin/corepack
+#30 CACHED
+
+#31 [dashboard build 8/8] RUN cd apps/dashboard && npm run build
+#31 CACHED
+
+#32 [dashboard build 4/8] RUN cd apps/dashboard && npm ci --ignore-scripts
+#32 CACHED
+
+#33 [dashboard runtime 4/6] WORKDIR /app
+#33 CACHED
+
+#34 [dashboard runtime 5/6] COPY --from=build --chown=node:node /workspace/apps/dashboard/.next/standalone ./
+#34 CACHED
+
+#35 [dashboard runtime 2/6] RUN if command -v apk >/dev/null 2>&1; then apk add --no-cache zlib=1.4-r0; fi
+#35 CACHED
+
+#36 [dashboard build 2/8] WORKDIR /workspace
+#36 CACHED
+
+#37 [dashboard runtime 6/6] COPY --from=build --chown=node:node /workspace/apps/dashboard/.next/static ./apps/dashboard/.next/static
+#37 CACHED
+
+#38 [control-api internal] load build context
+#38 transferring context: 660.75kB 0.1s done
+#38 DONE 0.1s
+
+#39 [opa] resolving provenance for metadata file
+#39 DONE 0.0s
+
+#40 [control-api 3/9] WORKDIR /app
+#40 CACHED
+
+#41 [control-api 4/9] COPY package.json package-lock.json ./
+#41 CACHED
+
+#42 [control-api 7/9] COPY services ./services
+#42 CACHED
+
+#43 [control-api 2/9] RUN apk add --no-cache git ca-certificates zlib=1.4-r0
+#43 CACHED
+
+#44 [control-api 5/9] RUN npm ci --omit=dev && rm -rf /root/.npm /usr/local/lib/node_modules/npm /usr/local/lib/node_modules/corepack /opt/yarn* && rm -f /usr/local/bin/npm /usr/local/bin/npx /usr/local/bin/yarn /usr/local/bin/yarnpkg /usr/local/bin/corepack
+#44 CACHED
+
+#45 [control-api 8/9] COPY scripts ./scripts
+#45 CACHED
+
+#46 [control-api 6/9] COPY server ./server
+#46 CACHED
+
+#47 [control-api 9/9] COPY infra ./infra
+#47 CACHED
+
+#23 [control-db] exporting to image
+#23 writing image sha256:9edf8f2a827b5db5e6004ad591228be8fb2bc23de85b5ec025b0e533fa01cd37 0.2s done
+#23 naming to docker.io/library/agentbrake-postgres:18-193f481f609ba4086c53 done
+#23 DONE 0.2s
+
+#48 [control-api] exporting to image
+#48 exporting layers done
+#48 writing image sha256:c7d4bfbe9030bf615c0b2514190c9694a70b2358d5fd5f41ce6ae3670d7897a5 0.0s done
+#48 naming to docker.io/library/agentbrake-product-verify-service-f956355d-runtime 0.0s done
+#48 DONE 0.1s
+
+#49 [dashboard] exporting to image
+#49 exporting layers done
+#49 writing image sha256:5b8927207ba5b82c08acd936af121d9f83d10bf68d9815fda54eac0c9e6b31ba 0.1s done
+#49 naming to docker.io/library/agentbrake-product-verify-service-f956355d-dashboard 0.0s done
+#49 DONE 0.1s
+
+#50 [dashboard] resolving provenance for metadata file
+#50 DONE 0.0s
+
+#51 [control-api] resolving provenance for metadata file
+#51 DONE 0.0s
+
+#52 [control-db] resolving provenance for metadata file
+#52 DONE 0.0s
+ Image agentbrake-product-verify-service-f956355d-dashboard Built 
+ Image agentbrake-product-verify-service-f956355d-runtime Built 
+ Image agentbrake-opa:1.22.4-3f9e5f443c6e97aa147e Built 
+ Image agentbrake-postgres:18-193f481f609ba4086c53 Built 
+ Container agentbrake-product-verify-service-f956355d-target-db-1 Running 
+ Container agentbrake-product-verify-service-f956355d-control-db-1 Running 
+ Container agentbrake-product-verify-service-f956355d-mock-target-1 Creating 
+ Network agentbrake-product-verify-service-f956355d_loopback-ingress Creating 
+ Network agentbrake-product-verify-service-f956355d_loopback-ingress Creating 
+ Network agentbrake-product-verify-service-f956355d_dashboard Creating 
+ Network agentbrake-product-verify-service-f956355d_dashboard Creating 
+ Network agentbrake-product-verify-service-f956355d_agent Creating 
+ Network agentbrake-product-verify-service-f956355d_agent Creating 
+ Container agentbrake-product-verify-service-f956355d-opa-1 Creating 
+ Network agentbrake-product-verify-service-f956355d_agent Created 
+ Network agentbrake-product-verify-service-f956355d_agent Created 
+ Network agentbrake-product-verify-service-f956355d_dashboard Created 
+ Network agentbrake-product-verify-service-f956355d_dashboard Created 
+ Container agentbrake-product-verify-service-f956355d-opa-1 Created 
+ Container agentbrake-product-verify-service-f956355d-mock-target-1 Created 
+ Container agentbrake-product-verify-service-f956355d-gateway-1 Creating 
+ Network agentbrake-product-verify-service-f956355d_loopback-ingress Created 
+ Network agentbrake-product-verify-service-f956355d_loopback-ingress Created 
+ Container agentbrake-product-verify-service-f956355d-gateway-1 Created 
+ Container agentbrake-product-verify-service-f956355d-agent-1 Creating 
+ Container agentbrake-product-verify-service-f956355d-control-api-1 Creating 
+ Container agentbrake-product-verify-service-f956355d-agent-1 Created 
+ Container agentbrake-product-verify-service-f956355d-control-api-1 Created 
+ Container agentbrake-product-verify-service-f956355d-dashboard-1 Creating 
+ Container agentbrake-product-verify-service-f956355d-dashboard-1 Created 
+ Container agentbrake-product-verify-service-f956355d-ingress-1 Creating 
+ Container agentbrake-product-verify-service-f956355d-ingress-1 Created 
+ Container agentbrake-product-verify-service-f956355d-opa-1 Starting 
+ Container agentbrake-product-verify-service-f956355d-volume-init-1 Starting 
+ Container agentbrake-product-verify-service-f956355d-opa-1 Started 
+ Container agentbrake-product-verify-service-f956355d-volume-init-1 Started 
+ Container agentbrake-product-verify-service-f956355d-volume-init-1 Waiting 
+ Container agentbrake-product-verify-service-f956355d-volume-init-1 Exited 
+ Container agentbrake-product-verify-service-f956355d-control-db-1 Waiting 
+ Container agentbrake-product-verify-service-f956355d-target-db-1 Waiting 
+ Container agentbrake-product-verify-service-f956355d-target-db-1 Healthy 
+ Container agentbrake-product-verify-service-f956355d-mock-target-1 Starting 
+ Container agentbrake-product-verify-service-f956355d-control-db-1 Healthy 
+ Container agentbrake-product-verify-service-f956355d-mock-target-1 Started 
+ Container agentbrake-product-verify-service-f956355d-mock-target-1 Waiting 
+ Container agentbrake-product-verify-service-f956355d-mock-target-1 Healthy 
+ Container agentbrake-product-verify-service-f956355d-gateway-1 Starting 
+ Container agentbrake-product-verify-service-f956355d-gateway-1 Started 
+ Container agentbrake-product-verify-service-f956355d-gateway-1 Waiting 
+ Container agentbrake-product-verify-service-f956355d-gateway-1 Healthy 
+ Container agentbrake-product-verify-service-f956355d-control-api-1 Starting 
+ Container agentbrake-product-verify-service-f956355d-agent-1 Starting 
+ Container agentbrake-product-verify-service-f956355d-control-api-1 Started 
+ Container agentbrake-product-verify-service-f956355d-control-api-1 Waiting 
+ Container agentbrake-product-verify-service-f956355d-agent-1 Started 
+ Container agentbrake-product-verify-service-f956355d-control-api-1 Healthy 
+ Container agentbrake-product-verify-service-f956355d-dashboard-1 Starting 
+ Container agentbrake-product-verify-service-f956355d-dashboard-1 Started 
+ Container agentbrake-product-verify-service-f956355d-dashboard-1 Waiting 
+ Container agentbrake-product-verify-service-f956355d-dashboard-1 Healthy 
+ Container agentbrake-product-verify-service-f956355d-ingress-1 Starting 
+ Container agentbrake-product-verify-service-f956355d-ingress-1 Started 
+ Container agentbrake-product-verify-service-f956355d-agent-1 Waiting 
+ Container agentbrake-product-verify-service-f956355d-ingress-1 Waiting 
+ Container agentbrake-product-verify-service-f956355d-control-api-1 Waiting 
+ Container agentbrake-product-verify-service-f956355d-dashboard-1 Waiting 
+ Container agentbrake-product-verify-service-f956355d-target-db-1 Waiting 
+ Container agentbrake-product-verify-service-f956355d-opa-1 Waiting 
+ Container agentbrake-product-verify-service-f956355d-volume-init-1 Waiting 
+ Container agentbrake-product-verify-service-f956355d-gateway-1 Waiting 
+ Container agentbrake-product-verify-service-f956355d-control-db-1 Waiting 
+ Container agentbrake-product-verify-service-f956355d-mock-target-1 Waiting 
+ Container agentbrake-product-verify-service-f956355d-volume-init-1 Exited 
+ Container agentbrake-product-verify-service-f956355d-gateway-1 Healthy 
+ Container agentbrake-product-verify-service-f956355d-target-db-1 Healthy 
+ Container agentbrake-product-verify-service-f956355d-mock-target-1 Healthy 
+ Container agentbrake-product-verify-service-f956355d-agent-1 Healthy 
+ Container agentbrake-product-verify-service-f956355d-opa-1 Healthy 
+ Container agentbrake-product-verify-service-f956355d-dashboard-1 Healthy 
+ Container agentbrake-product-verify-service-f956355d-control-db-1 Healthy 
+ Container agentbrake-product-verify-service-f956355d-control-api-1 Healthy 
+ Container agentbrake-product-verify-service-f956355d-ingress-1 Healthy 
+PASS managed owner bootstrap and invited reviewer work through installed proxy
+PASS installed browser account, team and settings workflow
+PASS encrypted consistent backup resumes original installation
+PASS oversized backup fails without publishing and resumes source
+PASS wrong key and existing destination rejected without damage
+PASS foreign exact-name volumes refused without content or metadata changes
+ Image agentbrake-opa:1.22.4-3f9e5f443c6e97aa147e Building 
+ Image agentbrake-product-verify-restore-f956355d-dashboard Building 
+ Image agentbrake-product-verify-restore-f956355d-runtime Building 
+ Image agentbrake-postgres:18-193f481f609ba4086c53 Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 2.57kB 0.0s done
+#1 DONE 0.0s
+
+#2 [control-db internal] load build definition from Postgres.Dockerfile
+#2 transferring dockerfile: 316B 0.0s done
+#2 DONE 0.1s
+
+#3 [dashboard internal] load build definition from Dockerfile
+#3 transferring dockerfile: 1.37kB 0.0s done
+#3 DONE 0.1s
+
+#4 [control-api internal] load build definition from Dockerfile
+#4 transferring dockerfile: 568B 0.0s done
+#4 WARN: InvalidDefaultArgInFrom: Default value for ARG ${NODE_IMAGE} results in empty or invalid base image name (line 2)
+#4 DONE 0.2s
+
+#5 [control-db internal] load metadata for docker.io/library/postgres@sha256:b6972e1115a4ff8eba5d7f7d19184926d1e16d7d1136ae1e1a7ebf286da0f015
+#5 DONE 0.0s
+
+#6 [opa internal] load build definition from Opa.Dockerfile
+#6 transferring dockerfile: 918B 0.0s done
+#6 DONE 0.2s
+
+#7 [opa internal] load metadata for docker.io/library/golang@sha256:70bd7ddea8b6cbe5d6943cde279d6b67feb10cc924fb9100d1d8757c1575b280
+#7 DONE 0.0s
+
+#8 [control-api internal] load metadata for docker.io/library/node@sha256:1314fb30ec37592d5845e5a160d522c0e680972aa534549940b8d73bde88481a
+#8 DONE 0.0s
+
+#9 [opa internal] load .dockerignore
+#9 transferring context: 289B 0.0s done
+#9 DONE 0.1s
+
+#10 [opa build 2/6] ADD --checksum=sha256:4eddbf690f65d6ca440fa8c1f2ce2a3439070cdf5d42c7aa8669a9e1552fbd59 https://github.com/open-policy-agent/opa/archive/refs/tags/v1.22.4.tar.gz /tmp/opa.tar.gz
+#10 DONE 0.0s
+
+#11 [opa build 1/6] FROM docker.io/library/golang@sha256:70bd7ddea8b6cbe5d6943cde279d6b67feb10cc924fb9100d1d8757c1575b280
+#11 DONE 0.0s
+
+#12 [opa build 5/6] RUN go get golang.org/x/net@v0.62.0 && go mod verify
+#12 CACHED
+
+#13 [opa build 4/6] RUN tar -xzf /tmp/opa.tar.gz --strip-components=1 -C /src
+#13 CACHED
+
+#14 [opa stage-1 1/3] COPY --from=build /out/opa /opa
+#14 CACHED
+
+#15 [opa build 3/6] WORKDIR /src
+#15 CACHED
+
+#16 [opa build 2/6] ADD --checksum=sha256:4eddbf690f65d6ca440fa8c1f2ce2a3439070cdf5d42c7aa8669a9e1552fbd59 https://github.com/open-policy-agent/opa/archive/refs/tags/v1.22.4.tar.gz /tmp/opa.tar.gz
+#16 CACHED
+
+#17 [opa build 6/6] RUN go test golang.org/x/net/html && go build -trimpath -tags=opa_wasm -ldflags='-s -w' -o /out/opa .
+#17 CACHED
+
+#18 [opa stage-1 2/3] COPY --from=build /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt
+#18 CACHED
+
+#19 [opa stage-1 3/3] COPY --from=build /src/LICENSE /licenses/OPA-LICENSE
+#19 CACHED
+
+#20 [control-db 1/2] FROM docker.io/library/postgres@sha256:b6972e1115a4ff8eba5d7f7d19184926d1e16d7d1136ae1e1a7ebf286da0f015
+#20 DONE 0.0s
+
+#21 [control-db 2/2] RUN rm -f /usr/local/bin/gosu
+#21 CACHED
+
+#22 [dashboard build 1/8] FROM docker.io/library/node@sha256:1314fb30ec37592d5845e5a160d522c0e680972aa534549940b8d73bde88481a
+#22 DONE 0.0s
+
+#23 [dashboard internal] load build context
+#23 transferring context: 1.26kB 0.0s done
+#23 DONE 0.0s
+
+#24 [control-api internal] load build context
+#24 transferring context: 6.67kB 0.0s done
+#24 DONE 0.0s
+
+#25 [control-api 4/9] COPY package.json package-lock.json ./
+#25 CACHED
+
+#26 [control-api 7/9] COPY services ./services
+#26 CACHED
+
+#27 [control-api 3/9] WORKDIR /app
+#27 CACHED
+
+#28 [control-api 2/9] RUN apk add --no-cache git ca-certificates zlib=1.4-r0
+#28 CACHED
+
+#29 [control-api 8/9] COPY scripts ./scripts
+#29 CACHED
+
+#30 [control-api 6/9] COPY server ./server
+#30 CACHED
+
+#31 [control-api 5/9] RUN npm ci --omit=dev && rm -rf /root/.npm /usr/local/lib/node_modules/npm /usr/local/lib/node_modules/corepack /opt/yarn* && rm -f /usr/local/bin/npm /usr/local/bin/npx /usr/local/bin/yarn /usr/local/bin/yarnpkg /usr/local/bin/corepack
+#31 CACHED
+
+#32 [control-api 9/9] COPY infra ./infra
+#32 CACHED
+
+#33 [dashboard build 6/8] COPY apps/dashboard ./apps/dashboard
+#33 CACHED
+
+#34 [dashboard runtime 4/6] WORKDIR /app
+#34 CACHED
+
+#35 [dashboard build 2/8] WORKDIR /workspace
+#35 CACHED
+
+#36 [dashboard runtime 2/6] RUN if command -v apk >/dev/null 2>&1; then apk add --no-cache zlib=1.4-r0; fi
+#36 CACHED
+
+#37 [dashboard build 7/8] COPY src ./src
+#37 CACHED
+
+#38 [dashboard runtime 3/6] RUN rm -rf /usr/local/lib/node_modules/npm /usr/local/lib/node_modules/corepack /opt/yarn* && rm -f /usr/local/bin/npm /usr/local/bin/npx /usr/local/bin/yarn /usr/local/bin/yarnpkg /usr/local/bin/corepack
+#38 CACHED
+
+#39 [dashboard build 4/8] RUN cd apps/dashboard && npm ci --ignore-scripts
+#39 CACHED
+
+#40 [dashboard build 3/8] COPY apps/dashboard/package.json apps/dashboard/package-lock.json ./apps/dashboard/
+#40 CACHED
+
+#41 [dashboard build 5/8] RUN ln -s apps/dashboard/node_modules /workspace/node_modules
+#41 CACHED
+
+#42 [dashboard build 8/8] RUN cd apps/dashboard && npm run build
+#42 CACHED
+
+#43 [dashboard runtime 5/6] COPY --from=build --chown=node:node /workspace/apps/dashboard/.next/standalone ./
+#43 CACHED
+
+#44 [dashboard runtime 6/6] COPY --from=build --chown=node:node /workspace/apps/dashboard/.next/static ./apps/dashboard/.next/static
+#44 CACHED
+
+#45 [control-api] exporting to image
+#45 exporting layers done
+#45 writing image sha256:abc0c2946c777eefec30cae1a05724c665f14278e91ae807a5c4fa1cc06663f4 0.0s done
+#45 naming to docker.io/library/agentbrake-product-verify-restore-f956355d-runtime 0.0s done
+#45 DONE 0.1s
+
+#46 [opa] exporting to image
+#46 exporting layers done
+#46 writing image sha256:111f535b25c2610cdc589b50451fb841c5a8b18bd5745863e05b4e6bfe22f8ea 0.1s done
+#46 naming to docker.io/library/agentbrake-opa:1.22.4-3f9e5f443c6e97aa147e 0.0s done
+#46 DONE 0.2s
+
+#47 [dashboard] exporting to image
+#47 exporting layers done
+#47 writing image sha256:8ff760c034fc76926c17711b3253043483430430ed9f047a13b8f7de3c945844 0.0s done
+#47 naming to docker.io/library/agentbrake-product-verify-restore-f956355d-dashboard 0.0s done
+#47 DONE 0.2s
+
+#48 [control-db] exporting to image
+#48 exporting layers done
+#48 writing image sha256:1943b6af93bf775402ebab1ba899be1af720d64657e93d28c764267b378b908d 0.1s done
+#48 naming to docker.io/library/agentbrake-postgres:18-193f481f609ba4086c53 0.0s done
+#48 DONE 0.2s
+
+#49 [control-api] resolving provenance for metadata file
+#49 ...
+
+#50 [control-db] resolving provenance for metadata file
+#50 DONE 0.1s
+
+#51 [opa] resolving provenance for metadata file
+#51 DONE 0.1s
+
+#49 [control-api] resolving provenance for metadata file
+#49 DONE 0.1s
+
+#52 [dashboard] resolving provenance for metadata file
+#52 DONE 0.0s
+ Image agentbrake-postgres:18-193f481f609ba4086c53 Built 
+ Image agentbrake-product-verify-restore-f956355d-dashboard Built 
+ Image agentbrake-opa:1.22.4-3f9e5f443c6e97aa147e Built 
+ Image agentbrake-product-verify-restore-f956355d-runtime Built 
+ Container agentbrake-product-verify-restore-f956355d-target-db-1 Running 
+ Container agentbrake-product-verify-restore-f956355d-control-db-1 Running 
+ Container agentbrake-product-verify-restore-f956355d-opa-1 Creating 
+ Container agentbrake-product-verify-restore-f956355d-mock-target-1 Creating 
+ Network agentbrake-product-verify-restore-f956355d_loopback-ingress Creating 
+ Network agentbrake-product-verify-restore-f956355d_loopback-ingress Creating 
+ Network agentbrake-product-verify-restore-f956355d_loopback-ingress Created 
+ Network agentbrake-product-verify-restore-f956355d_loopback-ingress Created 
+ Container agentbrake-product-verify-restore-f956355d-mock-target-1 Created 
+ Container agentbrake-product-verify-restore-f956355d-opa-1 Created 
+ Container agentbrake-product-verify-restore-f956355d-gateway-1 Creating 
+ Container agentbrake-product-verify-restore-f956355d-gateway-1 Created 
+ Container agentbrake-product-verify-restore-f956355d-control-api-1 Creating 
+ Container agentbrake-product-verify-restore-f956355d-agent-1 Creating 
+ Container agentbrake-product-verify-restore-f956355d-control-api-1 Created 
+ Container agentbrake-product-verify-restore-f956355d-dashboard-1 Creating 
+ Container agentbrake-product-verify-restore-f956355d-agent-1 Created 
+ Container agentbrake-product-verify-restore-f956355d-dashboard-1 Created 
+ Container agentbrake-product-verify-restore-f956355d-ingress-1 Creating 
+ Container agentbrake-product-verify-restore-f956355d-ingress-1 Created 
+ Container agentbrake-product-verify-restore-f956355d-opa-1 Starting 
+ Container agentbrake-product-verify-restore-f956355d-volume-init-1 Starting 
+ Container agentbrake-product-verify-restore-f956355d-opa-1 Started 
+ Container agentbrake-product-verify-restore-f956355d-volume-init-1 Started 
+ Container agentbrake-product-verify-restore-f956355d-volume-init-1 Waiting 
+ Container agentbrake-product-verify-restore-f956355d-volume-init-1 Exited 
+ Container agentbrake-product-verify-restore-f956355d-target-db-1 Waiting 
+ Container agentbrake-product-verify-restore-f956355d-control-db-1 Waiting 
+ Container agentbrake-product-verify-restore-f956355d-control-db-1 Healthy 
+ Container agentbrake-product-verify-restore-f956355d-target-db-1 Healthy 
+ Container agentbrake-product-verify-restore-f956355d-mock-target-1 Starting 
+ Container agentbrake-product-verify-restore-f956355d-mock-target-1 Started 
+ Container agentbrake-product-verify-restore-f956355d-mock-target-1 Waiting 
+ Container agentbrake-product-verify-restore-f956355d-mock-target-1 Healthy 
+ Container agentbrake-product-verify-restore-f956355d-gateway-1 Starting 
+ Container agentbrake-product-verify-restore-f956355d-gateway-1 Started 
+ Container agentbrake-product-verify-restore-f956355d-gateway-1 Waiting 
+ Container agentbrake-product-verify-restore-f956355d-gateway-1 Healthy 
+ Container agentbrake-product-verify-restore-f956355d-agent-1 Starting 
+ Container agentbrake-product-verify-restore-f956355d-control-api-1 Starting 
+ Container agentbrake-product-verify-restore-f956355d-agent-1 Started 
+ Container agentbrake-product-verify-restore-f956355d-control-api-1 Started 
+ Container agentbrake-product-verify-restore-f956355d-control-api-1 Waiting 
+ Container agentbrake-product-verify-restore-f956355d-control-api-1 Healthy 
+ Container agentbrake-product-verify-restore-f956355d-dashboard-1 Starting 
+ Container agentbrake-product-verify-restore-f956355d-dashboard-1 Started 
+ Container agentbrake-product-verify-restore-f956355d-dashboard-1 Waiting 
+ Container agentbrake-product-verify-restore-f956355d-dashboard-1 Healthy 
+ Container agentbrake-product-verify-restore-f956355d-ingress-1 Starting 
+ Container agentbrake-product-verify-restore-f956355d-ingress-1 Started 
+ Container agentbrake-product-verify-restore-f956355d-target-db-1 Waiting 
+ Container agentbrake-product-verify-restore-f956355d-mock-target-1 Waiting 
+ Container agentbrake-product-verify-restore-f956355d-gateway-1 Waiting 
+ Container agentbrake-product-verify-restore-f956355d-agent-1 Waiting 
+ Container agentbrake-product-verify-restore-f956355d-volume-init-1 Waiting 
+ Container agentbrake-product-verify-restore-f956355d-opa-1 Waiting 
+ Container agentbrake-product-verify-restore-f956355d-ingress-1 Waiting 
+ Container agentbrake-product-verify-restore-f956355d-control-db-1 Waiting 
+ Container agentbrake-product-verify-restore-f956355d-dashboard-1 Waiting 
+ Container agentbrake-product-verify-restore-f956355d-control-api-1 Waiting 
+ Container agentbrake-product-verify-restore-f956355d-volume-init-1 Exited 
+ Container agentbrake-product-verify-restore-f956355d-opa-1 Healthy 
+ Container agentbrake-product-verify-restore-f956355d-dashboard-1 Healthy 
+ Container agentbrake-product-verify-restore-f956355d-control-api-1 Healthy 
+ Container agentbrake-product-verify-restore-f956355d-mock-target-1 Healthy 
+ Container agentbrake-product-verify-restore-f956355d-control-db-1 Healthy 
+ Container agentbrake-product-verify-restore-f956355d-gateway-1 Healthy 
+ Container agentbrake-product-verify-restore-f956355d-target-db-1 Healthy 
+ Container agentbrake-product-verify-restore-f956355d-agent-1 Healthy 
+ Container agentbrake-product-verify-restore-f956355d-ingress-1 Healthy 
+PASS full restore preserves target and audit but suspends old authority
+PASS_LOCAL_SERVICE: docs\evidence\f956355d-600a-4b9b-87ea-05a5dbd6da95
+PASS compose-boundaries
+ Image agentbrake-product-verify-candidate-f1eaf5c3-dashboard Building 
+ Image agentbrake-postgres:18-193f481f609ba4086c53 Building 
+ Image agentbrake-product-verify-candidate-f1eaf5c3-runtime Building 
+ Image agentbrake-opa:1.22.4-3f9e5f443c6e97aa147e Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 2.58kB 0.1s done
+#1 DONE 0.1s
+
+#2 [dashboard internal] load build definition from Dockerfile
+#2 transferring dockerfile: 1.37kB done
+#2 DONE 0.1s
+
+#3 [opa internal] load build definition from Opa.Dockerfile
+#3 transferring dockerfile: 918B 0.0s done
+#3 DONE 0.0s
+
+#4 [control-db internal] load build definition from Postgres.Dockerfile
+#4 transferring dockerfile: 316B 0.0s done
+#4 WARN: InvalidDefaultArgInFrom: Default value for ARG ${POSTGRES_BASE_IMAGE} results in empty or invalid base image name (line 2)
+#4 DONE 0.0s
+
+#5 [opa internal] load metadata for docker.io/library/golang@sha256:70bd7ddea8b6cbe5d6943cde279d6b67feb10cc924fb9100d1d8757c1575b280
+#5 DONE 0.0s
+
+#6 [control-api internal] load build definition from Dockerfile
+#6 transferring dockerfile: 568B done
+#6 WARN: InvalidDefaultArgInFrom: Default value for ARG ${NODE_IMAGE} results in empty or invalid base image name (line 2)
+#6 DONE 0.1s
+
+#7 [control-db internal] load metadata for docker.io/library/postgres@sha256:b6972e1115a4ff8eba5d7f7d19184926d1e16d7d1136ae1e1a7ebf286da0f015
+#7 DONE 0.0s
+
+#8 [dashboard internal] load metadata for docker.io/library/node@sha256:1314fb30ec37592d5845e5a160d522c0e680972aa534549940b8d73bde88481a
+#8 DONE 0.0s
+
+#9 [control-api internal] load .dockerignore
+#9 transferring context: 289B 0.0s done
+#9 DONE 0.0s
+
+#10 [control-api build 1/8] FROM docker.io/library/node@sha256:1314fb30ec37592d5845e5a160d522c0e680972aa534549940b8d73bde88481a
+#10 DONE 0.0s
+
+#11 [control-db 1/2] FROM docker.io/library/postgres@sha256:b6972e1115a4ff8eba5d7f7d19184926d1e16d7d1136ae1e1a7ebf286da0f015
+#11 DONE 0.0s
+
+#12 [control-db 2/2] RUN rm -f /usr/local/bin/gosu
+#12 CACHED
+
+#13 [opa build 2/6] ADD --checksum=sha256:4eddbf690f65d6ca440fa8c1f2ce2a3439070cdf5d42c7aa8669a9e1552fbd59 https://github.com/open-policy-agent/opa/archive/refs/tags/v1.22.4.tar.gz /tmp/opa.tar.gz
+#13 DONE 0.0s
+
+#14 [opa build 1/6] FROM docker.io/library/golang@sha256:70bd7ddea8b6cbe5d6943cde279d6b67feb10cc924fb9100d1d8757c1575b280
+#14 DONE 0.0s
+
+#15 [opa stage-1 2/3] COPY --from=build /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt
+#15 CACHED
+
+#16 [opa build 4/6] RUN tar -xzf /tmp/opa.tar.gz --strip-components=1 -C /src
+#16 CACHED
+
+#17 [opa stage-1 1/3] COPY --from=build /out/opa /opa
+#17 CACHED
+
+#18 [opa build 3/6] WORKDIR /src
+#18 CACHED
+
+#19 [opa build 2/6] ADD --checksum=sha256:4eddbf690f65d6ca440fa8c1f2ce2a3439070cdf5d42c7aa8669a9e1552fbd59 https://github.com/open-policy-agent/opa/archive/refs/tags/v1.22.4.tar.gz /tmp/opa.tar.gz
+#19 CACHED
+
+#20 [opa build 5/6] RUN go get golang.org/x/net@v0.62.0 && go mod verify
+#20 CACHED
+
+#21 [opa build 6/6] RUN go test golang.org/x/net/html && go build -trimpath -tags=opa_wasm -ldflags='-s -w' -o /out/opa .
+#21 CACHED
+
+#22 [opa stage-1 3/3] COPY --from=build /src/LICENSE /licenses/OPA-LICENSE
+#22 CACHED
+
+#23 [control-db] exporting to image
+#23 exporting layers done
+#23 writing image sha256:9af190945d6e9c8e20fba6f13960234fda848ee9944cf20ae6e56f72c5004cd3 0.0s done
+#23 naming to docker.io/library/agentbrake-postgres:18-193f481f609ba4086c53 0.0s done
+#23 DONE 0.2s
+
+#24 [dashboard internal] load build context
+#24 transferring context: 194.68kB 0.1s done
+#24 DONE 0.2s
+
+#25 [control-api internal] load build context
+#25 transferring context: 660.75kB 0.2s done
+#25 DONE 0.2s
+
+#26 [opa] exporting to image
+#26 exporting layers done
+#26 writing image sha256:30c2ed904a73bd4e103dd7f0f3792aef92f2b173a9c443c0e39a39d0d0d20ff5 done
+#26 naming to docker.io/library/agentbrake-opa:1.22.4-3f9e5f443c6e97aa147e 0.1s done
+#26 DONE 0.2s
+
+#27 [dashboard build 3/8] COPY apps/dashboard/package.json apps/dashboard/package-lock.json ./apps/dashboard/
+#27 CACHED
+
+#28 [dashboard build 2/8] WORKDIR /workspace
+#28 CACHED
+
+#29 [dashboard runtime 2/6] RUN if command -v apk >/dev/null 2>&1; then apk add --no-cache zlib=1.4-r0; fi
+#29 CACHED
+
+#30 [dashboard build 4/8] RUN cd apps/dashboard && npm ci --ignore-scripts
+#30 CACHED
+
+#31 [dashboard build 7/8] COPY src ./src
+#31 CACHED
+
+#32 [dashboard runtime 3/6] RUN rm -rf /usr/local/lib/node_modules/npm /usr/local/lib/node_modules/corepack /opt/yarn* && rm -f /usr/local/bin/npm /usr/local/bin/npx /usr/local/bin/yarn /usr/local/bin/yarnpkg /usr/local/bin/corepack
+#32 CACHED
+
+#33 [dashboard build 5/8] RUN ln -s apps/dashboard/node_modules /workspace/node_modules
+#33 CACHED
+
+#34 [dashboard build 6/8] COPY apps/dashboard ./apps/dashboard
+#34 CACHED
+
+#35 [dashboard build 8/8] RUN cd apps/dashboard && npm run build
+#35 CACHED
+
+#36 [dashboard runtime 5/6] COPY --from=build --chown=node:node /workspace/apps/dashboard/.next/standalone ./
+#36 CACHED
+
+#37 [dashboard runtime 4/6] WORKDIR /app
+#37 CACHED
+
+#38 [dashboard runtime 6/6] COPY --from=build --chown=node:node /workspace/apps/dashboard/.next/static ./apps/dashboard/.next/static
+#38 CACHED
+
+#39 [control-api 4/9] COPY package.json package-lock.json ./
+#39 CACHED
+
+#40 [control-api 7/9] COPY services ./services
+#40 CACHED
+
+#41 [control-api 2/9] RUN apk add --no-cache git ca-certificates zlib=1.4-r0
+#41 CACHED
+
+#42 [control-api 3/9] WORKDIR /app
+#42 CACHED
+
+#43 [control-api 6/9] COPY server ./server
+#43 CACHED
+
+#44 [control-api 8/9] COPY scripts ./scripts
+#44 CACHED
+
+#45 [control-api 5/9] RUN npm ci --omit=dev && rm -rf /root/.npm /usr/local/lib/node_modules/npm /usr/local/lib/node_modules/corepack /opt/yarn* && rm -f /usr/local/bin/npm /usr/local/bin/npx /usr/local/bin/yarn /usr/local/bin/yarnpkg /usr/local/bin/corepack
+#45 CACHED
+
+#46 [control-api 9/9] COPY infra ./infra
+#46 CACHED
+
+#47 [dashboard] exporting to image
+#47 exporting layers done
+#47 writing image sha256:4efa2bbba7f5bb812dc6706054d3c7b602fde7c2e33a734f77814bb2b927fc61 done
+#47 naming to docker.io/library/agentbrake-product-verify-candidate-f1eaf5c3-dashboard 0.0s done
+#47 DONE 0.1s
+
+#48 [control-api] exporting to image
+#48 exporting layers done
+#48 writing image sha256:569c8cd5425be4d2c93a7cc497654d9b1e7dce6852cb4b742ec61c8da0123195 done
+#48 naming to docker.io/library/agentbrake-product-verify-candidate-f1eaf5c3-runtime 0.0s done
+#48 DONE 0.1s
+
+#49 [opa] resolving provenance for metadata file
+#49 DONE 0.1s
+
+#50 [control-api] resolving provenance for metadata file
+#50 DONE 0.0s
+
+#51 [control-db] resolving provenance for metadata file
+#51 DONE 0.1s
+
+#52 [dashboard] resolving provenance for metadata file
+#52 DONE 0.0s
+ Image agentbrake-opa:1.22.4-3f9e5f443c6e97aa147e Built 
+ Image agentbrake-product-verify-candidate-f1eaf5c3-dashboard Built 
+ Image agentbrake-product-verify-candidate-f1eaf5c3-runtime Built 
+ Image agentbrake-postgres:18-193f481f609ba4086c53 Built 
+ Container agentbrake-product-verify-candidate-f1eaf5c3-target-db-1 Running 
+ Container agentbrake-product-verify-candidate-f1eaf5c3-control-db-1 Running 
+ Network agentbrake-product-verify-candidate-f1eaf5c3_agent Creating 
+ Network agentbrake-product-verify-candidate-f1eaf5c3_agent Creating 
+ Container agentbrake-product-verify-candidate-f1eaf5c3-mock-target-1 Creating 
+ Container agentbrake-product-verify-candidate-f1eaf5c3-opa-1 Creating 
+ Network agentbrake-product-verify-candidate-f1eaf5c3_github-private Creating 
+ Network agentbrake-product-verify-candidate-f1eaf5c3_github-private Creating 
+ Network agentbrake-product-verify-candidate-f1eaf5c3_dashboard Creating 
+ Network agentbrake-product-verify-candidate-f1eaf5c3_dashboard Creating 
+ Network agentbrake-product-verify-candidate-f1eaf5c3_github-outbound Creating 
+ Network agentbrake-product-verify-candidate-f1eaf5c3_github-outbound Creating 
+ Network agentbrake-product-verify-candidate-f1eaf5c3_loopback-ingress Creating 
+ Network agentbrake-product-verify-candidate-f1eaf5c3_loopback-ingress Creating 
+ Network agentbrake-product-verify-candidate-f1eaf5c3_agent Created 
+ Network agentbrake-product-verify-candidate-f1eaf5c3_agent Created 
+ Network agentbrake-product-verify-candidate-f1eaf5c3_dashboard Created 
+ Network agentbrake-product-verify-candidate-f1eaf5c3_dashboard Created 
+ Network agentbrake-product-verify-candidate-f1eaf5c3_github-private Created 
+ Network agentbrake-product-verify-candidate-f1eaf5c3_github-private Created 
+ Container agentbrake-product-verify-candidate-f1eaf5c3-opa-1 Created 
+ Network agentbrake-product-verify-candidate-f1eaf5c3_loopback-ingress Created 
+ Network agentbrake-product-verify-candidate-f1eaf5c3_loopback-ingress Created 
+ Container agentbrake-product-verify-candidate-f1eaf5c3-mock-target-1 Created 
+ Network agentbrake-product-verify-candidate-f1eaf5c3_github-outbound Created 
+ Network agentbrake-product-verify-candidate-f1eaf5c3_github-outbound Created 
+ Container agentbrake-product-verify-candidate-f1eaf5c3-github-egress-1 Creating 
+ Container agentbrake-product-verify-candidate-f1eaf5c3-github-egress-1 Created 
+ Container agentbrake-product-verify-candidate-f1eaf5c3-gateway-1 Creating 
+ Container agentbrake-product-verify-candidate-f1eaf5c3-gateway-1 Created 
+ Container agentbrake-product-verify-candidate-f1eaf5c3-agent-1 Creating 
+ Container agentbrake-product-verify-candidate-f1eaf5c3-control-api-1 Creating 
+ Container agentbrake-product-verify-candidate-f1eaf5c3-agent-1 Created 
+ Container agentbrake-product-verify-candidate-f1eaf5c3-control-api-1 Created 
+ Container agentbrake-product-verify-candidate-f1eaf5c3-dashboard-1 Creating 
+ Container agentbrake-product-verify-candidate-f1eaf5c3-dashboard-1 Created 
+ Container agentbrake-product-verify-candidate-f1eaf5c3-ingress-1 Creating 
+ Container agentbrake-product-verify-candidate-f1eaf5c3-ingress-1 Created 
+ Container agentbrake-product-verify-candidate-f1eaf5c3-github-egress-1 Starting 
+ Container agentbrake-product-verify-candidate-f1eaf5c3-opa-1 Starting 
+ Container agentbrake-product-verify-candidate-f1eaf5c3-volume-init-1 Starting 
+ Container agentbrake-product-verify-candidate-f1eaf5c3-github-egress-1 Started 
+ Container agentbrake-product-verify-candidate-f1eaf5c3-opa-1 Started 
+ Container agentbrake-product-verify-candidate-f1eaf5c3-volume-init-1 Started 
+ Container agentbrake-product-verify-candidate-f1eaf5c3-volume-init-1 Waiting 
+ Container agentbrake-product-verify-candidate-f1eaf5c3-volume-init-1 Exited 
+ Container agentbrake-product-verify-candidate-f1eaf5c3-target-db-1 Waiting 
+ Container agentbrake-product-verify-candidate-f1eaf5c3-control-db-1 Waiting 
+ Container agentbrake-product-verify-candidate-f1eaf5c3-control-db-1 Healthy 
+ Container agentbrake-product-verify-candidate-f1eaf5c3-target-db-1 Healthy 
+ Container agentbrake-product-verify-candidate-f1eaf5c3-mock-target-1 Starting 
+ Container agentbrake-product-verify-candidate-f1eaf5c3-mock-target-1 Started 
+ Container agentbrake-product-verify-candidate-f1eaf5c3-mock-target-1 Waiting 
+ Container agentbrake-product-verify-candidate-f1eaf5c3-mock-target-1 Healthy 
+ Container agentbrake-product-verify-candidate-f1eaf5c3-gateway-1 Starting 
+ Container agentbrake-product-verify-candidate-f1eaf5c3-gateway-1 Started 
+ Container agentbrake-product-verify-candidate-f1eaf5c3-gateway-1 Waiting 
+ Container agentbrake-product-verify-candidate-f1eaf5c3-gateway-1 Healthy 
+ Container agentbrake-product-verify-candidate-f1eaf5c3-control-api-1 Starting 
+ Container agentbrake-product-verify-candidate-f1eaf5c3-agent-1 Starting 
+ Container agentbrake-product-verify-candidate-f1eaf5c3-control-api-1 Started 
+ Container agentbrake-product-verify-candidate-f1eaf5c3-control-api-1 Waiting 
+ Container agentbrake-product-verify-candidate-f1eaf5c3-agent-1 Started 
+ Container agentbrake-product-verify-candidate-f1eaf5c3-control-api-1 Healthy 
+ Container agentbrake-product-verify-candidate-f1eaf5c3-dashboard-1 Starting 
+ Container agentbrake-product-verify-candidate-f1eaf5c3-dashboard-1 Started 
+ Container agentbrake-product-verify-candidate-f1eaf5c3-dashboard-1 Waiting 
+ Container agentbrake-product-verify-candidate-f1eaf5c3-dashboard-1 Healthy 
+ Container agentbrake-product-verify-candidate-f1eaf5c3-ingress-1 Starting 
+ Container agentbrake-product-verify-candidate-f1eaf5c3-ingress-1 Started 
+ Container agentbrake-product-verify-candidate-f1eaf5c3-target-db-1 Waiting 
+ Container agentbrake-product-verify-candidate-f1eaf5c3-github-egress-1 Waiting 
+ Container agentbrake-product-verify-candidate-f1eaf5c3-control-api-1 Waiting 
+ Container agentbrake-product-verify-candidate-f1eaf5c3-mock-target-1 Waiting 
+ Container agentbrake-product-verify-candidate-f1eaf5c3-dashboard-1 Waiting 
+ Container agentbrake-product-verify-candidate-f1eaf5c3-agent-1 Waiting 
+ Container agentbrake-product-verify-candidate-f1eaf5c3-volume-init-1 Waiting 
+ Container agentbrake-product-verify-candidate-f1eaf5c3-opa-1 Waiting 
+ Container agentbrake-product-verify-candidate-f1eaf5c3-control-db-1 Waiting 
+ Container agentbrake-product-verify-candidate-f1eaf5c3-gateway-1 Waiting 
+ Container agentbrake-product-verify-candidate-f1eaf5c3-ingress-1 Waiting 
+ Container agentbrake-product-verify-candidate-f1eaf5c3-volume-init-1 Exited 
+ Container agentbrake-product-verify-candidate-f1eaf5c3-opa-1 Healthy 
+ Container agentbrake-product-verify-candidate-f1eaf5c3-agent-1 Healthy 
+ Container agentbrake-product-verify-candidate-f1eaf5c3-control-db-1 Healthy 
+ Container agentbrake-product-verify-candidate-f1eaf5c3-control-api-1 Healthy 
+ Container agentbrake-product-verify-candidate-f1eaf5c3-dashboard-1 Healthy 
+ Container agentbrake-product-verify-candidate-f1eaf5c3-gateway-1 Healthy 
+ Container agentbrake-product-verify-candidate-f1eaf5c3-github-egress-1 Healthy 
+ Container agentbrake-product-verify-candidate-f1eaf5c3-target-db-1 Healthy 
+ Container agentbrake-product-verify-candidate-f1eaf5c3-mock-target-1 Healthy 
+ Container agentbrake-product-verify-candidate-f1eaf5c3-ingress-1 Healthy 
+PASS rebuilt-opa-policy-tests
+PASS fresh-tls-install
+PASS managed-owner-over-tls
+PASS installed-app-identity-ui
+PASS installed-https-browser
+PASS agent-direct-egress-bypass-denied
+{"runId":"f1eaf5c3-a4fb-45fd-976c-2d2b3d0a4dbe","result":"PASS_LOCAL_CANDIDATE","directory":"docs\\evidence\\f1eaf5c3-a4fb-45fd-976c-2d2b3d0a4dbe"}
+PASS_LOCAL_SECURITY_CHECKS: F:\project love\AgentBrake\docs\evidence\7475b1f1-4dc8-4f6e-8e8e-3df5d9832a25
+LOCAL_MVP_VERIFIED_EXTERNAL_GATES_OPEN source=c043156a9a2f69b6d3ddfc0eb6eec315faba38250f8eb38ae2a02f7087f7c999

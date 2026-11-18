@@ -1,0 +1,11 @@
+{
+  "At": "2026-11-17T16:48:33.2742336Z",
+  "Result": "PASS_SCOPED_VM_SHUTDOWN",
+  "Vm": "AgentBrake-Ubuntu24-Validation-20261117",
+  "Uuid": "b51bc28b-62a5-4e29-be67-2c350ea4dda3",
+  "PowerState": "poweroff",
+  "Nic1": "none",
+  "SeedDetached": true,
+  "PublicProxyStopped": true,
+  "Scope": "Preserved test VDI and evidence; detached only completed seed ISO, disabled test NIC, stopped exact owned dependency proxy. No user installation/data removed."
+}

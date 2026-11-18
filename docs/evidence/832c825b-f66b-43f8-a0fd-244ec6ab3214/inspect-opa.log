@@ -1,0 +1,266 @@
+[
+    {
+        "Id": "8c75f435866eac0db0d26fdbc9d23c0445e064e5c38194d544a36bca928f8ec3",
+        "Created": "2026-11-17T16:56:54.621561731Z",
+        "Path": "/opa",
+        "Args": [
+            "run",
+            "--server",
+            "--addr=0.0.0.0:8181",
+            "--authentication=token",
+            "--authorization=basic",
+            "--log-level=error",
+            "/policy/agentbrake.rego",
+            "/policy/authz.rego",
+            "/run/secrets/auth.json"
+        ],
+        "State": {
+            "Status": "running",
+            "Running": true,
+            "Paused": false,
+            "Restarting": false,
+            "OOMKilled": false,
+            "Dead": false,
+            "Pid": 52092,
+            "ExitCode": 0,
+            "Error": "",
+            "StartedAt": "2026-11-17T16:56:55.132125714Z",
+            "FinishedAt": "0001-01-01T00:00:00Z"
+        },
+        "Image": "sha256:327128c76b65ec10a3c071a6a24647c1fddc1af3232a9d7a8fd9f8dec040cdc1",
+        "ResolvConfPath": "/var/lib/docker/containers/8c75f435866eac0db0d26fdbc9d23c0445e064e5c38194d544a36bca928f8ec3/resolv.conf",
+        "HostnamePath": "/var/lib/docker/containers/8c75f435866eac0db0d26fdbc9d23c0445e064e5c38194d544a36bca928f8ec3/hostname",
+        "HostsPath": "/var/lib/docker/containers/8c75f435866eac0db0d26fdbc9d23c0445e064e5c38194d544a36bca928f8ec3/hosts",
+        "LogPath": "",
+        "Name": "/agentbrake-a-832c825b-opa-1",
+        "RestartCount": 0,
+        "Driver": "overlay2",
+        "Platform": "linux",
+        "MountLabel": "",
+        "ProcessLabel": "",
+        "AppArmorProfile": "",
+        "ExecIDs": null,
+        "HostConfig": {
+            "Binds": [
+                "F:\\project love\\AgentBrake\\services\\policy\\agentbrake.rego:/policy/agentbrake.rego:ro",
+                "F:\\project love\\AgentBrake\\services\\policy\\authz.rego:/policy/authz.rego:ro",
+                "F:/project love/AgentBrake/.agentbrake-local/isolation-832c825b-f66b-43f8-a0fd-244ec6ab3214/opa-auth.json:/run/secrets/auth.json:ro"
+            ],
+            "ContainerIDFile": "",
+            "LogConfig": {
+                "Type": "local",
+                "Config": {}
+            },
+            "NetworkMode": "agentbrake-a-832c825b_protected",
+            "PortBindings": {},
+            "RestartPolicy": {
+                "Name": "no",
+                "MaximumRetryCount": 0
+            },
+            "AutoRemove": false,
+            "VolumeDriver": "",
+            "VolumesFrom": null,
+            "ConsoleSize": [
+                0,
+                0
+            ],
+            "CapAdd": null,
+            "CapDrop": [
+                "ALL"
+            ],
+            "CgroupnsMode": "private",
+            "Dns": null,
+            "DnsOptions": null,
+            "DnsSearch": null,
+            "ExtraHosts": [],
+            "GroupAdd": [
+                "1000"
+            ],
+            "IpcMode": "private",
+            "Cgroup": "",
+            "Links": null,
+            "OomScoreAdj": 0,
+            "PidMode": "",
+            "Privileged": false,
+            "PublishAllPorts": false,
+            "ReadonlyRootfs": true,
+            "SecurityOpt": [
+                "no-new-privileges:true"
+            ],
+            "UTSMode": "",
+            "UsernsMode": "",
+            "ShmSize": 67108864,
+            "Runtime": "runc",
+            "Isolation": "",
+            "CpuShares": 0,
+            "Memory": 268435456,
+            "NanoCpus": 0,
+            "CgroupParent": "",
+            "BlkioWeight": 0,
+            "BlkioWeightDevice": null,
+            "BlkioDeviceReadBps": null,
+            "BlkioDeviceWriteBps": null,
+            "BlkioDeviceReadIOps": null,
+            "BlkioDeviceWriteIOps": null,
+            "CpuPeriod": 0,
+            "CpuQuota": 0,
+            "CpuRealtimePeriod": 0,
+            "CpuRealtimeRuntime": 0,
+            "CpusetCpus": "",
+            "CpusetMems": "",
+            "Devices": null,
+            "DeviceCgroupRules": null,
+            "DeviceRequests": null,
+            "MemoryReservation": 0,
+            "MemorySwap": 536870912,
+            "MemorySwappiness": null,
+            "OomKillDisable": null,
+            "PidsLimit": 64,
+            "Ulimits": null,
+            "CpuCount": 0,
+            "CpuPercent": 0,
+            "IOMaximumIOps": 0,
+            "IOMaximumBandwidth": 0,
+            "MaskedPaths": [
+                "/proc/acpi",
+                "/proc/asound",
+                "/proc/interrupts",
+                "/proc/kcore",
+                "/proc/keys",
+                "/proc/latency_stats",
+                "/proc/sched_debug",
+                "/proc/scsi",
+                "/proc/timer_list",
+                "/proc/timer_stats",
+                "/sys/devices/virtual/powercap",
+                "/sys/firmware"
+            ],
+            "ReadonlyPaths": [
+                "/proc/bus",
+                "/proc/fs",
+                "/proc/irq",
+                "/proc/sys",
+                "/proc/sysrq-trigger"
+            ]
+        },
+        "GraphDriver": {
+            "Data": {
+                "ID": "8c75f435866eac0db0d26fdbc9d23c0445e064e5c38194d544a36bca928f8ec3",
+                "LowerDir": "/var/lib/docker/overlay2/59b1c86b35ca7f69af269bf72fa26ae6fff919f8bd9e6cde36a0c33e8c7beb77-init/diff:/var/lib/docker/overlay2/9aaa14520ad3fb7002d88af5f73545ac883f076f0ca8b55b9c82a859a3c7caa4/diff:/var/lib/docker/overlay2/fa9bf49f11517c6577637d1bdbe9c5c4fdb6120abc4933078b98e07a644fb893/diff",
+                "MergedDir": "/var/lib/docker/overlay2/59b1c86b35ca7f69af269bf72fa26ae6fff919f8bd9e6cde36a0c33e8c7beb77/merged",
+                "UpperDir": "/var/lib/docker/overlay2/59b1c86b35ca7f69af269bf72fa26ae6fff919f8bd9e6cde36a0c33e8c7beb77/diff",
+                "WorkDir": "/var/lib/docker/overlay2/59b1c86b35ca7f69af269bf72fa26ae6fff919f8bd9e6cde36a0c33e8c7beb77/work"
+            },
+            "Name": "overlay2"
+        },
+        "Mounts": [
+            {
+                "Type": "bind",
+                "Source": "F:\\project love\\AgentBrake\\services\\policy\\agentbrake.rego",
+                "Destination": "/policy/agentbrake.rego",
+                "Mode": "ro",
+                "RW": false,
+                "Propagation": "rprivate"
+            },
+            {
+                "Type": "bind",
+                "Source": "F:\\project love\\AgentBrake\\services\\policy\\authz.rego",
+                "Destination": "/policy/authz.rego",
+                "Mode": "ro",
+                "RW": false,
+                "Propagation": "rprivate"
+            },
+            {
+                "Type": "bind",
+                "Source": "F:/project love/AgentBrake/.agentbrake-local/isolation-832c825b-f66b-43f8-a0fd-244ec6ab3214/opa-auth.json",
+                "Destination": "/run/secrets/auth.json",
+                "Mode": "ro",
+                "RW": false,
+                "Propagation": "rprivate"
+            }
+        ],
+        "Config": {
+            "Hostname": "8c75f435866e",
+            "Domainname": "",
+            "User": "1000:1000",
+            "AttachStdin": false,
+            "AttachStdout": true,
+            "AttachStderr": true,
+            "Tty": false,
+            "OpenStdin": false,
+            "StdinOnce": false,
+            "Env": [
+                "PATH=/usr/local/sbin:/usr/local/bin:/usr/bin:/usr/sbin:/sbin:/bin:/",
+                "SSL_CERT_FILE=/etc/ssl/certs/ca-certificates.crt"
+            ],
+            "Cmd": [
+                "run",
+                "--server",
+                "--addr=0.0.0.0:8181",
+                "--authentication=token",
+                "--authorization=basic",
+                "--log-level=error",
+                "/policy/agentbrake.rego",
+                "/policy/authz.rego",
+                "/run/secrets/auth.json"
+            ],
+            "Image": "openpolicyagent/opa@sha256:12cecac5a174368f7d3f09d3a19d040ebe0c91d576e520335ae7a985a26e39d3",
+            "Volumes": null,
+            "WorkingDir": "",
+            "Entrypoint": [
+                "/opa"
+            ],
+            "Labels": {
+                "com.docker.compose.config-hash": "1652abf7253ae00679ea021071290f5411cbeeb68093d0dd72c6a49ebd3a217c",
+                "com.docker.compose.container-number": "1",
+                "com.docker.compose.depends_on": "",
+                "com.docker.compose.image": "sha256:327128c76b65ec10a3c071a6a24647c1fddc1af3232a9d7a8fd9f8dec040cdc1",
+                "com.docker.compose.oneoff": "False",
+                "com.docker.compose.project": "agentbrake-a-832c825b",
+                "com.docker.compose.project.config_files": "F:\\project love\\AgentBrake\\infra\\local\\compose.yaml,F:\\project love\\AgentBrake\\infra\\local\\codex.compose.yaml,F:\\project love\\AgentBrake\\infra\\local\\codex-gpu.compose.yaml",
+                "com.docker.compose.project.working_dir": "F:\\project love\\AgentBrake\\infra\\local",
+                "com.docker.compose.service": "opa",
+                "com.docker.compose.version": "5.7.0",
+                "dev.chainguard.image.title": "static",
+                "dev.chainguard.package.main": "",
+                "org.opencontainers.image.authors": "Torin Sandall \u003ctorinsandall@gmail.com\u003e",
+                "org.opencontainers.image.created": "2026-10-28T20:49:35Z",
+                "org.opencontainers.image.source": "https://github.com/open-policy-agent/opa",
+                "org.opencontainers.image.title": "static",
+                "org.opencontainers.image.url": "https://images.chainguard.dev/directory/image/static/overview",
+                "org.opencontainers.image.vendor": "Chainguard"
+            }
+        },
+        "NetworkSettings": {
+            "SandboxID": "8ec2bbae973d8c5873ded51a13ef29ca465515d18e2708007f4c91d017fb72b0",
+            "SandboxKey": "/var/run/docker/netns/8ec2bbae973d",
+            "Ports": {},
+            "Networks": {
+                "agentbrake-a-832c825b_protected": {
+                    "IPAMConfig": null,
+                    "Links": null,
+                    "Aliases": [
+                        "agentbrake-a-832c825b-opa-1",
+                        "opa"
+                    ],
+                    "DriverOpts": null,
+                    "GwPriority": 0,
+                    "NetworkID": "bec012614f5abe27e7c3b2a51c124dd3a8188a0b70e2f9c1e11632f2ca0a1953",
+                    "EndpointID": "50293e079033060a71bb45a71c07b467ce3a1586040e2b42eeb3c4ca1ca31eac",
+                    "Gateway": "",
+                    "IPAddress": "192.168.0.2",
+                    "MacAddress": "da:c7:c2:73:94:2a",
+                    "IPPrefixLen": 20,
+                    "IPv6Gateway": "",
+                    "GlobalIPv6Address": "",
+                    "GlobalIPv6PrefixLen": 0,
+                    "DNSNames": [
+                        "agentbrake-a-832c825b-opa-1",
+                        "opa",
+                        "8c75f435866e"
+                    ]
+                }
+            }
+        }
+    }
+]

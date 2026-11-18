@@ -1,0 +1,26 @@
+/policy/agentbrake_test.rego:20:
+data.agentbrake_test.test_wrong_audience: PASS (3.1761ms)
+/policy/agentbrake_test.rego:19:
+data.agentbrake_test.test_wrong_tenant: PASS (3.4696ms)
+/policy/agentbrake_test.rego:18:
+data.agentbrake_test.test_wrong_identity: PASS (3.0683ms)
+/policy/agentbrake_test.rego:15:
+data.agentbrake_test.test_expired_grant: PASS (5.9613ms)
+/policy/agentbrake_test.rego:21:
+data.agentbrake_test.test_revoked: PASS (1.8387ms)
+/policy/agentbrake_test.rego:23:
+data.agentbrake_test.test_row_budget: PASS (3.6597ms)
+/policy/agentbrake_test.rego:24:
+data.agentbrake_test.test_missing_context: PASS (1.243ms)
+/policy/agentbrake_test.rego:17:
+data.agentbrake_test.test_unknown_tool: PASS (8.7644ms)
+/policy/agentbrake_test.rego:16:
+data.agentbrake_test.test_outside_resource: PASS (9.1241ms)
+/policy/agentbrake_test.rego:22:
+data.agentbrake_test.test_quota: PASS (2.301ms)
+/policy/agentbrake_test.rego:14:
+data.agentbrake_test.test_write_requires_review: PASS (11.3699ms)
+/policy/agentbrake_test.rego:13:
+data.agentbrake_test.test_allowed_read: PASS (11.7035ms)
+--------------------------------------------------------------------------------
+PASS: 12/12

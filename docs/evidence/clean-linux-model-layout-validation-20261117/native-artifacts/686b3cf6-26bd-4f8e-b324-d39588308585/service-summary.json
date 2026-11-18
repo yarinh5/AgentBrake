@@ -1,0 +1,149 @@
+{
+  "runId": "686b3cf6-26bd-4f8e-b324-d39588308585",
+  "sourceHash": "52f0a7bfad1233158e2e40256165fbe217ef14f8c320f3da0711668d72a6528b",
+  "startedAt": "2026-11-17T14:28:30.813Z",
+  "result": "PASS_LOCAL_SERVICE",
+  "cases": [
+    {
+      "name": "managed owner bootstrap and invited reviewer work through installed proxy",
+      "result": "PASS",
+      "observed": {
+        "legacyKeysDenied": true,
+        "reviewerRole": "approver",
+        "reviewerTeamAccessDenied": true
+      }
+    },
+    {
+      "name": "installed browser account, team and settings workflow",
+      "result": "PASS",
+      "observed": {
+        "accountLogin": true,
+        "persistedReviewerVisible": true,
+        "profileVisible": true,
+        "signedOut": true,
+        "browserErrors": 0,
+        "externalRequests": 0,
+        "credentialStorage": {
+          "local": [],
+          "session": []
+        }
+      }
+    },
+    {
+      "name": "encrypted consistent backup resumes original installation",
+      "result": "PASS",
+      "observed": {
+        "bytes": 26018253,
+        "sourceResumed": true
+      }
+    },
+    {
+      "name": "oversized backup fails without publishing and resumes source",
+      "result": "PASS",
+      "observed": {
+        "rejectedOversizedSnapshot": true,
+        "artifactNotPublished": true,
+        "sourceResumed": true,
+        "originalContainersPreserved": true
+      }
+    },
+    {
+      "name": "wrong key and existing destination rejected without damage",
+      "result": "PASS",
+      "observed": {
+        "sourceTargetUnchanged": true,
+        "newDestinationAbsent": true
+      }
+    },
+    {
+      "name": "foreign exact-name volumes refused without content or metadata changes",
+      "result": "PASS",
+      "observed": {
+        "cases": [
+          {
+            "suffix": "control-data",
+            "labels": "no Compose label",
+            "before": {
+              "uid": 0,
+              "gid": 0,
+              "mode": 489,
+              "sentinel": "synthetic collision sentinel"
+            },
+            "after": {
+              "uid": 0,
+              "gid": 0,
+              "mode": 489,
+              "sentinel": "synthetic collision sentinel"
+            },
+            "destinationAbsent": true
+          },
+          {
+            "suffix": "target-data",
+            "labels": "foreign Compose label",
+            "before": {
+              "uid": 0,
+              "gid": 0,
+              "mode": 489,
+              "sentinel": "synthetic collision sentinel"
+            },
+            "after": {
+              "uid": 0,
+              "gid": 0,
+              "mode": 489,
+              "sentinel": "synthetic collision sentinel"
+            },
+            "destinationAbsent": true
+          },
+          {
+            "suffix": "git-data",
+            "labels": "foreign Compose label",
+            "before": {
+              "uid": 0,
+              "gid": 0,
+              "mode": 489,
+              "sentinel": "synthetic collision sentinel"
+            },
+            "after": {
+              "uid": 0,
+              "gid": 0,
+              "mode": 489,
+              "sentinel": "synthetic collision sentinel"
+            },
+            "destinationAbsent": true
+          }
+        ]
+      }
+    },
+    {
+      "name": "full restore preserves target and audit but suspends old authority",
+      "result": "PASS",
+      "observed": {
+        "agentId": "c52f05d3-770a-49d9-8a9e-f9019f97de76",
+        "oldTokenDenied": true,
+        "pendingBlocked": true,
+        "auditPrefixPreserved": true,
+        "paused": true,
+        "accountsPreserved": true,
+        "invitationAndRecoveryTokensInvalidated": true
+      }
+    }
+  ],
+  "scope": "Local synthetic service maintenance; encrypted cold snapshot, new-installation restore and authority suspension.",
+  "cleanup": [
+    {
+      "project": "agentbrake-product-verify-restore-686b3cf6",
+      "result": "PASS",
+      "containers": 0,
+      "volumes": 0,
+      "networks": 0
+    },
+    {
+      "project": "agentbrake-product-verify-service-686b3cf6",
+      "result": "PASS",
+      "containers": 0,
+      "volumes": 0,
+      "networks": 0
+    }
+  ],
+  "finishedAt": "2026-11-17T14:34:40.808Z"
+}

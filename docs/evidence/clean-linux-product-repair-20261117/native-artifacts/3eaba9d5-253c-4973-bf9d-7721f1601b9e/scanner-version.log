@@ -1,0 +1,50 @@
+Unable to find image 'semgrep/semgrep@sha256:cc1b68266f267878b39739373ea9985b9a78e5d64497dd875c8de100b22695ed' locally
+docker.io/semgrep/semgrep@sha256:cc1b68266f267878b39739373ea9985b9a78e5d64497dd875c8de100b22695ed: Pulling from semgrep/semgrep
+678147e73337: Pulling fs layer
+5e9b4a97f639: Pulling fs layer
+21495a98d08f: Pulling fs layer
+777d1f35a34c: Pulling fs layer
+ebe3c1bc793f: Pulling fs layer
+bd9ddc54bea9: Pulling fs layer
+92b52671f041: Pulling fs layer
+a395850e2056: Pulling fs layer
+20970f6e00d7: Pulling fs layer
+d43ffef2f55c: Pulling fs layer
+a19e714f9403: Pulling fs layer
+c51ea70fe996: Pulling fs layer
+4b7fe183b993: Pulling fs layer
+7e9b9e935201: Pulling fs layer
+7a86cee43274: Pulling fs layer
+7a86cee43274: Download complete
+678147e73337: Download complete
+21495a98d08f: Download complete
+5e9b4a97f639: Download complete
+bd9ddc54bea9: Download complete
+a19e714f9403: Download complete
+ebe3c1bc793f: Download complete
+4b7fe183b993: Download complete
+c51ea70fe996: Download complete
+7e9b9e935201: Download complete
+5e9b4a97f639: Pull complete
+b6cf1b432f4e: Download complete
+21495a98d08f: Pull complete
+92b52671f041: Download complete
+d43ffef2f55c: Download complete
+777d1f35a34c: Download complete
+777d1f35a34c: Pull complete
+ebe3c1bc793f: Pull complete
+bd9ddc54bea9: Pull complete
+92b52671f041: Pull complete
+a395850e2056: Download complete
+20970f6e00d7: Download complete
+a395850e2056: Pull complete
+20970f6e00d7: Pull complete
+a19e714f9403: Pull complete
+d43ffef2f55c: Pull complete
+4b7fe183b993: Pull complete
+c51ea70fe996: Pull complete
+7e9b9e935201: Pull complete
+7a86cee43274: Pull complete
+678147e73337: Pull complete
+Digest: sha256:cc1b68266f267878b39739373ea9985b9a78e5d64497dd875c8de100b22695ed
+Status: Downloaded newer image for semgrep/semgrep@sha256:cc1b68266f267878b39739373ea9985b9a78e5d64497dd875c8de100b22695ed

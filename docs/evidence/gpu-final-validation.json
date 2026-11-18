@@ -1,0 +1,22 @@
+{
+  "startedAt": "2026-11-17T17:00:57.5467168Z",
+  "sourceHash": "3ea2c8eb9d847d6213333172121d0e235fb0ef0e4efe44946108d0f4e18fb0c6",
+  "profile": "gpu-8k",
+  "result": "FAIL",
+  "stages": [
+    {
+      "seconds": 77.8,
+      "exitCode": 0,
+      "log": ".agentbrake-local/gpu-final-enterprise.log",
+      "name": "enterprise"
+    },
+    {
+      "seconds": 858.56,
+      "exitCode": 1,
+      "log": ".agentbrake-local/gpu-final-release.log",
+      "name": "release"
+    }
+  ],
+  "error": "release failed; original log retained",
+  "finishedAt": "2026-11-17T17:16:33.9267484Z"
+}

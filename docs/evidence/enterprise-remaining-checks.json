@@ -1,0 +1,26 @@
+{
+  "startedAt": "2026-11-17T09:50:54.722Z",
+  "sourceHash": "cad14e08e68caf1406304a4cc171bd0152fb85c8562cb28bed054b86331f496d",
+  "checks": [
+    {
+      "name": "product",
+      "exitCode": 0
+    },
+    {
+      "name": "service",
+      "exitCode": 0
+    },
+    {
+      "name": "candidate",
+      "exitCode": 0
+    },
+    {
+      "name": "security",
+      "exitCode": 1
+    }
+  ],
+  "scope": "Independent remaining local checks after the actual Codex CPU workflow timed out. Does not bypass or mark the full release gate passed.",
+  "finishedAt": "2026-11-17T09:57:28.160Z",
+  "sourceUnchanged": true,
+  "result": "FAIL"
+}

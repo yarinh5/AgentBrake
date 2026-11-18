@@ -1,0 +1,40 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {mkdtemp,readFile,writeFile,rm,readdir} from 'node:fs/promises';
+import {tmpdir} from 'node:os';import {join} from 'node:path';
+const mod = await import('../../scripts/enterprise-config.js').catch(()=>({} as any));
+const id='f02f072a-399e-4e48-b89d-5146130a3acd';
+test('enterprise setup is opt-in on dedicated HTTPS installation and never overwrites authority',async t=>{
+  assert.equal(typeof mod.configureEnterprise,'function');
+  const dir=await mkdtemp(join(tmpdir(),'ab-enterprise-config-'));t.after(()=>rm(dir,{recursive:true,force:true}));
+  const config={dir,id,name:'enterprise-fixture',candidate:{httpsOrigin:'https://enterprise.example'}};
+  await writeFile(join(dir,'installation.json'),JSON.stringify({id,name:config.name}));
+  const input={managedAccountsInitialized:true,audit:{endpoint:'https://sink.example/events',bearerToken:'synthetic-event-token-0123456789012345'}};
+  await assert.rejects(mod.configureEnterprise({...config,name:'local'},input));
+  await assert.rejects(mod.configureEnterprise({...config,candidate:undefined},input));
+  await assert.rejects(mod.configureEnterprise(config,{...input,managedAccountsInitialized:false}));
+  assert.deepEqual(await readdir(dir),['installation.json']);
+  await mod.configureEnterprise(config,input);
+  assert.equal(JSON.parse(await readFile(join(dir,'installation.json'),'utf8')).enterpriseRequired,true,'a later missing configuration must never silently downgrade authentication');
+  const manifest=await mod.loadEnterprise(config);assert.equal(manifest.audit,true);assert.equal(manifest.installationId,id);
+  const routes=JSON.parse(await readFile(join(dir,'enterprise-egress.json'),'utf8'));assert.deepEqual(routes,{routes:[{method:'POST',url:'https://sink.example/events'}]});
+  assert.ok(!(await readFile(join(dir,'enterprise-manifest.json'),'utf8')).includes(input.audit.bearerToken));
+  await assert.rejects(mod.configureEnterprise(config,input));
+});
+test('enterprise config refuses unsafe endpoints, caller cursor paths and testing bypass',async t=>{
+  assert.equal(typeof mod.configureEnterprise,'function');
+  const dir=await mkdtemp(join(tmpdir(),'ab-enterprise-config-'));t.after(()=>rm(dir,{recursive:true,force:true}));
+  const config={dir,id,name:'enterprise-fixture',candidate:{httpsOrigin:'https://enterprise.example'}};
+  await writeFile(join(dir,'installation.json'),JSON.stringify({id,name:config.name}));
+  for(const audit of [{endpoint:'http://sink.example',bearerToken:'a'.repeat(32)},{endpoint:'https://sink.example/',bearerToken:'a'.repeat(32),checkpointPath:'elsewhere'},{endpoint:'https://sink.example/',bearerToken:'a'.repeat(32),allowLoopbackHttpForTests:true}])await assert.rejects(mod.configureEnterprise(config,{managedAccountsInitialized:true,audit}));
+  assert.deepEqual(await readdir(dir),['installation.json']);
+});
+test('an SSO-required restored installation cannot be satisfied by audit-only reconfiguration',async t=>{
+  const dir=await mkdtemp(join(tmpdir(),'ab-enterprise-floor-'));t.after(()=>rm(dir,{recursive:true,force:true}));
+  const config={dir,id,name:'enterprise-fixture',candidate:{httpsOrigin:'https://enterprise.example'}};
+  await writeFile(join(dir,'installation.json'),JSON.stringify({id,name:config.name,enterpriseRequired:true,enterpriseIdentityRequired:true}));
+  await assert.rejects(mod.configureEnterprise(config,{managedAccountsInitialized:true,audit:{endpoint:'https://sink.example/events',bearerToken:'a'.repeat(32)}}));
+  const identity={issuer:'https://idp.example',authorizationEndpoint:'https://idp.example/authorize',tokenEndpoint:'https://idp.example/token',jwksUri:'https://idp.example/jwks',clientId:'fixture',clientSecret:'a'.repeat(32),redirectUri:'https://enterprise.example/api/enterprise/oidc/callback',requiredAcr:['urn:fixture:mfa'],requiredAmr:['otp'],maxAuthAgeSeconds:300,scimToken:'b'.repeat(32),groupRoleMapping:{}};
+  await mod.configureEnterprise(config,{managedAccountsInitialized:true,identity});
+  assert.equal(JSON.parse(await readFile(join(dir,'installation.json'),'utf8')).enterpriseIdentityRequired,true);
+});

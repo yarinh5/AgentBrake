@@ -1,0 +1,3 @@
+Using payload from: /inputs/archive.tar.gz
+Signing artifact...
+Wrote bundle to file /out/archive.sigstore.json

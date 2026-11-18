@@ -1,0 +1,22 @@
+{
+  "startedAt": "2026-11-17T19:19:54.0676361Z",
+  "sourceHash": "c043156a9a2f69b6d3ddfc0eb6eec315faba38250f8eb38ae2a02f7087f7c999",
+  "profile": "gpu-8k",
+  "result": "FAIL",
+  "stages": [
+    {
+      "exitCode": 0,
+      "name": "release",
+      "log": "docs\\evidence\\engineering-close-9bc6971f-48ae-4724-a523-60ff43c01a06/release.log",
+      "seconds": 875.81
+    },
+    {
+      "exitCode": 1,
+      "name": "coding",
+      "log": "docs\\evidence\\engineering-close-9bc6971f-48ae-4724-a523-60ff43c01a06/coding.log",
+      "seconds": 377.96
+    }
+  ],
+  "error": "coding failed; original log retained",
+  "finishedAt": "2026-11-17T19:40:47.8573130Z"
+}

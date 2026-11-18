@@ -1,0 +1,52 @@
+{
+  "buildDefinition": {
+    "buildType": "urn:agentbrake:local-source-archive-assembly:v1",
+    "externalParameters": {
+      "sourceHash": "e9722202db98dfa5804f39c12f8761455f62cb08e1c44c303455b93a08aa3677",
+      "packageVersion": "0.3.0-rc.1",
+      "command": "node scripts/package-release.mjs",
+      "scope": "Developer workstation assembly, preexisting dependencies, no trusted hosted builder"
+    },
+    "internalParameters": {},
+    "resolvedDependencies": [
+      {
+        "uri": "urn:agentbrake:source-manifest:e9722202db98dfa5804f39c12f8761455f62cb08e1c44c303455b93a08aa3677",
+        "digest": {
+          "sha256": "e9722202db98dfa5804f39c12f8761455f62cb08e1c44c303455b93a08aa3677"
+        }
+      },
+      {
+        "uri": "urn:agentbrake:evidence:local-release.json",
+        "digest": {
+          "sha256": "3fb40b960abe2b58cc6b3934776080bb4eae63e54b47ada97d8477c76357af7d"
+        }
+      },
+      {
+        "uri": "urn:agentbrake:evidence:container-scan.json",
+        "digest": {
+          "sha256": "9b7752446ed0b78bb837f05ab2aae8f59dd4fb3dd7b16f94b7d3b7cce572012e"
+        }
+      },
+      {
+        "uri": "urn:agentbrake:evidence:commercial-package-validation.json",
+        "digest": {
+          "sha256": "4debd100f7de49e2779dd0a48c1660bbcf0e3bfee9f66c114402c93925891c1b"
+        }
+      }
+    ]
+  },
+  "runDetails": {
+    "builder": {
+      "id": "urn:agentbrake:untrusted-local-development-builder"
+    },
+    "metadata": {
+      "invocationId": "standard-signing-aaa68603-841a-4975-a9ef-6d64cff3209c"
+    },
+    "byproducts": [
+      {
+        "name": "scope",
+        "content": "U3ludGhldGljIHNpZ25pbmcga2V5OyBubyBleHRlcm5hbCB0cnVzdCwgYXR0ZXN0ZWQgaWRlbnRpdHksIHRyYW5zcGFyZW5jeSBsb2csIGluZGVwZW5kZW50IGJ1aWxkZXIgb3IgU0xTQSBsZXZlbC4="
+      }
+    ]
+  }
+}

@@ -1,0 +1,307 @@
+local-model-1  | slot   operator(): id  0 | task 1129 | new prompt, n_ctx_slot = 8192, n_keep = 4, task.n_tokens = 4510
+local-model-1  | slot   operator(): id  0 | task 1129 | cached n_tokens = 3176, memory_seq_rm [3176, end)
+local-model-1  | slot   operator(): id  0 | task 1129 | cached n_tokens = 4200, memory_seq_rm [4200, end)
+local-model-1  | slot init_sampler: id  0 | task 1129 | init sampler, took 10.61 ms, tokens: text = 4510, total = 4510
+local-model-1  | slot print_timing: id  0 | task 1129 | prompt eval time =     920.23 ms /  1334 tokens (    0.69 ms per token,  1449.64 tokens per second)
+local-model-1  | slot print_timing: id  0 | task 1129 |        eval time =    2278.96 ms /    94 tokens (   24.50 ms per token,    40.81 tokens per second)
+local-model-1  | slot print_timing: id  0 | task 1129 |       total time =    3199.18 ms /  1428 tokens
+local-model-1  | slot print_timing: id  0 | task 1129 |    graphs reused =       1169
+local-model-1  | slot print_timing: id  0 | task 1129 |   graph reallocs =          0    /     0        (same size) / (changed size)
+local-model-1  | slot      release: id  0 | task 1129 | stop processing: n_tokens = 4603, truncated = 0
+local-model-1  | srv  update_slots: all slots are idle
+local-model-1  | [GIN] 2026/11/17 - 18:19:50 | 200 |    4.21s |    192.168.32.3 | POST     "/v1/responses"
+local-model-1  | srv  server_strea: conv_id= (empty=1)
+local-model-1  | slot get_availabl: id  0 | task -1 |  - checking sim = 0.657 (3176/4834) > 0.100
+local-model-1  | slot get_availabl: id  0 | task -1 | selected slot by LCP similarity, f_sim_best = 0.657 (> 0.100 thold), f_keep = 0.690
+local-model-1  | slot launch_slot_: id  0 | task -1 | sampler chain: logits -> ?penalties -> ?dry -> ?top-n-sigma -> top-k -> ?typical -> top-p -> ?min-p -> ?xtc -> temp-ext -> dist 
+local-model-1  | slot launch_slot_: id  0 | task -1 | sampler params: 
+local-model-1  | 	repeat_last_n = 64, repeat_penalty = 1.000, frequency_penalty = 0.000, presence_penalty = 0.000
+local-model-1  | 	dry_multiplier = 0.000, dry_base = 1.750, dry_allowed_length = 2, dry_penalty_last_n = 64
+local-model-1  | 	top_k = 20, top_p = 0.800, min_p = 0.000, xtc_probability = 0.000, xtc_threshold = 0.100, typical_p = 1.000, top_n_sigma = -1.000, temp = 0.700
+local-model-1  | 	mirostat = 0, mirostat_lr = 0.100, mirostat_ent = 5.000, adaptive_target = -1.000, adaptive_decay = 0.900
+local-model-1  | slot launch_slot_: id  0 | task 1225 | processing task, is_child = 0
+local-model-1  | slot   operator(): id  0 | task 1225 | new prompt, n_ctx_slot = 8192, n_keep = 4, task.n_tokens = 4834
+local-model-1  | slot   operator(): id  0 | task 1225 | cached n_tokens = 3176, memory_seq_rm [3176, end)
+local-model-1  | slot   operator(): id  0 | task 1225 | cached n_tokens = 4200, memory_seq_rm [4200, end)
+local-model-1  | slot init_sampler: id  0 | task 1225 | init sampler, took 2.19 ms, tokens: text = 4834, total = 4834
+local-model-1  | slot print_timing: id  0 | task 1225 | prompt eval time =     830.30 ms /  1658 tokens (    0.50 ms per token,  1996.86 tokens per second)
+local-model-1  | slot print_timing: id  0 | task 1225 |        eval time =     757.47 ms /    35 tokens (   22.28 ms per token,    44.89 tokens per second)
+local-model-1  | slot print_timing: id  0 | task 1225 |       total time =    1587.77 ms /  1693 tokens
+local-model-1  | slot print_timing: id  0 | task 1225 |    graphs reused =       1201
+local-model-1  | slot print_timing: id  0 | task 1225 |   graph reallocs =          0    /     0        (same size) / (changed size)
+local-model-1  | slot      release: id  0 | task 1225 | stop processing: n_tokens = 4868, truncated = 0
+local-model-1  | srv  update_slots: all slots are idle
+local-model-1  | [GIN] 2026/11/17 - 18:19:53 | 200 |    3.17s |    192.168.32.3 | POST     "/v1/responses"
+local-model-1  | srv  server_strea: conv_id= (empty=1)
+local-model-1  | slot get_availabl: id  0 | task -1 |  - checking sim = 0.671 (3264/4865) > 0.100
+local-model-1  | slot get_availabl: id  0 | task -1 | selected slot by LCP similarity, f_sim_best = 0.671 (> 0.100 thold), f_keep = 0.671
+local-model-1  | slot launch_slot_: id  0 | task -1 | sampler chain: logits -> ?penalties -> ?dry -> ?top-n-sigma -> top-k -> ?typical -> top-p -> ?min-p -> ?xtc -> temp-ext -> dist 
+local-model-1  | slot launch_slot_: id  0 | task -1 | sampler params: 
+local-model-1  | 	repeat_last_n = 64, repeat_penalty = 1.000, frequency_penalty = 0.000, presence_penalty = 0.000
+local-model-1  | 	dry_multiplier = 0.000, dry_base = 1.750, dry_allowed_length = 2, dry_penalty_last_n = 64
+local-model-1  | 	top_k = 20, top_p = 0.800, min_p = 0.000, xtc_probability = 0.000, xtc_threshold = 0.100, typical_p = 1.000, top_n_sigma = -1.000, temp = 0.700
+local-model-1  | 	mirostat = 0, mirostat_lr = 0.100, mirostat_ent = 5.000, adaptive_target = -1.000, adaptive_decay = 0.900
+local-model-1  | slot launch_slot_: id  0 | task 1262 | processing task, is_child = 0
+local-model-1  | slot   operator(): id  0 | task 1262 | new prompt, n_ctx_slot = 8192, n_keep = 4, task.n_tokens = 4865
+local-model-1  | slot   operator(): id  0 | task 1262 | cached n_tokens = 3264, memory_seq_rm [3264, end)
+local-model-1  | slot   operator(): id  0 | task 1262 | cached n_tokens = 4288, memory_seq_rm [4288, end)
+local-model-1  | slot init_sampler: id  0 | task 1262 | init sampler, took 0.92 ms, tokens: text = 4865, total = 4865
+local-model-1  | slot print_timing: id  0 | task 1262 | n_gen =    126, tg =  41.38 t/s, tg_3s =  41.71 t/s
+local-model-1  | slot print_timing: id  0 | task 1262 | prompt eval time =    1215.77 ms /  1601 tokens (    0.76 ms per token,  1316.86 tokens per second)
+local-model-1  | slot print_timing: id  0 | task 1262 |        eval time =    3403.18 ms /   146 tokens (   23.47 ms per token,    42.61 tokens per second)
+local-model-1  | slot print_timing: id  0 | task 1262 |       total time =    4618.95 ms /  1747 tokens
+local-model-1  | slot print_timing: id  0 | task 1262 |    graphs reused =       1345
+local-model-1  | slot print_timing: id  0 | task 1262 |   graph reallocs =          0    /     0        (same size) / (changed size)
+local-model-1  | slot      release: id  0 | task 1262 | stop processing: n_tokens = 5010, truncated = 0
+local-model-1  | srv  update_slots: all slots are idle
+local-model-1  | [GIN] 2026/11/17 - 18:20:09 | 200 |     6.2s |    192.168.32.3 | POST     "/v1/responses"
+local-model-1  | srv  server_strea: conv_id= (empty=1)
+local-model-1  | slot get_availabl: id  0 | task -1 |  - checking sim = 0.874 (5010/5733) > 0.100
+local-model-1  | slot get_availabl: id  0 | task -1 | selected slot by LCP similarity, f_sim_best = 0.874 (> 0.100 thold), f_keep = 1.000
+local-model-1  | slot launch_slot_: id  0 | task -1 | sampler chain: logits -> ?penalties -> ?dry -> ?top-n-sigma -> top-k -> ?typical -> top-p -> ?min-p -> ?xtc -> temp-ext -> dist 
+local-model-1  | slot launch_slot_: id  0 | task -1 | sampler params: 
+local-model-1  | 	repeat_last_n = 64, repeat_penalty = 1.000, frequency_penalty = 0.000, presence_penalty = 0.000
+local-model-1  | 	dry_multiplier = 0.000, dry_base = 1.750, dry_allowed_length = 2, dry_penalty_last_n = 64
+local-model-1  | 	top_k = 20, top_p = 0.800, min_p = 0.000, xtc_probability = 0.000, xtc_threshold = 0.100, typical_p = 1.000, top_n_sigma = -1.000, temp = 0.700
+local-model-1  | 	mirostat = 0, mirostat_lr = 0.100, mirostat_ent = 5.000, adaptive_target = -1.000, adaptive_decay = 0.900
+local-model-1  | slot launch_slot_: id  0 | task 1410 | processing task, is_child = 0
+local-model-1  | slot   operator(): id  0 | task 1410 | new prompt, n_ctx_slot = 8192, n_keep = 4, task.n_tokens = 5733
+local-model-1  | slot   operator(): id  0 | task 1410 | cached n_tokens = 5010, memory_seq_rm [5010, end)
+local-model-1  | slot init_sampler: id  0 | task 1410 | init sampler, took 0.81 ms, tokens: text = 5733, total = 5733
+local-model-1  | slot print_timing: id  0 | task 1410 | prompt eval time =     454.42 ms /   723 tokens (    0.63 ms per token,  1591.03 tokens per second)
+local-model-1  | slot print_timing: id  0 | task 1410 |        eval time =    2023.51 ms /    89 tokens (   22.99 ms per token,    43.49 tokens per second)
+local-model-1  | slot print_timing: id  0 | task 1410 |       total time =    2477.93 ms /   812 tokens
+local-model-1  | slot print_timing: id  0 | task 1410 |    graphs reused =       1432
+local-model-1  | slot print_timing: id  0 | task 1410 |   graph reallocs =          0    /     0        (same size) / (changed size)
+local-model-1  | slot      release: id  0 | task 1410 | stop processing: n_tokens = 5821, truncated = 0
+local-model-1  | srv  update_slots: all slots are idle
+local-model-1  | [GIN] 2026/11/17 - 18:20:12 | 200 |    2.92s |    192.168.32.3 | POST     "/v1/responses"
+local-model-1  | srv  server_strea: conv_id= (empty=1)
+local-model-1  | slot get_availabl: id  0 | task -1 |  - checking sim = 0.880 (5761/6544) > 0.100
+local-model-1  | slot get_availabl: id  0 | task -1 | selected slot by LCP similarity, f_sim_best = 0.880 (> 0.100 thold), f_keep = 0.990
+local-model-1  | slot launch_slot_: id  0 | task -1 | sampler chain: logits -> ?penalties -> ?dry -> ?top-n-sigma -> top-k -> ?typical -> top-p -> ?min-p -> ?xtc -> temp-ext -> dist 
+local-model-1  | slot launch_slot_: id  0 | task -1 | sampler params: 
+local-model-1  | 	repeat_last_n = 64, repeat_penalty = 1.000, frequency_penalty = 0.000, presence_penalty = 0.000
+local-model-1  | 	dry_multiplier = 0.000, dry_base = 1.750, dry_allowed_length = 2, dry_penalty_last_n = 64
+local-model-1  | 	top_k = 20, top_p = 0.800, min_p = 0.000, xtc_probability = 0.000, xtc_threshold = 0.100, typical_p = 1.000, top_n_sigma = -1.000, temp = 0.700
+local-model-1  | 	mirostat = 0, mirostat_lr = 0.100, mirostat_ent = 5.000, adaptive_target = -1.000, adaptive_decay = 0.900
+local-model-1  | slot launch_slot_: id  0 | task 1500 | processing task, is_child = 0
+local-model-1  | slot   operator(): id  0 | task 1500 | new prompt, n_ctx_slot = 8192, n_keep = 4, task.n_tokens = 6544
+local-model-1  | slot   operator(): id  0 | task 1500 | cached n_tokens = 5761, memory_seq_rm [5761, end)
+local-model-1  | slot init_sampler: id  0 | task 1500 | init sampler, took 0.95 ms, tokens: text = 6544, total = 6544
+local-model-1  | slot print_timing: id  0 | task 1500 | n_gen =    120, tg =  39.07 t/s, tg_3s =  39.40 t/s
+local-model-1  | slot print_timing: id  0 | task 1500 | prompt eval time =     503.56 ms /   783 tokens (    0.64 ms per token,  1554.92 tokens per second)
+local-model-1  | slot print_timing: id  0 | task 1500 |        eval time =    4216.68 ms /   169 tokens (   25.10 ms per token,    39.84 tokens per second)
+local-model-1  | slot print_timing: id  0 | task 1500 |       total time =    4720.24 ms /   952 tokens
+local-model-1  | slot print_timing: id  0 | task 1500 |    graphs reused =       1598
+local-model-1  | slot print_timing: id  0 | task 1500 |   graph reallocs =          0    /     0        (same size) / (changed size)
+local-model-1  | slot      release: id  0 | task 1500 | stop processing: n_tokens = 6712, truncated = 0
+local-model-1  | [GIN] 2026/11/17 - 18:20:18 | 200 |    6.09s |    192.168.32.3 | POST     "/v1/responses"
+local-model-1  | srv  update_slots: all slots are idle
+gateway-1      | (node:1) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+gateway-1      | (Use `node --trace-warnings ...` to show where the warning was created)
+gateway-1      | responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+gateway-1      | Isolated AgentBrake gateway ready
+target-db-1    | REVOKE
+target-db-1    | GRANT
+target-db-1    | GRANT
+target-db-1    | INSERT 0 1
+target-db-1    | COMMIT
+target-db-1    | BEGIN
+target-db-1    | DO
+target-db-1    | CREATE FUNCTION
+target-db-1    | GRANT
+target-db-1    | ALTER FUNCTION
+target-db-1    | REVOKE
+target-db-1    | REVOKE
+target-db-1    | REVOKE
+target-db-1    | GRANT
+target-db-1    | INSERT 0 1
+target-db-1    | COMMIT
+target-db-1    | 
+target-db-1    | waiting for server to shut down....2026-11-17 18:16:47.906 UTC [28] LOG:  received fast shutdown request
+target-db-1    | 2026-11-17 18:16:47.906 UTC [28] LOG:  aborting any active transactions
+target-db-1    | 2026-11-17 18:16:47.909 UTC [28] LOG:  background worker "logical replication launcher" (PID 37) exited with exit code 1
+target-db-1    | 2026-11-17 18:16:47.909 UTC [32] LOG:  shutting down
+target-db-1    | 2026-11-17 18:16:47.909 UTC [32] LOG:  checkpoint starting: shutdown immediate
+target-db-1    | 2026-11-17 18:16:47.918 UTC [32] LOG:  checkpoint complete: wrote 975 buffers (6.0%), wrote 3 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.009 s, sync=0.001 s, total=0.010 s; sync files=318, longest=0.001 s, average=0.000 s; distance=4509 kB, estimate=4509 kB; lsn=0/1BDFB28, redo lsn=0/1BDFB28
+target-db-1    | 2026-11-17 18:16:47.928 UTC [28] LOG:  database system is shut down
+target-db-1    |  done
+target-db-1    | server stopped
+target-db-1    | 
+target-db-1    | PostgreSQL init process complete; ready for start up.
+target-db-1    | 
+target-db-1    | 2026-11-17 18:16:48.027 UTC [1] LOG:  starting PostgreSQL 18.7 on x86_64-pc-linux-musl, compiled by gcc (Alpine 15.2.0) 15.2.0, 64-bit
+target-db-1    | 2026-11-17 18:16:48.027 UTC [1] LOG:  listening on IPv4 address "0.0.0.0", port 5432
+target-db-1    | 2026-11-17 18:16:48.027 UTC [1] LOG:  listening on IPv6 address "::", port 5432
+target-db-1    | 2026-11-17 18:16:48.027 UTC [1] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+target-db-1    | 2026-11-17 18:16:48.029 UTC [59] LOG:  database system was shut down at 2026-11-17 18:16:47 UTC
+target-db-1    | 2026-11-17 18:16:48.032 UTC [1] LOG:  database system is ready to accept connections
+target-db-1    | 2026-11-17 18:17:17.075 UTC [165] ERROR:  permission denied for function agentbrake_update_customer
+target-db-1    | 2026-11-17 18:17:17.075 UTC [165] STATEMENT:  SELECT * FROM public.agentbrake_update_customer(3,'active')
+target-db-1    | 2026-11-17 18:17:17.184 UTC [172] ERROR:  permission denied for table agentbrake_customers
+target-db-1    | 2026-11-17 18:17:17.184 UTC [172] STATEMENT:  UPDATE public.agentbrake_customers SET status='paused'
+target-db-1    | 2026-11-17 18:17:17.186 UTC [172] ERROR:  permission denied for table agentbrake_customers
+target-db-1    | 2026-11-17 18:17:17.186 UTC [172] STATEMENT:  DELETE FROM public.agentbrake_customers
+target-db-1    | 2026-11-17 18:17:17.186 UTC [172] ERROR:  permission denied for table agentbrake_customers
+target-db-1    | 2026-11-17 18:17:17.186 UTC [172] STATEMENT:  TRUNCATE public.agentbrake_customers
+target-db-1    | 2026-11-17 18:17:17.187 UTC [172] ERROR:  must be owner of table agentbrake_customers
+target-db-1    | 2026-11-17 18:17:17.187 UTC [172] STATEMENT:  DROP TABLE public.agentbrake_customers
+target-db-1    | 2026-11-17 18:17:17.188 UTC [172] ERROR:  permission denied for schema public at character 14
+target-db-1    | 2026-11-17 18:17:17.188 UTC [172] STATEMENT:  CREATE TABLE public.must_not_exist(id integer)
+target-db-1    | 2026-11-17 18:17:17.189 UTC [172] ERROR:  permission denied to create temporary tables in database "agentbrake_target_fixture" at character 19
+target-db-1    | 2026-11-17 18:17:17.189 UTC [172] STATEMENT:  CREATE TEMP TABLE must_not_exist(id integer)
+target-db-1    | 2026-11-17 18:17:17.191 UTC [172] ERROR:  permission denied to create extension "hstore"
+target-db-1    | 2026-11-17 18:17:17.191 UTC [172] HINT:  Must have CREATE privilege on current database to create this extension.
+target-db-1    | 2026-11-17 18:17:17.191 UTC [172] STATEMENT:  CREATE EXTENSION hstore
+target-db-1    | 2026-11-17 18:17:17.192 UTC [172] ERROR:  permission denied to alter role
+target-db-1    | 2026-11-17 18:17:17.192 UTC [172] DETAIL:  Only roles with the SUPERUSER attribute may change the SUPERUSER attribute.
+target-db-1    | 2026-11-17 18:17:17.192 UTC [172] STATEMENT:  ALTER ROLE fixture_reader SUPERUSER
+target-db-1    | 2026-11-17 18:17:17.193 UTC [172] ERROR:  permission denied to grant role "fixture_owner"
+target-db-1    | 2026-11-17 18:17:17.193 UTC [172] DETAIL:  Only roles with the SUPERUSER attribute may grant roles with the SUPERUSER attribute.
+target-db-1    | 2026-11-17 18:17:17.193 UTC [172] STATEMENT:  GRANT fixture_owner TO fixture_reader
+target-db-1    | 2026-11-17 18:17:17.194 UTC [172] ERROR:  permission denied to set role "fixture_data_owner"
+target-db-1    | 2026-11-17 18:17:17.194 UTC [172] STATEMENT:  SET ROLE fixture_data_owner
+target-db-1    | 2026-11-17 18:17:17.195 UTC [172] ERROR:  permission denied to COPY to or from an external program
+target-db-1    | 2026-11-17 18:17:17.195 UTC [172] DETAIL:  Only roles with privileges of the "pg_execute_server_program" role may COPY to or from an external program.
+target-db-1    | 2026-11-17 18:17:17.195 UTC [172] HINT:  Anyone can COPY to stdout or from stdin. psql's \copy command also works for anyone.
+target-db-1    | 2026-11-17 18:17:17.195 UTC [172] STATEMENT:  COPY (SELECT 1) TO PROGRAM 'true'
+mock-target-1  | (node:1) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+mock-target-1  | (Use `node --trace-warnings ...` to show where the warning was created)
+mock-target-1  | Synthetic target ready
+target-db-1    | 2026-11-17 18:17:17.204 UTC [173] ERROR:  permission denied for table agentbrake_customers
+target-db-1    | 2026-11-17 18:17:17.204 UTC [173] STATEMENT:  UPDATE public.agentbrake_customers SET status='paused'
+target-db-1    | 2026-11-17 18:17:17.205 UTC [173] ERROR:  permission denied for table agentbrake_customers
+target-db-1    | 2026-11-17 18:17:17.205 UTC [173] STATEMENT:  DELETE FROM public.agentbrake_customers
+target-db-1    | 2026-11-17 18:17:17.206 UTC [173] ERROR:  permission denied for table agentbrake_customers
+target-db-1    | 2026-11-17 18:17:17.206 UTC [173] STATEMENT:  TRUNCATE public.agentbrake_customers
+target-db-1    | 2026-11-17 18:17:17.207 UTC [173] ERROR:  must be owner of table agentbrake_customers
+target-db-1    | 2026-11-17 18:17:17.207 UTC [173] STATEMENT:  DROP TABLE public.agentbrake_customers
+target-db-1    | 2026-11-17 18:17:17.208 UTC [173] ERROR:  permission denied for schema public at character 14
+target-db-1    | 2026-11-17 18:17:17.208 UTC [173] STATEMENT:  CREATE TABLE public.must_not_exist(id integer)
+target-db-1    | 2026-11-17 18:17:17.208 UTC [173] ERROR:  permission denied to create temporary tables in database "agentbrake_target_fixture" at character 19
+target-db-1    | 2026-11-17 18:17:17.208 UTC [173] STATEMENT:  CREATE TEMP TABLE must_not_exist(id integer)
+target-db-1    | 2026-11-17 18:17:17.210 UTC [173] ERROR:  permission denied to create extension "hstore"
+target-db-1    | 2026-11-17 18:17:17.210 UTC [173] HINT:  Must have CREATE privilege on current database to create this extension.
+target-db-1    | 2026-11-17 18:17:17.210 UTC [173] STATEMENT:  CREATE EXTENSION hstore
+target-db-1    | 2026-11-17 18:17:17.211 UTC [173] ERROR:  permission denied to alter role
+target-db-1    | 2026-11-17 18:17:17.211 UTC [173] DETAIL:  Only roles with the SUPERUSER attribute may change the SUPERUSER attribute.
+target-db-1    | 2026-11-17 18:17:17.211 UTC [173] STATEMENT:  ALTER ROLE fixture_writer SUPERUSER
+target-db-1    | 2026-11-17 18:17:17.212 UTC [173] ERROR:  permission denied to grant role "fixture_owner"
+target-db-1    | 2026-11-17 18:17:17.212 UTC [173] DETAIL:  Only roles with the SUPERUSER attribute may grant roles with the SUPERUSER attribute.
+target-db-1    | 2026-11-17 18:17:17.212 UTC [173] STATEMENT:  GRANT fixture_owner TO fixture_writer
+target-db-1    | 2026-11-17 18:17:17.212 UTC [173] ERROR:  permission denied to set role "fixture_data_owner"
+target-db-1    | 2026-11-17 18:17:17.212 UTC [173] STATEMENT:  SET ROLE fixture_data_owner
+target-db-1    | 2026-11-17 18:17:17.213 UTC [173] ERROR:  permission denied to COPY to or from an external program
+target-db-1    | 2026-11-17 18:17:17.213 UTC [173] DETAIL:  Only roles with privileges of the "pg_execute_server_program" role may COPY to or from an external program.
+target-db-1    | 2026-11-17 18:17:17.213 UTC [173] HINT:  Anyone can COPY to stdout or from stdin. psql's \copy command also works for anyone.
+target-db-1    | 2026-11-17 18:17:17.213 UTC [173] STATEMENT:  COPY (SELECT 1) TO PROGRAM 'true'
+target-db-1    | 2026-11-17 18:17:17.214 UTC [172] ERROR:  permission denied for function agentbrake_update_customer_checked
+target-db-1    | 2026-11-17 18:17:17.214 UTC [172] STATEMENT:  SELECT * FROM public.agentbrake_update_customer_checked(1,'paused',0)
+target-db-1    | 2026-11-17 18:17:17.216 UTC [173] ERROR:  Invalid reviewed update arguments
+target-db-1    | 2026-11-17 18:17:17.216 UTC [173] CONTEXT:  PL/pgSQL function public.agentbrake_update_customer_checked(integer,text,integer) line 4 at RAISE
+target-db-1    | 2026-11-17 18:17:17.216 UTC [173] STATEMENT:  SELECT * FROM public.agentbrake_update_customer_checked(1,'deleted',0)
+target-db-1    | 2026-11-17 18:17:18.744 UTC [174] ERROR:  canceling statement due to statement timeout
+target-db-1    | 2026-11-17 18:17:18.744 UTC [174] STATEMENT:  SELECT pg_sleep(4)
+target-db-1    | 2026-11-17 18:17:20.244 UTC [175] ERROR:  canceling statement due to statement timeout
+target-db-1    | 2026-11-17 18:17:20.244 UTC [175] STATEMENT:  SELECT pg_sleep(4)
+control-db-1   | 
+control-db-1   | Success. You can now start the database server using:
+control-db-1   | 
+control-db-1   |     pg_ctl -D /var/lib/postgresql/data/pgdata -l logfile start
+control-db-1   | 
+control-db-1   | initdb: warning: enabling "trust" authentication for local connections
+control-db-1   | initdb: hint: You can change this by editing pg_hba.conf or using the option -A, or --auth-local and --auth-host, the next time you run initdb.
+control-db-1   | waiting for server to start....2026-11-17 18:16:47.211 UTC [28] LOG:  starting PostgreSQL 18.7 on x86_64-pc-linux-musl, compiled by gcc (Alpine 15.2.0) 15.2.0, 64-bit
+control-db-1   | 2026-11-17 18:16:47.211 UTC [28] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+control-db-1   | 2026-11-17 18:16:47.213 UTC [34] LOG:  database system was shut down at 2026-11-17 18:16:47 UTC
+control-db-1   | 2026-11-17 18:16:47.216 UTC [28] LOG:  database system is ready to accept connections
+control-db-1   |  done
+control-db-1   | server started
+control-db-1   | CREATE DATABASE
+control-db-1   | 
+control-db-1   | 
+control-db-1   | /usr/local/bin/docker-entrypoint.sh: running /docker-entrypoint-initdb.d/010-control-fixture.sh
+control-db-1   | DO
+control-db-1   | BEGIN
+control-db-1   | REVOKE
+control-db-1   | GRANT
+control-db-1   | REVOKE
+control-db-1   | GRANT
+control-db-1   | CREATE TABLE
+control-db-1   | INSERT 0 1
+control-db-1   | CREATE TABLE
+control-db-1   | INSERT 0 1
+control-db-1   | CREATE TABLE
+control-db-1   | CREATE TABLE
+control-db-1   | CREATE TABLE
+control-db-1   | REVOKE
+control-db-1   | REVOKE
+control-db-1   | GRANT
+control-db-1   | GRANT
+control-db-1   | GRANT
+control-db-1   | GRANT
+control-db-1   | GRANT
+control-db-1   | COMMIT
+control-db-1   | BEGIN
+control-db-1   | CREATE TABLE
+control-db-1   | INSERT 0 1
+control-db-1   | REVOKE
+control-db-1   | GRANT
+control-db-1   | COMMIT
+control-db-1   | 
+control-db-1   | waiting for server to shut down....2026-11-17 18:16:47.495 UTC [28] LOG:  received fast shutdown request
+control-db-1   | 2026-11-17 18:16:47.495 UTC [28] LOG:  aborting any active transactions
+control-db-1   | 2026-11-17 18:16:47.497 UTC [28] LOG:  background worker "logical replication launcher" (PID 37) exited with exit code 1
+control-db-1   | 2026-11-17 18:16:47.499 UTC [32] LOG:  shutting down
+control-db-1   | 2026-11-17 18:16:47.499 UTC [32] LOG:  checkpoint starting: shutdown immediate
+control-db-1   | 2026-11-17 18:16:47.508 UTC [32] LOG:  checkpoint complete: wrote 990 buffers (6.0%), wrote 3 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.009 s, sync=0.001 s, total=0.010 s; sync files=342, longest=0.001 s, average=0.001 s; distance=4617 kB, estimate=4617 kB; lsn=0/1BFAA08, redo lsn=0/1BFAA08
+control-db-1   | 2026-11-17 18:16:47.519 UTC [28] LOG:  database system is shut down
+control-db-1   |  done
+control-db-1   | server stopped
+control-db-1   | 
+control-db-1   | PostgreSQL init process complete; ready for start up.
+control-db-1   | 
+control-db-1   | 2026-11-17 18:16:47.615 UTC [1] LOG:  starting PostgreSQL 18.7 on x86_64-pc-linux-musl, compiled by gcc (Alpine 15.2.0) 15.2.0, 64-bit
+control-db-1   | 2026-11-17 18:16:47.615 UTC [1] LOG:  listening on IPv4 address "0.0.0.0", port 5432
+control-db-1   | 2026-11-17 18:16:47.615 UTC [1] LOG:  listening on IPv6 address "::", port 5432
+control-db-1   | 2026-11-17 18:16:47.616 UTC [1] LOG:  listening on Unix socket "/var/run/postgresql/.s.PGSQL.5432"
+control-db-1   | 2026-11-17 18:16:47.618 UTC [57] LOG:  database system was shut down at 2026-11-17 18:16:47 UTC
+control-db-1   | 2026-11-17 18:16:47.621 UTC [1] LOG:  database system is ready to accept connections
+control-db-1   | 2026-11-17 18:17:15.237 UTC [159] ERROR:  permission denied for table audit
+control-db-1   | 2026-11-17 18:17:15.237 UTC [159] STATEMENT:  INSERT INTO audit(data,previous_hash,hash) VALUES ($1,$2,$3)
+control-db-1   | 2026-11-17 18:17:15.239 UTC [159] ERROR:  permission denied for table audit
+control-db-1   | 2026-11-17 18:17:15.239 UTC [159] STATEMENT:  INSERT INTO audit(data,previous_hash,hash) VALUES ($1,$2,$3)
+control-db-1   | 2026-11-17 18:17:15.693 UTC [141] ERROR:  duplicate key value violates unique constraint "actions_agent_id_request_id_key"
+control-db-1   | 2026-11-17 18:17:15.693 UTC [141] DETAIL:  Key (agent_id, request_id)=(a7ef7aeb-2b51-4c23-8498-bce860776ff5, f046942f-f76a-4b7d-a7c3-c79accb4ba32) already exists.
+control-db-1   | 2026-11-17 18:17:15.693 UTC [141] STATEMENT:  INSERT INTO actions(id,agent_id,request_id,status,data) VALUES ($1,$2,$3,$4,$5)
+control-db-1   | 2026-11-17 18:17:15.781 UTC [171] ERROR:  permission denied for table audit
+control-db-1   | 2026-11-17 18:17:15.781 UTC [171] STATEMENT:  INSERT INTO audit(data,previous_hash,hash) VALUES ($1,$2,$3)
+control-db-1   | 2026-11-17 18:17:15.785 UTC [171] ERROR:  permission denied for table audit
+control-db-1   | 2026-11-17 18:17:15.785 UTC [171] STATEMENT:  INSERT INTO audit(data,previous_hash,hash) VALUES ($1,$2,$3)
+control-db-1   | 2026-11-17 18:17:15.789 UTC [171] ERROR:  permission denied for table audit
+control-db-1   | 2026-11-17 18:17:15.789 UTC [171] STATEMENT:  INSERT INTO audit(data,previous_hash,hash) VALUES ($1,$2,$3)
+control-db-1   | 2026-11-17 18:17:15.791 UTC [171] ERROR:  permission denied for table audit
+control-db-1   | 2026-11-17 18:17:15.791 UTC [171] STATEMENT:  INSERT INTO audit(data,previous_hash,hash) VALUES ($1,$2,$3)
+control-db-1   | 2026-11-17 18:17:15.793 UTC [171] ERROR:  permission denied for table audit
+control-db-1   | 2026-11-17 18:17:15.793 UTC [171] STATEMENT:  INSERT INTO audit(data,previous_hash,hash) VALUES ($1,$2,$3)
+control-db-1   | 2026-11-17 18:17:15.796 UTC [171] ERROR:  permission denied for table audit
+control-db-1   | 2026-11-17 18:17:15.796 UTC [171] STATEMENT:  INSERT INTO audit(data,previous_hash,hash) VALUES ($1,$2,$3)
+control-db-1   | 2026-11-17 18:17:15.798 UTC [171] ERROR:  permission denied for table audit
+control-db-1   | 2026-11-17 18:17:15.798 UTC [171] STATEMENT:  INSERT INTO audit(data,previous_hash,hash) VALUES ($1,$2,$3)
+control-db-1   | 2026-11-17 18:17:15.863 UTC [172] ERROR:  permission denied for table audit
+control-db-1   | 2026-11-17 18:17:15.863 UTC [172] STATEMENT:  UPDATE audit SET hash='changed'
+control-db-1   | 2026-11-17 18:17:15.873 UTC [173] ERROR:  permission denied for table audit
+control-db-1   | 2026-11-17 18:17:15.873 UTC [173] STATEMENT:  DELETE FROM audit
+control-db-1   | 2026-11-17 18:17:15.882 UTC [174] ERROR:  permission denied for table audit
+control-db-1   | 2026-11-17 18:17:15.882 UTC [174] STATEMENT:  TRUNCATE audit
+control-db-1   | 2026-11-17 18:17:15.892 UTC [175] ERROR:  permission denied for schema public at character 14
+control-db-1   | 2026-11-17 18:17:15.892 UTC [175] STATEMENT:  CREATE TABLE public.forbidden_control_table(id integer)
+control-db-1   | 2026-11-17 18:17:15.904 UTC [176] ERROR:  permission denied to create temporary tables in database "agentbrake_control_fixture" at character 19
+control-db-1   | 2026-11-17 18:17:15.904 UTC [176] STATEMENT:  CREATE TEMP TABLE forbidden_control_temp(id integer)
+control-db-1   | 2026-11-17 18:17:15.913 UTC [177] ERROR:  must be owner of table audit
+control-db-1   | 2026-11-17 18:17:15.913 UTC [177] STATEMENT:  ALTER TABLE audit ADD COLUMN forbidden integer
+control-db-1   | 2026-11-17 18:17:15.925 UTC [178] ERROR:  must be owner of table audit
+control-db-1   | 2026-11-17 18:17:15.925 UTC [178] STATEMENT:  ALTER TABLE audit DISABLE TRIGGER ALL
+control-db-1   | 2026-11-17 18:17:15.934 UTC [179] ERROR:  permission denied to set role "control_owner"
+control-db-1   | 2026-11-17 18:17:15.934 UTC [179] STATEMENT:  SET ROLE control_owner

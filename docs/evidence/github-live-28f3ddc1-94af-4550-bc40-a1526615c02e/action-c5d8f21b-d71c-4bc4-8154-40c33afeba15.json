@@ -1,0 +1,176 @@
+{
+  "schemaVersion": 1,
+  "action": {
+    "id": "c5d8f21b-d71c-4bc4-8154-40c33afeba15",
+    "agentId": "67b557b6-7994-4b35-bea9-b07b27bad5ad",
+    "requestId": "3e3f2a8a-0a59-4590-8293-deeaedec81b0",
+    "tool": "github_open_pull_request",
+    "destination": "036b2fb6793194e59e5a9745f1715aa277cc1238a53ccd1080d2d0207a24e271",
+    "correlationId": "dec2ec6b-cf29-4c0e-bfdb-4038d738fada",
+    "grantId": "53f6f77a-97b5-4ea2-ab7d-6290e662caf4",
+    "grantFingerprint": "a6a83c6506c44f3e1c2cdcdb3ae8b32af074d94223c16ea0dd871c71651b42c8",
+    "policyRevision": 1,
+    "policyDecisionId": "7ca7ec34-f38b-499f-84c9-68d793ae8fc3",
+    "policyVersion": "stage2.v1",
+    "policyHash": "9ac719fef979ee7b37c5c5ef3173621453782a0a02d432727391beeff1234d14",
+    "policyEffect": "REQUIRE_APPROVAL",
+    "arguments": {
+      "repo": "yarinh5/AgentBrake-Sandbox",
+      "baseSha": "7d7873af0fa09e12f12217a40e6030df5bcd8058",
+      "branch": "agentbrake/validation-28f3ddc1",
+      "title": "Stale pending synthetic proposal",
+      "body": "Authorized synthetic validation only. No merge or deployment.",
+      "changes": [
+        {
+          "path": "src/example.ts",
+          "content": "export const validationMessage = \"synthetic-reviewed-change\";\n"
+        }
+      ]
+    },
+    "status": "blocked",
+    "rule": "preview-changed",
+    "reason": "The target or preview changed after review. Submit a new action.",
+    "resource": "yarinh5/AgentBrake-Sandbox",
+    "sandbox": false,
+    "createdAt": "2026-11-17T11:51:00.489Z",
+    "expiresAt": "2026-11-17T12:06:00.489Z",
+    "durationMs": 10.25,
+    "preview": {
+      "kind": "git-change",
+      "summary": "Apply reviewed files and open a draft GitHub pull request",
+      "details": {
+        "repositoryId": 1461019528,
+        "ownerId": 87584981,
+        "repo": "yarinh5/AgentBrake-Sandbox",
+        "defaultBranch": "main",
+        "baseSha": "7d7873af0fa09e12f12217a40e6030df5bcd8058",
+        "branch": "agentbrake/validation-28f3ddc1",
+        "branchSha": "7d7873af0fa09e12f12217a40e6030df5bcd8058",
+        "treeSha": "3011d205ee016c5b37c228659ece33f7708bcca7",
+        "changes": [
+          {
+            "path": "src/example.ts",
+            "before": "export const validationMessage = \"synthetic-baseline\";\n",
+            "after": "export const validationMessage = \"synthetic-reviewed-change\";\n"
+          }
+        ],
+        "title": "Stale pending synthetic proposal",
+        "body": "Authorized synthetic validation only. No merge or deployment.",
+        "draft": true
+      }
+    },
+    "review": {
+      "nonce": "[REDACTED]",
+      "fingerprint": "63f0bd4d4078b0c26b655651c067692f6d9d61f4fa084c1812dcda244faa3194"
+    },
+    "approvalReceipt": {
+      "actorId": "ace37093-1188-4771-82f8-22d31efc5c32",
+      "tenant": "local",
+      "decision": "approve",
+      "at": "2026-11-17T11:51:23.202Z",
+      "proof": {
+        "nonce": "[REDACTED]",
+        "fingerprint": "63f0bd4d4078b0c26b655651c067692f6d9d61f4fa084c1812dcda244faa3194"
+      }
+    }
+  },
+  "decision": {
+    "id": "7ca7ec34-f38b-499f-84c9-68d793ae8fc3",
+    "policyHash": "9ac719fef979ee7b37c5c5ef3173621453782a0a02d432727391beeff1234d14",
+    "version": "stage2.v1",
+    "revision": 1,
+    "effect": "REQUIRE_APPROVAL",
+    "reason": "The target or preview changed after review. Submit a new action."
+  },
+  "review": {
+    "fingerprint": "63f0bd4d4078b0c26b655651c067692f6d9d61f4fa084c1812dcda244faa3194",
+    "receipt": {
+      "actorId": "ace37093-1188-4771-82f8-22d31efc5c32",
+      "tenant": "local",
+      "decision": "approve",
+      "at": "2026-11-17T11:51:23.202Z",
+      "proof": {
+        "nonce": "[REDACTED]",
+        "fingerprint": "63f0bd4d4078b0c26b655651c067692f6d9d61f4fa084c1812dcda244faa3194"
+      }
+    },
+    "preview": {
+      "kind": "git-change",
+      "summary": "Apply reviewed files and open a draft GitHub pull request",
+      "details": {
+        "repositoryId": 1461019528,
+        "ownerId": 87584981,
+        "repo": "yarinh5/AgentBrake-Sandbox",
+        "defaultBranch": "main",
+        "baseSha": "7d7873af0fa09e12f12217a40e6030df5bcd8058",
+        "branch": "agentbrake/validation-28f3ddc1",
+        "branchSha": "7d7873af0fa09e12f12217a40e6030df5bcd8058",
+        "treeSha": "3011d205ee016c5b37c228659ece33f7708bcca7",
+        "changes": [
+          {
+            "path": "src/example.ts",
+            "before": "export const validationMessage = \"synthetic-baseline\";\n",
+            "after": "export const validationMessage = \"synthetic-reviewed-change\";\n"
+          }
+        ],
+        "title": "Stale pending synthetic proposal",
+        "body": "Authorized synthetic validation only. No merge or deployment.",
+        "draft": true
+      }
+    }
+  },
+  "execution": {
+    "status": "blocked",
+    "observation": "not-dispatched",
+    "outcome": "not-dispatched",
+    "resultDisclosure": "unrecorded",
+    "resultRetained": false,
+    "correlationId": "dec2ec6b-cf29-4c0e-bfdb-4038d738fada"
+  },
+  "audit": {
+    "valid": true,
+    "redacted": true,
+    "entries": [
+      {
+        "seq": 32,
+        "data": {
+          "type": "action.pending",
+          "details": {
+            "actionId": "c5d8f21b-d71c-4bc4-8154-40c33afeba15",
+            "agentId": "67b557b6-7994-4b35-bea9-b07b27bad5ad",
+            "tool": "github_open_pull_request",
+            "rule": "github-writes",
+            "correlationId": "dec2ec6b-cf29-4c0e-bfdb-4038d738fada",
+            "grantId": "53f6f77a-97b5-4ea2-ab7d-6290e662caf4",
+            "decisionId": "7ca7ec34-f38b-499f-84c9-68d793ae8fc3",
+            "policyHash": "9ac719fef979ee7b37c5c5ef3173621453782a0a02d432727391beeff1234d14",
+            "policyRevision": 1,
+            "effect": "REQUIRE_APPROVAL"
+          },
+          "at": "2026-11-17T11:51:02.882Z"
+        },
+        "previous_hash": "7b78e23dd3ae29605231bed45d400071575f88e45ecc0207f170a4dacc260697",
+        "hash": "4ad1817aad777d4cfdf9b3785350ea638f28a92a9ab41b5835cda3adc33facb7"
+      },
+      {
+        "seq": 39,
+        "data": {
+          "type": "approval.blocked",
+          "details": {
+            "actionId": "c5d8f21b-d71c-4bc4-8154-40c33afeba15",
+            "rule": "preview-changed",
+            "actor": {
+              "actorId": "ace37093-1188-4771-82f8-22d31efc5c32",
+              "tenant": "local"
+            }
+          },
+          "at": "2026-11-17T11:51:24.290Z"
+        },
+        "previous_hash": "84147fc492f6169e9c5d595af2f196fe25a55e7485e8e76cc4f78f2b0ae785c0",
+        "hash": "b2273b3dae434cf38b54d7ab955731e8287f6c1051582afd3b133b6099de758e"
+      }
+    ],
+    "verification": "Hash chain checked against stored records before redaction; this filtered redacted export is not an independent full-chain proof."
+  },
+  "coverage": "Local synthetic fixture. Adapter response is not independent target verification. UNKNOWN requires target reconciliation; never retry automatically."
+}

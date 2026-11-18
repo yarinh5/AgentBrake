@@ -1,0 +1,15 @@
+{
+  "runId": "3482077f-f134-49d9-8ff5-c49c2921fbb1",
+  "sourceHash": "c043156a9a2f69b6d3ddfc0eb6eec315faba38250f8eb38ae2a02f7087f7c999",
+  "startedAt": "2026-11-17T20:01:58.943Z",
+  "result": "FAIL",
+  "checks": [
+    {
+      "label": "scanner-version",
+      "exitCode": 125
+    }
+  ],
+  "limits": "Semgrep OSS with eight local rules, npm advisories and dependency SBOM. Not exhaustive interprocedural analysis, OS image CVE coverage, penetration testing or external human review.",
+  "error": "scanner-version failed (125)",
+  "finishedAt": "2026-11-17T20:02:03.133Z"
+}

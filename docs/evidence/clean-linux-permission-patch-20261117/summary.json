@@ -1,0 +1,47 @@
+{
+  "at": "2026-11-17T13:36:03.402752+00:00",
+  "result": "FAIL",
+  "phase": "permission-patch",
+  "sourceHash": "1ebb20fdfb823e94ccc22564efe978130a8903e108399c88a3f60099e89aa909",
+  "baseSource": "855b2915022fae9542d05207f62bec5eb356d942a001a9f3415a738f3b453c8c",
+  "releaseAcceptance": false,
+  "approval": "User approved the UNRELEASED base for development testing and authorized necessary local fixes; changed revisions are recorded separately.",
+  "seedSha256": "7c081a0456d72e972dddfdba798eb58f10ca59b6d2a25b8c979d0b091667a67d",
+  "files": [
+    {
+      "name": "change.diff",
+      "sha256": "9c41c8f652f2dea1745e09ab963261fda0de681731b3c0fde9eaebec432f9f28",
+      "bytes": 8405
+    },
+    {
+      "name": "changed-files.json",
+      "sha256": "22a7040a81b45bbf6283646edf6d9e83aff53ddfee34f58e0190b4c7f71d352f",
+      "bytes": 1582
+    },
+    {
+      "name": "guest-report.json",
+      "sha256": "f7cf444a30fb7bc65a4bb951fe5abf6819da0c1055fd1cc5aab1267d104d593c",
+      "bytes": 2687
+    },
+    {
+      "name": "meta-data",
+      "sha256": "6c0298e43f1e8631914827f6423432e3fc2bb0919220c3e765a0352d90b34602",
+      "bytes": 105
+    },
+    {
+      "name": "network-config",
+      "sha256": "a3bc4c3619b4e66dd6c60f9b005944e1a7e218dfebcff10398d20e94c08613af",
+      "bytes": 27
+    },
+    {
+      "name": "serial.log",
+      "sha256": "82c9dc8829ba9d603a13ed60889546af74a8384945d6cae4f9888e9604ed9e38",
+      "bytes": 78299
+    },
+    {
+      "name": "user-data",
+      "sha256": "5c673a1de469369915149380bd84ea892d9e7ee9a643445d77cb72376bfede9d",
+      "bytes": 44259
+    }
+  ]
+}

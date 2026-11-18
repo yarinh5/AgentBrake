@@ -1,0 +1,7 @@
+{
+  "scope": "Separate disposable local verifier; not independent human or externally trusted key",
+  "mounts": "readonly public key, bundle, archive, tool only",
+  "exitCode": 0,
+  "result": "PASS",
+  "network": "none"
+}

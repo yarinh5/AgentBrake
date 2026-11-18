@@ -1,0 +1,75 @@
+{
+  "scope": "Approved development guest, public dependencies only, synthetic native tests",
+  "commands": [
+    {
+      "label": "guard-active",
+      "exitCode": 0,
+      "seconds": 0.01,
+      "outputTail": "active\n"
+    },
+    {
+      "label": "rules-before",
+      "exitCode": 0,
+      "seconds": 0.01,
+      "outputTail": "table inet ab_dependency_guard {\n\tchain output {\n\t\ttype filter hook output priority filter - 10; policy drop;\n\t\toifname \"lo\" accept\n\t\toifname \"docker0\" accept\n\t\toifname \"br-*\" accept\n\t\tct state established,related accept\n\t\toifname \"abegress0\" ip daddr 10.0.2.2 tcp dport 8877 counter packets 0 bytes 0 accept\n\t\tcounter packets 0 bytes 0 reject with icmpx admin-prohibited\n\t}\n\n\tchain forward {\n\t\ttype filter hook forward priority filter - 10; policy accept;\n\t\toifname \"abegress0\" ip daddr 10.0.2.2 tcp dport 8877 counter packets 0 bytes 0 accept\n\t\toifname \"abegress0\" counter packets 0 bytes 0 reject with icmpx admin-prohibited\n\t}\n\n\tchain input {\n\t\ttype filter hook input priority filter - 10; policy drop;\n\t\tiifname \"lo\" accept\n\t\tiifname \"docker0\" accept\n\t\tiifname \"br-*\" accept\n\t\tct state established,related accept\n\t\tcounter packets 0 bytes 0 reject with icmpx admin-prohibited\n\t}\n}\n"
+    },
+    {
+      "label": "public-npm-positive",
+      "exitCode": 0,
+      "seconds": 0.31,
+      "outputTail": "200"
+    },
+    {
+      "label": "rules-after",
+      "exitCode": 0,
+      "seconds": 0.01,
+      "outputTail": "table inet ab_dependency_guard {\n\tchain output {\n\t\ttype filter hook output priority filter - 10; policy drop;\n\t\toifname \"lo\" accept\n\t\toifname \"docker0\" accept\n\t\toifname \"br-*\" accept\n\t\tct state established,related accept\n\t\toifname \"abegress0\" ip daddr 10.0.2.2 tcp dport 8877 counter packets 4 bytes 240 accept\n\t\tcounter packets 3 bytes 180 reject with icmpx admin-prohibited\n\t}\n\n\tchain forward {\n\t\ttype filter hook forward priority filter - 10; policy accept;\n\t\toifname \"abegress0\" ip daddr 10.0.2.2 tcp dport 8877 counter packets 0 bytes 0 accept\n\t\toifname \"abegress0\" counter packets 0 bytes 0 reject with icmpx admin-prohibited\n\t}\n\n\tchain input {\n\t\ttype filter hook input priority filter - 10; policy drop;\n\t\tiifname \"lo\" accept\n\t\tiifname \"docker0\" accept\n\t\tiifname \"br-*\" accept\n\t\tct state established,related accept\n\t\tcounter packets 0 bytes 0 reject with icmpx admin-prohibited\n\t}\n}\n"
+    },
+    {
+      "label": "pull-node",
+      "exitCode": 1,
+      "seconds": 2.81,
+      "outputTail": "docker.io/library/node@sha256:e9f565d32859f0cbfb52125eafe8be39390f24dac302dc3cdf566e8ba3ab21ee: Pulling from library/node\nfailed to copy: httpReadSeeker: failed open: failed to do request: Get \"https://production.cloudfront.docker.com/registry-v2/docker/registry/v2/blobs/sha256/b7/b774d993885c47eca14db241ba8cc7e5789235142f76e4a2a6a65ec350a1bac0/data?[PUBLIC_DOWNLOAD_QUERY_REDACTED]\": Forbidden\n"
+    }
+  ],
+  "probes": [
+    {
+      "target": "10.0.2.2:8878",
+      "result": "DENIED",
+      "errno": 113
+    },
+    {
+      "target": "198.51.100.1:443",
+      "result": "DENIED",
+      "errno": 113
+    },
+    {
+      "target": "10.0.2.3:53",
+      "result": "DENIED",
+      "errno": 113
+    },
+    {
+      "proxyTarget": "127.0.0.1:8878",
+      "result": "DENIED_403"
+    },
+    {
+      "proxyTarget": "api.github.com:443",
+      "result": "DENIED_403"
+    },
+    {
+      "proxyTarget": "api.openai.com:443",
+      "result": "DENIED_403"
+    }
+  ],
+  "releaseAcceptance": false,
+  "interfaces": [
+    "abegress0",
+    "docker0",
+    "lo"
+  ],
+  "rulesBefore": "table inet ab_dependency_guard {\n\tchain output {\n\t\ttype filter hook output priority filter - 10; policy drop;\n\t\toifname \"lo\" accept\n\t\toifname \"docker0\" accept\n\t\toifname \"br-*\" accept\n\t\tct state established,related accept\n\t\toifname \"abegress0\" ip daddr 10.0.2.2 tcp dport 8877 counter packets 0 bytes 0 accept\n\t\tcounter packets 0 bytes 0 reject with icmpx admin-prohibited\n\t}\n\n\tchain forward {\n\t\ttype filter hook forward priority filter - 10; policy accept;\n\t\toifname \"abegress0\" ip daddr 10.0.2.2 tcp dport 8877 counter packets 0 bytes 0 accept\n\t\toifname \"abegress0\" counter packets 0 bytes 0 reject with icmpx admin-prohibited\n\t}\n\n\tchain input {\n\t\ttype filter hook input priority filter - 10; policy drop;\n\t\tiifname \"lo\" accept\n\t\tiifname \"docker0\" accept\n\t\tiifname \"br-*\" accept\n\t\tct state established,related accept\n\t\tcounter packets 0 bytes 0 reject with icmpx admin-prohibited\n\t}\n}",
+  "rulesAfter": "table inet ab_dependency_guard {\n\tchain output {\n\t\ttype filter hook output priority filter - 10; policy drop;\n\t\toifname \"lo\" accept\n\t\toifname \"docker0\" accept\n\t\toifname \"br-*\" accept\n\t\tct state established,related accept\n\t\toifname \"abegress0\" ip daddr 10.0.2.2 tcp dport 8877 counter packets 4 bytes 240 accept\n\t\tcounter packets 3 bytes 180 reject with icmpx admin-prohibited\n\t}\n\n\tchain forward {\n\t\ttype filter hook forward priority filter - 10; policy accept;\n\t\toifname \"abegress0\" ip daddr 10.0.2.2 tcp dport 8877 counter packets 0 bytes 0 accept\n\t\toifname \"abegress0\" counter packets 0 bytes 0 reject with icmpx admin-prohibited\n\t}\n\n\tchain input {\n\t\ttype filter hook input priority filter - 10; policy drop;\n\t\tiifname \"lo\" accept\n\t\tiifname \"docker0\" accept\n\t\tiifname \"br-*\" accept\n\t\tct state established,related accept\n\t\tcounter packets 0 bytes 0 reject with icmpx admin-prohibited\n\t}\n}",
+  "result": "FAIL",
+  "error": "pull-node failed",
+  "trace": "Traceback (most recent call last):\n  File \"/usr/local/sbin/agentbrake-phase.py\", line 34, in <module>\n    run('pull-node',['docker','--config',str(root/'.agentbrake-local/docker-public'),'pull',nodeImage],600)\n  File \"/usr/local/sbin/agentbrake-phase.py\", line 15, in run\n    if p.returncode:raise RuntimeError(label+' failed')\n                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nRuntimeError: pull-node failed\n"
+}

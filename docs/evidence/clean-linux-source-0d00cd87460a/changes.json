@@ -1,0 +1,93 @@
+{
+  "baseSource": "855b2915022fae9542d05207f62bec5eb356d942a001a9f3415a738f3b453c8c",
+  "sourceHash": "0d00cd87460a49e11cfb36a183fd353ad482942ee88becbb4065067017f9aa49",
+  "files": [
+    {
+      "path": "infra/local/codex.compose.yaml",
+      "before": "1706a83293882e7d365ba440f281b5048e76e6653b954ee703059f1843e8a62c",
+      "after": "a07ca33fe151ef9bd79fccdefea323da16e720bbc39b6edf0cf19509ae44954d"
+    },
+    {
+      "path": "infra/local/compose.yaml",
+      "before": "a37d540dd05f62cc6e54ed814a23c31198a3a6a68a5ef8e5fadb400e6b69578b",
+      "after": "76a57c31ea4ced8c9f5b23181c3908503b01cc95c6783f116241a7ffbb514ba2"
+    },
+    {
+      "path": "infra/product/compose.yaml",
+      "before": "d5f6a0285abd525ee3e1818d657c99cd62a6540ae6372e6aaf65de51f3cc56b3",
+      "after": "fc7afb592ae1ce2b359d1bbb80abad9668a896b34b93e90e6eda25b92389b056"
+    },
+    {
+      "path": "infra/product/enterprise.compose.yaml",
+      "before": "c8f232f381f83342b7c6702ec8527d51cfa99bf770e10812e90337cfb561d974",
+      "after": "13eb855eada379bf3f3aad78166d8ad62a9f11558d12c0d51ebdaada4317bf91"
+    },
+    {
+      "path": "infra/product/github.compose.yaml",
+      "before": "97aa15232920fed3f3bb1ede145af309ba582ed3b24ddb5572e46a3c23265a1b",
+      "after": "7153bc4c7a8d284b1bb5da1af922f27893d9ad2170ca815fec1fde2a09b662d7"
+    },
+    {
+      "path": "infra/product/minimal.compose.yaml",
+      "before": "07ac34803994b406bb2d6b5942a12f0a1879011e7fa684a6a788a95663401497",
+      "after": "9f907abcdc9c7e5b6111ea99b4a6c322d85b227cda6f90af610c7b54eb94b542"
+    },
+    {
+      "path": "infra/product/verify-enterprise.compose.yaml",
+      "before": "b99b10e605be8a2536071eac73fc27529b25d69424886f0f52e0f849b3f4110f",
+      "after": "bba8dd23dc0957bfdb007209e72c647f31366b9ad358b10fcfb1e331ae6a54a4"
+    },
+    {
+      "path": "scripts/fixture-file-access.mjs",
+      "before": "b06d76578c29348279e7c781c70bc1c46ab77364c57b65f9a1e88262370e9573",
+      "after": "b612b435b1d3b2589f5eafe61a9d5c31e1b895509a51b6c04291511d150b1225"
+    },
+    {
+      "path": "scripts/product-maintenance.mjs",
+      "before": "3d030123dc1b021260639de0da13758ea208b8ce1a4e41ed74dc809005981a80",
+      "after": "767905c7151313beff232f4b36e405a6ccdeccd94839c02a063694f2aadbc46d"
+    },
+    {
+      "path": "scripts/product.mjs",
+      "before": "b09cb004a46565eac4faab98079c9fc0cd0e31f3857a0f833d03888a2151e26f",
+      "after": "09ae8a9e5b1913164e2be9470203126b5283b78171f9bd4ab5c56401fa71b355"
+    },
+    {
+      "path": "scripts/verify-enterprise.mjs",
+      "before": "9ac5dbcefcaa71eea381144942e2aac504298c98d2e02a189a9160a6b368c421",
+      "after": "def326475e099f13c974cd6a613e4afc8f1391d170b313c4917e88fecf730508"
+    },
+    {
+      "path": "scripts/verify-images.mjs",
+      "before": "cc3ce179c4466c8f937fee38127151b04a067cb65cd4f6b3e894fcf74c0eb776",
+      "after": "57c9fc8d269dd733aea03f1a5c7708f1b0677aa71ec87ea01a91bdd686053cd6"
+    },
+    {
+      "path": "scripts/verify-isolation.mjs",
+      "before": "10043ea7ab2dfb466fe749d6721a82aff7d56597d3848935ee378e2045e8a962",
+      "after": "5aedc02c9e9da5530a839e9dbd15cfa76f982a624d88d050a901e1d3dbab3408"
+    },
+    {
+      "path": "tests/enforcement/compose-build-ownership.test.mjs",
+      "before": null,
+      "after": "f830bb0e3a665e5f240e5264416990ea20f75398219f42292b3063eb1fba10de"
+    },
+    {
+      "path": "tests/enforcement/product-file-access.test.mjs",
+      "before": null,
+      "after": "874bbe3df8c9da36f1aeff573a24f9dadb90f416fa1f6c83442a3ea442254093"
+    },
+    {
+      "path": "tests/enforcement/service-backup-failure.mjs",
+      "before": "387dd63531df19b690b32f9ae54955b5538622e84986370b228d72bb90df8656",
+      "after": "d7122c5c7e27145c593ef586031b79b3742def99ecd5281f4d061d67947064a3"
+    },
+    {
+      "path": "tests/enforcement/service-restore-orchestration.mjs",
+      "before": "4d3238787c060b2c04bb905c4e772f9d20ae3e1d66a427b339687be16d1fb964",
+      "after": "1a3d56301201bfa2cca7fdd6391c0c6ba3bc2cedfc5440a7d744e233d5afea30"
+    }
+  ],
+  "diffNewlinesNormalized": true,
+  "byteIdentity": "Exact per-file SHA256; review diff normalizes line endings only."
+}

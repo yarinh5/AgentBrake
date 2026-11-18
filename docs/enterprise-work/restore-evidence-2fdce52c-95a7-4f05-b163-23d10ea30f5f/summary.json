@@ -1,0 +1,127 @@
+{
+  "schema": 1,
+  "runId": "2fdce52c-95a7-4f05-b163-23d10ea30f5f",
+  "startedAt": "2026-11-17T08:22:41.739Z",
+  "sourceHash": "ad12b62c992187a2cb96d4adcbba993b1bd5c96ee7bd5117501b98e19fcf3fc4",
+  "harnessSha256": "ca1a1afab268c2022791b6a8bb56fbe113019b9db918d562245ba542db9fd02e",
+  "result": "PASS_LOCAL_ENTERPRISE_POSTGRES_RESTORE",
+  "cases": [
+    {
+      "name": "actual-source-managed-authority",
+      "result": "PASS",
+      "observed": {
+        "ordinaryOwner": true,
+        "unusedInvitation": true,
+        "recoveryToken": true,
+        "agent": true,
+        "pendingApproval": true,
+        "auditValid": true
+      }
+    },
+    {
+      "name": "enterprise-source-denies-ordinary-password",
+      "result": "PASS",
+      "observed": {
+        "noBreakGlassConfigured": true,
+        "sourcePasswordDenied": true,
+        "internalRuntimeNetworks": true
+      }
+    },
+    {
+      "name": "authenticated-enterprise-backup",
+      "result": "PASS",
+      "observed": {
+        "enterpriseRequired": true,
+        "enterpriseIdentityRequired": true,
+        "enterpriseSecretsCopied": false,
+        "sourceResumedWithoutPasswordDowngrade": true,
+        "backupBytes": 25985402,
+        "backupSha256": "9c868c46f93f18dba131273f9fc1f6cc1f059960785d25f06b5497cda330f228"
+      }
+    },
+    {
+      "name": "actual-enterprise-restore-remains-stopped",
+      "result": "PASS",
+      "observed": {
+        "status": "RESTORED_REQUIRES_ENTERPRISE_CONFIGURATION",
+        "enterpriseRequired": true,
+        "enterpriseIdentityRequired": true,
+        "installationIdPreserved": true,
+        "configurationAbsent": true,
+        "ordinaryStartDenied": true,
+        "states": [
+          {
+            "name": "control-db",
+            "state": "exited"
+          },
+          {
+            "name": "target-db",
+            "state": "exited"
+          },
+          {
+            "name": "volume-init",
+            "state": "exited"
+          }
+        ]
+      }
+    },
+    {
+      "name": "audit-only-cannot-replace-restored-sso",
+      "result": "PASS",
+      "observed": {
+        "replacementRejected": true,
+        "enterpriseIdentityRequiredPreserved": true,
+        "servicesStillStopped": true
+      }
+    },
+    {
+      "name": "real-postgresql-recovery-invariants",
+      "result": "PASS",
+      "observed": {
+        "paused": true,
+        "accountsPreserved": 1,
+        "accountRevisionsIncreased": true,
+        "invitations": 0,
+        "recoveries": 0,
+        "agentsPausedAndRevoked": 1,
+        "pendingReviewBlocked": true,
+        "auditValid": true,
+        "auditPrefixPreserved": true,
+        "targetHashPreserved": true,
+        "targetHash": "4518a182a773ff6d97d32cbbe6ae7489477b868ba6493de497853bf6dc0d5c8d",
+        "restoredApplicationNeverStarted": true,
+        "observer": "Database services plus read-only one-shot PostgresStore; no restored login or resumed IdP flow"
+      }
+    }
+  ],
+  "scope": "Disposable minimal local Docker/PostgreSQL Enterprise cold backup and stopped recovery; synthetic HTTPS and identity endpoints; read-only maintenance observer after stopped-state verification; no resumed restored IdP session acceptance or production disaster-recovery claim.",
+  "cleanup": [
+    {
+      "name": "verify-ent-rst-2fdce52c",
+      "result": "PASS",
+      "containers": 0,
+      "volumes": 0,
+      "networks": 0,
+      "ownedFilesRemoved": true,
+      "ownedImageTagsRemoved": true
+    },
+    {
+      "name": "verify-ent-src-2fdce52c",
+      "result": "PASS",
+      "containers": 0,
+      "volumes": 0,
+      "networks": 0,
+      "ownedFilesRemoved": true,
+      "ownedImageTagsRemoved": true
+    }
+  ],
+  "backupArtifactRemoved": true,
+  "finishedAt": "2026-11-17T08:25:26.597Z",
+  "sourceHashAtEnd": "ad12b62c992187a2cb96d4adcbba993b1bd5c96ee7bd5117501b98e19fcf3fc4",
+  "sourceUnchanged": true,
+  "knownSecretScan": {
+    "result": "PASS",
+    "checkedValues": 36,
+    "scope": "Sanitized summary and saved standalone harness; no raw backup/config/key in evidence"
+  }
+}

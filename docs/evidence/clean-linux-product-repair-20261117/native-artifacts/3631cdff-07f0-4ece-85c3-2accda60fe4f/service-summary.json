@@ -1,0 +1,45 @@
+{
+  "runId": "3631cdff-07f0-4ece-85c3-2accda60fe4f",
+  "sourceHash": "8710c17580dd07e7dfe96e0894505a75026825daadcf86aa010b10463045115c",
+  "startedAt": "2026-11-17T14:02:49.264Z",
+  "result": "FAIL",
+  "cases": [
+    {
+      "name": "managed owner bootstrap and invited reviewer work through installed proxy",
+      "result": "PASS",
+      "observed": {
+        "legacyKeysDenied": true,
+        "reviewerRole": "approver",
+        "reviewerTeamAccessDenied": true
+      }
+    },
+    {
+      "name": "installed browser account, team and settings workflow",
+      "result": "PASS",
+      "observed": {
+        "accountLogin": true,
+        "persistedReviewerVisible": true,
+        "profileVisible": true,
+        "signedOut": true,
+        "browserErrors": 0,
+        "externalRequests": 0,
+        "credentialStorage": {
+          "local": [],
+          "session": []
+        }
+      }
+    }
+  ],
+  "scope": "Local synthetic service maintenance; encrypted cold snapshot, new-installation restore and authority suspension.",
+  "error": "Local Docker command failed (1)",
+  "cleanup": [
+    {
+      "project": "agentbrake-product-verify-service-3631cdff",
+      "result": "PASS",
+      "containers": 0,
+      "volumes": 0,
+      "networks": 0
+    }
+  ],
+  "finishedAt": "2026-11-17T14:04:31.819Z"
+}

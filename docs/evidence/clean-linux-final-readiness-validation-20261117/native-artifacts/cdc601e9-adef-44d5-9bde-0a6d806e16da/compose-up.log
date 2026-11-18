@@ -1,0 +1,116 @@
+#1 [internal] load local bake definitions
+#1 reading from stdin 801B done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile
+#2 transferring dockerfile: 443B done
+#2 WARN: InvalidDefaultArgInFrom: Default value for ARG ${NODE_IMAGE} results in empty or invalid base image name (line 2)
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/node@sha256:e9f565d32859f0cbfb52125eafe8be39390f24dac302dc3cdf566e8ba3ab21ee
+#3 DONE 1.4s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 289B done
+#4 DONE 0.0s
+
+#5 [internal] load build context
+#5 transferring context: 512.69kB 0.1s done
+#5 DONE 0.1s
+
+#6 [ 1/10] FROM docker.io/library/node@sha256:e9f565d32859f0cbfb52125eafe8be39390f24dac302dc3cdf566e8ba3ab21ee
+#6 resolve docker.io/library/node@sha256:e9f565d32859f0cbfb52125eafe8be39390f24dac302dc3cdf566e8ba3ab21ee 0.1s done
+#6 DONE 0.1s
+
+#7 [ 4/10] COPY package.json package-lock.json ./
+#7 CACHED
+
+#8 [ 5/10] RUN npm ci
+#8 CACHED
+
+#9 [ 6/10] COPY server ./server
+#9 CACHED
+
+#10 [ 2/10] RUN apt-get update && apt-get install -y --no-install-recommends curl git postgresql-client ca-certificates && rm -rf /var/lib/apt/lists/*
+#10 CACHED
+
+#11 [ 3/10] WORKDIR /app
+#11 CACHED
+
+#12 [ 7/10] COPY services ./services
+#12 CACHED
+
+#13 [ 8/10] COPY tests ./tests
+#13 DONE 0.2s
+
+#14 [ 9/10] COPY scripts ./scripts
+#14 DONE 0.1s
+
+#15 [10/10] COPY infra ./infra
+#15 DONE 0.1s
+
+#16 exporting to image
+#16 exporting layers
+#16 exporting layers 0.3s done
+#16 exporting manifest sha256:39d0217249d730988256348233adde4fde644e52acf0ec3c62c7e2a7b6f41a46
+#16 exporting manifest sha256:39d0217249d730988256348233adde4fde644e52acf0ec3c62c7e2a7b6f41a46 0.0s done
+#16 exporting config sha256:a838ad07a4a65ef3ee6466142d23a41fb480037743ef9e40998a14044de77360 0.0s done
+#16 exporting attestation manifest sha256:a6bfab8ae2c7925a02a1e59d1757c45c6dee51b99e28538e035cc92d2ad98521 0.0s done
+#16 exporting manifest list sha256:75da23d943b69131cac0778132fca951fe47accb72fc1e5c3c5f40b044659668 0.0s done
+#16 naming to docker.io/library/agentbrake-a-cdc601e9-runtime:latest done
+#16 unpacking to docker.io/library/agentbrake-a-cdc601e9-runtime:latest 0.1s done
+#16 DONE 0.6s
+
+#17 resolving provenance for metadata file
+#17 DONE 0.0s
+ agentbrake-a-cdc601e9-runtime  Built
+ Network agentbrake-a-cdc601e9_protected  Creating
+ Network agentbrake-a-cdc601e9_protected  Created
+ Network agentbrake-a-cdc601e9_agent  Creating
+ Network agentbrake-a-cdc601e9_agent  Created
+ Container agentbrake-a-cdc601e9-control-db-1  Creating
+ Container agentbrake-a-cdc601e9-opa-1  Creating
+ Container agentbrake-a-cdc601e9-target-db-1  Creating
+ Container agentbrake-a-cdc601e9-opa-1  Created
+ Container agentbrake-a-cdc601e9-control-db-1  Created
+ Container agentbrake-a-cdc601e9-target-db-1  Created
+ Container agentbrake-a-cdc601e9-mock-target-1  Creating
+ Container agentbrake-a-cdc601e9-mock-target-1  Created
+ Container agentbrake-a-cdc601e9-gateway-1  Creating
+ Container agentbrake-a-cdc601e9-gateway-1  Created
+ Container agentbrake-a-cdc601e9-agent-1  Creating
+ Container agentbrake-a-cdc601e9-agent-1  Created
+ Container agentbrake-a-cdc601e9-control-db-1  Starting
+ Container agentbrake-a-cdc601e9-opa-1  Starting
+ Container agentbrake-a-cdc601e9-target-db-1  Starting
+ Container agentbrake-a-cdc601e9-opa-1  Started
+ Container agentbrake-a-cdc601e9-target-db-1  Started
+ Container agentbrake-a-cdc601e9-target-db-1  Waiting
+ Container agentbrake-a-cdc601e9-control-db-1  Started
+ Container agentbrake-a-cdc601e9-target-db-1  Healthy
+ Container agentbrake-a-cdc601e9-mock-target-1  Starting
+ Container agentbrake-a-cdc601e9-mock-target-1  Started
+ Container agentbrake-a-cdc601e9-mock-target-1  Waiting
+ Container agentbrake-a-cdc601e9-control-db-1  Waiting
+ Container agentbrake-a-cdc601e9-control-db-1  Healthy
+ Container agentbrake-a-cdc601e9-mock-target-1  Healthy
+ Container agentbrake-a-cdc601e9-gateway-1  Starting
+ Container agentbrake-a-cdc601e9-gateway-1  Started
+ Container agentbrake-a-cdc601e9-target-db-1  Waiting
+ Container agentbrake-a-cdc601e9-gateway-1  Waiting
+ Container agentbrake-a-cdc601e9-target-db-1  Healthy
+ Container agentbrake-a-cdc601e9-gateway-1  Healthy
+ Container agentbrake-a-cdc601e9-agent-1  Starting
+ Container agentbrake-a-cdc601e9-agent-1  Started
+ Container agentbrake-a-cdc601e9-control-db-1  Waiting
+ Container agentbrake-a-cdc601e9-agent-1  Waiting
+ Container agentbrake-a-cdc601e9-gateway-1  Waiting
+ Container agentbrake-a-cdc601e9-mock-target-1  Waiting
+ Container agentbrake-a-cdc601e9-opa-1  Waiting
+ Container agentbrake-a-cdc601e9-target-db-1  Waiting
+ Container agentbrake-a-cdc601e9-gateway-1  Healthy
+ Container agentbrake-a-cdc601e9-agent-1  Healthy
+ Container agentbrake-a-cdc601e9-control-db-1  Healthy
+ Container agentbrake-a-cdc601e9-opa-1  Healthy
+ Container agentbrake-a-cdc601e9-target-db-1  Healthy
+ Container agentbrake-a-cdc601e9-mock-target-1  Healthy

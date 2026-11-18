@@ -40,7 +40,6 @@ export async function sourceManifest() {
     "package.json",
     "package-lock.json",
     "tsconfig.json",
-    "vite.config.ts",
     "playwright.config.ts",
     ".dockerignore",
     "index.html",

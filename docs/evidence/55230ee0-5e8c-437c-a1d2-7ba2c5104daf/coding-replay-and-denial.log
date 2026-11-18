@@ -1,0 +1,1 @@
+{"replay":{"id":"f0d97bfa-0f27-4600-8a8a-04c56a22d38e","status":"allowed"},"forcedDenied":{"id":"1929a9a3-9e40-487e-b9a6-e00ed3d60416","status":"blocked","rule":"task-scope"},"scope":"Deterministic adversarial request using the real task credential; not a claim that the model attempted this write"}

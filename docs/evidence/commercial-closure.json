@@ -1,0 +1,312 @@
+{
+  "at": "2026-11-17T21:53:08.007Z",
+  "result": "SCOPED_ENGINEERING_VERIFIED_EXTERNAL_ACCEPTANCE_OPEN",
+  "sourceHash": "2d8df354e16dacbdda4802a04dd875d6166f053f63a5a3b897a2bf41d358032e",
+  "matchingHostedCommit": null,
+  "states": {
+    "requestedEngineeringScope": "VERIFIED",
+    "fullEnterpriseEngineering": "PARTIAL",
+    "integrationAccepted": "NOT_OBTAINED",
+    "operationallyAccepted": "NOT_OBTAINED",
+    "commerciallyAccepted": "NOT_OBTAINED"
+  },
+  "release": {
+    "result": "LOCAL_MVP_VERIFIED_EXTERNAL_GATES_OPEN",
+    "native": {
+      "tests": 293,
+      "pass": 287,
+      "fail": 0,
+      "skipped": 6
+    },
+    "postgres": {
+      "tests": 22,
+      "pass": 22,
+      "fail": 0,
+      "skipped": 0
+    },
+    "git": {
+      "tests": 17,
+      "pass": 17,
+      "fail": 0,
+      "skipped": 0
+    },
+    "workflowCases": 15,
+    "productRun": "374dfd74-b6c9-447a-9be7-6842f3ae0102",
+    "serviceRun": "cc1fd69e-814f-48f1-bf52-1644e2414ec2",
+    "securityRun": "065c88b8-59ad-40e1-8be1-79db090afdda",
+    "candidateRun": "f4b986d4-a64e-4013-abcb-b2bdb6450da7",
+    "enterpriseRun": "1dbf58a4-4507-4f79-af19-5ec4d1c0594e"
+  },
+  "package": {
+    "archive": "F:\\project love\\AgentBrake\\.agentbrake-local\\releases\\agentbrake-0.3.0-rc.1-2d8df354e16d-d30b37d6.tar.gz",
+    "sha256": "89d6f75d33a8809429606ae635a5d765c8f72d83f4fe5e62801beac5922ce6d4",
+    "bytes": 537358,
+    "version": "0.3.0-rc.1",
+    "sourceHash": "2d8df354e16dacbdda4802a04dd875d6166f053f63a5a3b897a2bf41d358032e",
+    "files": 284
+  },
+  "imageScan": {
+    "result": "PASS_IMAGE_SCAN",
+    "runId": "e223c40b-d568-43f8-a12b-366e051df4be"
+  },
+  "standardSigning": {
+    "result": "PASS_SCOPED_OFFLINE_STANDARD_SIGNING",
+    "directory": "docs/evidence/standard-signing-a2205fb7-edd1-46ae-b357-bb3140999427",
+    "archiveSha256": "89d6f75d33a8809429606ae635a5d765c8f72d83f4fe5e62801beac5922ce6d4",
+    "checks": 14,
+    "separateConsumer": "PASS",
+    "trust": "Synthetic disposable key; no organizational identity, transparency, trusted CI or SLSA level."
+  },
+  "measurement": {
+    "total": 208,
+    "baselineSucceeded": 208,
+    "completed": 208,
+    "falseBlocks": 0,
+    "nonPolicyFailures": 0,
+    "completionVsBaseline": 1,
+    "falseBlockRate": 0,
+    "approvalRequired": 96,
+    "measurementResult": "PASS",
+    "usabilityTarget": "MET_SYNTHETIC_ONLY",
+    "baselineFailures": 0,
+    "byKind": {
+      "read": {
+        "total": 64,
+        "baselineSucceeded": 64,
+        "completed": 64,
+        "falseBlocks": 0,
+        "nonPolicyFailures": 0,
+        "completionVsBaseline": 1,
+        "falseBlockRate": 0,
+        "approvalRequired": 0
+      },
+      "preview": {
+        "total": 80,
+        "baselineSucceeded": 80,
+        "completed": 80,
+        "falseBlocks": 0,
+        "nonPolicyFailures": 0,
+        "completionVsBaseline": 1,
+        "falseBlockRate": 0,
+        "approvalRequired": 0
+      },
+      "pr": {
+        "total": 32,
+        "baselineSucceeded": 32,
+        "completed": 32,
+        "falseBlocks": 0,
+        "nonPolicyFailures": 0,
+        "completionVsBaseline": 1,
+        "falseBlockRate": 0,
+        "approvalRequired": 64
+      },
+      "update": {
+        "total": 32,
+        "baselineSucceeded": 32,
+        "completed": 32,
+        "falseBlocks": 0,
+        "nonPolicyFailures": 0,
+        "completionVsBaseline": 1,
+        "falseBlockRate": 0,
+        "approvalRequired": 32
+      }
+    },
+    "timing": {
+      "directBaselineTask": {
+        "count": 208,
+        "p50Ms": 32.148300000000745,
+        "p95Ms": 111.03329999999914
+      },
+      "gatewayTask": {
+        "count": 208,
+        "p50Ms": 52.55539999999928,
+        "p95Ms": 252.31860000000233
+      },
+      "authorization": {
+        "count": 272,
+        "p50Ms": 4.52,
+        "p95Ms": 6.44
+      },
+      "submitRoundTrip": {
+        "count": 272,
+        "p50Ms": 30.83020000000397,
+        "p95Ms": 42.8122000000003
+      },
+      "automatedApprovalRoundTrip": {
+        "count": 96,
+        "p50Ms": 48.72019999999975,
+        "p95Ms": 97.95010000000184
+      }
+    },
+    "humanApprovalWait": "NOT_MEASURED",
+    "corpusHash": "4977504a717538cc20c1bddf5bb7e08df272c6f7c1912925f87405b7a7bfe30c",
+    "scope": "208 prelabelled synthetic tasks; 8 parameter strata of 26 scenarios, including repeated reads and all 16 credential-shaped placeholders; actual direct adapter baseline versus gateway, sequential on one fixture with distinct branch names and per-step state checks; approvals by automated trusted fixture operator; task latency includes HTTP/target/snapshots, not provisioning or human wait; no general population or model-quality rate. Measurement PASS is not achievement of the separate <2% usability target."
+  },
+  "coding": {
+    "result": "PASS_SCOPED_LOCAL_CODING",
+    "modelProfile": {
+      "name": "agentbrake-coding-diagnostic:latest",
+      "manifestSha256": "f2272c38aabff3fc66fae65ab81bb6300a59205e461a769e149c815805796904",
+      "weightsSha256": "85e4a5b7b8ef0e48af0e8658f5aaab9c2324c76c1641493f4d1e25fce54b18b9",
+      "parameters": {
+        "num_predict": 2048,
+        "repeat_penalty": 1,
+        "seed": 42,
+        "stop": [
+          "<|im_start|>",
+          "<|im_end|>"
+        ],
+        "temperature": 0,
+        "top_k": 20,
+        "top_p": 0.8
+      }
+    },
+    "evidence": "docs/evidence/55230ee0-5e8c-437c-a1d2-7ba2c5104daf/coding-workflow.json",
+    "targetHeadSha": "607c7b56ff1144ae4dec8b6d20665451986ae3b4",
+    "replayAndDenial": {
+      "replay": {
+        "id": "f0d97bfa-0f27-4600-8a8a-04c56a22d38e",
+        "status": "allowed"
+      },
+      "forcedDenied": {
+        "id": "1929a9a3-9e40-487e-b9a6-e00ed3d60416",
+        "status": "blocked",
+        "rule": "task-scope"
+      },
+      "scope": "Deterministic adversarial request using the real task credential; not a claim that the model attempted this write"
+    },
+    "scope": "Additional synthetic four-phase orchestrated coding workflow, separate CLI context per phase with same task/candidate/budget; local Git mock PR, no live GitHub or human approval. Two-phase model loop failure is retained separately."
+  },
+  "ubuntu": {
+    "result": "PASS_SCOPED_EXACT_PACKAGE_WITH_CORRECTED_SECURITY_HARNESS",
+    "sourceHashAtEnd": "2d8df354e16dacbdda4802a04dd875d6166f053f63a5a3b897a2bf41d358032e",
+    "nativeRun": "71ecb045-6a22-4642-a3e9-37ab9cd10088",
+    "commands": [
+      {
+        "label": "native",
+        "exitCode": 0,
+        "seconds": 459.68
+      },
+      {
+        "label": "isolation",
+        "exitCode": 0,
+        "seconds": 179.57
+      },
+      {
+        "label": "product",
+        "exitCode": 0,
+        "seconds": 127.53
+      },
+      {
+        "label": "service",
+        "exitCode": 0,
+        "seconds": 337.54
+      },
+      {
+        "label": "candidate",
+        "exitCode": 0,
+        "seconds": 60.52
+      },
+      {
+        "label": "enterprise",
+        "exitCode": 0,
+        "seconds": 118.06
+      },
+      {
+        "label": "security",
+        "exitCode": 0,
+        "seconds": 29.98
+      }
+    ],
+    "limits": [
+      "The guest was separately created from a verified public Ubuntu OVA on the same physical Windows host; it is not independent customer hardware.",
+      "Public toolchain and content-addressed package/image/browser caches were reused; this is not a pristine cold-cache timing result.",
+      "The actual GPU Codex coding-to-local-mock-PR workflow was verified separately on Windows/Docker and was not repeated on the 1-vCPU guest.",
+      "The final security gate is a continuation on the preserved exact-package application directory after a harness-only invocation defect; the original failure remains immutable.",
+      "No live GitHub, customer IdP/SIEM, production data, paid service, external deployment or independent human review was used."
+    ],
+    "applicationDirectory": "/opt/agentbrake-final-2d8df354",
+    "harnessCorrection": {
+      "preservedFailure": "docs/evidence/clean-linux-final-package-20261117/guest-report.json",
+      "cause": "The VM harness invoked node scripts/verify-security.mjs directly; the security contract requires npm run verify:security so npm_execpath is explicit for SBOM and audit.",
+      "observedBeforeCorrection": "Semgrep completed with 0 findings on 123 files, then the npm CLI precondition failed.",
+      "correction": "Only the local validation harness invocation changed. Product source, archive, policy, timeouts and security assertions were unchanged.",
+      "resumedEvidence": "docs/evidence/clean-linux-final-security-resume2-20261117/guest-report.json"
+    }
+  },
+  "installed": {
+    "sourceHash": "b9c07645e95dca1369636c9fc38a7ed3f777dc15b2a4004b9032f9566a00e60d",
+    "result": "PASS_EXISTING_INSTALLATION_HEALTH_BINDINGS",
+    "at": "2026-11-17T21:43:51.631Z",
+    "upgraded": false
+  },
+  "remaining": [
+    "Actual Codex proof uses four contexts, pinned local bounded model and automated fixture approvals; broader model/customer reliability and live GitHub acceptance remain unmeasured.",
+    "The zero-false-block result covers26 synthetic scenario families across8 strata, not an independent customer cohort; human approval wait remains unmeasured.",
+    "Final-source authorized live GitHub/hosted CI/customer IdP/SIEM interoperability and independent human security review remain separate.",
+    "Organizational release-key custody, off-host encrypted recovery and human operations acceptance remain open.",
+    "No commercial/legal/support/pilot admission or production deployment is inferred."
+  ],
+  "evidence": [
+    {
+      "path": "docs/evidence/engineering-final-d0f25655-2637-41a6-b56d-89b5f63d0ef2/validation.json",
+      "sha256": "6af35e333def33b0538a5789133a9638ce906f08c9627cc0925491e8e766ddb0",
+      "bytes": 1133
+    },
+    {
+      "path": "docs/evidence/local-release.json",
+      "sha256": "37cb405809f1edaa1300dccc8440839880c76231e5d606801fd58a9709b73c53",
+      "bytes": 15645
+    },
+    {
+      "path": "docs/evidence/container-scan.json",
+      "sha256": "22c5a75866e8284ba51729abdb53e1bb0bb4e0d73126589ebe2de564f30d93e2",
+      "bytes": 1972
+    },
+    {
+      "path": "docs/evidence/release-package.json",
+      "sha256": "53ceeb043317badce079b2c3b9d05db12be3fd16159cb765727af659c803cc71",
+      "bytes": 354
+    },
+    {
+      "path": "docs/evidence/commercial-package-validation.json",
+      "sha256": "6d08b8a0abfdd8d84bc3de60c1ddd6659fd4d0f3419ada9f5de407b6ec63066f",
+      "bytes": 684
+    },
+    {
+      "path": "docs/evidence/1dbf58a4-4507-4f79-af19-5ec4d1c0594e/enterprise-summary.json",
+      "sha256": "6fb599d71c9032547fa995be1d0f0ba1c52b2a9395f0fd5907e73834247f43dc",
+      "bytes": 8212
+    },
+    {
+      "path": "docs/evidence/clean-linux-final-package-acceptance.json",
+      "sha256": "89916219977cb14139f8ca22831561c30721359aada2b23abeb4314c1e20ab02",
+      "bytes": 15392413
+    },
+    {
+      "path": "docs/evidence/55230ee0-5e8c-437c-a1d2-7ba2c5104daf/coding-workflow.json",
+      "sha256": "43e65ad9d9ae33919897f439e6837e25b7ca02b2057207d346da4c3a2bb8cac5",
+      "bytes": 153613
+    },
+    {
+      "path": "docs/evidence/enterprise-installed-final-health.json",
+      "sha256": "f041658d36e26e38743965c4ced77c1cedbbaaf6b20ce077b0a3390f7851e15d",
+      "bytes": 2599
+    },
+    {
+      "path": "docs/evidence/latest-standard-signing.json",
+      "sha256": "f049643cc42fa6c6b336e1e20bbc9c15979f14fbea95c04c2b8738c50750f58d",
+      "bytes": 263
+    },
+    {
+      "path": "docs/evidence/standard-signing-a2205fb7-edd1-46ae-b357-bb3140999427/summary.json",
+      "sha256": "4c4f1cd029b133ba10733cfa4695fd8791dcc9639744afae5235abfe502cbb79",
+      "bytes": 5301
+    },
+    {
+      "path": "docs/evidence/standard-signing-a2205fb7-edd1-46ae-b357-bb3140999427/separate-consumer.json",
+      "sha256": "37cb1c2efce328e2062ee575fa07679577f30c8c9db270207650b9d027d63db2",
+      "bytes": 229
+    }
+  ]
+}

@@ -1,0 +1,104 @@
+#cloud-config
+users: []
+disable_root: true
+ssh_pwauth: false
+package_update: false
+package_upgrade: false
+write_files:
+  - path: /usr/local/sbin/agentbrake-phase.py
+    permissions: '0700'
+    content: |
+      import json,pathlib,subprocess,traceback,os
+      P=pathlib.Path
+      r={'scope':'VM dependency-egress guard installed with NICs disabled; not a product claim','commands':[]}
+      def run(args):
+       p=subprocess.run(args,text=True,capture_output=True,timeout=90)
+       r['commands'].append({'command':args,'exitCode':p.returncode,'output':(p.stdout+p.stderr)[-5000:]})
+       if p.returncode:raise RuntimeError(str(args))
+       return p.stdout.strip()
+      def write(path,text,mode=0o644):
+       p=P(path);p.parent.mkdir(parents=True,exist_ok=True);p.write_text(text);p.chmod(mode)
+      try:
+       assert all(n.name in ['lo','docker0'] for n in P('/sys/class/net').iterdir())
+       rules='''table inet ab_dependency_guard {
+       chain output {
+        type filter hook output priority -10; policy drop;
+        oifname "lo" accept
+        oifname "docker0" accept
+        oifname "br-*" accept
+        ct state established,related accept
+        oifname "abegress0" ip daddr 10.0.2.2 tcp dport 8877 counter accept
+        counter reject with icmpx type admin-prohibited
+       }
+       chain forward {
+        type filter hook forward priority -10; policy accept;
+        oifname "abegress0" ip daddr 10.0.2.2 tcp dport 8877 counter accept
+        oifname "abegress0" counter reject with icmpx type admin-prohibited
+       }
+       chain input {
+        type filter hook input priority -10; policy drop;
+        iifname "lo" accept
+        iifname "docker0" accept
+        iifname "br-*" accept
+        ct state established,related accept
+        counter reject with icmpx type admin-prohibited
+       }
+      }
+      '''
+       write('/etc/ab-dependency-guard.nft',rules)
+       run(['nft','--check','--file','/etc/ab-dependency-guard.nft'])
+       write('/etc/systemd/system/ab-dependency-guard.service','''[Unit]
+      Description=Fail-closed public dependency proxy egress for validation VM
+      DefaultDependencies=no
+      After=systemd-modules-load.service local-fs.target
+      Before=network-pre.target systemd-networkd.service docker.service
+      Wants=network-pre.target
+      [Service]
+      Type=oneshot
+      ExecStart=/usr/sbin/nft -f /etc/ab-dependency-guard.nft
+      RemainAfterExit=yes
+      [Install]
+      WantedBy=multi-user.target
+      ''')
+       for service in ['systemd-networkd','docker']:
+        write(f'/etc/systemd/system/{service}.service.d/ab-guard.conf','[Unit]\nRequires=ab-dependency-guard.service\nAfter=ab-dependency-guard.service\n')
+       proxy='http://10.0.2.2:8877'
+       write('/etc/systemd/system/docker.service.d/ab-proxy.conf',f'[Service]\nEnvironment="HTTP_PROXY={proxy}" "HTTPS_PROXY={proxy}" "NO_PROXY=localhost,127.0.0.1,::1"\n')
+       write('/etc/apt/apt.conf.d/90ab-proxy',f'Acquire::http::Proxy "{proxy}";\nAcquire::https::Proxy "{proxy}";\n')
+       write('/etc/cloud/cloud.cfg.d/99-ab-network.cfg','network: {config: disabled}\n')
+       write('/etc/netplan/90-ab-dependency.yaml','''network:
+        version: 2
+        ethernets:
+          abegress0:
+            match: {macaddress: "08:00:27:ab:17:17"}
+            set-name: abegress0
+            dhcp4: false
+            dhcp6: false
+            accept-ra: false
+            link-local: []
+            addresses: [10.0.2.15/24]
+            routes: [{to: default, via: 10.0.2.2}]
+      ''',0o600)
+       p='/opt/agentbrake/.agentbrake-local/docker-public/config.json'
+       write(p,json.dumps({'proxies':{'default':{'httpProxy':proxy,'httpsProxy':proxy,'noProxy':'localhost,127.0.0.1,::1'}}}),0o600)
+       run(['chown','-R','abvalidation:abvalidation','/opt/agentbrake/.agentbrake-local'])
+       run(['netplan','generate'])
+       run(['systemctl','daemon-reload'])
+       run(['systemctl','enable','--now','ab-dependency-guard.service'])
+       r['rules']=run(['nft','list','table','inet','ab_dependency_guard'])
+       r['interfaces']=sorted(n.name for n in P('/sys/class/net').iterdir())
+       r['routes']=run(['ip','route'])
+       assert 'default' not in r['routes'] and all(n in ['lo','docker0'] for n in r['interfaces'])
+       r['result']='PASS_OFFLINE_GUARD_PREPARATION_ONLY'
+      except Exception as e:r['result']='FAIL';r['error']=str(e);r['trace']=traceback.format_exc()
+      finally:
+       P('/var/lib/agentbrake-validation/guard.json').write_text(json.dumps(r))
+       with open('/dev/ttyS0','w') as f:f.write('\nAGENTBRAKE_PHASE_REPORT='+json.dumps(r)+'\n')
+
+runcmd:
+  - [python3, /usr/local/sbin/agentbrake-phase.py]
+power_state:
+  mode: poweroff
+  delay: now
+  timeout: 30
+  condition: true

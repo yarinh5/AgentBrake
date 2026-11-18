@@ -1,0 +1,80 @@
+{
+  "at": "2026-11-17T18:35:13.087Z",
+  "sourceHash": "6c5db3b91a0cb7f9e9055bedfee5088a6b075fd4b32491949339693b7dd0a63a",
+  "project": "agentbrake-a-3f5516ea",
+  "agentImage": "sha256:4733b8ebf7f62277f5d25d77220d88d898921539a1a8356c2b2c3b6cb715358f",
+  "agentId": "a7b27c78e02997a10cbe631140fdc003d1ffd33309e7acdadbf55ef8e77692df",
+  "networks": [
+    {
+      "name": "agentbrake-a-3f5516ea_agent",
+      "internal": true,
+      "ipv6": false
+    },
+    {
+      "name": "agentbrake-a-3f5516ea_protected",
+      "internal": true,
+      "ipv6": false
+    }
+  ],
+  "targets": [
+    {
+      "name": "target-http",
+      "host": "192.168.16.5",
+      "port": 8080
+    },
+    {
+      "name": "target-db",
+      "host": "192.168.16.3",
+      "port": 5432
+    },
+    {
+      "name": "control-db",
+      "host": "192.168.16.4",
+      "port": 5432
+    },
+    {
+      "name": "opa",
+      "host": "192.168.16.2",
+      "port": 8181
+    }
+  ],
+  "probeSha256": "73f30bf2177c00a85b303eefdfd7847f24157f79e300c95116e71995a8295e7c",
+  "results": [
+    {
+      "case": "ipv4-mapped-ipv6-target-http",
+      "result": "PASS"
+    },
+    {
+      "case": "ipv4-mapped-ipv6-target-db",
+      "result": "PASS"
+    },
+    {
+      "case": "ipv4-mapped-ipv6-control-db",
+      "result": "PASS"
+    },
+    {
+      "case": "ipv4-mapped-ipv6-opa",
+      "result": "PASS"
+    },
+    {
+      "case": "container-loopback-protected-ports",
+      "result": "PASS"
+    },
+    {
+      "case": "local-helper-proxy-and-redirect",
+      "result": "PASS",
+      "positiveControl": true
+    },
+    {
+      "case": "child-helper-no-target-credential-or-tcp",
+      "result": "PASS"
+    },
+    {
+      "case": "mediated-gateway-reachable-positive",
+      "result": "PASS"
+    }
+  ],
+  "uid": 1000,
+  "scope": "Read-only named synthetic addresses; no target request/credential or mutation. Native IPv6 routed targets absent; no kernel/admin/alternate-topology claim.",
+  "result": "PASS_SCOPED_ADDITIONAL_BOUNDARIES"
+}

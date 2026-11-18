@@ -1,0 +1,57 @@
+{
+  "scope": "Separate Ubuntu guest; synthetic product/isolation/restore/candidate/security checks",
+  "commands": [
+    {
+      "label": "exact-source",
+      "exitCode": 0,
+      "failure": null,
+      "seconds": 1.92,
+      "outputTail": "0d00cd87460a49e11cfb36a183fd353ad482942ee88becbb4065067017f9aa49\n"
+    },
+    {
+      "label": "guard-active",
+      "exitCode": 0,
+      "failure": null,
+      "seconds": 0.02,
+      "outputTail": "active\n"
+    },
+    {
+      "label": "image-identity",
+      "exitCode": 0,
+      "failure": null,
+      "seconds": 0.41,
+      "outputTail": "\"sha256:5e3b4f4b3717f8a73214e99892f7b07a07399522ce786aebc1a8d5f68c807111\"\n"
+    },
+    {
+      "label": "start-probe",
+      "exitCode": 0,
+      "failure": null,
+      "seconds": 0.67,
+      "outputTail": "ab3843ff384d3075f402392365b7a31d6b1ef4cce5c1fc97aaceb0e35a1560ed\n"
+    },
+    {
+      "label": "cleanup-probe",
+      "exitCode": 0,
+      "failure": null,
+      "seconds": 0.29,
+      "outputTail": "agentbrake-readiness-60247e09\n"
+    }
+  ],
+  "reports": {},
+  "releaseAcceptance": false,
+  "sourceHash": "0d00cd87460a49e11cfb36a183fd353ad482942ee88becbb4065067017f9aa49",
+  "postgresImage": "sha256:5e3b4f4b3717f8a73214e99892f7b07a07399522ce786aebc1a8d5f68c807111",
+  "duringInitialization": {
+    "unixExit": 0,
+    "unixOutput": "/var/run/postgresql:5432 - accepting connections\n",
+    "tcpExit": 2,
+    "tcpOutput": "127.0.0.1:5432 - no response\n"
+  },
+  "afterInitialization": {
+    "tcpExit": 0,
+    "output": "127.0.0.1:5432 - accepting connections\n"
+  },
+  "containerLog": "The files belonging to this database system will be owned by user \"postgres\".\nThis user must also own the server process.\n\nThe database cluster will be initialized with locale \"en_US.utf8\".\nThe default database encoding has accordingly been set to \"UTF8\".\nThe default text search configuration will be set to \"english\".\n\nData page checksums are enabled.\n\nfixing permissions on existing directory /var/lib/postgresql/18/docker ... ok\ncreating subdirectories ... ok\nselecting dynamic shared memory implementation ... posix\nselecting default \"max_connections\" ... 100\nselecting default \"shared_buffers\" ... 128MB\nselecting default time zone ... UTC\ncreating configuration files ... ok\nrunning bootstrap script ... ok\nperforming post-bootstrap initialization ... ok\nsyncing data to disk ... ok\n\n\nSuccess. You can now start the database server using:\n\n    pg_ctl -D /var/lib/postgresql/18/docker -l logfile start\n\nwaiting for server to start....2026-11-17 16:16:12.960 UTC [31] LOG:  starting PostgreSQL 18.7 on x86_64-pc-linux-musl, compiled by gcc (Alpine 15.2.0) 15.2.0, 64-bit\n2026-11-17 16:16:12.960 UTC [31] LOG:  listening on Unix socket \"/var/run/postgresql/.s.PGSQL.5432\"\n2026-11-17 16:16:12.971 UTC [37] LOG:  database system was shut down at 2026-11-17 16:16:12 UTC\n2026-11-17 16:16:12.974 UTC [31] LOG:  database system is ready to accept connections\n done\nserver started\nCREATE DATABASE\n\n\n/usr/local/bin/docker-entrypoint.sh: sourcing /docker-entrypoint-initdb.d/000-readiness.sh\nAGENTBRAKE_INIT_WINDOW\n\nwaiting for server to shut down...2026-11-17 16:16:38.241 UTC [31] LOG:  received fast shutdown request\n.2026-11-17 16:16:38.241 UTC [31] LOG:  aborting any active transactions\n2026-11-17 16:16:38.245 UTC [31] LOG:  background worker \"logical replication launcher\" (PID 40) exited with exit code 1\n2026-11-17 16:16:38.251 UTC [35] LOG:  shutting down\n2026-11-17 16:16:38.251 UTC [35] LOG:  checkpoint starting: shutdown immediate\n2026-11-17 16:16:38.259 UTC [35] LOG:  checkpoint complete: wrote 952 buffers (5.8%), wrote 3 SLRU buffers; 0 WAL file(s) added, 0 removed, 0 recycled; write=0.008 s, sync=0.001 s, total=0.009 s; sync files=303, longest=0.001 s, average=0.000 s; distance=4437 kB, estimate=4437 kB; lsn=0/1BCDB90, redo lsn=0/1BCDB90\n2026-11-17 16:16:38.277 UTC [31] LOG:  database system is shut down\n done\nserver stopped\n\nPostgreSQL init process complete; ready for start up.\n\n********************************************************************************\nWARNING: POSTGRES_HOST_AUTH_METHOD has been set to \"trust\". This will allow\n         anyone with access to the Postgres port to access your database without\n         a password, even if POSTGRES_PASSWORD is set. See PostgreSQL\n         documentation about \"trust\":\n         https://www.postgresql.org/docs/current/auth-trust.html\n         In Docker's default configuration, this is effectively any other\n         container on the same system.\n\n         It is not recommended to use POSTGRES_HOST_AUTH_METHOD=trust. Replace\n         it with \"-e POSTGRES_PASSWORD=password\" instead to set a password in\n         \"docker run\".\n********************************************************************************\nsh: locale: not found\n2026-11-17 16:16:11.866 UTC [25] WARNING:  no usable system locales were found\ninitdb: warning: enabling \"trust\" authentication for local connections\ninitdb: hint: You can change this by editing pg_hba.conf or using the option -A, or --auth-local and --auth-host, the next time you run initdb.\n2026-11-17 16:16:38.375 UTC [1] LOG:  starting PostgreSQL 18.7 on x86_64-pc-linux-musl, compiled by gcc (Alpine 15.2.0) 15.2.0, 64-bit\n2026-11-17 16:16:38.380 UTC [1] LOG:  listening on IPv4 address \"0.0.0.0\", port 5432\n2026-11-17 16:16:38.381 UTC [1] LOG:  listening on IPv6 address \"::\", port 5432\n2026-11-17 16:16:38.381 UTC [1] LOG:  listening on Unix socket \"/var/run/postgresql/.s.PGSQL.5432\"\n2026-11-17 16:16:38.385 UTC [196] LOG:  database system was shut down at 2026-11-17 16:16:38 UTC\n2026-11-17 16:16:38.392 UTC [1] LOG:  database system is ready to accept connections\n",
+  "result": "PASS_REPRODUCED_EARLY_UNIX_READINESS",
+  "cleanup": "PASS"
+}

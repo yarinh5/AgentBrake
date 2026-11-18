@@ -1,0 +1,37 @@
+{
+  "at": "2026-11-17T16:17:13.920098+00:00",
+  "result": "PASS_REPRODUCED_EARLY_UNIX_READINESS",
+  "phase": "postgres-readiness-probe",
+  "sourceHash": "0d00cd87460a49e11cfb36a183fd353ad482942ee88becbb4065067017f9aa49",
+  "baseSource": "855b2915022fae9542d05207f62bec5eb356d942a001a9f3415a738f3b453c8c",
+  "releaseAcceptance": false,
+  "approval": "User approved the UNRELEASED base for development testing and authorized necessary local fixes; changed revisions are recorded separately.",
+  "seedSha256": "95b80db7ede0b338470a8b5b6ba03ba6ddc48e5a144fe3ec43d5f74c7ee1db62",
+  "files": [
+    {
+      "name": "guest-report.json",
+      "sha256": "8f930e57b3a87479b798083bd70e28a7d8d9734a2a97328a4b262d85319644cc",
+      "bytes": 5908
+    },
+    {
+      "name": "meta-data",
+      "sha256": "eea7878e1a943e4726630034cfb7761ede4833cd99df651d4dadc9201b86f049",
+      "bytes": 113
+    },
+    {
+      "name": "network-config",
+      "sha256": "a3bc4c3619b4e66dd6c60f9b005944e1a7e218dfebcff10398d20e94c08613af",
+      "bytes": 27
+    },
+    {
+      "name": "serial.log",
+      "sha256": "ab0ebe535644c26e3e6e98b5e41dc3a0d962654d5953ad21b385a9862977e854",
+      "bytes": 81612
+    },
+    {
+      "name": "user-data",
+      "sha256": "00d2dfc933b729662c0e296e1163a89c431b733b256fcffb61146510c1f8ecea",
+      "bytes": 6432
+    }
+  ]
+}

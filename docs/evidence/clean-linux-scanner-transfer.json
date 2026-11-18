@@ -1,0 +1,12 @@
+{
+  "scope": "Previously downloaded public vulnerability database; no source or credentials",
+  "metadata": {
+    "Version": 2,
+    "NextUpdate": "2026-11-17T13:03:44.830426014Z",
+    "UpdatedAt": "2026-11-16T13:03:44.830426244Z",
+    "DownloadedAt": "2026-11-16T19:02:52.831437722Z"
+  },
+  "archive": ".tools\\linux-offline-deps\\trivy-db.tar.gz",
+  "sha256": "e0479076ae9d83cc26722a35f9c7cfaab2a3f9025e87820b51bece38276902f9",
+  "bytes": 178576422
+}

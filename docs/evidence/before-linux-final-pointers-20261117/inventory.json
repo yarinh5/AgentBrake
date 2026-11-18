@@ -1,0 +1,81 @@
+{
+  "at": "2026-11-17T16:46:27.979033+00:00",
+  "sourceHash": "2642bd1356660a8c91b157f2870bfb787e8088d83eca2544886f0784deed06bc",
+  "scope": "Previous canonical pointers/aggregates preserved before importing exact-source Ubuntu results. Original run reports remain unchanged.",
+  "previous": [
+    {
+      "path": "container-scan.json",
+      "sha256": "4e9b5fd0bc8570bd4080464db60c0092a328567ac5ceb90eae9abd5c33d4e517"
+    },
+    {
+      "path": "latest-candidate.json",
+      "sha256": "aba4a9694cd145b3445a8257edeea53d3e0112cdc9ab10e0eafa0197dccc4d78"
+    },
+    {
+      "path": "latest-enterprise.json",
+      "sha256": "e090250833e0240a470ff34d6a5730cb07bfcc5fea482335865c1e8de7388834"
+    },
+    {
+      "path": "latest-isolation.json",
+      "sha256": "84ca678433bab47b7f0a0f452871309719bd5ad0ac1ce93c643fa0c677d319eb"
+    },
+    {
+      "path": "latest-product.json",
+      "sha256": "cd52d823369fd4286d85ba40e18f27713d7a9942552c755af43e7f212e9cdfc6"
+    },
+    {
+      "path": "latest-security.json",
+      "sha256": "a1c2a04c17011aff32a9577e5c024c2120efcca6a6b6321464ccae56f0105961"
+    },
+    {
+      "path": "latest-service.json",
+      "sha256": "40429d5f9a98287799847fc268a96131d58c18810bf65d2cbb6f4f8a3de237a9"
+    },
+    {
+      "path": "latest.json",
+      "sha256": "3615a43961a2e0fc04317d6413b18687836154da9d924341114d86c3e661d616"
+    }
+  ],
+  "published": [
+    {
+      "path": "docs/evidence/latest.json",
+      "sha256": "bd96589574028be6dd8a3b4573d0c9a0d267c51d88de506b95d18ba096bf7e03",
+      "origin": "docs/evidence/clean-linux-final-readiness-validation-20261117/native-artifacts/e5ec3630-a477-4d0a-8476-a8dac194f091/summary.json"
+    },
+    {
+      "path": "docs/evidence/latest-isolation.json",
+      "sha256": "b65b90bfce699e082742f38f80485d5c3d4e0e6d07b65e92d93e175b6ebbfe4e",
+      "origin": "docs/evidence/clean-linux-final-readiness-validation-20261117/materialized/cdc601e9-adef-44d5-9bde-0a6d806e16da/isolation-summary.json"
+    },
+    {
+      "path": "docs/evidence/latest-product.json",
+      "sha256": "97708fdb11065611ffeae88a006f2cc94c1f9fecbc5f567cd3fcbabb70e8e0c9",
+      "origin": "docs/evidence/clean-linux-final-readiness-validation-20261117/native-artifacts/3d610ec7-11ba-4bd6-9961-3cc55522eef1/product-summary.json"
+    },
+    {
+      "path": "docs/evidence/latest-service.json",
+      "sha256": "50cfc25b8138b3351d6da0464a7a9dee7f18a3462f94852187b69d52dd55a2e9",
+      "origin": "docs/evidence/clean-linux-final-readiness-validation-20261117/native-artifacts/34ddb3b8-e081-4c17-bd86-9a12305d2689/service-summary.json"
+    },
+    {
+      "path": "docs/evidence/latest-candidate.json",
+      "sha256": "a46f0bedc4f080620a4852fb303ce0ad17971bf1b870a88356a8a4205eade2e4",
+      "origin": "docs/evidence/clean-linux-final-readiness-validation-20261117/native-artifacts/b869fbfb-a6d1-49b1-bd65-9b36746652f2/candidate-summary.json"
+    },
+    {
+      "path": "docs/evidence/latest-security.json",
+      "sha256": "71fac6206079c0ec23b6737bdde255dc74642fe50d71bd97a9d4af1355cd7c81",
+      "origin": "docs/evidence/clean-linux-final-readiness-validation-20261117/native-artifacts/a660318a-db27-4fe1-a025-71478b94f691/security-summary.json"
+    },
+    {
+      "path": "docs/evidence/latest-enterprise.json",
+      "sha256": "9c29dc908eda7ff85d53e63ae71f601ad1e74f1a4f6f77ea870db23e373f5738",
+      "origin": "docs/evidence/clean-linux-final-readiness-validation-20261117/native-artifacts/72754876-7b3d-4f0c-915b-4908d513fea4/enterprise-summary.json"
+    },
+    {
+      "path": "docs/evidence/container-scan.json",
+      "sha256": "94a2f0bdea12460d1514195afca577207519cc5007b07f5170810836f1e73b69",
+      "origin": "docs/evidence/clean-linux-final-readiness-validation-20261117/native-artifacts/aggregate/container-scan.json"
+    }
+  ]
+}

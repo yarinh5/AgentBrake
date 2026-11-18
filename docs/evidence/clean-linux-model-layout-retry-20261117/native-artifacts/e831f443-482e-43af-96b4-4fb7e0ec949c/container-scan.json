@@ -1,0 +1,38 @@
+{
+  "runId": "e831f443-482e-43af-96b4-4fb7e0ec949c",
+  "sourceHash": "0d00cd87460a49e11cfb36a183fd353ad482942ee88becbb4065067017f9aa49",
+  "currentSourceHash": "0d00cd87460a49e11cfb36a183fd353ad482942ee88becbb4065067017f9aa49",
+  "startedAt": "2026-11-17T16:10:51.697Z",
+  "scanner": {
+    "version": "0.76.2",
+    "image": "aquasec/trivy@sha256:8f6bb947dbc528902e11f2f5be52f7b519f6a39d5d148f41166f2040499768fb",
+    "resolvedAt": "2026-11-16",
+    "source": "https://github.com/aquasecurity/trivy/releases/tag/v0.76.2"
+  },
+  "result": "FAIL",
+  "images": [
+    {
+      "name": "runtime",
+      "imageId": "sha256:26a08cde17a815ce010019465929a363db341ac175d29a70739eef4a1155dd71",
+      "reference": "agentbrake-product-verify-candidate-a2b2bf37-runtime",
+      "total": 0,
+      "highCritical": []
+    },
+    {
+      "name": "dashboard",
+      "imageId": "sha256:1d67e83863a30cb028709b847c352cbd0e6cd58466d9d1a3690acfb137152381",
+      "reference": "agentbrake-product-verify-candidate-a2b2bf37-dashboard",
+      "total": 0,
+      "highCritical": []
+    }
+  ],
+  "scope": "Offline Trivy vulnerability scan of locally exported images. Database downloaded separately; no source or image uploaded. Unfixed findings included; no blanket suppression.",
+  "database": {
+    "Version": 2,
+    "NextUpdate": "2026-11-17T13:03:44.830426014Z",
+    "UpdatedAt": "2026-11-16T13:03:44.830426244Z",
+    "DownloadedAt": "2026-11-16T19:02:52.831437722Z"
+  },
+  "error": "Image changed since candidate acceptance; rebuild/reverify before scanning",
+  "finishedAt": "2026-11-17T16:11:02.635Z"
+}

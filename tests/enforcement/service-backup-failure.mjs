@@ -3,7 +3,7 @@ import { randomUUID } from "node:crypto";
 import { readdir } from "node:fs/promises";
 import { join } from "node:path";
 import { root } from "../../scripts/opa-runtime.mjs";
-import { dockerProduct } from "../../scripts/product.mjs";
+import { dockerProduct, composeProduct } from "../../scripts/product.mjs";
 import {
   backupProduct,
   doctorProduct,
@@ -56,6 +56,11 @@ export async function verifyBackupFailureResume(config) {
       .filter((name) => name.startsWith(config.name + "-"))
       .sort();
   const before = await artifacts();
+  const containerIds = async () => (await composeProduct(config,
+    ['--profile','agent','ps','--all','--quiet'], {capture:true}))
+    .trim().split(/\r?\n/).filter(Boolean).sort();
+  const originalContainers = await containerIds();
+  assert.ok(originalContainers.length > 0);
   try {
     await helper(
       "require('fs').writeFileSync(process.argv[1],require('crypto').randomBytes(50*1024*1024),{flag:'wx',mode:0o600});",
@@ -73,10 +78,13 @@ export async function verifyBackupFailureResume(config) {
       "200",
       "Source must resume after backup rejection",
     );
+    assert.deepEqual(await containerIds(), originalContainers,
+      'Backup failure recovery must resume existing containers without replacement');
     return {
       rejectedOversizedSnapshot: true,
       artifactNotPublished: true,
       sourceResumed: true,
+      originalContainersPreserved: true,
     };
   } finally {
     await helper(

@@ -1,0 +1,97 @@
+TAP version 13
+# (node:13768) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: App JWT and installation authority are scoped; safe file read returns only bounded data
+ok 1 - App JWT and installation authority are scoped; safe file read returns only bounded data
+  ---
+  duration_ms: 79.4089
+  ...
+# Subtest: unknown tool, secret path, outside repo, main branch and duplicate change paths never mint a credential
+ok 2 - unknown tool, secret path, outside repo, main branch and duplicate change paths never mint a credential
+  ---
+  duration_ms: 22.8948
+  ...
+# Subtest: wrong immutable identity, broader token permissions/repositories, redirects and oversized responses fail closed
+ok 3 - wrong immutable identity, broader token permissions/repositories, redirects and oversized responses fail closed
+  ---
+  duration_ms: 45.2434
+  ...
+# Subtest: human preview pins real identity and before/after content; protected main required for mutation
+ok 4 - human preview pins real identity and before/after content; protected main required for mutation
+  ---
+  duration_ms: 19.9136
+  ...
+# Subtest: branch and draft PR use exact approved commit, paths and non-force ref update
+ok 5 - branch and draft PR use exact approved commit, paths and non-force ref update
+  ---
+  duration_ms: 25.9913
+  ...
+# Subtest: missing/swapped/stale preview cannot mutate; partial PR failure is never a zero-effect TargetChanged error
+ok 6 - missing/swapped/stale preview cannot mutate; partial PR failure is never a zero-effect TargetChanged error
+  ---
+  duration_ms: 21.1577
+  ...
+# Subtest: sandbox containing workflow automation refuses branch/PR mutations before side effects
+ok 7 - sandbox containing workflow automation refuses branch/PR mutations before side effects
+  ---
+  duration_ms: 12.5214
+  ...
+# Subtest: invalid, expired, near-expiry and excessive-lifetime tokens never authorize repository access
+ok 8 - invalid, expired, near-expiry and excessive-lifetime tokens never authorize repository access
+  ---
+  duration_ms: 15.7447
+  ...
+# Subtest: cached token is refreshed at its safety cutoff; failed refresh never uses the stale credential
+ok 9 - cached token is refreshed at its safety cutoff; failed refresh never uses the stale credential
+  ---
+  duration_ms: 16.0345
+  ...
+# (node:74128) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# responseMode: 'json' drops mid-call notifications. subscriptions/listen streams are always served over SSE regardless; other notifications emitted before a result are dropped.
+# Subtest: operator can issue and narrow an explicitly configured App sandbox grant but cannot expand its target
+ok 10 - operator can issue and narrow an explicitly configured App sandbox grant but cannot expand its target
+  ---
+  duration_ms: 139.1009
+  ...
+# Subtest: fixed GitHub egress rejects alternate hosts/repos/mint scope before outbound dispatch and never follows redirects
+ok 11 - fixed GitHub egress rejects alternate hosts/repos/mint scope before outbound dispatch and never follows redirects
+  ---
+  duration_ms: 77.4001
+  ...
+# (node:22396) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: real Gateway/OPA denies outside scope before any App HTTP; explicit App read succeeds
+ok 12 - real Gateway/OPA denies outside scope before any App HTTP; explicit App read succeeds
+  ---
+  duration_ms: 113.9691
+  ...
+# Subtest: pending has zero mutation; independent approval dispatches once; duplicate approval fails
+ok 13 - pending has zero mutation; independent approval dispatches once; duplicate approval fails
+  ---
+  duration_ms: 47.7138
+  ...
+# Subtest: changed repository identity after preview blocks with zero dispatch
+ok 14 - changed repository identity after preview blocks with zero dispatch
+  ---
+  duration_ms: 17.6356
+  ...
+# Subtest: lost PR response records UNKNOWN and request replay never retries side effects
+ok 15 - lost PR response records UNKNOWN and request replay never retries side effects
+  ---
+  duration_ms: 44.9786
+  ...
+# Subtest: local demo identity remains a fixture even when the App is configured
+ok 16 - local demo identity remains a fixture even when the App is configured
+  ---
+  duration_ms: 9.8776
+  ...
+1..16
+# tests 16
+# suites 0
+# pass 16
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 5964.9871

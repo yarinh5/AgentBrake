@@ -1,0 +1,84 @@
+#cloud-config
+users: []
+disable_root: true
+ssh_pwauth: false
+package_update: false
+package_upgrade: false
+write_files:
+  - path: /usr/local/sbin/agentbrake-phase.py
+    permissions: '0700'
+    content: |
+      import json,pathlib,subprocess,traceback,os,time,selectors,signal
+      P=pathlib.Path;root=P('/opt/agentbrake');proxy='http://10.0.2.2:8877'
+      r={'scope':'Separate Ubuntu guest; synthetic product/isolation/restore/candidate/security checks','commands':[],'reports':{},'releaseAcceptance':False}
+      env={**os.environ,'PATH':'/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin','HTTP_PROXY':proxy,'HTTPS_PROXY':proxy,'http_proxy':proxy,'https_proxy':proxy,'NO_PROXY':'localhost,127.0.0.1,::1','no_proxy':'localhost,127.0.0.1,::1','NEXT_TELEMETRY_DISABLED':'1','DEBIAN_FRONTEND':'noninteractive'}
+      def emit(v):
+       with open('/dev/ttyS0','w') as f:f.write('\nAGENTBRAKE_PROGRESS='+json.dumps(v)+'\n')
+      def run(label,args,timeout=1800,asRoot=False):
+       emit({'starting':label});at=time.monotonic()
+       p=subprocess.Popen(args if asRoot else ['runuser','-u','abvalidation','--',*args],stdout=subprocess.PIPE,stderr=subprocess.STDOUT,env=env,cwd=root,start_new_session=True)
+       output=bytearray();selector=selectors.DefaultSelector();selector.register(p.stdout,selectors.EVENT_READ);last=at
+       failure=None;code=None
+       try:
+        while selector.get_map():
+         if time.monotonic()-at>timeout:raise TimeoutError(label+' deadline')
+         for key,_ in selector.select(1):
+          chunk=os.read(key.fd,65536)
+          if chunk:output.extend(chunk)
+          else:selector.unregister(key.fileobj)
+         if len(output)>20*1024*1024:raise RuntimeError(label+' output limit')
+         if time.monotonic()-last>=30:
+          emit({'running':label,'seconds':round(time.monotonic()-at),'outputBytes':len(output)});last=time.monotonic()
+        code=p.wait(timeout=10)
+       except Exception as error:failure=str(error)
+       finally:
+        selector.close()
+        if p.poll() is None:
+         os.killpg(p.pid,signal.SIGTERM)
+         try:p.wait(timeout=10)
+         except subprocess.TimeoutExpired:os.killpg(p.pid,signal.SIGKILL);p.wait(timeout=5)
+       text=output.decode(errors='replace');P('/var/lib/agentbrake-validation/'+label+'.log').write_text(text)
+       r['commands'].append({'label':label,'exitCode':code,'failure':failure,'seconds':round(time.monotonic()-at,2),'outputTail':text[-16000:]});emit({'finished':label,'exitCode':code})
+       if failure or code:raise RuntimeError(label+' failed'+(': '+failure if failure else ''))
+       return text.strip()
+      name=None
+      try:
+       import hashlib,base64,gzip,uuid
+       r['sourceHash']=run('exact-source',['node','--input-type=module','-e',"import {sourceManifest} from './scripts/source-manifest.mjs';console.log((await sourceManifest()).sourceHash)"])
+       assert r['sourceHash']=='0d00cd87460a49e11cfb36a183fd353ad482942ee88becbb4065067017f9aa49'
+       assert run('guard-active',['systemctl','is-active','ab-dependency-guard'])=='active'
+       pointer=json.loads((root/'docs/evidence/latest-candidate.json').read_text());candidate=json.loads((root/pointer['directory']/'candidate-summary.json').read_text());image=candidate['imageReferences']['postgres'];docker=['docker','--config',str(root/'.agentbrake-local/docker-public')]
+       r['postgresImage']=json.loads(run('image-identity',docker+['image','inspect',image,'--format','{{json .Id}}'],30))
+       script=root/'.agentbrake-local/readiness-init-window.sh';assert not script.exists();script.write_text('#!/bin/sh\necho AGENTBRAKE_INIT_WINDOW\nsleep 25\n');script.chmod(0o644);os.chown(script,1100,1100)
+       name='agentbrake-readiness-'+uuid.uuid4().hex[:8]
+       run('start-probe',docker+['run','-d','--name',name,'--label','com.agentbrake.fixture=true','--network','none','--user','70:70','--read-only','--cap-drop','ALL','--security-opt','no-new-privileges:true','--memory','512m','--pids-limit','128','--tmpfs','/var/lib/postgresql:uid=70,gid=70,mode=0700','--tmpfs','/var/run/postgresql:uid=70,gid=70,mode=0770','--tmpfs','/tmp:size=64m,mode=1777','--mount','type=bind,src='+str(script)+',dst=/docker-entrypoint-initdb.d/000-readiness.sh,readonly','--env','POSTGRES_HOST_AUTH_METHOD=trust','--env','POSTGRES_USER=fixture_owner','--env','POSTGRES_DB=readiness_probe',image],60)
+       def call(args):return subprocess.run(['runuser','-u','abvalidation','--',*docker,*args],capture_output=True,text=True,env=env,timeout=15)
+       for attempt in range(60):
+        logs=call(['logs',name]);out=logs.stdout+logs.stderr
+        if 'AGENTBRAKE_INIT_WINDOW' in out:break
+        time.sleep(1)
+       assert 'AGENTBRAKE_INIT_WINDOW' in out,out
+       local=call(['exec',name,'pg_isready','-U','fixture_owner','-d','readiness_probe']);tcp=call(['exec',name,'pg_isready','-h','127.0.0.1','-U','fixture_owner','-d','readiness_probe'])
+       r['duringInitialization']={'unixExit':local.returncode,'unixOutput':local.stdout+local.stderr,'tcpExit':tcp.returncode,'tcpOutput':tcp.stdout+tcp.stderr};assert local.returncode==0 and tcp.returncode!=0,r['duringInitialization']
+       for attempt in range(60):
+        tcp=call(['exec',name,'pg_isready','-h','127.0.0.1','-U','fixture_owner','-d','readiness_probe'])
+        if tcp.returncode==0:break
+        time.sleep(1)
+       assert tcp.returncode==0,tcp.stdout+tcp.stderr
+       r['afterInitialization']={'tcpExit':tcp.returncode,'output':tcp.stdout+tcp.stderr};logs=call(['logs',name]);r['containerLog']=logs.stdout+logs.stderr
+       r['result']='PASS_REPRODUCED_EARLY_UNIX_READINESS'
+      except Exception as e:r['result']='FAIL';r['error']=str(e);r['trace']=traceback.format_exc()
+      finally:
+       if name:
+        try:run('cleanup-probe',['docker','--config',str(root/'.agentbrake-local/docker-public'),'rm','--force',name],60);r['cleanup']='PASS'
+        except Exception as e:r['cleanup']=str(e);r['result']='FAIL'
+       P('/var/lib/agentbrake-validation/postgres-readiness-probe.json').write_text(json.dumps(r))
+       with open('/dev/ttyS0','w') as f:f.write('\nAGENTBRAKE_PHASE_REPORT_GZIP='+base64.b64encode(gzip.compress(json.dumps(r).encode())).decode()+'\n')
+
+runcmd:
+  - [python3, /usr/local/sbin/agentbrake-phase.py]
+power_state:
+  mode: poweroff
+  delay: now
+  timeout: 30
+  condition: true

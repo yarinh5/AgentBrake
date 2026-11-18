@@ -1,0 +1,103 @@
+TAP version 13
+# Subtest: PR preview refuses a missing, moved or used feature branch without changing target state
+ok 1 - PR preview refuses a missing, moved or used feature branch without changing target state
+  ---
+  duration_ms: 3656.348
+  ...
+# Subtest: persistent fixture reopens exact branch/PR state and refuses another installation or unmarked repository
+ok 2 - persistent fixture reopens exact branch/PR state and refuses another installation or unmarked repository
+  ---
+  duration_ms: 3777.4593
+  ...
+# Subtest: human PR review computes the canonical diff from a full PR request without mutating Git
+not ok 3 - human PR review computes the canonical diff from a full PR request without mutating Git
+  ---
+  duration_ms: 930.0911
+  location: 'F:\\project love\\AgentBrake\\tests\\stage2\\git-fixture.test.ts:1:4404'
+  failureType: 'testCodeFailure'
+  error: 'Feature branch missing, changed or already used'
+  code: 'ERR_TEST_FAILURE'
+  stack: |-
+    GitFixtureAdapter.checkPullRequestBranch (F:\project love\AgentBrake\server\adapters\git-fixture.ts:494:13)
+    process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    async <anonymous> (F:\project love\AgentBrake\server\adapters\git-fixture.ts:432:9)
+  ...
+# Subtest: creates a new real Git fixture with trusted identity, protected main and bounded reads
+ok 4 - creates a new real Git fixture with trusted identity, protected main and bounded reads
+  ---
+  duration_ms: 1477.6381
+  ...
+# Subtest: refuses existing directories and repositories without changing their contents
+ok 5 - refuses existing directories and repositories without changing their contents
+  ---
+  duration_ms: 529.2068
+  ...
+# Subtest: canonical proposals return an exact diff and fingerprint without writing Git objects
+ok 6 - canonical proposals return an exact diff and fingerprint without writing Git objects
+  ---
+  duration_ms: 1665.1033
+  ...
+# Subtest: proposal diff applies exactly, including empty files and missing terminal newlines
+ok 7 - proposal diff applies exactly, including empty files and missing terminal newlines
+  ---
+  duration_ms: 2842.087
+  ...
+# Subtest: queued requests cannot swap validated branch or content before execution
+ok 8 - queued requests cannot swap validated branch or content before execution
+  ---
+  duration_ms: 2016.1872
+  ...
+# Subtest: approved feature branch and mock PR produce one real commit while main remains unchanged
+ok 9 - approved feature branch and mock PR produce one real commit while main remains unchanged
+  ---
+  duration_ms: 3545.1988
+  ...
+# Subtest: rejects protected branches, external repos, extra arguments and forbidden tools with no effects
+ok 10 - rejects protected branches, external repos, extra arguments and forbidden tools with no effects
+  ---
+  duration_ms: 806.0382
+  ...
+# Subtest: rejects workflow, secret, traversal and ambiguous paths before reading or writing
+ok 11 - rejects workflow, secret, traversal and ambiguous paths before reading or writing
+  ---
+  duration_ms: 791.9108
+  ...
+# Subtest: enforces file count, UTF-8 bytes, total bytes, duplicate paths and exact nested schemas
+ok 12 - enforces file count, UTF-8 bytes, total bytes, duplicate paths and exact nested schemas
+  ---
+  duration_ms: 1317.2981
+  ...
+# Subtest: stale main, stale feature, missing feature and no-op proposals fail before mutation
+ok 13 - stale main, stale feature, missing feature and no-op proposals fail before mutation
+  ---
+  duration_ms: 2868.1731
+  ...
+# Subtest: concurrent branch and PR requests produce at most one effect each
+ok 14 - concurrent branch and PR requests produce at most one effect each
+  ---
+  duration_ms: 5232.9408
+  ...
+# Subtest: Git tree symlinks are never resolved or overwritten through an allowed path
+ok 15 - Git tree symlinks are never resolved or overwritten through an allowed path
+  ---
+  duration_ms: 1562.8545
+  ...
+# Subtest: closing preserves evidence and rejects subsequent execution
+ok 16 - closing preserves evidence and rejects subsequent execution
+  ---
+  duration_ms: 635.0705
+  ...
+# Subtest: fast Git read commands do not fail after an unused stdin pipe closes
+ok 17 - fast Git read commands do not fail after an unused stdin pipe closes
+  ---
+  duration_ms: 7392.0193
+  ...
+1..17
+# tests 17
+# suites 0
+# pass 16
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 41540.3131

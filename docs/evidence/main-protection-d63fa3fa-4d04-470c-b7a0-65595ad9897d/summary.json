@@ -1,0 +1,123 @@
+{
+  "startedAt": "2026-11-17T11:32:57.631Z",
+  "repository": "yarinh5/AgentBrake",
+  "branch": "main",
+  "result": "PASS_PROTECTION_CONFIGURATION_READBACK",
+  "authorization": "Yarin explicitly approved activating the prepared main protections in this conversation on2026-11-17",
+  "requests": [
+    {
+      "path": "/branches/main",
+      "method": "GET",
+      "status": 200,
+      "requestId": "CC16:96F7D:B312D5:129BA74:6AFC3B6A"
+    },
+    {
+      "path": "/branches/main/protection",
+      "method": "PUT",
+      "status": 200,
+      "requestId": "CC16:96F7D:B3131D:129BAEC:6AFC3B6A"
+    },
+    {
+      "path": "/branches/main/protection",
+      "method": "GET",
+      "status": 200,
+      "requestId": "CC16:96F7D:B313AB:129BBDF:6AFC3B6A"
+    },
+    {
+      "path": "/branches/main",
+      "method": "GET",
+      "status": 200,
+      "requestId": "CC16:96F7D:B313FF:129BC53:6AFC3B6B"
+    },
+    {
+      "path": "/pulls/1",
+      "method": "GET",
+      "status": 200,
+      "requestId": "CC16:96F7D:B3145D:129BCD9:6AFC3B6B"
+    }
+  ],
+  "proposalSha256": "aba210f031aff09a93e8a26325b46510d6a50b7567195cdeff08ac1afeb21ee0",
+  "before": {
+    "sha": "1f674ca65a8e70eaa20459fc7eef3f88f6aa7d38",
+    "protected": false
+  },
+  "mutation": "APPLIED_APPROVED_PROPOSAL",
+  "readback": {
+    "url": "https://api.github.com/repos/yarinh5/AgentBrake/branches/main/protection",
+    "required_status_checks": {
+      "url": "https://api.github.com/repos/yarinh5/AgentBrake/branches/main/protection/required_status_checks",
+      "strict": true,
+      "contexts": [
+        "native",
+        "security",
+        "isolation"
+      ],
+      "contexts_url": "https://api.github.com/repos/yarinh5/AgentBrake/branches/main/protection/required_status_checks/contexts",
+      "checks": [
+        {
+          "context": "native",
+          "app_id": 15368
+        },
+        {
+          "context": "security",
+          "app_id": 15368
+        },
+        {
+          "context": "isolation",
+          "app_id": 15368
+        }
+      ]
+    },
+    "required_pull_request_reviews": {
+      "url": "https://api.github.com/repos/yarinh5/AgentBrake/branches/main/protection/required_pull_request_reviews",
+      "dismiss_stale_reviews": true,
+      "require_code_owner_reviews": false,
+      "require_last_push_approval": false,
+      "required_approving_review_count": 1
+    },
+    "required_signatures": {
+      "url": "https://api.github.com/repos/yarinh5/AgentBrake/branches/main/protection/required_signatures",
+      "enabled": false
+    },
+    "enforce_admins": {
+      "url": "https://api.github.com/repos/yarinh5/AgentBrake/branches/main/protection/enforce_admins",
+      "enabled": true
+    },
+    "required_linear_history": {
+      "enabled": true
+    },
+    "allow_force_pushes": {
+      "enabled": false
+    },
+    "allow_deletions": {
+      "enabled": false
+    },
+    "block_creations": {
+      "enabled": false
+    },
+    "required_conversation_resolution": {
+      "enabled": true
+    },
+    "lock_branch": {
+      "enabled": false
+    },
+    "allow_fork_syncing": {
+      "enabled": false
+    }
+  },
+  "after": {
+    "sha": "1f674ca65a8e70eaa20459fc7eef3f88f6aa7d38",
+    "protected": true
+  },
+  "pullRequest": {
+    "number": 1,
+    "url": "https://github.com/yarinh5/AgentBrake/pull/1",
+    "draft": true,
+    "merged": false,
+    "state": "open",
+    "head": "104e558a99e086f16596b2970901caaa94e7824a",
+    "mergeableState": "blocked"
+  },
+  "scope": "Exact approved settings applied/read back. Main SHA unchanged; PR remains draft and unmerged. No push/delete/force/merge probe attempted; API readback is not an adversarial enforcement test. No deployment, Sandbox or installed-product change.",
+  "finishedAt": "2026-11-17T11:33:00.721Z"
+}

@@ -1,0 +1,3 @@
+WARNING: Skipping tlog verification is an insecure practice that lacks transparency and auditability verification for the blob.
+Error: failed to verify signature: could not verify message: ecdsa: Invalid IEEE_P1363 encoded bytes
+error during command execution: failed to verify signature: could not verify message: ecdsa: Invalid IEEE_P1363 encoded bytes

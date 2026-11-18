@@ -1,0 +1,12 @@
+{
+  "package": {
+    "archive": "F:\\project love\\AgentBrake\\.agentbrake-local\\releases\\agentbrake-0.3.0-rc.1-c043156a9a2f-180a5a9c.tar.gz",
+    "sha256": "f292228b0c036a0f38fcffef1c99eb224b6b0cbc67777f7240bf1f921c0c7dd3",
+    "bytes": 530216,
+    "version": "0.3.0-rc.1",
+    "sourceHash": "c043156a9a2f69b6d3ddfc0eb6eec315faba38250f8eb38ae2a02f7087f7c999",
+    "files": 278
+  },
+  "seedSha256": "9ed600aaa30cc37cc6fe4fa66352fac885458a11f3c3eb294862689279c74128",
+  "scope": "Exact release package transfer; no data, keys or host dependencies"
+}

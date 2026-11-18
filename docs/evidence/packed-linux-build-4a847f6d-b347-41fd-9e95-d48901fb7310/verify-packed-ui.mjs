@@ -1,0 +1,26 @@
+import assert from 'node:assert/strict';
+import {readFile,mkdir,lstat,writeFile,symlink,readdir} from 'node:fs/promises';
+import {createHash} from 'node:crypto';
+import {spawnSync} from 'node:child_process';
+const sha=b=>createHash('sha256').update(b).digest('hex');
+const metadata=JSON.parse(await readFile('/inputs/metadata.json','utf8'));
+const expected=metadata.archiveSha256;
+assert.equal(sha(await readFile('/inputs/archive.tar.gz')),expected);
+const run=args=>{const r=spawnSync(args[0],args.slice(1),{cwd:'/tmp/extract',encoding:'utf8',env:{PATH:process.env.PATH,HOME:'/tmp',NEXT_TELEMETRY_DISABLED:'1'},timeout:60000});assert.equal(r.status,0,r.stdout+r.stderr);return r.stdout;};
+await mkdir('/tmp/extract');
+const list=run(['tar','-tzf','/inputs/archive.tar.gz']).trim().split('\n');
+for(const path of list)assert.ok(path.startsWith('./')&&!path.includes('\\')&&!path.includes(':')&&!path.split('/').includes('..'));
+run(['tar','-xzf','/inputs/archive.tar.gz']);
+const manifest=JSON.parse(await readFile('/tmp/extract/RELEASE.json','utf8'));
+assert.equal(manifest.sourceHash,metadata.sourceHash);
+assert.equal(sha(await readFile('/app/package-lock.json')),manifest.files.find(f=>f.path==='package-lock.json').sha256);
+for(const f of manifest.files){assert.ok(!f.path.split('/').includes('..'));const p='/tmp/extract/'+f.path;assert.ok((await lstat(p)).isFile());const b=await readFile(p);assert.equal(b.length,f.bytes);assert.equal(sha(b),f.sha256);}
+const observed=[];async function walk(dir,pre=''){for(const e of await readdir(dir,{withFileTypes:true})){assert.ok(!e.isSymbolicLink());if(e.isDirectory())await walk(dir+'/'+e.name,pre+e.name+'/');else{assert.ok(e.isFile());observed.push(pre+e.name);}}}await walk('/tmp/extract');
+assert.deepEqual(observed.sort(),[...manifest.files.map(f=>f.path),'RELEASE.json'].sort());
+const actual=await import('/tmp/extract/scripts/source-manifest.mjs');assert.equal((await actual.sourceManifest()).sourceHash,manifest.sourceHash);
+await symlink('/app/node_modules','/tmp/extract/node_modules');
+const build=run(['npm','run','build']);
+assert.ok((await readFile('/tmp/extract/dist/index.html','utf8')).includes('/assets/app.js'));
+await writeFile('/out/build.log',build);
+await writeFile('/out/summary.json',JSON.stringify({result:'PASS_PACKED_NONROOT_LINUX_BUILD',sourceHash:manifest.sourceHash,archiveSha256:expected,files:manifest.files.length,uid:process.getuid(),network:'none',build:'npm run build (TypeScript and root UI)',dependencies:'Existing exact-source runtime image root node_modules; no network install; not a clean independent host or Next install',scope:'Actual gated archive extraction, exact inventory, per-file SHA and recomputed source manifest, nonroot readonly Linux container build; no installed service modified'},null,2));
+console.log('Packed nonroot Linux build PASS');

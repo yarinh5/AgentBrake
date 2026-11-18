@@ -1,0 +1,211 @@
+{
+  "schemaVersion": 1,
+  "action": {
+    "id": "32b3a06e-8906-4d18-b205-36444eeaa821",
+    "agentId": "67b557b6-7994-4b35-bea9-b07b27bad5ad",
+    "requestId": "a21e6f26-9e90-4414-b782-cb73031e7511",
+    "tool": "github_open_pull_request",
+    "destination": "036b2fb6793194e59e5a9745f1715aa277cc1238a53ccd1080d2d0207a24e271",
+    "correlationId": "d922754b-2fe1-4de1-a449-351d3b12a623",
+    "grantId": "53f6f77a-97b5-4ea2-ab7d-6290e662caf4",
+    "grantFingerprint": "a6a83c6506c44f3e1c2cdcdb3ae8b32af074d94223c16ea0dd871c71651b42c8",
+    "policyRevision": 1,
+    "policyDecisionId": "29f63b58-1854-409a-b561-46c015a13294",
+    "policyVersion": "stage2.v1",
+    "policyHash": "9ac719fef979ee7b37c5c5ef3173621453782a0a02d432727391beeff1234d14",
+    "policyEffect": "REQUIRE_APPROVAL",
+    "arguments": {
+      "repo": "yarinh5/AgentBrake-Sandbox",
+      "baseSha": "7d7873af0fa09e12f12217a40e6030df5bcd8058",
+      "branch": "agentbrake/validation-28f3ddc1",
+      "title": "Synthetic AgentBrake validation",
+      "body": "Authorized synthetic validation only. No merge or deployment.",
+      "changes": [
+        {
+          "path": "src/example.ts",
+          "content": "export const validationMessage = \"synthetic-reviewed-change\";\n"
+        }
+      ]
+    },
+    "status": "allowed",
+    "rule": "github-writes",
+    "reason": "Executed through the enforced gateway.",
+    "resource": "yarinh5/AgentBrake-Sandbox",
+    "sandbox": false,
+    "createdAt": "2026-11-17T11:51:04.503Z",
+    "expiresAt": "2026-11-17T12:06:04.503Z",
+    "durationMs": 18.51,
+    "preview": {
+      "kind": "git-change",
+      "summary": "Apply reviewed files and open a draft GitHub pull request",
+      "details": {
+        "repositoryId": 1461019528,
+        "ownerId": 87584981,
+        "repo": "yarinh5/AgentBrake-Sandbox",
+        "defaultBranch": "main",
+        "baseSha": "7d7873af0fa09e12f12217a40e6030df5bcd8058",
+        "branch": "agentbrake/validation-28f3ddc1",
+        "branchSha": "7d7873af0fa09e12f12217a40e6030df5bcd8058",
+        "treeSha": "3011d205ee016c5b37c228659ece33f7708bcca7",
+        "changes": [
+          {
+            "path": "src/example.ts",
+            "before": "export const validationMessage = \"synthetic-baseline\";\n",
+            "after": "export const validationMessage = \"synthetic-reviewed-change\";\n"
+          }
+        ],
+        "title": "Synthetic AgentBrake validation",
+        "body": "Authorized synthetic validation only. No merge or deployment.",
+        "draft": true
+      }
+    },
+    "review": {
+      "nonce": "[REDACTED]",
+      "fingerprint": "ba08f9b20ba3a657fc5553970e126735753508d07c8d8dab41c56f24cb534486"
+    },
+    "approvalReceipt": {
+      "actorId": "ace37093-1188-4771-82f8-22d31efc5c32",
+      "tenant": "local",
+      "decision": "approve",
+      "at": "2026-11-17T11:51:07.496Z",
+      "proof": {
+        "nonce": "[REDACTED]",
+        "fingerprint": "ba08f9b20ba3a657fc5553970e126735753508d07c8d8dab41c56f24cb534486"
+      }
+    },
+    "executionOutcome": "adapter-reported",
+    "resultDisclosure": "released"
+  },
+  "decision": {
+    "id": "29f63b58-1854-409a-b561-46c015a13294",
+    "policyHash": "9ac719fef979ee7b37c5c5ef3173621453782a0a02d432727391beeff1234d14",
+    "version": "stage2.v1",
+    "revision": 1,
+    "effect": "REQUIRE_APPROVAL",
+    "reason": "Executed through the enforced gateway."
+  },
+  "review": {
+    "fingerprint": "ba08f9b20ba3a657fc5553970e126735753508d07c8d8dab41c56f24cb534486",
+    "receipt": {
+      "actorId": "ace37093-1188-4771-82f8-22d31efc5c32",
+      "tenant": "local",
+      "decision": "approve",
+      "at": "2026-11-17T11:51:07.496Z",
+      "proof": {
+        "nonce": "[REDACTED]",
+        "fingerprint": "ba08f9b20ba3a657fc5553970e126735753508d07c8d8dab41c56f24cb534486"
+      }
+    },
+    "preview": {
+      "kind": "git-change",
+      "summary": "Apply reviewed files and open a draft GitHub pull request",
+      "details": {
+        "repositoryId": 1461019528,
+        "ownerId": 87584981,
+        "repo": "yarinh5/AgentBrake-Sandbox",
+        "defaultBranch": "main",
+        "baseSha": "7d7873af0fa09e12f12217a40e6030df5bcd8058",
+        "branch": "agentbrake/validation-28f3ddc1",
+        "branchSha": "7d7873af0fa09e12f12217a40e6030df5bcd8058",
+        "treeSha": "3011d205ee016c5b37c228659ece33f7708bcca7",
+        "changes": [
+          {
+            "path": "src/example.ts",
+            "before": "export const validationMessage = \"synthetic-baseline\";\n",
+            "after": "export const validationMessage = \"synthetic-reviewed-change\";\n"
+          }
+        ],
+        "title": "Synthetic AgentBrake validation",
+        "body": "Authorized synthetic validation only. No merge or deployment.",
+        "draft": true
+      }
+    }
+  },
+  "execution": {
+    "status": "allowed",
+    "observation": "adapter-reported",
+    "outcome": "adapter-reported",
+    "resultDisclosure": "released",
+    "resultRetained": true,
+    "summary": {
+      "baseSha": "7d7873af0fa09e12f12217a40e6030df5bcd8058",
+      "headSha": "8ba823980cd1c693df00722e6f1fb7ccffac427c",
+      "branch": "agentbrake/validation-28f3ddc1",
+      "pullRequest": {
+        "number": 1,
+        "state": "open"
+      }
+    },
+    "correlationId": "d922754b-2fe1-4de1-a449-351d3b12a623"
+  },
+  "audit": {
+    "valid": true,
+    "redacted": true,
+    "entries": [
+      {
+        "seq": 33,
+        "data": {
+          "type": "action.pending",
+          "details": {
+            "actionId": "32b3a06e-8906-4d18-b205-36444eeaa821",
+            "agentId": "67b557b6-7994-4b35-bea9-b07b27bad5ad",
+            "tool": "github_open_pull_request",
+            "rule": "github-writes",
+            "correlationId": "d922754b-2fe1-4de1-a449-351d3b12a623",
+            "grantId": "53f6f77a-97b5-4ea2-ab7d-6290e662caf4",
+            "decisionId": "2271b13e-6974-4f98-8716-a0e1d7b35bcf",
+            "policyHash": "9ac719fef979ee7b37c5c5ef3173621453782a0a02d432727391beeff1234d14",
+            "policyRevision": 1,
+            "effect": "REQUIRE_APPROVAL"
+          },
+          "at": "2026-11-17T11:51:05.787Z"
+        },
+        "previous_hash": "4ad1817aad777d4cfdf9b3785350ea638f28a92a9ab41b5835cda3adc33facb7",
+        "hash": "a535a63e2145224f03152d1ba7176add4ac3e6926409aab751ad6a2b22e80ecb"
+      },
+      {
+        "seq": 34,
+        "data": {
+          "type": "approval.granted",
+          "details": {
+            "actionId": "32b3a06e-8906-4d18-b205-36444eeaa821",
+            "actor": "ace37093-1188-4771-82f8-22d31efc5c32",
+            "fingerprint": "ba08f9b20ba3a657fc5553970e126735753508d07c8d8dab41c56f24cb534486"
+          },
+          "at": "2026-11-17T11:51:09.719Z"
+        },
+        "previous_hash": "a535a63e2145224f03152d1ba7176add4ac3e6926409aab751ad6a2b22e80ecb",
+        "hash": "8a0c1dc0c1ed55d3116217147b151c70cbe4e7c61e35c2a18c3c33785165459d"
+      },
+      {
+        "seq": 35,
+        "data": {
+          "type": "execution.started",
+          "details": {
+            "actionId": "32b3a06e-8906-4d18-b205-36444eeaa821",
+            "approverId": "ace37093-1188-4771-82f8-22d31efc5c32"
+          },
+          "at": "2026-11-17T11:51:09.726Z"
+        },
+        "previous_hash": "8a0c1dc0c1ed55d3116217147b151c70cbe4e7c61e35c2a18c3c33785165459d",
+        "hash": "cb10098d677bd674418f8b3d3a3908ccb1ad4f1022ee4fa0ce5c94f78b4561df"
+      },
+      {
+        "seq": 36,
+        "data": {
+          "type": "execution.allowed",
+          "details": {
+            "actionId": "32b3a06e-8906-4d18-b205-36444eeaa821",
+            "outcome": "adapter-reported",
+            "resultDisclosure": "released"
+          },
+          "at": "2026-11-17T11:51:16.024Z"
+        },
+        "previous_hash": "cb10098d677bd674418f8b3d3a3908ccb1ad4f1022ee4fa0ce5c94f78b4561df",
+        "hash": "a67c3a434af06f0b188a8e705759f4406dad2e202e47ea00e0075db1dccee73d"
+      }
+    ],
+    "verification": "Hash chain checked against stored records before redaction; this filtered redacted export is not an independent full-chain proof."
+  },
+  "coverage": "Local synthetic fixture. Adapter response is not independent target verification. UNKNOWN requires target reconciliation; never retry automatically."
+}

@@ -1,0 +1,43 @@
+{
+  "at": "2026-11-17T07:00:24.063Z",
+  "kind": "READ_ONLY_CONNECTOR_PREFLIGHT",
+  "repository": {
+    "url": "https://github.com/yarinh5/AgentBrake-Sandbox",
+    "id": 1461019528,
+    "ownerId": 87584981,
+    "visibility": "public",
+    "defaultBranch": "main",
+    "size": 0,
+    "branches": []
+  },
+  "app": {
+    "name": "AgentBrake Validation",
+    "status": "USER_REPORTED_ONLY",
+    "settings": "SIGN_IN_REQUIRED",
+    "installationId": 182835437,
+    "appId": 5796132,
+    "actualPermissions": "NOT_VERIFIED",
+    "key": {
+      "status": "LOCAL_RSA_KEY_PARSED_FINGERPRINT_MATCH",
+      "bits": 2048,
+      "fingerprint": "SHA256:XbQsMkyTup7vv0oi53Td/wazm2b468w9KsPNAaVh/DA=",
+      "registration": "USER_REPORTED; SETTINGS NOT VERIFIED",
+      "privateMaterialIncluded": false,
+      "networkUse": false
+    },
+    "identifierEvidence": "USER_REPORTED; NOT VERIFIED WITH GITHUB APP"
+  },
+  "authorization": {
+    "readOnlyPreparation": "AUTHORIZED",
+    "appConnection": "AWAITING_EXPLICIT_APPROVAL",
+    "githubWrites": "AWAITING_EXPLICIT_APPROVAL"
+  },
+  "operationsOwner": "Yarin, temporary; acceptance pending",
+  "vm": "Ubuntu24.04 preparation authorized; VM not created",
+  "notes": [
+    "Connector permissions are not App permissions and were not reused as Gateway credentials.",
+    "Workflows collection fetch unsupported by connector; repo has no branches. Hooks/automation remain unverified.",
+    "Private key read only into local crypto parser to derive public fingerprint; no JWT/token minted, no App API connection or GitHub write. Private file and contents excluded from source and evidence packages."
+  ],
+  "localKeyCheckedAt": "2026-11-17T07:13:06.322Z"
+}

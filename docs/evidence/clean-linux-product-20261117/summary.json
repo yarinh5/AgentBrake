@@ -1,0 +1,37 @@
+{
+  "at": "2026-11-17T13:51:45.369735+00:00",
+  "result": "FAIL",
+  "phase": "product",
+  "sourceHash": "fb5b65ff91880bb711f5de632f9d0cc9610232094e567dd21accaa9004606fe3",
+  "baseSource": "855b2915022fae9542d05207f62bec5eb356d942a001a9f3415a738f3b453c8c",
+  "releaseAcceptance": false,
+  "approval": "User approved the UNRELEASED base for development testing and authorized necessary local fixes; changed revisions are recorded separately.",
+  "seedSha256": "bf14e90f8183d54286f776e630c1ca97f14300284a486664f30abd34e32661fc",
+  "files": [
+    {
+      "name": "guest-report.json",
+      "sha256": "e58e557c7050bce5dbe35ab1039c8d19537b66f3b3958a3c27fe896f303c13ee",
+      "bytes": 42154
+    },
+    {
+      "name": "meta-data",
+      "sha256": "58b24ea9eca6d984a3c5dc0f3b2e1b0bc411e3a555b67adcdbb33f1f076860c6",
+      "bytes": 96
+    },
+    {
+      "name": "network-config",
+      "sha256": "a3bc4c3619b4e66dd6c60f9b005944e1a7e218dfebcff10398d20e94c08613af",
+      "bytes": 27
+    },
+    {
+      "name": "serial.log",
+      "sha256": "245af43ecde4e2c0ee531583cb95553ba67c4ad6a3dbbacadf779da08bddb5f1",
+      "bytes": 119765
+    },
+    {
+      "name": "user-data",
+      "sha256": "6065493d7f69e276c0ed74805726e4743c45fb81388c378e261555c5721bb92c",
+      "bytes": 6995
+    }
+  ]
+}

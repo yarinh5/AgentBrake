@@ -1,0 +1,12 @@
+{
+  "id": "d3200fd8-cd53-4a4a-82bc-85d17d7a3670",
+  "startedAt": "2026-11-17T10:17:31.359Z",
+  "result": "FAIL",
+  "source": "https://cloud-images.ubuntu.com/releases/noble/release/",
+  "filename": "noble-server-cloudimg-amd64.ova",
+  "fingerprint": "D2EB44626FDDC30B513D5BB71A5D6C4C7DB87C81",
+  "verificationReference": "https://ubuntu.com/docs/public-images/public-images-how-to/verify-image-checksum/",
+  "scope": "Official Ubuntu24.04 cloud image public download and signature/checksum preparation only. No VM created or started; no installer, customer data, private credentials, paid service or Production access.",
+  "error": "gpg: keybox 'F:\\\\project love\\\\AgentBrake\\\\.tools\\\\ubuntu-validation-d3200fd8-cd53-4a4a-82bc-85d17d7a3670\\\\gnupg/pubring.kbx' created\ngpg: key 1A5D6C4C7DB87C81: 2 signatures not checked due to missing keys\ngpg: F:\\\\project love\\\\AgentBrake\\\\.tools\\\\ubuntu-validation-d3200fd8-cd53-4a4a-82bc-85d17d7a3670\\\\gnupg/trustdb.gpg: trustdb created\ngpg: key 1A5D6C4C7DB87C81: public key \"UEC Image Automatic Signing Key <cdimage@ubuntu.com>\" imported\ngpg: error running '/usr/bin/gpg-agent': exit status 2\ngpg: failed to start gpg-agent '/usr/bin/gpg-agent': General error\ngpg: can't connect to the gpg-agent: General error\ngpg: Total number processed: 1\ngpg:               imported: 1\ngpg: no ultimately trusted keys found\n\n\n2 !== 0\n",
+  "finishedAt": "2026-11-17T10:17:32.724Z"
+}

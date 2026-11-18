@@ -1,0 +1,983 @@
+[    0.000000] Linux version 6.8.0-147-generic (buildd@lcy02-amd64-081) (x86_64-linux-gnu-gcc-13 (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0, GNU ld (GNU Binutils for Ubuntu) 2.42) #147-Ubuntu SMP PREEMPT_DYNAMIC Thu Sep 24 11:33:16 UTC 2026 (Ubuntu 6.8.0-147.147-generic 6.8.12)
+[    0.000000] Command line: BOOT_IMAGE=/vmlinuz-6.8.0-147-generic root=LABEL=cloudimg-rootfs ro console=tty1 console=ttyS0
+[    0.000000] KERNEL supported cpus:
+[    0.000000]   Intel GenuineIntel
+[    0.000000]   AMD AuthenticAMD
+[    0.000000]   Hygon HygonGenuine
+[    0.000000]   Centaur CentaurHauls
+[    0.000000]   zhaoxin   Shanghai  
+[    0.000000] BIOS-provided physical RAM map:
+[    0.000000] BIOS-e820: [mem 0x0000000000000000-0x000000000009fbff] usable
+[    0.000000] BIOS-e820: [mem 0x000000000009fc00-0x000000000009ffff] reserved
+[    0.000000] BIOS-e820: [mem 0x00000000000f0000-0x00000000000fffff] reserved
+[    0.000000] BIOS-e820: [mem 0x0000000000100000-0x000000007ffeffff] usable
+[    0.000000] BIOS-e820: [mem 0x000000007fff0000-0x000000007fffffff] ACPI data
+[    0.000000] BIOS-e820: [mem 0x00000000fec00000-0x00000000fec00fff] reserved
+[    0.000000] BIOS-e820: [mem 0x00000000fee00000-0x00000000fee00fff] reserved
+[    0.000000] BIOS-e820: [mem 0x00000000fffc0000-0x00000000ffffffff] reserved
+[    0.000000] NX (Execute Disable) protection: active
+[    0.000000] APIC: Static calls initialized
+[    0.000000] SMBIOS 2.5 present.
+[    0.000000] DMI: innotek GmbH VirtualBox/VirtualBox, BIOS VirtualBox 12/01/2006
+[    0.000000] Hypervisor detected: KVM
+[    0.000000] kvm-clock: Using msrs 4b564d01 and 4b564d00
+[    0.000002] kvm-clock: using sched offset of 4758804294 cycles
+[    0.000006] clocksource: kvm-clock: mask: 0xffffffffffffffff max_cycles: 0x1cd42e4dffb, max_idle_ns: 881590591483 ns
+[    0.000009] tsc: Detected 3600.012 MHz processor
+[    0.002683] last_pfn = 0x7fff0 max_arch_pfn = 0x400000000
+[    0.002705] MTRR map: 3 entries (3 fixed + 0 variable; max 19), built from 8 variable MTRRs
+[    0.002707] x86/PAT: Configuration [0-7]: WB  WC  UC- UC  WB  WP  UC- WT  
+[    0.002734] CPU MTRRs all blank - virtualized system.
+[    0.018476] found SMP MP-table at [mem 0x0009fbf0-0x0009fbff]
+[    0.018584] RAMDISK: [mem 0x3455b000-0x362a4fff]
+[    0.018685] ACPI: Early table checksum verification disabled
+[    0.018689] ACPI: RSDP 0x00000000000E0000 000024 (v02 VBOX  )
+[    0.018694] ACPI: XSDT 0x000000007FFF0030 00003C (v01 VBOX   VBOXXSDT 00000001 ASL  00000061)
+[    0.018700] ACPI: FACP 0x000000007FFF00F0 0000F4 (v04 VBOX   VBOXFACP 00000001 ASL  00000061)
+[    0.018706] ACPI: DSDT 0x000000007FFF0610 002353 (v02 VBOX   VBOXBIOS 00000002 INTL 20100528)
+[    0.018710] ACPI: FACS 0x000000007FFF0200 000040
+[    0.018714] ACPI: FACS 0x000000007FFF0200 000040
+[    0.018717] ACPI: APIC 0x000000007FFF0240 000054 (v02 VBOX   VBOXAPIC 00000001 ASL  00000061)
+[    0.018721] ACPI: SSDT 0x000000007FFF02A0 00036C (v01 VBOX   VBOXCPUT 00000002 INTL 20100528)
+[    0.018723] ACPI: Reserving FACP table memory at [mem 0x7fff00f0-0x7fff01e3]
+[    0.018725] ACPI: Reserving DSDT table memory at [mem 0x7fff0610-0x7fff2962]
+[    0.018726] ACPI: Reserving FACS table memory at [mem 0x7fff0200-0x7fff023f]
+[    0.018727] ACPI: Reserving FACS table memory at [mem 0x7fff0200-0x7fff023f]
+[    0.018727] ACPI: Reserving APIC table memory at [mem 0x7fff0240-0x7fff0293]
+[    0.018728] ACPI: Reserving SSDT table memory at [mem 0x7fff02a0-0x7fff060b]
+[    0.020396] No NUMA configuration found
+[    0.020401] Faking a node at [mem 0x0000000000000000-0x000000007ffeffff]
+[    0.020410] NODE_DATA(0) allocated [mem 0x7ffc5000-0x7ffeffff]
+[    0.020540] Zone ranges:
+[    0.020541]   DMA      [mem 0x0000000000001000-0x0000000000ffffff]
+[    0.020543]   DMA32    [mem 0x0000000001000000-0x000000007ffeffff]
+[    0.020545]   Normal   empty
+[    0.020546]   Device   empty
+[    0.020547] Movable zone start for each node
+[    0.020549] Early memory node ranges
+[    0.020550]   node   0: [mem 0x0000000000001000-0x000000000009efff]
+[    0.020551]   node   0: [mem 0x0000000000100000-0x000000007ffeffff]
+[    0.020553] Initmem setup node 0 [mem 0x0000000000001000-0x000000007ffeffff]
+[    0.020631] On node 0, zone DMA: 1 pages in unavailable ranges
+[    0.021657] On node 0, zone DMA: 97 pages in unavailable ranges
+[    0.045207] On node 0, zone DMA32: 16 pages in unavailable ranges
+[    0.051761] ACPI: PM-Timer IO Port: 0x4008
+[    0.052891] IOAPIC[0]: apic_id 1, version 32, address 0xfec00000, GSI 0-23
+[    0.052904] ACPI: INT_SRC_OVR (bus 0 bus_irq 0 global_irq 2 dfl dfl)
+[    0.052907] ACPI: INT_SRC_OVR (bus 0 bus_irq 9 global_irq 9 low level)
+[    0.052913] ACPI: Using ACPI (MADT) for SMP configuration information
+[    0.052915] smpboot: Allowing 1 CPUs, 0 hotplug CPUs
+[    0.053721] PM: hibernation: Registered nosave memory: [mem 0x00000000-0x00000fff]
+[    0.053726] PM: hibernation: Registered nosave memory: [mem 0x0009f000-0x000fffff]
+[    0.053729] [mem 0x80000000-0xfebfffff] available for PCI devices
+[    0.053730] Booting paravirtualized kernel on KVM
+[    0.053733] clocksource: refined-jiffies: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 1910969940391419 ns
+[    0.053740] setup_percpu: NR_CPUS:8192 nr_cpumask_bits:1 nr_cpu_ids:1 nr_node_ids:1
+[    0.064157] percpu: Embedded 86 pages/cpu s229376 r8192 d114688 u2097152
+[    0.064335] kvm-guest: PV spinlocks disabled, single CPU
+[    0.064339] Kernel command line: BOOT_IMAGE=/vmlinuz-6.8.0-147-generic root=LABEL=cloudimg-rootfs ro console=tty1 console=ttyS0
+[    0.064466] random: crng init done
+[    0.073345] Dentry cache hash table entries: 262144 (order: 9, 2097152 bytes, linear)
+[    0.073573] Inode-cache hash table entries: 131072 (order: 8, 1048576 bytes, linear)
+[    0.073618] Fallback order for Node 0: 0 
+[    0.073622] Built 1 zonelists, mobility grouping on.  Total pages: 515824
+[    0.073623] Policy zone: DMA32
+[    0.073631] mem auto-init: stack:all(zero), heap alloc:on, heap free:off
+[    0.077225] Memory: 1976084K/2096696K available (22528K kernel code, 4441K rwdata, 14440K rodata, 4936K init, 4772K bss, 120352K reserved, 0K cma-reserved)
+[    0.078031] SLUB: HWalign=64, Order=0-3, MinObjects=0, CPUs=1, Nodes=1
+[    0.087927] ftrace: allocating 57776 entries in 228 pages
+[    0.087932] ftrace: allocated 228 pages with 4 groups
+[    0.088776] Dynamic Preempt: voluntary
+[    0.088835] rcu: Preemptible hierarchical RCU implementation.
+[    0.088837] rcu: 	RCU restricting CPUs from NR_CPUS=8192 to nr_cpu_ids=1.
+[    0.088838] 	Trampoline variant of Tasks RCU enabled.
+[    0.088839] 	Rude variant of Tasks RCU enabled.
+[    0.088839] 	Tracing variant of Tasks RCU enabled.
+[    0.088840] rcu: RCU calculated value of scheduler-enlistment delay is 100 jiffies.
+[    0.088841] rcu: Adjusting geometry for rcu_fanout_leaf=16, nr_cpu_ids=1
+[    0.088849] RCU Tasks: Setting shift to 0 and lim to 1 rcu_task_cb_adjust=1 rcu_task_cpu_ids=1.
+[    0.088850] RCU Tasks Rude: Setting shift to 0 and lim to 1 rcu_task_cb_adjust=1 rcu_task_cpu_ids=1.
+[    0.088851] RCU Tasks Trace: Setting shift to 0 and lim to 1 rcu_task_cb_adjust=1 rcu_task_cpu_ids=1.
+[    0.092243] NR_IRQS: 524544, nr_irqs: 256, preallocated irqs: 16
+[    0.092638] rcu: srcu_init: Setting srcu_struct sizes based on contention.
+[    0.163515] Console: colour VGA+ 80x25
+[    0.163521] printk: legacy console [tty1] enabled
+[    0.550622] printk: legacy console [ttyS0] enabled
+[    0.965797] ACPI: Core revision 20230628
+[    0.971153] APIC: Switch to symmetric I/O mode setup
+[    0.995854] ..TIMER: vector=0x30 apic1=0 pin1=2 apic2=-1 pin2=-1
+[    1.002176] clocksource: tsc-early: mask: 0xffffffffffffffff max_cycles: 0x33e45ed112f, max_idle_ns: 440795282550 ns
+[    1.013570] Calibrating delay loop (skipped) preset value.. 7200.02 BogoMIPS (lpj=3600012)
+[    1.019091] Last level iTLB entries: 4KB 128, 2MB 8, 4MB 8
+[    1.020572] Last level dTLB entries: 4KB 64, 2MB 32, 4MB 32, 1GB 4
+[    1.022590] Spectre V1 : Mitigation: usercopy/swapgs barriers and __user pointer sanitization
+[    1.024574] Spectre V2 : Mitigation: Retpolines
+[    1.026572] Spectre V2 : Spectre v2 / SpectreRSB: Filling RSB on context switch and VMEXIT
+[    1.028574] RETBleed: WARNING: Spectre v2 mitigation leaves CPU vulnerable to RETBleed attacks, data leaks possible!
+[    1.030573] RETBleed: Vulnerable
+[    1.032572] Speculative Store Bypass: Vulnerable
+[    1.034580] MDS: Mitigation: Clear CPU buffers
+[    1.037570] MMIO Stale Data: Mitigation: Clear CPU buffers
+[    1.039571] SRBDS: Unknown: Dependent on hypervisor status
+[    1.041575] active return thunk: its_return_thunk
+[    1.043574] ITS: Mitigation: Aligned branch/return thunks
+[    1.046574] x86/fpu: x87 FPU will use FXSAVE
+[    1.054566] Freeing SMP alternatives memory: 48K
+[    1.056573] pid_max: default: 32768 minimum: 301
+[    1.058625] LSM: initializing lsm=lockdown,capability,landlock,yama,apparmor,integrity
+[    1.060600] landlock: Up and running.
+[    1.062570] Yama: becoming mindful.
+[    1.065615] AppArmor: AppArmor initialized
+[    1.067617] Mount-cache hash table entries: 4096 (order: 3, 32768 bytes, linear)
+[    1.069599] Mountpoint-cache hash table entries: 4096 (order: 3, 32768 bytes, linear)
+[    1.174570] APIC calibration not consistent with PM-Timer: 120ms instead of 100ms
+[    1.175566] APIC delta adjusted to PM-Timer: 6299828 (7561346)
+[    1.176911] smpboot: CPU0: Intel(R) Core(TM) i7-9700K CPU @ 3.60GHz (family: 0x6, model: 0x9e, stepping: 0xc)
+[    1.178786] Performance Events: unsupported p6 CPU model 158 no PMU driver, software events only.
+[    1.180592] signal: max sigframe size: 1440
+[    1.183640] rcu: Hierarchical SRCU implementation.
+[    1.185575] rcu: 	Max phase no-delay instances is 400.
+[    1.190566] NMI watchdog: Perf NMI watchdog permanently disabled
+[    1.191629] smp: Bringing up secondary CPUs ...
+[    1.195593] smp: Brought up 1 node, 1 CPU
+[    1.197572] smpboot: Max logical packages: 1
+[    1.199572] smpboot: Total of 1 processors activated (7200.02 BogoMIPS)
+[    1.201837] devtmpfs: initialized
+[    1.203628] x86/mm: Memory block size: 128MB
+[    1.205979] clocksource: jiffies: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 1911260446275000 ns
+[    1.207587] futex hash table entries: 256 (order: 2, 16384 bytes, linear)
+[    1.209654] pinctrl core: initialized pinctrl subsystem
+[    1.213569] PM: RTC time: 19:13:38, date: 2026-11-17
+[    1.216006] NET: Registered PF_NETLINK/PF_ROUTE protocol family
+[    1.217699] DMA: preallocated 256 KiB GFP_KERNEL pool for atomic allocations
+[    1.219594] DMA: preallocated 256 KiB GFP_KERNEL|GFP_DMA pool for atomic allocations
+[    1.221593] DMA: preallocated 256 KiB GFP_KERNEL|GFP_DMA32 pool for atomic allocations
+[    1.223601] audit: initializing netlink subsys (disabled)
+[    1.225635] audit: type=2000 audit(1794942823.155:1): state=initialized audit_enabled=0 res=1
+[    1.227706] thermal_sys: Registered thermal governor 'fair_share'
+[    1.227709] thermal_sys: Registered thermal governor 'bang_bang'
+[    1.229581] thermal_sys: Registered thermal governor 'step_wise'
+[    1.231572] thermal_sys: Registered thermal governor 'user_space'
+[    1.233573] thermal_sys: Registered thermal governor 'power_allocator'
+[    1.236601] cpuidle: using governor ladder
+[    1.242586] cpuidle: using governor menu
+[    1.245605] acpiphp: ACPI Hot Plug PCI Controller Driver version: 0.5
+[    1.247960] PCI: Using configuration type 1 for base access
+[    1.250797] kprobes: kprobe jump-optimization is enabled. All kprobes are optimized if possible.
+[    1.258566] HugeTLB: registered 2.00 MiB page size, pre-allocated 0 pages
+[    1.259572] HugeTLB: 28 KiB vmemmap can be freed for a 2.00 MiB page
+[    1.262133] ACPI: Added _OSI(Module Device)
+[    1.263573] ACPI: Added _OSI(Processor Device)
+[    1.266573] ACPI: Added _OSI(Processor Aggregator Device)
+[    1.270451] ACPI: 2 ACPI AML tables successfully acquired and loaded
+[    1.278028] ACPI: _OSC evaluation for CPUs failed, trying _PDC
+[    1.279713] ACPI: Interpreter enabled
+[    1.281590] ACPI: PM: (supports S0 S5)
+[    1.284572] ACPI: Using IOAPIC for interrupt routing
+[    1.287784] PCI: Using host bridge windows from ACPI; if necessary, use "pci=nocrs" and report a bug
+[    1.289572] PCI: Using E820 reservations for host bridge windows
+[    1.293627] ACPI: Enabled 2 GPEs in block 00 to 07
+[    1.313365] ACPI: PCI Root Bridge [PCI0] (domain 0000 [bus 00-ff])
+[    1.315583] acpi PNP0A03:00: _OSC: OS supports [ASPM ClockPM Segments MSI EDR HPX-Type3]
+[    1.317575] acpi PNP0A03:00: _OSC: not requesting OS control; OS requires [ExtendedConfig ASPM ClockPM MSI]
+[    1.321344] acpi PNP0A03:00: fail to add MMCONFIG information, can't access extended configuration space under this bridge
+[    1.325399] PCI host bridge to bus 0000:00
+[    1.326575] pci_bus 0000:00: root bus resource [io  0x0000-0x0cf7 window]
+[    1.328575] pci_bus 0000:00: root bus resource [io  0x0d00-0xffff window]
+[    1.330576] pci_bus 0000:00: root bus resource [mem 0x000a0000-0x000bffff window]
+[    1.332575] pci_bus 0000:00: root bus resource [mem 0x80000000-0xfdffffff window]
+[    1.334575] pci_bus 0000:00: root bus resource [bus 00-ff]
+[    1.337768] pci 0000:00:00.0: [8086:1237] type 00 class 0x060000 conventional PCI endpoint
+[    1.342651] pci 0000:00:01.0: [8086:7000] type 00 class 0x060100 conventional PCI endpoint
+[    1.348015] pci 0000:00:01.1: [8086:7111] type 00 class 0x01018a conventional PCI endpoint
+[    1.351654] pci 0000:00:01.1: BAR 4 [io  0xd000-0xd00f]
+[    1.354682] pci 0000:00:01.1: BAR 0 [io  0x01f0-0x01f7]: legacy IDE quirk
+[    1.356572] pci 0000:00:01.1: BAR 1 [io  0x03f6]: legacy IDE quirk
+[    1.359572] pci 0000:00:01.1: BAR 2 [io  0x0170-0x0177]: legacy IDE quirk
+[    1.361574] pci 0000:00:01.1: BAR 3 [io  0x0376]: legacy IDE quirk
+[    1.364995] pci 0000:00:02.0: [80ee:beef] type 00 class 0x030000 conventional PCI endpoint
+[    1.369610] pci 0000:00:02.0: BAR 0 [mem 0xe0000000-0xe0ffffff pref]
+[    1.372000] pci 0000:00:02.0: Video device with shadowed ROM at [mem 0x000c0000-0x000dffff]
+[    1.384117] pci 0000:00:04.0: [80ee:cafe] type 00 class 0x088000 conventional PCI endpoint
+[    1.388161] pci 0000:00:04.0: BAR 0 [io  0xd020-0xd03f]
+[    1.389697] pci 0000:00:04.0: BAR 1 [mem 0xf0000000-0xf03fffff]
+[    1.392570] pci 0000:00:04.0: BAR 2 [mem 0xf0400000-0xf0403fff pref]
+[    1.414822] pci 0000:00:07.0: [8086:7113] type 00 class 0x068000 conventional PCI endpoint
+[    1.419661] pci 0000:00:07.0: quirk: [io  0x4000-0x403f] claimed by PIIX4 ACPI
+[    1.421615] pci 0000:00:07.0: quirk: [io  0x4100-0x410f] claimed by PIIX4 SMB
+[    1.592688] pci 0000:00:14.0: [1000:0030] type 00 class 0x010000 conventional PCI endpoint
+[    1.597735] pci 0000:00:14.0: BAR 0 [io  0xd100-0xd1ff]
+[    1.599613] pci 0000:00:14.0: BAR 1 [mem 0xf0420000-0xf043ffff]
+[    1.602625] pci 0000:00:14.0: BAR 2 [mem 0xf0440000-0xf045ffff]
+[    1.804794] ACPI: PCI: Interrupt link LNKA configured for IRQ 11
+[    1.808591] ACPI: PCI: Interrupt link LNKB configured for IRQ 10
+[    1.811848] ACPI: PCI: Interrupt link LNKC configured for IRQ 9
+[    1.814734] ACPI: PCI: Interrupt link LNKD configured for IRQ 11
+[    1.816921] iommu: Default domain type: Translated
+[    1.820571] iommu: DMA domain TLB invalidation policy: lazy mode
+[    1.822842] SCSI subsystem initialized
+[    1.824844] ACPI: bus type USB registered
+[    1.826612] usbcore: registered new interface driver usbfs
+[    1.829597] usbcore: registered new interface driver hub
+[    1.831599] usbcore: registered new device driver usb
+[    1.833619] pps_core: LinuxPPS API ver. 1 registered
+[    1.836570] pps_core: Software ver. 5.3.6 - Copyright 2005-2007 Rodolfo Giometti <giometti@linux.it>
+[    1.838587] PTP clock support registered
+[    1.840671] EDAC MC: Ver: 3.0.0
+[    1.845457] NetLabel: Initializing
+[    1.846573] NetLabel:  domain hash size = 128
+[    1.849572] NetLabel:  protocols = UNLABELED CIPSOv4 CALIPSO
+[    1.852598] NetLabel:  unlabeled traffic allowed by default
+[    1.854660] mctp: management component transport protocol core
+[    1.856573] NET: Registered PF_MCTP protocol family
+[    1.858581] PCI: Using ACPI for IRQ routing
+[    1.862187] pci 0000:00:02.0: vgaarb: setting as boot VGA device
+[    1.862566] pci 0000:00:02.0: vgaarb: bridge control possible
+[    1.862566] pci 0000:00:02.0: vgaarb: VGA device added: decodes=io+mem,owns=io+mem,locks=none
+[    1.862574] vgaarb: loaded
+[    1.864732] clocksource: Switched to clocksource kvm-clock
+[    1.878885] VFS: Disk quotas dquot_6.6.0
+[    1.887000] VFS: Dquot-cache hash table entries: 512 (order 0, 4096 bytes)
+[    1.904658] AppArmor: AppArmor Filesystem Enabled
+[    1.913289] pnp: PnP ACPI init
+[    1.920477] pnp: PnP ACPI: found 3 devices
+[    1.934932] clocksource: acpi_pm: mask: 0xffffff max_cycles: 0xffffff, max_idle_ns: 2085701024 ns
+[    1.950250] NET: Registered PF_INET protocol family
+[    1.957979] IP idents hash table entries: 32768 (order: 6, 262144 bytes, linear)
+[    2.009926] tcp_listen_portaddr_hash hash table entries: 1024 (order: 2, 16384 bytes, linear)
+[    2.032962] Table-perturb hash table entries: 65536 (order: 6, 262144 bytes, linear)
+[    2.050590] TCP established hash table entries: 16384 (order: 5, 131072 bytes, linear)
+[    2.061574] TCP bind hash table entries: 16384 (order: 7, 524288 bytes, linear)
+[    2.069260] TCP: Hash tables configured (established 16384 bind 16384)
+[    2.077188] MPTCP token hash table entries: 2048 (order: 4, 49152 bytes, linear)
+[    2.103233] UDP hash table entries: 1024 (order: 3, 32768 bytes, linear)
+[    2.116083] UDP-Lite hash table entries: 1024 (order: 3, 32768 bytes, linear)
+[    2.128157] NET: Registered PF_UNIX/PF_LOCAL protocol family
+[    2.136953] NET: Registered PF_XDP protocol family
+[    2.143216] pci_bus 0000:00: resource 4 [io  0x0000-0x0cf7 window]
+[    2.154933] pci_bus 0000:00: resource 5 [io  0x0d00-0xffff window]
+[    2.162036] pci_bus 0000:00: resource 6 [mem 0x000a0000-0x000bffff window]
+[    2.177242] pci_bus 0000:00: resource 7 [mem 0x80000000-0xfdffffff window]
+[    2.185473] pci 0000:00:00.0: Limiting direct PCI/PCI transfers
+[    2.196632] pci 0000:00:00.0: quirk_natoma+0x0/0x40 took 10897 usecs
+[    2.205275] PCI: CLS 0 bytes, default 64
+[    2.210750] Trying to unpack rootfs image as initramfs...
+[    2.229489] clocksource: tsc: mask: 0xffffffffffffffff max_cycles: 0x33e45ed112f, max_idle_ns: 440795282550 ns
+[    2.240553] clocksource: Switched to clocksource tsc
+[    2.251577] platform rtc_cmos: registered platform RTC device (no PNP device found)
+[    2.299478] Initialise system trusted keyrings
+[    2.317019] Key type blacklist registered
+[    2.326860] workingset: timestamp_bits=36 max_order=19 bucket_order=0
+[    2.348189] zbud: loaded
+[    2.352986] squashfs: version 4.0 (2009/01/31) Phillip Lougher
+[    2.383321] fuse: init (API version 7.39)
+[    2.402609] integrity: Platform Keyring initialized
+[    2.423978] integrity: Machine keyring initialized
+[    2.467078] Key type asymmetric registered
+[    2.503237] Asymmetric key parser 'x509' registered
+[    2.532449] Block layer SCSI generic (bsg) driver version 0.4 loaded (major 243)
+[    2.598224] io scheduler mq-deadline registered
+[    2.647343] shpchp: Standard Hot Plug PCI Controller Driver version: 0.4
+[    2.695783] ACPI: AC: AC Adapter [AC] (on-line)
+[    2.721302] input: Power Button as /devices/LNXSYSTM:00/LNXPWRBN:00/input/input0
+[    2.755430] ACPI: button: Power Button [PWRF]
+[    2.783356] input: Sleep Button as /devices/LNXSYSTM:00/LNXSLPBN:00/input/input1
+[    2.817326] ACPI: button: Sleep Button [SLPF]
+[    2.880968] Serial: 8250/16550 driver, 32 ports, IRQ sharing enabled
+[    3.031282] 00:02: ttyS0 at I/O 0x3f8 (irq = 4, base_baud = 115200) is a 16550A
+[    3.044036] Linux agpgart interface v0.103
+[    3.075918] loop: module loaded
+[    3.105753] scsi host0: ata_piix
+[    3.116930] scsi host1: ata_piix
+[    3.127238] ata1: PATA max UDMA/33 cmd 0x1f0 ctl 0x3f6 bmdma 0xd000 irq 14 lpm-pol 0
+[    3.137251] ata2: PATA max UDMA/33 cmd 0x170 ctl 0x376 bmdma 0xd008 irq 15 lpm-pol 0
+[    3.174614] ACPI: bus type drm_connector registered
+[    3.181555] Freeing initrd memory: 29992K
+[    3.188825] tun: Universal TUN/TAP device driver, 1.6
+[    3.194833] PPP generic driver version 2.4.2
+[    3.200235] i8042: PNP: PS/2 Controller [PNP0303:PS2K,PNP0f03:PS2M] at 0x60,0x64 irq 1,12
+[    3.225650] serio: i8042 KBD port at 0x60,0x64 irq 1
+[    3.238857] serio: i8042 AUX port at 0x60,0x64 irq 12
+[    3.244900] mousedev: PS/2 mouse device common for all mice
+[    3.257494] input: AT Translated Set 2 keyboard as /devices/platform/i8042/serio0/input/input2
+[    3.269789] rtc_cmos rtc_cmos: registered as rtc0
+[    3.276043] rtc_cmos rtc_cmos: setting system clock to 2026-11-17T19:13:40 UTC (1794942820)
+[    3.293733] rtc_cmos rtc_cmos: alarms up to one day, 114 bytes nvram
+[    3.302847] i2c_dev: i2c /dev entries driver
+[    3.310551] device-mapper: core: CONFIG_IMA_DISABLE_HTABLE is disabled. Duplicate IMA measurements will not be recorded in the IMA log.
+[    3.322443] device-mapper: uevent: version 1.0.3
+[    3.403643] device-mapper: ioctl: 4.48.0-ioctl (2023-03-01) initialised: dm-devel@redhat.com
+[    3.412149] intel_pstate: CPU model not supported
+[    3.417810] ata1.00: ATAPI: VBOX CD-ROM, 1.0, max UDMA/133
+[    3.429079] scsi 0:0:0:0: CD-ROM            VBOX     CD-ROM           1.0  PQ: 0 ANSI: 5
+[    3.439800] ledtrig-cpu: registered to indicate activity on CPUs
+[    3.449436] drop_monitor: Initializing network drop monitor service
+[    3.456049] sr 0:0:0:0: [sr0] scsi3-mmc drive: 32x/32x xa/form2 tray
+[    3.463710] NET: Registered PF_INET6 protocol family
+[    3.476559] cdrom: Uniform CD-ROM driver Revision: 3.20
+[    3.509635] sr 0:0:0:0: Attached scsi generic sg0 type 5
+[    3.524221] Segment Routing with IPv6
+[    3.528496] In-situ OAM (IOAM) with IPv6
+[    3.534695] NET: Registered PF_PACKET protocol family
+[    3.540255] Key type dns_resolver registered
+[    3.545592] IPI shorthand broadcast: enabled
+[    3.551354] sched_clock: Marking stable (2635498948, 914855480)->(4397387386, -847032958)
+[    3.561133] registered taskstats version 1
+[    3.566322] Loading compiled-in X.509 certificates
+[    3.572146] Loaded X.509 cert 'Build time autogenerated kernel key: 67dae3bf0284ce2ad34b9632cb7c8734f4f57c6c'
+[    3.583327] Loaded X.509 cert 'Canonical Ltd. Live Patch Signing 2025 Kmod: d541cef61dc7e793b7eb7e899970a2eef0b5dc8c'
+[    3.595031] Loaded X.509 cert 'Canonical Ltd. Live Patch Signing: 14df34d1a87cf37625abec039ef2bf521249b969'
+[    3.608273] Loaded X.509 cert 'Canonical Ltd. Kernel Module Signing 2025 Kmod: 4627603d2357a2a3f81006370894c221175893e9'
+[    3.626060] Loaded X.509 cert 'Canonical Ltd. Kernel Module Signing: 88f752e560a1e0737e31163a466ad7b70a850c19'
+[    3.636830] blacklist: Loading compiled-in revocation X.509 certificates
+[    3.643708] Loaded X.509 cert 'Canonical Ltd. Secure Boot Signing: 61482aa2830d0ab2ad5af10b7250da9033ddcef0'
+[    3.655184] Loaded X.509 cert 'Canonical Ltd. Secure Boot Signing (2017): 242ade75ac4a15e50d50c84b0d45ff3eae707a03'
+[    3.667677] Loaded X.509 cert 'Canonical Ltd. Secure Boot Signing (ESM 2018): 365188c1d374d6b07c3c8f240f8ef722433d6a8b'
+[    3.678767] Loaded X.509 cert 'Canonical Ltd. Secure Boot Signing (2019): c0746fd6c5da3ae827864651ad66ae47fe24b3e8'
+[    3.690711] Loaded X.509 cert 'Canonical Ltd. Secure Boot Signing (2021 v1): a8d54bbb3825cfb94fa13c9f8a594a195c107b8d'
+[    3.702517] Loaded X.509 cert 'Canonical Ltd. Secure Boot Signing (2021 v2): 4cf046892d6fd3c9a5b03f98d845f90851dc6a8c'
+[    3.716643] Loaded X.509 cert 'Canonical Ltd. Secure Boot Signing (2021 v3): 100437bb6de6e469b581e61cd66bce3ef4ed53af'
+[    3.730064] Loaded X.509 cert 'Canonical Ltd. Secure Boot Signing (Ubuntu Core 2019): c1d57b8f6b743f23ee41f4f7ee292f06eecadfb9'
+[    3.769239] Key type .fscrypt registered
+[    3.777336] Key type fscrypt-provisioning registered
+[    3.806909] cryptd: max_cpu_qlen set to 1000
+[    3.826784] SSE version of gcm_enc/dec engaged.
+[    3.898962] Key type encrypted registered
+[    3.906457] AppArmor: AppArmor sha256 policy hashing enabled
+[    3.915157] ima: No TPM chip found, activating TPM-bypass!
+[    3.926820] Loading compiled-in module X.509 certificates
+[    3.936349] Loaded X.509 cert 'Build time autogenerated kernel key: 67dae3bf0284ce2ad34b9632cb7c8734f4f57c6c'
+[    3.966433] ima: Allocated hash algorithm: sha256
+[    3.984395] ima: No architecture policies found
+[    3.996139] evm: Initialising EVM extended attributes:
+[    4.027382] evm: security.selinux
+[    4.033412] evm: security.SMACK64
+[    4.038314] evm: security.SMACK64EXEC
+[    4.044392] evm: security.SMACK64TRANSMUTE
+[    4.049383] evm: security.SMACK64MMAP
+[    4.058506] evm: security.apparmor
+[    4.063709] evm: security.ima
+[    4.067588] evm: security.capability
+[    4.073051] evm: HMAC attrs: 0x1
+[    4.078789] PM:   Magic number: 2:493:243
+[    4.089149] RAS: Correctable Errors collector initialized.
+[    4.097144] clk: Disabling unused clocks
+[    4.118598] Freeing unused decrypted memory: 2028K
+[    4.129744] Freeing unused kernel image (initmem) memory: 4936K
+[    4.135119] Write protecting the kernel read-only data: 38912k
+[    4.143133] Freeing unused kernel image (rodata/data gap) memory: 1944K
+[    4.276521] x86/mm: Checked W+X mappings: passed, no W+X pages found.
+[    4.282247] Run /init as init process
+Loading, please wait...
+Starting systemd-udevd version 255.4-1ubuntu8.18
+[    4.734224] Fusion MPT base driver 3.04.20
+[    4.738106] Copyright (c) 1999-2008 LSI Corporation
+[    4.755316] vboxvideo 0000:00:02.0: vgaarb: deactivate vga console
+[    4.855342] Fusion MPT SPI Host driver 3.04.20
+[    4.863351] mptbase: ioc0: Initiating bringup
+[    4.867852] Console: switching to colour dummy device 80x25
+[    4.888099] [drm] VRAM 01000000
+[    4.896231] [drm] Initialized vboxvideo 1.0.0 20130823 for 0000:00:02.0 on minor 0
+[    4.899662] fbcon: vboxvideodrmfb (fb0) is primary device
+[    4.915414] vboxvideo 0000:00:02.0: [drm] drm_plane_enable_fb_damage_clips() not called
+[    4.917613] Console: switching to colour frame buffer device 128x48
+[    4.929811] ioc0: LSI53C1030 A0: Capabilities={Initiator}
+[    4.961551] vboxvideo 0000:00:02.0: [drm] fb0: vboxvideodrmfb frame buffer device
+[    4.967949] input: ImExPS/2 Generic Explorer Mouse as /devices/platform/i8042/serio1/input/input4
+[    5.067035] scsi host2: ioc0: LSI53C1030 A0, FwRev=00000000h, Ports=1, MaxQ=256, IRQ=20
+[    5.126346] scsi 2:0:0:0: Direct-Access     VBOX     HARDDISK         1.0  PQ: 0 ANSI: 5
+[    5.133090] scsi target2:0:0: Beginning Domain Validation
+[    5.149467] scsi target2:0:0: Domain Validation skipping write tests
+[    5.151606] scsi target2:0:0: Ending Domain Validation
+[    5.154550] scsi target2:0:0: asynchronous
+[    5.177459] sd 2:0:0:0: [sda] 134217728 512-byte logical blocks: (68.7 GB/64.0 GiB)
+[    5.180657] sd 2:0:0:0: Attached scsi generic sg1 type 0
+[    5.183514] sd 2:0:0:0: [sda] Write Protect is off
+[    5.186431] sd 2:0:0:0: [sda] Incomplete mode parameter data
+[    5.188257] sd 2:0:0:0: [sda] Assuming drive cache: write through
+[    5.200856] GPT:Primary header thinks Alt. header is not at the end of the disk.
+[    5.203149] GPT:7340031 != 134217727
+[    5.204405] GPT:Alternate GPT header not at the end of the disk.
+[    5.207004] GPT:7340031 != 134217727
+[    5.209767] GPT: Use GNU Parted to correct GPT errors.
+[    5.211598]  sda: sda1 sda14 sda15 sda16
+[    5.214275] sd 2:0:0:0: [sda] Attached SCSI disk
+Begin: Loading essential drivers ... [    5.614228] raid6: sse2x4   gen() 20059 MB/s
+[    5.645019] raid6: sse2x2   gen() 20468 MB/s
+[    5.671009] raid6: sse2x1   gen()  7457 MB/s
+[    5.672686] raid6: using algorithm sse2x2 gen() 20468 MB/s
+[    5.705999] raid6: .... xor() 9325 MB/s, rmw enabled
+[    5.707946] raid6: using ssse3x2 recovery algorithm
+[    5.713572] xor: measuring software checksum speed
+[    5.717532]    prefetch64-sse  :  5158 MB/sec
+[    5.720500]    generic_sse     : 15771 MB/sec
+[    5.722264] xor: using function: generic_sse (15771 MB/sec)
+[    5.727482] async_tx: api initialized (async)
+done.
+Begin: Running /scripts/init-premount ... done.
+Begin: Mounting root file system ... Begin: Running /scripts/local-top ... done.
+Begin: Running /scripts/local-premount ... [    6.111429] Btrfs loaded, zoned=yes, fsverity=yes
+Scanning for Btrfs filesystems
+done.
+Warning: fsck not present, so skipping root file system
+[    6.498335] EXT4-fs (sda1): mounted filesystem 59134bd0-a76f-4ea0-8e4a-770b2e1eafc2 ro with ordered data mode. Quota mode: none.
+done.
+Begin: Running /scripts/local-bottom ... done.
+Begin: Running /scripts/init-bottom ... done.
+[    7.450062] systemd[1]: Inserted module 'autofs4'
+[    7.487997] systemd[1]: systemd 255.4-1ubuntu8.18 running in system mode (+PAM +AUDIT +SELINUX +APPARMOR +IMA +SMACK +SECCOMP +GCRYPT -GNUTLS +OPENSSL +ACL +BLKID +CURL +ELFUTILS +FIDO2 +IDN2 -IDN +IPTC +KMOD +LIBCRYPTSETUP +LIBFDISK +PCRE2 -PWQUALITY +P11KIT +QRENCODE +TPM2 +BZIP2 +LZ4 +XZ +ZLIB +ZSTD -BPF_FRAMEWORK -XKBCOMMON +UTMP +SYSVINIT default-hierarchy=unified)
+[    7.502930] systemd[1]: Detected virtualization oracle.
+[    7.506757] systemd[1]: Detected architecture x86-64.
+[    7.510142] systemd[1]: Invalid DMI field header.
+
+Welcome to [1mUbuntu 24.04.5 LTS[0m!
+
+[    7.521822] systemd[1]: Hostname set to <ubuntu>.
+[    7.530759] systemd[1]: Initializing machine ID from random generator.
+[    7.533913] systemd[1]: Installed transient /etc/machine-id file.
+[    8.400587] systemd[1]: Queued start job for default target graphical.target.
+[    8.416897] systemd[1]: Created slice system-modprobe.slice - Slice /system/modprobe.
+[[0;32m  OK  [0m] Created slice [0;1;39msystem-modprobe.slice[0m - Slice /system/modprobe.
+[    8.425924] systemd[1]: Created slice system-serial\x2dgetty.slice - Slice /system/serial-getty.
+[[0;32m  OK  [0m] Created slice [0;1;39msystem-serial\x2dget…slice[0m - Slice /system/serial-getty.
+[    8.435271] systemd[1]: Created slice system-systemd\x2dfsck.slice - Slice /system/systemd-fsck.
+[[0;32m  OK  [0m] Created slice [0;1;39msystem-systemd\x2dfs…slice[0m - Slice /system/systemd-fsck.
+[    8.445684] systemd[1]: Created slice user.slice - User and Session Slice.
+[[0;32m  OK  [0m] Created slice [0;1;39muser.slice[0m - User and Session Slice.
+[    8.452696] systemd[1]: Started systemd-ask-password-wall.path - Forward Password Requests to Wall Directory Watch.
+[[0;32m  OK  [0m] Started [0;1;39msystemd-ask-password-wall.…[0md Requests to Wall Directory Watch.
+[    8.462394] systemd[1]: Set up automount proc-sys-fs-binfmt_misc.automount - Arbitrary Executable File Formats File System Automount Point.
+[[0;32m  OK  [0m] Set up automount [0;1;39mproc-sys-fs-binfm…[0mormats File System Automount Point.
+[    8.471503] systemd[1]: Expecting device dev-disk-by\x2dlabel-BOOT.device - /dev/disk/by-label/BOOT...
+         Expecting device [0;1;39mdev-disk-by\x2dla…device[0m - /dev/disk/by-label/BOOT...
+[    8.480379] systemd[1]: Expecting device dev-disk-by\x2dlabel-UEFI.device - /dev/disk/by-label/UEFI...
+         Expecting device [0;1;39mdev-disk-by\x2dla…device[0m - /dev/disk/by-label/UEFI...
+[    8.493673] systemd[1]: Expecting device dev-ttyS0.device - /dev/ttyS0...
+         Expecting device [0;1;39mdev-ttyS0.device[0m - /dev/ttyS0...
+[    8.502557] systemd[1]: Reached target integritysetup.target - Local Integrity Protected Volumes.
+[[0;32m  OK  [0m] Reached target [0;1;39mintegritysetup.targ…[0m Local Integrity Protected Volumes.
+[    8.510583] systemd[1]: Reached target slices.target - Slice Units.
+[[0;32m  OK  [0m] Reached target [0;1;39mslices.target[0m - Slice Units.
+[    8.517551] systemd[1]: Reached target snapd.mounts-pre.target - Mounting snaps.
+[[0;32m  OK  [0m] Reached target [0;1;39msnapd.mounts-pre.target[0m - Mounting snaps.
+[    8.526256] systemd[1]: Reached target snapd.mounts.target - Mounted snaps.
+[[0;32m  OK  [0m] Reached target [0;1;39msnapd.mounts.target[0m - Mounted snaps.
+[    8.532840] systemd[1]: Reached target swap.target - Swaps.
+[[0;32m  OK  [0m] Reached target [0;1;39mswap.target[0m - Swaps.
+[    8.538647] systemd[1]: Reached target veritysetup.target - Local Verity Protected Volumes.
+[[0;32m  OK  [0m] Reached target [0;1;39mveritysetup.target[0m - Local Verity Protected Volumes.
+[    8.546764] systemd[1]: Listening on dm-event.socket - Device-mapper event daemon FIFOs.
+[[0;32m  OK  [0m] Listening on [0;1;39mdm-event.socket[0m - Device-mapper event daemon FIFOs.
+[    8.554985] systemd[1]: Listening on lvm2-lvmpolld.socket - LVM2 poll daemon socket.
+[[0;32m  OK  [0m] Listening on [0;1;39mlvm2-lvmpolld.socket[0m - LVM2 poll daemon socket.
+[    8.563922] systemd[1]: Listening on multipathd.socket - multipathd control socket.
+[[0;32m  OK  [0m] Listening on [0;1;39mmultipathd.socket[0m - multipathd control socket.
+[    8.571763] systemd[1]: Listening on syslog.socket - Syslog Socket.
+[[0;32m  OK  [0m] Listening on [0;1;39msyslog.socket[0m - Syslog Socket.
+[    8.578684] systemd[1]: Listening on systemd-fsckd.socket - fsck to fsckd communication Socket.
+[[0;32m  OK  [0m] Listening on [0;1;39msystemd-fsckd.socket[0m …fsck to fsckd communication Socket.
+[    8.586524] systemd[1]: Listening on systemd-initctl.socket - initctl Compatibility Named Pipe.
+[[0;32m  OK  [0m] Listening on [0;1;39msystemd-initctl.socke…[0m- initctl Compatibility Named Pipe.
+[    8.595844] systemd[1]: Listening on systemd-journald-dev-log.socket - Journal Socket (/dev/log).
+[[0;32m  OK  [0m] Listening on [0;1;39msystemd-journald-dev-…socket[0m - Journal Socket (/dev/log).
+[    8.603806] systemd[1]: Listening on systemd-journald.socket - Journal Socket.
+[[0;32m  OK  [0m] Listening on [0;1;39msystemd-journald.socket[0m - Journal Socket.
+[    8.616507] systemd[1]: Listening on systemd-networkd.socket - Network Service Netlink Socket.
+[[0;32m  OK  [0m] Listening on [0;1;39msystemd-networkd.socket[0m - Network Service Netlink Socket.
+[    8.626599] systemd[1]: systemd-pcrextend.socket - TPM2 PCR Extension (Varlink) was skipped because of an unmet condition check (ConditionSecurity=measured-uki).
+[    8.637628] systemd[1]: Listening on systemd-udevd-control.socket - udev Control Socket.
+[[0;32m  OK  [0m] Listening on [0;1;39msystemd-udevd-control.socket[0m - udev Control Socket.
+[    8.650783] systemd[1]: Listening on systemd-udevd-kernel.socket - udev Kernel Socket.
+[[0;32m  OK  [0m] Listening on [0;1;39msystemd-udevd-kernel.socket[0m - udev Kernel Socket.
+[    8.668121] systemd[1]: Mounting dev-hugepages.mount - Huge Pages File System...
+         Mounting [0;1;39mdev-hugepages.mount[0m - Huge Pages File System...
+[    8.681709] systemd[1]: Mounting dev-mqueue.mount - POSIX Message Queue File System...
+         Mounting [0;1;39mdev-mqueue.mount[0m - POSIX Message Queue File System...
+[    8.703089] systemd[1]: Mounting sys-kernel-debug.mount - Kernel Debug File System...
+         Mounting [0;1;39msys-kernel-debug.mount[0m - Kernel Debug File System...
+[    8.727132] systemd[1]: Mounting sys-kernel-tracing.mount - Kernel Trace File System...
+         Mounting [0;1;39msys-kernel-tracing.mount[0m - Kernel Trace File System...
+[    8.837377] systemd[1]: Starting systemd-journald.service - Journal Service...
+         Starting [0;1;39msystemd-journald.service[0m - Journal Service...
+[    8.870324] systemd-journald[292]: Collecting audit messages is disabled.
+[    8.885207] systemd[1]: Starting keyboard-setup.service - Set the console keyboard layout...
+         Starting [0;1;39mkeyboard-setup.service[0m - Set the console keyboard layout...
+[    8.918523] systemd[1]: Starting kmod-static-nodes.service - Create List of Static Device Nodes...
+         Starting [0;1;39mkmod-static-nodes.service[0m…eate List of Static Device Nodes...
+[    8.945241] systemd[1]: Starting lvm2-monitor.service - Monitoring of LVM2 mirrors, snapshots etc. using dmeventd or progress polling...
+         Starting [0;1;39mlvm2-monitor.service[0m - Mo…ing dmeventd or progress polling...
+[    8.984123] systemd[1]: Starting modprobe@configfs.service - Load Kernel Module configfs...
+         Starting [0;1;39mmodprobe@configfs.service[0m - Load Kernel Module configfs...
+[    9.043136] systemd[1]: Starting modprobe@dm_mod.service - Load Kernel Module dm_mod...
+         Starting [0;1;39mmodprobe@dm_mod.service[0m - Load Kernel Module dm_mod...
+[    9.104711] systemd[1]: Starting modprobe@drm.service - Load Kernel Module drm...
+         Starting [0;1;39mmodprobe@drm.service[0m - Load Kernel Module drm...
+[    9.176184] systemd[1]: Starting modprobe@efi_pstore.service - Load Kernel Module efi_pstore...
+         Starting [0;1;39mmodprobe@efi_pstore.servi…[0m - Load Kernel Module efi_pstore...
+[    9.203217] systemd[1]: Starting modprobe@fuse.service - Load Kernel Module fuse...
+         Starting [0;1;39mmodprobe@fuse.service[0m - Load Kernel Module fuse...
+[    9.228093] systemd[1]: Starting modprobe@loop.service - Load Kernel Module loop...
+         Starting [0;1;39mmodprobe@loop.service[0m - Load Kernel Module loop...
+[    9.248487] systemd[1]: netplan-ovs-cleanup.service - OpenVSwitch configuration for cleanup was skipped because of an unmet condition check (ConditionFileIsExecutable=/usr/bin/ovs-vsctl).
+[    9.283149] systemd[1]: Starting systemd-fsck-root.service - File System Check on Root Device...
+         Starting [0;1;39msystemd-fsck-root.service[0m…File System Check on Root Device...
+[    9.309176] systemd[1]: Starting systemd-modules-load.service - Load Kernel Modules...
+         Starting [0;1;39msystemd-modules-load.service[0m - Load Kernel Modules...
+[    9.335451] systemd[1]: systemd-pcrmachine.service - TPM2 PCR Machine ID Measurement was skipped because of an unmet condition check (ConditionSecurity=measured-uki).
+[    9.350273] systemd[1]: systemd-tpm2-setup-early.service - TPM2 SRK Setup (Early) was skipped because of an unmet condition check (ConditionSecurity=measured-uki).
+[    9.374515] systemd[1]: Starting systemd-udev-trigger.service - Coldplug All udev Devices...
+         Starting [0;1;39msystemd-udev-trigger.service[0m - Coldplug All udev Devices...
+[    9.408862] systemd[1]: Started systemd-journald.service - Journal Service.
+[[0;32m  OK  [0m] Started [0;1;39msystemd-journald.service[0m - Journal Service.
+[[0;32m  OK  [0m] Mounted [0;1;39mdev-hugepages.mount[0m - Huge Pages File System.
+[[0;32m  OK  [0m] Mounted [0;1;39mdev-mqueue.mount[0m - POSIX Message Queue File System.
+[[0;32m  OK  [0m] Mounted [0;1;39msys-kernel-debug.mount[0m - Kernel Debug File System.
+[[0;32m  OK  [0m] Mounted [0;1;39msys-kernel-tracing.mount[0m - Kernel Trace File System.
+[[0;32m  OK  [0m] Finished [0;1;39mkeyboard-setup.service[0m - Set the console keyboard layout.
+[[0;32m  OK  [0m] Finished [0;1;39mkmod-static-nodes.service[0m…Create List of Static Device Nodes.
+[[0;32m  OK  [0m] Finished [0;1;39mlvm2-monitor.service[0m - Mo…using dmeventd or progress polling.
+[[0;32m  OK  [0m] Finished [0;1;39mmodprobe@configfs.service[0m - Load Kernel Module configfs.
+[[0;32m  OK  [0m] Finished [0;1;39mmodprobe@dm_mod.service[0m - Load Kernel Module dm_mod.
+[[0;32m  OK  [0m] Finished [0;1;39mmodprobe@drm.service[0m - Load Kernel Module drm.
+[[0;32m  OK  [0m] Finished [0;1;39mmodprobe@efi_pstore.service[0m - Load Kernel Module efi_pstore.
+[[0;32m  OK  [0m] Finished [0;1;39mmodprobe@fuse.service[0m - Load Kernel Module fuse.
+[[0;32m  OK  [0m] Finished [0;1;39mmodprobe@loop.service[0m - Load Kernel Module loop.
+[[0;32m  OK  [0m] Finished [0;1;39msystemd-fsck-root.service[0m - File System Check on Root Device.
+[[0;32m  OK  [0m] Finished [0;1;39msystemd-modules-load.service[0m - Load Kernel Modules.
+         Mounting [0;1;39msys-fs-fuse-connections.mount[0m - FUSE Control File System...
+         Mounting [0;1;39msys-kernel-config.mount[0m - Kernel Configuration File System...
+[[0;32m  OK  [0m] Started [0;1;39msystemd-fsckd.service[0m - Fi…stem Check Daemon to report status.
+         Starting [0;1;39msystemd-remount-fs.servic…[0munt Root and Kernel File Systems...
+         Starting [0;1;39msystemd-sysctl.service[0m - Apply Kernel Variables...
+         Starting [0;1;39msystemd-tmpfiles-setup-de…[0m Device Nodes in /dev gracefully...[    9.751478] EXT4-fs (sda1): re-mounted 59134bd0-a76f-4ea0-8e4a-770b2e1eafc2 r/w.
+
+[[0;32m  OK  [0m] Finished [0;1;39msystemd-udev-trigger.service[0m - Coldplug All udev Devices.
+[[0;32m  OK  [0m] Mounted [0;1;39msys-fs-fuse-connections.mount[0m - FUSE Control File System.
+[[0;32m  OK  [0m] Mounted [0;1;39msys-kernel-config.mount[0m - Kernel Configuration File System.
+[[0;32m  OK  [0m] Finished [0;1;39msystemd-remount-fs.servic…[0mmount Root and Kernel File Systems.
+[[0;32m  OK  [0m] Finished [0;1;39msystemd-sysctl.service[0m - Apply Kernel Variables.
+         Starting [0;1;39mmultipathd.service[0m - Devi…pper Multipath Device Controller...
+         Starting [0;1;39msystemd-journal-flush.ser…[0msh Journal to Persistent Storage...
+         Starting [0;1;39msystemd-random-seed.service[0m - Load/Save OS Random Seed...
+[[0;32m  OK  [0m] Finished [0;1;39msystemd-tmpfiles-setup-de…[0mic Device Nodes in /dev gracefully.
+         Starting [0;1;39msystemd-sysusers.service[0m - Create System Users...
+[[0;32m  OK  [0m] Finished [0;1;39msystemd-journal-flush.ser…[0mlush Journal to Persistent Storage.
+[[0;32m  OK  [0m] Finished [0;1;39msystemd-random-seed.service[0m - Load/Save OS Random Seed.
+[[0;32m  OK  [0m] Finished [0;1;39msystemd-sysusers.service[0m - Create System Users.
+         Starting [0;1;39msystemd-tmpfiles-setup-de…[0meate Static Device Nodes in /dev...
+[[0;32m  OK  [0m] Started [0;1;39mmultipathd.service[0m - Devic…Mapper Multipath Device Controller.
+[[0;32m  OK  [0m] Finished [0;1;39msystemd-tmpfiles-setup-de…[0mCreate Static Device Nodes in /dev.
+[[0;32m  OK  [0m] Reached target [0;1;39mlocal-fs-pre.target[0m…Preparation for Local File Systems.
+         Starting [0;1;39msystemd-udevd.service[0m - R…ager for Device Events and Files...
+[[0;32m  OK  [0m] Started [0;1;39msystemd-udevd.service[0m - Ru…anager for Device Events and Files.
+[[0;32m  OK  [0m] Started [0;1;39msystemd-ask-password-conso…[0mequests to Console Directory Watch.
+[[0;32m  OK  [0m] Reached target [0;1;39mcryptsetup.target[0m - Local Encrypted Volumes.
+[[0;32m  OK  [0m] Found device [0;1;39mdev-ttyS0.device[0m - /dev/ttyS0.
+[[0;32m  OK  [0m] Listening on [0;1;39msystemd-rfkill.socket[0m…ll Switch Status /dev/rfkill Watch.
+[[0;32m  OK  [0m] Found device [0;1;39mdev-disk-by\x2dlabel-BOOT.device[0m - HARDDISK BOOT.
+[[0;32m  OK  [0m] Found device [0;1;39mdev-disk-by\x2dlabel-UEFI.device[0m - HARDDISK UEFI.
+         Starting [0;1;39msystemd-fsck@dev-disk-by\…[0mCheck on /dev/disk/by-label/BOOT...
+         Starting [0;1;39msystemd-fsck@dev-disk-by\…[0mCheck on /dev/disk/by-label/UEFI...
+Checking in progress on 1 disk (0.0% complete)[[0;32m  OK  [0m] Finished [0;1;39msystemd-fsck@dev-disk-by\…[0mm Check on /dev/disk/by-label/BOOT.
+         Mounting [0;1;39mboot.mount[0m - /boot...
+Checking in progress on 0 disks (100.0% complete)[[0;32m  OK  [0m] Finished [0;1;39msystemd-fsck@dev-disk-by\…[0mm Check on /dev/disk/by-label/UEFI.
+[[0;32m  OK  [0m] Mounted [0;1;39mboot.mount[0m - /boot.
+         Mounting [0;1;39mboot-efi.mount[0m - /boot/efi...
+[[0;32m  OK  [0m] Mounted [0;1;39mboot-efi.mount[0m - /boot/efi.
+[[0;32m  OK  [0m] Reached target [0;1;39mlocal-fs.target[0m - Local File Systems.
+[[0;32m  OK  [0m] Listening on [0;1;39msystemd-sysext.socket[0m…tension Image Management (Varlink).
+         Starting [0;1;39mapparmor.service[0m - Load AppArmor profiles...
+         Starting [0;1;39mconsole-setup.service[0m - Set console font and keymap...
+         Starting [0;1;39mfinalrd.service[0m - Create …time dir for shutdown pivot root...
+         Starting [0;1;39mldconfig.service[0m - Rebuild Dynamic Linker Cache...
+         Starting [0;1;39mplymouth-read-write.servi…[0mymouth To Write Out Runtime Data...
+         Starting [0;1;39msystemd-binfmt.service[0m - Set Up Additional Binary Formats...
+         Starting [0;1;39msystemd-tmpfiles-setup.se…[0me Volatile Files and Directories...
+         Starting [0;1;39mufw.service[0m - Uncomplicated firewall...
+[[0;32m  OK  [0m] Finished [0;1;39mconsole-setup.service[0m - Set console font and keymap.
+[[0;32m  OK  [0m] Finished [0;1;39mfinalrd.service[0m - Create …untime dir for shutdown pivot root.
+[[0;32m  OK  [0m] Finished [0;1;39mplymouth-read-write.servi…[0mPlymouth To Write Out Runtime Data.
+         Mounting [0;1;39mproc-sys-fs-binfmt_misc.m…[0mcutable File Formats File System...
+[[0;32m  OK  [0m] Finished [0;1;39msystemd-tmpfiles-setup.se…[0mate Volatile Files and Directories.
+[[0;32m  OK  [0m] Finished [0;1;39mufw.service[0m - Uncomplicated firewall.
+         Starting [0;1;39msystemd-journal-catalog-u…ervice[0m - Rebuild Journal Catalog...
+         Starting [0;1;39msystemd-machine-id-commit…[0mt a transient machine-id on disk...
+         Starting [0;1;39msystemd-resolved.service[0m - Network Name Resolution...
+         Starting [0;1;39msystemd-timesyncd.service[0m - Network Time Synchronization...
+         Starting [0;1;39msystemd-update-utmp.servi…[0mord System Boot/Shutdown in UTMP...
+         Starting [0;1;39mcloud-init-local.service[0m …-init: Local Stage (pre-network)...
+[[0;32m  OK  [0m] Mounted [0;1;39mproc-sys-fs-binfmt_misc.mo…[0mxecutable File Formats File System.
+[[0;32m  OK  [0m] Finished [0;1;39msystemd-journal-catalog-u….service[0m - Rebuild Journal Catalog.
+[[0;32m  OK  [0m] Finished [0;1;39msystemd-binfmt.service[0m - Set Up Additional Binary Formats.
+[[0;32m  OK  [0m] Finished [0;1;39msystemd-machine-id-commit…[0mmit a transient machine-id on disk.
+[[0;32m  OK  [0m] Finished [0;1;39msystemd-update-utmp.servi…[0mecord System Boot/Shutdown in UTMP.
+[[0;32m  OK  [0m] Started [0;1;39msystemd-timesyncd.service[0m - Network Time Synchronization.
+[[0;32m  OK  [0m] Reached target [0;1;39mtime-set.target[0m - System Time Set.
+[[0;32m  OK  [0m] Finished [0;1;39mldconfig.service[0m - Rebuild Dynamic Linker Cache.
+         Starting [0;1;39msystemd-update-done.service[0m - Update is Completed...
+[[0;32m  OK  [0m] Finished [0;1;39msystemd-update-done.service[0m - Update is Completed.
+[[0;32m  OK  [0m] Started [0;1;39msystemd-resolved.service[0m - Network Name Resolution.
+[[0;32m  OK  [0m] Reached target [0;1;39mnss-lookup.target[0m - Host and Network Name Lookups.
+[   15.547579] cloud-init[600]: Cloud-init v. 26.1-0ubuntu1~24.04.1 running 'init-local' at Tue, 17 Nov 2026 19:13:53 +0000. Up 15.41 seconds.
+[[0;32m  OK  [0m] Finished [0;1;39mapparmor.service[0m - Load AppArmor profiles.
+         Starting [0;1;39msnapd.apparmor.service[0m - …iles managed internally by snapd...
+[[0;32m  OK  [0m] Finished [0;1;39msnapd.apparmor.service[0m - …ofiles managed internally by snapd.
+[   18.074411] cloud-init[600]: Created symlink /etc/systemd/system/systemd-networkd-wait-online.service → /dev/null.
+[[0;1;31mFAILED[0m] Failed to start [0;1;39msystemd-networkd-wait-online.service[0m.
+See 'systemctl status systemd-networkd-wait-online.service' for details.
+[   21.563142] cloud-init[600]: Generating public/private rsa key pair.
+[   21.578487] cloud-init[600]: Your identification has been saved in /etc/ssh/ssh_host_rsa_key
+[   21.585717] cloud-init[600]: Your public key has been saved in /etc/ssh/ssh_host_rsa_key.pub
+[   21.601107] cloud-init[600]: The key fingerprint is:
+[   21.607378] cloud-init[600]: SHA256:FiWN3lqp/IPNZZbfO4LzzNj0/hnl/OapuZHkGxaRd+Y root@agentbrake-clean-validation
+[   21.632669] cloud-init[600]: The key's randomart image is:
+[   21.637248] cloud-init[600]: +---[RSA 3072]----+
+[   21.644020] cloud-init[600]: |        .o.      |
+[   21.649437] cloud-init[600]: |        .o.   .  |
+[   21.664498] cloud-init[600]: |       ... . o .o|
+[   21.668613] cloud-init[600]: |        ..+   oo.|
+[   21.671091] cloud-init[600]: |       .S+   +  E|
+[   21.673893] cloud-init[600]: |       .+   B oo.|
+[   21.696364] cloud-init[600]: |         = +.O oo|
+[   21.698712] cloud-init[600]: |        . =oB.B.B|
+[   21.702047] cloud-init[600]: |           ooX=OB|
+[   21.704914] cloud-init[600]: +----[SHA256]-----+
+[   21.707754] cloud-init[600]: Generating public/private ecdsa key pair.
+[   21.723862] cloud-init[600]: Your identification has been saved in /etc/ssh/ssh_host_ecdsa_key
+[   21.734522] cloud-init[600]: Your public key has been saved in /etc/ssh/ssh_host_ecdsa_key.pub
+[   21.749349] cloud-init[600]: The key fingerprint is:
+[   21.752401] cloud-init[600]: SHA256:1Anr0ExBDLhWAl6UQRh1ir3F8PJIoMX1DGYdY0iz83A root@agentbrake-clean-validation
+[   21.769717] cloud-init[600]: The key's randomart image is:
+[   21.772692] cloud-init[600]: +---[ECDSA 256]---+
+[   21.775162] cloud-init[600]: | .=X#**==.       |
+[   21.788424] cloud-init[600]: | +oB=&o=.+ .     |
+[   21.791034] cloud-init[600]: |. o O+E = o      |
+[   21.794108] cloud-init[600]: |   .o@ +         |
+[[0;32m  OK  [0m] Finished [0;1;39mcloud-init-local.service[0m …ud-init: Local Stage (pre-network).
+[   21.801763] cloud-init[600]: |   .o o S        |
+[   21.805017] cloud-init[600]: |                 |
+[[0;32m  OK  [0m] Reached target [0;1;39mnetwork-pre.target[0m - Preparation for Network.
+[   21.811953] cloud-init[600]: |                 |
+[   21.815488] cloud-init[600]: |                 |
+[   21.820752] cloud-init[600]: |                 |
+[   21.828608] cloud-init[600]: +----[SHA256]-----+
+         Starting [0;1;39mcloud-init.service[0m - Cloud-init: Network Stage...
+[   21.833871] cloud-init[600]: Generating public/private ed25519 key pair.
+[   21.839237] cloud-init[600]: Your identification has been saved in /etc/ssh/ssh_host_ed25519_key
+[   21.845680] cloud-init[600]: Your public key has been saved in /etc/ssh/ssh_host_ed25519_key.pub
+[   21.868339] cloud-init[600]: The key fingerprint is:
+[   21.872635] cloud-init[600]: SHA256:InsMCXUNBQpWB7nknaQSbkHnIS+9nLZ2I/HmsPtr+60 root@agentbrake-clean-validation
+         Starting [0;1;39msystemd-networkd.service[0m - Network Configuration...
+[   21.882456] cloud-init[600]: The key's randomart image is:
+[   21.900440] cloud-init[600]: +--[ED25519 256]--+
+[   21.905239] cloud-init[600]: | .=.*o==.        |
+[   21.915426] cloud-init[600]: | .oOo=. .        |
+[   21.939260] cloud-init[600]: | .o=== .         |
+[   21.942252] cloud-init[600]: |  ++++o          |
+[   21.945733] cloud-init[600]: | . .X . S        |
+[   21.948433] cloud-init[600]: |   . O .         |
+[   21.959741] cloud-init[600]: |    * B          |
+[   21.967501] cloud-init[600]: |   . O.. .       |
+[   21.988530] cloud-init[600]: |    o+=+E..      |
+[   21.992226] cloud-init[600]: +----[SHA256]-----+
+[[0;32m  OK  [0m] Started [0;1;39msystemd-networkd.service[0m - Network Configuration.
+[[0;32m  OK  [0m] Reached target [0;1;39mnetwork.target[0m - Network.
+[   22.874314] cloud-init[810]: Cloud-init v. 26.1-0ubuntu1~24.04.1 running 'init' at Tue, 17 Nov 2026 19:14:00 +0000. Up 22.81 seconds.
+[   22.921798] cloud-init[810]: ci-info: +++++++++++++++++++++++Net device info++++++++++++++++++++++++
+[   22.936278] cloud-init[810]: ci-info: +--------+------+-----------+-----------+-------+------------+
+[   22.953335] cloud-init[810]: ci-info: | Device |  Up  |  Address  |    Mask   | Scope | Hw-Address |
+[   22.957516] cloud-init[810]: ci-info: +--------+------+-----------+-----------+-------+------------+
+[   22.970320] cloud-init[810]: ci-info: |   lo   | True | 127.0.0.1 | 255.0.0.0 |  host |     .      |
+[   22.975359] cloud-init[810]: ci-info: |   lo   | True |  ::1/128  |     .     |  host |     .      |
+[   22.997754] cloud-init[810]: ci-info: +--------+------+-----------+-----------+-------+------------+
+[   23.004894] cloud-init[810]: ci-info: +++++++++++++++++++Route IPv6 info+++++++++++++++++++
+[   23.009000] cloud-init[810]: ci-info: +-------+-------------+---------+-----------+-------+
+[   23.023431] cloud-init[810]: ci-info: | Route | Destination | Gateway | Interface | Flags |
+[   23.027446] cloud-init[810]: ci-info: +-------+-------------+---------+-----------+-------+
+[   23.046304] cloud-init[810]: ci-info: +-------+-------------+---------+-----------+-------+
+[[0;32m  OK  [0m] Finished [0;1;39mcloud-init.service[0m - Cloud-init: Network Stage.
+[[0;32m  OK  [0m] Reached target [0;1;39mcloud-config.target[0m - Cloud-config availability.
+[[0;32m  OK  [0m] Reached target [0;1;39mnetwork-online.target[0m - Network is Online.
+[[0;32m  OK  [0m] Reached target [0;1;39msysinit.target[0m - System Initialization.
+[[0;32m  OK  [0m] Started [0;1;39mapt-daily.timer[0m - Daily apt download activities.
+[[0;32m  OK  [0m] Started [0;1;39mapt-daily-upgrade.timer[0m - …y apt upgrade and clean activities.
+[[0;32m  OK  [0m] Started [0;1;39mdpkg-db-backup.timer[0m - Daily dpkg database backup timer.
+[[0;32m  OK  [0m] Started [0;1;39me2scrub_all.timer[0m - Period…Metadata Check for All Filesystems.
+[[0;32m  OK  [0m] Started [0;1;39mfstrim.timer[0m - Discard unused filesystem blocks once a week.
+[[0;32m  OK  [0m] Started [0;1;39mfwupd-refresh.timer[0m - Refresh fwupd metadata regularly.
+[[0;32m  OK  [0m] Started [0;1;39mlogrotate.timer[0m - Daily rotation of log files.
+[[0;32m  OK  [0m] Started [0;1;39mman-db.timer[0m - Daily man-db regeneration.
+[[0;32m  OK  [0m] Started [0;1;39mmotd-news.timer[0m - Message of the Day.
+[[0;32m  OK  [0m] Started [0;1;39msysstat-collect.timer[0m - Ru…y accounting tool every 10 minutes.
+[[0;32m  OK  [0m] Started [0;1;39msysstat-summary.timer[0m - Ge… of yesterday's process accounting.
+[[0;32m  OK  [0m] Started [0;1;39msystemd-tmpfiles-clean.tim…[0my Cleanup of Temporary Directories.
+[[0;32m  OK  [0m] Started [0;1;39mupdate-notifier-download.t…[0mhat failed at package install time.
+[[0;32m  OK  [0m] Started [0;1;39mupdate-notifier-motd.timer[0m… a new version of Ubuntu available.
+[[0;32m  OK  [0m] Reached target [0;1;39mpaths.target[0m - Path Units.
+[[0;32m  OK  [0m] Reached target [0;1;39mtimers.target[0m - Timer Units.
+[[0;32m  OK  [0m] Listening on [0;1;39mcloud-init-hotplugd.s…t[0m - cloud-init hotplug hook socket.
+[[0;32m  OK  [0m] Listening on [0;1;39mdbus.socket[0m - D-Bus System Message Bus Socket.
+[[0;32m  OK  [0m] Listening on [0;1;39miscsid.socket[0m - Open-iSCSI iscsid Socket.
+         Starting [0;1;39mlxd-installer.socket[0m - He…er to install lxd snap on demand...
+         Starting [0;1;39msnapd.socket[0m - Socket activation for snappy daemon...
+[[0;32m  OK  [0m] Listening on [0;1;39mssh.socket[0m - OpenBSD Secure Shell server socket.
+[[0;32m  OK  [0m] Listening on [0;1;39muuidd.socket[0m - UUID daemon activation socket.
+[[0;32m  OK  [0m] Reached target [0;1;39mremote-fs-pre.targe…[0mreparation for Remote File Systems.
+[[0;32m  OK  [0m] Reached target [0;1;39mremote-fs.target[0m - Remote File Systems.
+[[0;32m  OK  [0m] Finished [0;1;39mblk-availability.service[0m - Availability of block devices.
+[[0;32m  OK  [0m] Listening on [0;1;39mlxd-installer.socket[0m …lper to install lxd snap on demand.
+[[0;32m  OK  [0m] Listening on [0;1;39msnapd.socket[0m - Socket activation for snappy daemon.
+[[0;32m  OK  [0m] Reached target [0;1;39msockets.target[0m - Socket Units.
+[[0;32m  OK  [0m] Reached target [0;1;39mbasic.target[0m - Basic System.
+         Starting [0;1;39mapport.service[0m - automatic crash report generation...
+         Starting [0;1;39mcloud-config.service[0m - Cloud-init: Config Stage...
+[[0;32m  OK  [0m] Started [0;1;39mcron.service[0m - Regular background program processing daemon.
+         Starting [0;1;39mdbus.service[0m - D-Bus System Message Bus...
+[[0;32m  OK  [0m] Started [0;1;39mdmesg.service[0m - Save initial kernel messages after boot.
+         Starting [0;1;39me2scrub_reap.service[0m - Re…ne ext4 Metadata Check Snapshots...
+         Starting [0;1;39mgrub-common.service[0m - Record successful boot for GRUB...
+         Starting [0;1;39mpolkit.service[0m - Authorization Manager...
+         Starting [0;1;39mpollinate.service[0m - Polli…e pseudo random number generator...
+         Starting [0;1;39mrsyslog.service[0m - System Logging Service...
+[[0;32m  OK  [0m] Reached target [0;1;39mgetty-pre.target[0m - Preparation for Logins.
+         Starting [0;1;39msnapd.seeded.service[0m - Wait until snapd is fully seeded...
+         Starting [0;1;39msnapd.service[0m - Snap Daemon...
+         Starting [0;1;39msysstat.service[0m - Resets System Activity Logs...
+         Starting [0;1;39msystemd-logind.service[0m - User Login Management...
+         Starting [0;1;39msystemd-user-sessions.service[0m - Permit User Sessions...
+         Starting [0;1;39mudisks2.service[0m - Disk Manager...
+[[0;32m  OK  [0m] Started [0;1;39mdbus.service[0m - D-Bus System Message Bus.
+[[0;32m  OK  [0m] Finished [0;1;39me2scrub_reap.service[0m - Re…line ext4 Metadata Check Snapshots.
+[[0;32m  OK  [0m] Finished [0;1;39mapport.service[0m - automatic crash report generation.
+[[0;32m  OK  [0m] Started [0;1;39msystemd-logind.service[0m - User Login Management.
+[[0;32m  OK  [0m] Finished [0;1;39msysstat.service[0m - Resets System Activity Logs.
+[[0;32m  OK  [0m] Finished [0;1;39msystemd-user-sessions.service[0m - Permit User Sessions.
+         Starting [0;1;39mplymouth-quit-wait.servic…[0md until boot process finishes up...
+         Starting [0;1;39mplymouth-quit.service[0m - Terminate Plymouth Boot Screen...
+[[0;32m  OK  [0m] Started [0;1;39munattended-upgrades.service[0m - Unattended Upgrades Shutdown.
+[[0;32m  OK  [0m] Finished [0;1;39mgrub-common.service[0m - Record successful boot for GRUB.
+[[0;32m  OK  [0m] Finished [0;1;39mplymouth-quit-wait.servic…[0mold until boot process finishes up.
+[[0;32m  OK  [0m] Finished [0;1;39mplymouth-quit.service[0m - Terminate Plymouth Boot Screen.
+[[0;32m  OK  [0m] Started [0;1;39mrsyslog.service[0m - System Logging Service.
+[[0;32m  OK  [0m] Started [0;1;39mpolkit.service[0m - Authorization Manager.
+         Starting [0;1;39mModemManager.service[0m - Modem Manager...
+         Starting [0;1;39mgrub-initrd-fallback.service[0m - GRUB failed boot detection...
+[[0;32m  OK  [0m] Started [0;1;39mserial-getty@ttyS0.service[0m - Serial Getty on ttyS0.
+         Starting [0;1;39msetvtrgb.service[0m - Set console scheme...
+[[0;32m  OK  [0m] Started [0;1;39mudisks2.service[0m - Disk Manager.
+[   26.624036] cloud-init[944]: Cloud-init v. 26.1-0ubuntu1~24.04.1 running 'modules:config' at Tue, 17 Nov 2026 19:14:04 +0000. Up 26.11 seconds.
+[[0;32m  OK  [0m] Finished [0;1;39msetvtrgb.service[0m - Set console scheme.
+[[0;32m  OK  [0m] Created slice [0;1;39msystem-getty.slice[0m - Slice /system/getty.
+[[0;32m  OK  [0m] Started [0;1;39mgetty@tty1.service[0m - Getty on tty1.
+[[0;32m  OK  [0m] Reached target [0;1;39mgetty.target[0m - Login Prompts.
+[[0;32m  OK  [0m] Finished [0;1;39mgrub-initrd-fallback.service[0m - GRUB failed boot detection.
+[[0;32m  OK  [0m] Finished [0;1;39mpollinate.service[0m - Polli…the pseudo random number generator.
+[[0;32m  OK  [0m] Started [0;1;39mModemManager.service[0m - Modem Manager.
+[[0;32m  OK  [0m] Started [0;1;39msnapd.service[0m - Snap Daemon.
+         Starting [0;1;39msystemd-timedated.service[0m - Time & Date Service...
+[[0;32m  OK  [0m] Finished [0;1;39mcloud-config.service[0m - Cloud-init: Config Stage.
+[[0;32m  OK  [0m] Started [0;1;39msystemd-timedated.service[0m - Time & Date Service.
+
+Ubuntu 24.04.5 LTS agentbrake-clean-validation ttyS0
+
+agentbrake-clean-validation login:                                                    [   61.585341] cloud-init[1070]: Cloud-init v. 26.1-0ubuntu1~24.04.1 running 'modules:final' at Tue, 17 Nov 2026 19:14:39 +0000. Up 61.47 seconds.
+[   61.633186] cloud-init[1070]: Synchronizing state of ssh.service with SysV service script with /usr/lib/systemd/systemd-sysv-install.
+[   61.643126] cloud-init[1070]: Executing: /usr/lib/systemd/systemd-sysv-install disable ssh
+[   63.030440] cloud-init[1070]: Removed "/etc/systemd/system/sockets.target.wants/ssh.socket".
+[   63.056402] cloud-init[1070]: Removed "/etc/systemd/system/ssh.service.requires/ssh.socket".
+[   63.974859] cloud-init[1070]: Disabling 'ssh.service', but its triggering units are still active:
+[[0;32m  OK  [0m] Closed [0;1;39mssh.socket[0m - OpenBSD Secure Shell server socket.
+[   63.993443] cloud-init[1070]: ssh.socket
+[  175.104484] sd 2:0:0:0: [sda] tag#48 Medium access timeout failure. Offlining disk!
+[  175.107401] I/O error, dev sda, sector 2406912 op 0x1:(WRITE) flags 0x4000 phys_seg 20 prio class 2
+[  175.110202] I/O error, dev sda, sector 2404352 op 0x1:(WRITE) flags 0x4000 phys_seg 20 prio class 2
+[  175.112986] I/O error, dev sda, sector 2401792 op 0x1:(WRITE) flags 0x4000 phys_seg 20 prio class 2
+[  175.115815] I/O error, dev sda, sector 2399232 op 0x1:(WRITE) flags 0x4000 phys_seg 20 prio class 2
+[  175.119576] I/O error, dev sda, sector 2396672 op 0x1:(WRITE) flags 0x4000 phys_seg 20 prio class 2
+[  175.122474] I/O error, dev sda, sector 31540776 op 0x1:(WRITE) flags 0x4800 phys_seg 55 prio class 2
+[  175.125274] I/O error, dev sda, sector 2394112 op 0x1:(WRITE) flags 0x4000 phys_seg 20 prio class 2
+[  175.128138] I/O error, dev sda, sector 31540336 op 0x1:(WRITE) flags 0x4800 phys_seg 55 prio class 2
+[  175.131642] I/O error, dev sda, sector 2233288 op 0x0:(READ) flags 0x3000 phys_seg 1 prio class 2
+[  175.134426] I/O error, dev sda, sector 31539896 op 0x1:(WRITE) flags 0x4800 phys_seg 55 prio class 2
+[  175.137782] EXT4-fs (sda1): failed to convert unwritten extents to written extents -- potential data loss!  (inode 42586, error -5)
+[  175.141266] Buffer I/O error on device sda1, logical block 36864
+[  175.143175] Buffer I/O error on device sda1, logical block 36865
+[  175.145038] Buffer I/O error on device sda1, logical block 36866
+[  175.147239] Buffer I/O error on device sda1, logical block 36867
+[  175.149222] Buffer I/O error on device sda1, logical block 36868
+[  175.151207] Buffer I/O error on device sda1, logical block 36869
+[  175.153166] Buffer I/O error on device sda1, logical block 36870
+[  175.155085] Buffer I/O error on device sda1, logical block 36871
+[  175.157000] Buffer I/O error on device sda1, logical block 36872
+[  175.158928] Buffer I/O error on device sda1, logical block 36873
+[  175.161765] EXT4-fs error (device sda1): __ext4_find_entry:1689: inode #567: comm cron: reading directory lblock 0
+[  175.165367] Aborting journal on device sda1-8.
+[  175.171011] sd 2:0:0:0: rejecting I/O to offline device
+[  175.173063] Buffer I/O error on dev sda1, logical block 262144, lost sync page write
+[  175.175587] JBD2: I/O error when updating journal superblock for sda1-8.
+[  175.185541] EXT4-fs (sda1): ext4_do_writepages: jbd2_start: 1023 pages, ino 21; err -5
+[  175.190051] Buffer I/O error on dev sda1, logical block 0, lost sync page write
+[  175.192357] EXT4-fs (sda1): I/O error while writing superblock
+[  175.194209] EXT4-fs (sda1): Remounting filesystem read-only
+[  175.198648] EXT4-fs (sda1): ext4_do_writepages: jbd2_start: 9223372036854771711 pages, ino 42586; err -5
+[  174.353827] cloud-init[1070]: Traceback (most recent call last):
+[  174.364929] cloud-init[1070]: tee: /var/log/cloud-init-output.log: Input/output error
+[  174.373313] cloud-init[1070]:   File "/usr/local/sbin/ab-bootstrap.py", line 27, in <module>
+[  174.381366] cloud-init[1070]:   File "/usr/lib/python3.12/pathlib.py", line 1313, in mkdir
+[  174.397305] cloud-init[1070]: OSError: [Errno 5] Input/output error: '/var/lib/agentbrake-validation'
+[  174.401115] cloud-init[1070]: FALLBACK: 2026-11-17 19:16:32,507 - performance.py[DEBUG]: Running ['/var/lib/cloud/instance/scripts/runcmd'] took 112.748 seconds
+[  174.418348] cloud-init[1070]: FALLBACK: 2026-11-17 19:16:32,507 - subp.py[DEBUG]: Unexpected error while running command.
+[  174.422815] cloud-init[1070]: Command: ['/var/lib/cloud/instance/scripts/runcmd']
+[  174.439519] cloud-init[1070]: Exit code: 1
+[  174.442010] cloud-init[1070]: Reason: -
+[  174.444628] cloud-init[1070]: Stdout: -
+[  174.447111] cloud-init[1070]: Stderr: -
+[  174.458543] cloud-init[1070]: 2026-11-17 19:16:32,507 - cc_scripts_user.py[WARNING]: Failed to run module scripts_user (scripts in /var/lib/cloud/instance/scripts)
+[  174.471262] cloud-init[1070]: FALLBACK: 2026-11-17 19:16:32,507 - cc_scripts_user.py[WARNING]: Failed to run module scripts_user (scripts in /var/lib/cloud/instance/scripts)
+[  174.494235] cloud-init[1070]: FALLBACK: 2026-11-17 19:16:32,508 - handlers.py[DEBUG]: finish: modules-final/config-scripts_user: FAIL: running config-scripts_user with frequency once-per-instance (duration: 112.749s)
+[  174.500907] cloud-init[1070]: 2026-11-17 19:16:32,508 - log_util.py[WARNING]: Running module scripts_user (<module 'cloudinit.config.cc_scripts_user' from '/usr/lib/python3/dist-packages/cloudinit/config/cc_scripts_user.py'>) failed
+[  174.512694] cloud-init[1070]: FALLBACK: 2026-11-17 19:16:32,508 - log_util.py[WARNING]: Running module scripts_user (<module 'cloudinit.config.cc_scripts_user' from '/usr/lib/python3/dist-packages/cloudinit/config/cc_scripts_user.py'>) failed
+[  174.531326] cloud-init[1070]: FALLBACK: 2026-11-17 19:16:32,508 - log_util.py[DEBUG]: Running module scripts_user (<module 'cloudinit.config.cc_scripts_user' from '/usr/lib/python3/dist-packages/cloudinit/config/cc_scripts_user.py'>) failed
+[[0;1;31mFAILED[0m] Failed to start [0;1;39mcloud-final.service[0m - Cloud-init: Final Stage.
+[  174.544712] cloud-init[1070]: Traceback (most recent call last):
+See 'systemctl status cloud-final.service' for details.
+[  174.550433] cloud-init[1070]:   File "/usr/lib/python3/dist-packages/cloudinit/config/modules.py", line 297, in _run_modules
+[[0;32m  OK  [0m] Reached target [0;1;39mcloud-init.target[0m - Cloud-init target.
+[  174.560562] cloud-init[1070]:   File "/usr/lib/python3/dist-packages/cloudinit/cloud.py", line 71, in run
+[  174.565768] cloud-init[1070]:   File "/usr/lib/python3/dist-packages/cloudinit/helpers.py", line 156, in run
+[  174.569879] cloud-init[1070]:   File "/usr/lib/python3/dist-packages/cloudinit/config/cc_scripts_user.py", line 38, in handle
+[  174.574772] cloud-init[1070]:   File "/usr/lib/python3/dist-packages/cloudinit/subp.py", line 386, in runparts
+[  174.579570] cloud-init[1070]: RuntimeError: Runparts: 1 failures (runcmd) in 1 attempted commands
+[  174.585100] cloud-init[1070]: FALLBACK: 2026-11-17 19:16:32,508 - modules.py[DEBUG]: Running module ssh_authkey_fingerprints (<module 'cloudinit.config.cc_ssh_authkey_fingerprints' from '/usr/lib/python3/dist-packages/cloudinit/config/cc_ssh_authkey_fingerprints.py'>) with frequency once-per-instance
+[  174.595975] cloud-init[1070]: FALLBACK: 2026-11-17 19:16:32,509 - handlers.py[DEBUG]: start: modules-final/config-ssh_authkey_fingerprints: running config-ssh_authkey_fingerprints with frequency once-per-instance
+[  174.602681] cloud-init[1070]: FALLBACK: 2026-11-17 19:16:32,509 - util.py[DEBUG]: Writing to /var/lib/cloud/instances/agentbrake-clean-package-bootstrap-20261117/sem/config_ssh_authkey_fingerprints - wb: [644] 25 bytes
+[  174.609651] cloud-init[1070]: 2026-11-17 19:16:32,510 - log_util.py[WARNING]: Failed writing semaphore file /var/lib/cloud/instances/agentbrake-clean-package-bootstrap-20261117/sem/config_ssh_authkey_fingerprints
+[  174.616407] cloud-init[1070]: FALLBACK: 2026-11-17 19:16:32,510 - log_util.py[WARNING]: Failed writing semaphore file /var/lib/cloud/instances/agentbrake-clean-package-bootstrap-20261117/sem/config_ssh_authkey_fingerprints
+[  174.623510] cloud-init[1070]: FALLBACK: 2026-11-17 19:16:32,511 - log_util.py[DEBUG]: Failed writing semaphore file /var/lib/cloud/instances/agentbrake-clean-package-bootstrap-20261117/sem/config_ssh_authkey_fingerprints
+[  174.633102] cloud-init[1070]: Traceback (most recent call last):
+[  174.636426] cloud-init[1070]:   File "/usr/lib/python3/dist-packages/cloudinit/helpers.py", line 93, in _acquire
+[  174.640629] cloud-init[1070]:   File "/usr/lib/python3/dist-packages/cloudinit/performance.py", line 103, in decorator
+[  174.644841] cloud-init[1070]:   File "/usr/lib/python3/dist-packages/cloudinit/util.py", line 2283, in write_file
+[  174.648848] cloud-init[1070]: OSError: [Errno 5] Input/output error: '/var/lib/cloud/instances/agentbrake-clean-package-bootstrap-20261117/sem/config_ssh_authkey_fingerprints'
+[  174.654724] cloud-init[1070]: FALLBACK: 2026-11-17 19:16:32,512 - handlers.py[DEBUG]: finish: modules-final/config-ssh_authkey_fingerprints: FAIL: running config-ssh_authkey_fingerprints with frequency once-per-instance (duration: 0.003s)
+[  174.662067] cloud-init[1070]: 2026-11-17 19:16:32,515 - log_util.py[WARNING]: Running module ssh_authkey_fingerprints (<module 'cloudinit.config.cc_ssh_authkey_fingerprints' from '/usr/lib/python3/dist-packages/cloudinit/config/cc_ssh_authkey_fingerprints.py'>) failed
+[  174.670454] cloud-init[1070]: FALLBACK: 2026-11-17 19:16:32,515 - log_util.py[WARNING]: Running module ssh_authkey_fingerprints (<module 'cloudinit.config.cc_ssh_authkey_fingerprints' from '/usr/lib/python3/dist-packages/cloudinit/config/cc_ssh_authkey_fingerprints.py'>) failed
+[  174.678882] cloud-init[1070]: FALLBACK: 2026-11-17 19:16:32,515 - log_util.py[DEBUG]: Running module ssh_authkey_fingerprints (<module 'cloudinit.config.cc_ssh_authkey_fingerprints' from '/usr/lib/python3/dist-packages/cloudinit/config/cc_ssh_authkey_fingerprints.py'>) failed
+[  174.687784] cloud-init[1070]: Traceback (most recent call last):
+[  174.690741] cloud-init[1070]:   File "/usr/lib/python3/dist-packages/cloudinit/config/modules.py", line 297, in _run_modules
+[  174.695062] cloud-init[1070]:   File "/usr/lib/python3/dist-packages/cloudinit/cloud.py", line 71, in run
+[  174.698943] cloud-init[1070]:   File "/usr/lib/python3/dist-packages/cloudinit/helpers.py", line 152, in run
+[  174.702762] cloud-init[1070]: cloudinit.helpers.LockFailure: Failed to acquire lock for config-ssh_authkey_fingerprints
+[  174.706814] cloud-init[1070]: FALLBACK: 2026-11-17 19:16:32,515 - modules.py[DEBUG]: Running module keys_to_console (<module 'cloudinit.config.cc_keys_to_console' from '/usr/lib/python3/dist-packages/cloudinit/config/cc_keys_to_console.py'>) with frequency once-per-instance
+[  174.714802] cloud-init[1070]: FALLBACK: 2026-11-17 19:16:32,516 - handlers.py[DEBUG]: start: modules-final/config-keys_to_console: running config-keys_to_console with frequency once-per-instance
+[  174.720860] cloud-init[1070]: FALLBACK: 2026-11-17 19:16:32,516 - util.py[DEBUG]: Writing to /var/lib/cloud/instances/agentbrake-clean-package-bootstrap-20261117/sem/config_keys_to_console - wb: [644] 24 bytes
+[  174.727440] cloud-init[1070]: 2026-11-17 19:16:32,516 - log_util.py[WARNING]: Failed writing semaphore file /var/lib/cloud/instances/agentbrake-clean-package-bootstrap-20261117/sem/config_keys_to_console
+[  174.733839] cloud-init[1070]: FALLBACK: 2026-11-17 19:16:32,516 - log_util.py[WARNING]: Failed writing semaphore file /var/lib/cloud/instances/agentbrake-clean-package-bootstrap-20261117/sem/config_keys_to_console
+[  174.740482] cloud-init[1070]: FALLBACK: 2026-11-17 19:16:32,516 - log_util.py[DEBUG]: Failed writing semaphore file /var/lib/cloud/instances/agentbrake-clean-package-bootstrap-20261117/sem/config_keys_to_console
+[  174.746817] cloud-init[1070]: Traceback (most recent call last):
+[  174.749746] cloud-init[1070]:   File "/usr/lib/python3/dist-packages/cloudinit/helpers.py", line 93, in _acquire
+[  174.753727] cloud-init[1070]:   File "/usr/lib/python3/dist-packages/cloudinit/performance.py", line 103, in decorator
+[  174.757779] cloud-init[1070]:   File "/usr/lib/python3/dist-packages/cloudinit/util.py", line 2283, in write_file
+[  174.761703] cloud-init[1070]: OSError: [Errno 5] Input/output error: '/var/lib/cloud/instances/agentbrake-clean-package-bootstrap-20261117/sem/config_keys_to_console'
+[  174.767350] cloud-init[1070]: FALLBACK: 2026-11-17 19:16:32,516 - handlers.py[DEBUG]: finish: modules-final/config-keys_to_console: FAIL: running config-keys_to_console with frequency once-per-instance (duration: 0.001s)
+[  174.773985] cloud-init[1070]: 2026-11-17 19:16:32,516 - log_util.py[WARNING]: Running module keys_to_console (<module 'cloudinit.config.cc_keys_to_console' from '/usr/lib/python3/dist-packages/cloudinit/config/cc_keys_to_console.py'>) failed
+[  174.782677] cloud-init[1070]: FALLBACK: 2026-11-17 19:16:32,516 - log_util.py[WARNING]: Running module keys_to_console (<module 'cloudinit.config.cc_keys_to_console' from '/usr/lib/python3/dist-packages/cloudinit/config/cc_keys_to_console.py'>) failed
+[  174.790090] cloud-init[1070]: FALLBACK: 2026-11-17 19:16:32,517 - log_util.py[DEBUG]: Running module keys_to_console (<module 'cloudinit.config.cc_keys_to_console' from '/usr/lib/python3/dist-packages/cloudinit/config/cc_keys_to_console.py'>) failed
+[  174.797858] cloud-init[1070]: Traceback (most recent call last):
+[  174.800788] cloud-init[1070]:   File "/usr/lib/python3/dist-packages/cloudinit/config/modules.py", line 297, in _run_modules
+[  174.804989] cloud-init[1070]:   File "/usr/lib/python3/dist-packages/cloudinit/cloud.py", line 71, in run
+[  174.808904] cloud-init[1070]:   File "/usr/lib/python3/dist-packages/cloudinit/helpers.py", line 152, in run
+[  174.812669] cloud-init[1070]: cloudinit.helpers.LockFailure: Failed to acquire lock for config-keys_to_console
+[  174.816996] cloud-init[1070]: FALLBACK: 2026-11-17 19:16:32,517 - modules.py[DEBUG]: Running module install_hotplug (<module 'cloudinit.config.cc_install_hotplug' from '/usr/lib/python3/dist-packages/cloudinit/config/cc_install_hotplug.py'>) with frequency once-per-instance
+[  174.825675] cloud-init[1070]: FALLBACK: 2026-11-17 19:16:32,517 - handlers.py[DEBUG]: start: modules-final/config-install_hotplug: running config-install_hotplug with frequency once-per-instance
+[  174.832125] cloud-init[1070]: FALLBACK: 2026-11-17 19:16:32,517 - util.py[DEBUG]: Writing to /var/lib/cloud/instances/agentbrake-clean-package-bootstrap-20261117/sem/config_install_hotplug - wb: [644] 25 bytes
+[  174.839360] cloud-init[1070]: 2026-11-17 19:16:32,517 - log_util.py[WARNING]: Failed writing semaphore file /var/lib/cloud/instances/agentbrake-clean-package-bootstrap-20261117/sem/config_install_hotplug
+[  174.845865] cloud-init[1070]: FALLBACK: 2026-11-17 19:16:32,517 - log_util.py[WARNING]: Failed writing semaphore file /var/lib/cloud/instances/agentbrake-clean-package-bootstrap-20261117/sem/config_install_hotplug
+[  174.852345] cloud-init[1070]: FALLBACK: 2026-11-17 19:16:32,517 - log_util.py[DEBUG]: Failed writing semaphore file /var/lib/cloud/instances/agentbrake-clean-package-bootstrap-20261117/sem/config_install_hotplug
+[  174.858897] cloud-init[1070]: Traceback (most recent call last):
+[  174.861706] cloud-init[1070]:   File "/usr/lib/python3/dist-packages/cloudinit/helpers.py", line 93, in _acquire
+[  174.865743] cloud-init[1070]:   File "/usr/lib/python3/dist-packages/cloudinit/performance.py", line 103, in decorator
+[  174.869935] cloud-init[1070]:   File "/usr/lib/python3/dist-packages/cloudinit/util.py", line 2283, in write_file
+[  174.873978] cloud-init[1070]: OSError: [Errno 5] Input/output error: '/var/lib/cloud/instances/agentbrake-clean-package-bootstrap-20261117/sem/config_install_hotplug'
+[  174.879470] cloud-init[1070]: FALLBACK: 2026-11-17 19:16:32,518 - handlers.py[DEBUG]: finish: modules-final/config-install_hotplug: FAIL: running config-install_hotplug with frequency once-per-instance (duration: 0.001s)
+[  174.886387] cloud-init[1070]: 2026-11-17 19:16:32,518 - log_util.py[WARNING]: Running module install_hotplug (<module 'cloudinit.config.cc_install_hotplug' from '/usr/lib/python3/dist-packages/cloudinit/config/cc_install_hotplug.py'>) failed
+[  174.893842] cloud-init[1070]: FALLBACK: 2026-11-17 19:16:32,518 - log_util.py[WARNING]: Running module install_hotplug (<module 'cloudinit.config.cc_install_hotplug' from '/usr/lib/python3/dist-packages/cloudinit/config/cc_install_hotplug.py'>) failed
+[  174.901739] cloud-init[1070]: FALLBACK: 2026-11-17 19:16:32,518 - log_util.py[DEBUG]: Running module install_hotplug (<module 'cloudinit.config.cc_install_hotplug' from '/usr/lib/python3/dist-packages/cloudinit/config/cc_install_hotplug.py'>) failed
+[  174.909043] cloud-init[1070]: Traceback (most recent call last):
+[  174.911897] cloud-init[1070]:   File "/usr/lib/python3/dist-packages/cloudinit/config/modules.py", line 297, in _run_modules
+[  174.916159] cloud-init[1070]:   File "/usr/lib/python3/dist-packages/cloudinit/cloud.py", line 71, in run
+[  174.920349] cloud-init[1070]:   File "/usr/lib/python3/dist-packages/cloudinit/helpers.py", line 152, in run
+[  174.924043] cloud-init[1070]: cloudinit.helpers.LockFailure: Failed to acquire lock for config-install_hotplug
+[  174.928031] cloud-init[1070]: FALLBACK: 2026-11-17 19:16:32,518 - modules.py[DEBUG]: Running module final_message (<module 'cloudinit.config.cc_final_message' from '/usr/lib/python3/dist-packages/cloudinit/config/cc_final_message.py'>) with frequency always
+[  174.935877] cloud-init[1070]: FALLBACK: 2026-11-17 19:16:32,518 - handlers.py[DEBUG]: start: modules-final/config-final_message: running config-final_message with frequency always
+[  174.941696] cloud-init[1070]: FALLBACK: 2026-11-17 19:16:32,519 - helpers.py[DEBUG]: Running config-final_message using lock (<cloudinit.helpers.DummyLock object at 0x7836bcb8e0c0>)
+[  174.947529] cloud-init[1070]: FALLBACK: 2026-11-17 19:16:32,519 - util.py[DEBUG]: Reading from /proc/uptime (quiet=False)
+[  174.952036] cloud-init[1070]: FALLBACK: 2026-11-17 19:16:32,519 - util.py[DEBUG]: Reading 13 bytes from /proc/uptime
+[  174.956365] cloud-init[1070]: 2026-11-17 19:16:32,520 - log_util.py[WARNING]: Failed to render final message template
+[  174.960562] cloud-init[1070]: FALLBACK: 2026-11-17 19:16:32,520 - log_util.py[WARNING]: Failed to render final message template
+[  174.964896] cloud-init[1070]: FALLBACK: 2026-11-17 19:16:32,524 - log_util.py[DEBUG]: Failed to render final message template
+[  174.969336] cloud-init[1070]: Traceback (most recent call last):
+[  174.972302] cloud-init[1070]:   File "/usr/lib/python3/dist-packages/cloudinit/config/cc_final_message.py", line 62, in handle
+[  174.976839] cloud-init[1070]:   File "/usr/lib/python3/dist-packages/cloudinit/templater.py", line 214, in render_string
+[  174.981025] cloud-init[1070]:   File "/usr/lib/python3/dist-packages/cloudinit/templater.py", line 167, in jinja_render
+[  174.985353] cloud-init[1070]:   File "/usr/lib/python3/dist-packages/cloudinit/templater.py", line 153, in jinja_render
+[  174.989755] cloud-init[1070]:   File "/usr/lib/python3/dist-packages/jinja2/environment.py", line 1183, in __new__
+[  174.993732] cloud-init[1070]:   File "/usr/lib/python3/dist-packages/jinja2/environment.py", line 75, in get_spontaneous_environment
+[  174.998662] cloud-init[1070]:   File "/usr/lib/python3/dist-packages/jinja2/environment.py", line 363, in __init__
+[  175.002946] cloud-init[1070]:   File "/usr/lib/python3/dist-packages/jinja2/environment.py", line 117, in load_extensions
+[  175.007116] cloud-init[1070]:   File "/usr/lib/python3/dist-packages/jinja2/utils.py", line 152, in import_string
+[  175.011723] cloud-init[1070]:   File "<frozen importlib._bootstrap>", line 1360, in _find_and_load
+[  175.016383] cloud-init[1070]:   File "<frozen importlib._bootstrap>", line 1331, in _find_and_load_unlocked
+[  175.020108] cloud-init[1070]:   File "<frozen importlib._bootstrap>", line 935, in _load_unlocked
+[  175.023632] cloud-init[1070]:   File "<frozen importlib._bootstrap_external>", line 991, in exec_module
+[  175.027469] cloud-init[1070]:   File "<frozen importlib._bootstrap_external>", line 1128, in get_code
+[  175.031055] cloud-init[1070]:   File "<frozen importlib._bootstrap_external>", line 1186, in get_data
+[  175.035341] cloud-init[1070]: OSError: [Errno 5] Input/output error: '/usr/lib/python3/dist-packages/jinja2/ext.py'
+[  175.039506] cloud-init[1070]: FALLBACK: 2026-11-17 19:16:32,525 - util.py[DEBUG]: Writing to /var/lib/cloud/instance/boot-finished - wb: [644] 68 bytes
+[  175.044533] cloud-init[1070]: 2026-11-17 19:16:32,525 - log_util.py[WARNING]: Failed to write boot finished file /var/lib/cloud/instance/boot-finished
+[  175.049688] cloud-init[1070]: FALLBACK: 2026-11-17 19:16:32,525 - log_util.py[WARNING]: Failed to write boot finished file /var/lib/cloud/instance/boot-finished
+[  175.054850] cloud-init[1070]: FALLBACK: 2026-11-17 19:16:32,525 - log_util.py[DEBUG]: Failed to write boot finished file /var/lib/cloud/instance/boot-finished
+[  175.060422] cloud-init[1070]: Traceback (most recent call last):
+[  175.063084] cloud-init[1070]:   File "/usr/lib/python3/dist-packages/cloudinit/config/cc_final_message.py", line 77, in handle
+[  175.067730] cloud-init[1070]:   File "/usr/lib/python3/dist-packages/cloudinit/performance.py", line 103, in decorator
+[  175.071876] cloud-init[1070]:   File "/usr/lib/python3/dist-packages/cloudinit/util.py", line 2283, in write_file
+[  175.075843] cloud-init[1070]: OSError: [Errno 5] Input/output error: '/var/lib/cloud/instance/boot-finished'
+[  175.079909] cloud-init[1070]: FALLBACK: 2026-11-17 19:16:32,525 - handlers.py[DEBUG]: finish: modules-final/config-final_message: SUCCESS: config-final_message ran successfully and took 0.006 seconds (duration: 0.007s)
+[  175.086454] cloud-init[1070]: FALLBACK: 2026-11-17 19:16:32,525 - modules.py[DEBUG]: Running module power_state_change (<module 'cloudinit.config.cc_power_state_change' from '/usr/lib/python3/dist-packages/cloudinit/config/cc_power_state_change.py'>) with frequency once-per-instance
+[  175.094642] cloud-init[1070]: FALLBACK: 2026-11-17 19:16:32,526 - handlers.py[DEBUG]: start: modules-final/config-power_state_change: running config-power_state_change with frequency once-per-instance
+[  175.101056] cloud-init[1070]: FALLBACK: 2026-11-17 19:16:32,526 - util.py[DEBUG]: Writing to /var/lib/cloud/instances/agentbrake-clean-package-bootstrap-20261117/sem/config_power_state_change - wb: [644] 25 bytes
+[  175.107966] cloud-init[1070]: 2026-11-17 19:16:32,526 - log_util.py[WARNING]: Failed writing semaphore file /var/lib/cloud/instances/agentbrake-clean-package-bootstrap-20261117/sem/config_power_state_change
+[  175.114980] cloud-init[1070]: FALLBACK: 2026-11-17 19:16:32,526 - log_util.py[WARNING]: Failed writing semaphore file /var/lib/cloud/instances/agentbrake-clean-package-bootstrap-20261117/sem/config_power_state_change
+[  175.121919] cloud-init[1070]: FALLBACK: 2026-11-17 19:16:32,526 - log_util.py[DEBUG]: Failed writing semaphore file /var/lib/cloud/instances/agentbrake-clean-package-bootstrap-20261117/sem/config_power_state_change
+[  175.129004] cloud-init[1070]: Traceback (most recent call last):
+[  175.132159] cloud-init[1070]:   File "/usr/lib/python3/dist-packages/cloudinit/helpers.py", line 93, in _acquire
+[  175.136818] cloud-init[1070]:   File "/usr/lib/python3/dist-packages/cloudinit/performance.py", line 103, in decorator
+[  175.141492] cloud-init[1070]:   File "/usr/lib/python3/dist-packages/cloudinit/util.py", line 2283, in write_file
+[  175.145767] cloud-init[1070]: OSError: [Errno 5] Input/output error: '/var/lib/cloud/instances/agentbrake-clean-package-bootstrap-20261117/sem/config_power_state_change'
+[  175.151125] cloud-init[1070]: FALLBACK: 2026-11-17 19:16:32,526 - handlers.py[DEBUG]: finish: modules-final/config-power_state_change: FAIL: running config-power_state_change with frequency once-per-instance (duration: 0.001s)
+[  175.158825] cloud-init[1070]: 2026-11-17 19:16:32,526 - log_util.py[WARNING]: Running module power_state_change (<module 'cloudinit.config.cc_power_state_change' from '/usr/lib/python3/dist-packages/cloudinit/config/cc_power_state_change.py'>) failed
+[  175.167050] cloud-init[1070]: FALLBACK: 2026-11-17 19:16:32,526 - log_util.py[WARNING]: Running module power_state_change (<module 'cloudinit.config.cc_power_state_change' from '/usr/lib/python3/dist-packages/cloudinit/config/cc_power_state_change.py'>) failed
+[  175.175371] cloud-init[1070]: FALLBACK: 2026-11-17 19:16:32,527 - log_util.py[DEBUG]: Running module power_state_change (<module 'cloudinit.config.cc_power_state_change' from '/usr/lib/python3/dist-packages/cloudinit/config/cc_power_state_change.py'>) failed
+[  175.183776] cloud-init[1070]: Traceback (most recent call last):
+[  175.186701] cloud-init[1070]:   File "/usr/lib/python3/dist-packages/cloudinit/config/modules.py", line 297, in _run_modules
+[  175.190925] cloud-init[1070]:   File "/usr/lib/python3/dist-packages/cloudinit/cloud.py", line 71, in run
+[  175.194823] cloud-init[1070]:   File "/usr/lib/python3/dist-packages/cloudinit/helpers.py", line 152, in run
+[  175.199083] cloud-init[1070]: cloudinit.helpers.LockFailure: Failed to acquire lock for config-power_state_change
+[  175.203513] cloud-init[1070]: FALLBACK: 2026-11-17 19:16:32,527 - main.py[DEBUG]: Ran 13 modules with 5 failures
+[  175.207640] cloud-init[1070]: FALLBACK: 2026-11-17 19:16:32,527 - util.py[DEBUG]: Reading from /proc/uptime (quiet=False)
+[  175.211914] cloud-init[1070]: FALLBACK: 2026-11-17 19:16:32,527 - util.py[DEBUG]: Reading 13 bytes from /proc/uptime
+[  175.215954] cloud-init[1070]: FALLBACK: 2026-11-17 19:16:32,527 - performance.py[DEBUG]: cloud-init stage: 'modules-final' took 112.958 seconds
+[  175.220751] cloud-init[1070]: FALLBACK: 2026-11-17 19:16:32,527 - handlers.py[DEBUG]: finish: modules-final: FAIL: running modules for final (duration: 112.958s)
+[  175.225934] cloud-init[1070]: Traceback (most recent call last):
+[  175.228787] cloud-init[1070]:   File "/usr/bin/cloud-init", line 33, in <module>
+[  175.231997] cloud-init[1070]:   File "/usr/lib/python3/dist-packages/cloudinit/cmd/main.py", line 1308, in main
+[  175.236723] cloud-init[1070]:   File "/usr/lib/python3/dist-packages/cloudinit/cmd/main.py", line 1438, in sub_main
+[  175.240824] cloud-init[1070]:   File "/usr/lib/python3/dist-packages/cloudinit/cmd/main.py", line 1015, in status_wrapper
+[  175.244856] cloud-init[1070]:   File "/usr/lib/python3/dist-packages/cloudinit/atomic_helper.py", line 107, in write_json
+[  175.248948] cloud-init[1070]:   File "/usr/lib/python3/dist-packages/cloudinit/atomic_helper.py", line 48, in write_file
+[  175.252961] cloud-init[1070]:   File "/usr/lib/python3/dist-packages/cloudinit/atomic_helper.py", line 82, in _write_file
+[  175.257019] cloud-init[1070]:   File "/usr/lib/python3/dist-packages/cloudinit/atomic_helper.py", line 65, in _write_file
+[  175.261397] cloud-init[1070]:   File "/usr/lib/python3.12/tempfile.py", line 721, in NamedTemporaryFile
+[  175.265010] cloud-init[1070]:   File "/usr/lib/python3.12/tempfile.py", line 718, in opener
+[  175.268626] cloud-init[1070]:   File "/usr/lib/python3.12/tempfile.py", line 395, in _mkstemp_inner
+[  175.272338] cloud-init[1070]: OSError: [Errno 5] Input/output error: '/var/lib/cloud/data/tmpxx3y74ks'

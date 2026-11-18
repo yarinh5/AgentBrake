@@ -1,0 +1,255 @@
+[
+    {
+        "Id": "b8c1e7dc026e2914e0847daa783b7a9adcb5beff0a2a48fb53b91feefecb4d66",
+        "Created": "2026-11-17T15:40:54.45480781Z",
+        "Path": "/bin/ollama",
+        "Args": [
+            "serve"
+        ],
+        "State": {
+            "Status": "running",
+            "Running": true,
+            "Paused": false,
+            "Restarting": false,
+            "OOMKilled": false,
+            "Dead": false,
+            "Pid": 20491,
+            "ExitCode": 0,
+            "Error": "",
+            "StartedAt": "2026-11-17T15:40:54.83648758Z",
+            "FinishedAt": "0001-01-01T00:00:00Z"
+        },
+        "Image": "sha256:910d0d8107b538fb0894e63163eb195de0cc7aefcbc666dc62d3b18f71124592",
+        "ResolvConfPath": "/var/lib/docker/containers/b8c1e7dc026e2914e0847daa783b7a9adcb5beff0a2a48fb53b91feefecb4d66/resolv.conf",
+        "HostnamePath": "/var/lib/docker/containers/b8c1e7dc026e2914e0847daa783b7a9adcb5beff0a2a48fb53b91feefecb4d66/hostname",
+        "HostsPath": "/var/lib/docker/containers/b8c1e7dc026e2914e0847daa783b7a9adcb5beff0a2a48fb53b91feefecb4d66/hosts",
+        "LogPath": "/var/lib/docker/containers/b8c1e7dc026e2914e0847daa783b7a9adcb5beff0a2a48fb53b91feefecb4d66/b8c1e7dc026e2914e0847daa783b7a9adcb5beff0a2a48fb53b91feefecb4d66-json.log",
+        "Name": "/agentbrake-a-5e616cb7-local-model-1",
+        "RestartCount": 0,
+        "Driver": "overlayfs",
+        "Platform": "linux",
+        "MountLabel": "",
+        "ProcessLabel": "",
+        "AppArmorProfile": "docker-default",
+        "ExecIDs": null,
+        "HostConfig": {
+            "Binds": [
+                "/opt/agentbrake/.tools/ollama-models:/models:ro"
+            ],
+            "ContainerIDFile": "",
+            "LogConfig": {
+                "Type": "json-file",
+                "Config": {}
+            },
+            "NetworkMode": "agentbrake-a-5e616cb7_inference",
+            "PortBindings": {},
+            "RestartPolicy": {
+                "Name": "no",
+                "MaximumRetryCount": 0
+            },
+            "AutoRemove": false,
+            "VolumeDriver": "",
+            "VolumesFrom": null,
+            "ConsoleSize": [
+                0,
+                0
+            ],
+            "CapAdd": null,
+            "CapDrop": [
+                "ALL"
+            ],
+            "CgroupnsMode": "private",
+            "Dns": null,
+            "DnsOptions": null,
+            "DnsSearch": null,
+            "ExtraHosts": [],
+            "GroupAdd": null,
+            "IpcMode": "private",
+            "Cgroup": "",
+            "Links": null,
+            "OomScoreAdj": 0,
+            "PidMode": "",
+            "Privileged": false,
+            "PublishAllPorts": false,
+            "ReadonlyRootfs": true,
+            "SecurityOpt": [
+                "no-new-privileges:true"
+            ],
+            "Tmpfs": {
+                "/tmp": "size=256m,mode=1777"
+            },
+            "UTSMode": "",
+            "UsernsMode": "",
+            "ShmSize": 67108864,
+            "Runtime": "runc",
+            "Isolation": "",
+            "CpuShares": 0,
+            "Memory": 12884901888,
+            "NanoCpus": 0,
+            "CgroupParent": "",
+            "BlkioWeight": 0,
+            "BlkioWeightDevice": null,
+            "BlkioDeviceReadBps": null,
+            "BlkioDeviceWriteBps": null,
+            "BlkioDeviceReadIOps": null,
+            "BlkioDeviceWriteIOps": null,
+            "CpuPeriod": 0,
+            "CpuQuota": 0,
+            "CpuRealtimePeriod": 0,
+            "CpuRealtimeRuntime": 0,
+            "CpusetCpus": "",
+            "CpusetMems": "",
+            "Devices": null,
+            "DeviceCgroupRules": null,
+            "DeviceRequests": null,
+            "MemoryReservation": 0,
+            "MemorySwap": 25769803776,
+            "MemorySwappiness": null,
+            "OomKillDisable": null,
+            "PidsLimit": 256,
+            "Ulimits": null,
+            "CpuCount": 0,
+            "CpuPercent": 0,
+            "IOMaximumIOps": 0,
+            "IOMaximumBandwidth": 0,
+            "MaskedPaths": [
+                "/proc/acpi",
+                "/proc/asound",
+                "/proc/interrupts",
+                "/proc/kcore",
+                "/proc/keys",
+                "/proc/latency_stats",
+                "/proc/sched_debug",
+                "/proc/scsi",
+                "/proc/timer_list",
+                "/proc/timer_stats",
+                "/sys/devices/virtual/powercap",
+                "/sys/firmware"
+            ],
+            "ReadonlyPaths": [
+                "/proc/bus",
+                "/proc/fs",
+                "/proc/irq",
+                "/proc/sys",
+                "/proc/sysrq-trigger"
+            ]
+        },
+        "Storage": {
+            "RootFS": {
+                "Snapshot": {
+                    "Name": "overlayfs"
+                }
+            }
+        },
+        "Mounts": [
+            {
+                "Type": "bind",
+                "Source": "/opt/agentbrake/.tools/ollama-models",
+                "Destination": "/models",
+                "Mode": "ro",
+                "RW": false,
+                "Propagation": "rprivate"
+            }
+        ],
+        "Config": {
+            "Hostname": "b8c1e7dc026e",
+            "Domainname": "",
+            "User": "1000:1000",
+            "AttachStdin": false,
+            "AttachStdout": true,
+            "AttachStderr": true,
+            "ExposedPorts": {
+                "11434/tcp": {}
+            },
+            "Tty": false,
+            "OpenStdin": false,
+            "StdinOnce": false,
+            "Env": [
+                "OLLAMA_FLASH_ATTENTION=1",
+                "OLLAMA_MAX_LOADED_MODELS=1",
+                "OLLAMA_CONTEXT_LENGTH=32768",
+                "OLLAMA_NO_CLOUD=1",
+                "NO_PROXY=localhost,127.0.0.1,::1",
+                "OLLAMA_HOST=0.0.0.0:11434",
+                "HTTP_PROXY=http://10.0.2.2:8877",
+                "https_proxy=http://10.0.2.2:8877",
+                "OLLAMA_MODELS=/models",
+                "OLLAMA_KV_CACHE_TYPE=q8_0",
+                "http_proxy=http://10.0.2.2:8877",
+                "HTTPS_PROXY=http://10.0.2.2:8877",
+                "no_proxy=localhost,127.0.0.1,::1",
+                "OLLAMA_NUM_PARALLEL=1",
+                "CUDA_VISIBLE_DEVICES=-1",
+                "HOME=/tmp",
+                "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+                "LD_LIBRARY_PATH=/usr/local/nvidia/lib:/usr/local/nvidia/lib64",
+                "NVIDIA_DRIVER_CAPABILITIES=compute,utility",
+                "NVIDIA_VISIBLE_DEVICES=all"
+            ],
+            "Cmd": [
+                "serve"
+            ],
+            "Image": "ollama/ollama@sha256:910d0d8107b538fb0894e63163eb195de0cc7aefcbc666dc62d3b18f71124592",
+            "Volumes": null,
+            "WorkingDir": "",
+            "Entrypoint": [
+                "/bin/ollama"
+            ],
+            "Labels": {
+                "com.docker.compose.config-hash": "76d950ce0a8c1fcdc5473fe5d043f996f8c577eba28823a5ad322c29e6c7e1ab",
+                "com.docker.compose.container-number": "1",
+                "com.docker.compose.depends_on": "",
+                "com.docker.compose.image": "sha256:910d0d8107b538fb0894e63163eb195de0cc7aefcbc666dc62d3b18f71124592",
+                "com.docker.compose.oneoff": "False",
+                "com.docker.compose.project": "agentbrake-a-5e616cb7",
+                "com.docker.compose.project.config_files": "/opt/agentbrake/infra/local/compose.yaml,/opt/agentbrake/infra/local/codex.compose.yaml",
+                "com.docker.compose.project.working_dir": "/opt/agentbrake/infra/local",
+                "com.docker.compose.service": "local-model",
+                "com.docker.compose.version": "2.40.3",
+                "org.opencontainers.image.version": "24.04"
+            }
+        },
+        "NetworkSettings": {
+            "SandboxID": "92a7b270e148045ef3b78fc10febc84df4d414402ae1214cff2c2e33a3ca972f",
+            "SandboxKey": "/var/run/docker/netns/92a7b270e148",
+            "Ports": {
+                "11434/tcp": null
+            },
+            "Networks": {
+                "agentbrake-a-5e616cb7_inference": {
+                    "IPAMConfig": null,
+                    "Links": null,
+                    "Aliases": [
+                        "agentbrake-a-5e616cb7-local-model-1",
+                        "local-model"
+                    ],
+                    "DriverOpts": null,
+                    "GwPriority": 0,
+                    "NetworkID": "4c08eb0c49e63de6b64898bcc4d7dfb1d31b69f1963e88be9c3243de9690f51b",
+                    "EndpointID": "b9a60fb114a8a48dcb4a845f007c6af61d8914c95c5ef67b060d10f19fb87f43",
+                    "Gateway": "",
+                    "IPAddress": "172.20.0.2",
+                    "MacAddress": "72:01:6d:41:bd:4b",
+                    "IPPrefixLen": 16,
+                    "IPv6Gateway": "",
+                    "GlobalIPv6Address": "",
+                    "GlobalIPv6PrefixLen": 0,
+                    "DNSNames": [
+                        "agentbrake-a-5e616cb7-local-model-1",
+                        "local-model",
+                        "b8c1e7dc026e"
+                    ]
+                }
+            }
+        },
+        "ImageManifestDescriptor": {
+            "mediaType": "application/vnd.oci.image.manifest.v1+json",
+            "digest": "sha256:a372a1c0d1e15b68e9521189785c3ca17795c26c2356f8b1b10122cfb59ed0d7",
+            "size": 1065,
+            "platform": {
+                "architecture": "amd64",
+                "os": "linux"
+            }
+        }
+    }
+]

@@ -1,0 +1,14 @@
+
+> agentbrake@0.3.0-rc.1 verify:release
+> node scripts/verify-release.mjs
+
+rego: PASS (exit 0)
+node-tests: PASS (exit 0)
+typecheck: PASS (exit 0)
+build: PASS (exit 0)
+dashboard-build: PASS (exit 0)
+browser: FAIL (exit 1)
+upstream-proof: PASS (exit 0)
+docker-preflight: PASS (exit 0)
+Evidence: docs\evidence\633b723c-395e-49ba-9a15-ec689961d29b
+FAIL; Container evidence is reported separately.

@@ -1,0 +1,210 @@
+{
+  "startedAt": "2026-11-17T21:51:07.470Z",
+  "sourceHash": "2d8df354e16dacbdda4802a04dd875d6166f053f63a5a3b897a2bf41d358032e",
+  "archiveSha256": "89d6f75d33a8809429606ae635a5d765c8f72d83f4fe5e62801beac5922ce6d4",
+  "archive": "F:\\project love\\AgentBrake\\.agentbrake-local\\releases\\agentbrake-0.3.0-rc.1-2d8df354e16d-d30b37d6.tar.gz",
+  "tool": "cosign3.1.4",
+  "toolSha256": "424e2c97d0b45fd7a6b608a87f090f35633f4c23ece5f092d48bba11aaf4bbfa",
+  "upstream": "https://github.com/sigstore/cosign/releases/tag/v3.1.4",
+  "result": "PASS_SCOPED_OFFLINE_STANDARD_SIGNING",
+  "commands": [
+    {
+      "label": "version",
+      "args": [
+        "version"
+      ],
+      "exitCode": 0,
+      "expected": "zero"
+    },
+    {
+      "label": "config",
+      "args": [
+        "signing-config",
+        "create",
+        "--out",
+        "/out/signing-config.json"
+      ],
+      "exitCode": 0,
+      "expected": "zero"
+    },
+    {
+      "label": "generate",
+      "args": [
+        "generate-key-pair",
+        "--output-key-prefix",
+        "/tmp/fixture"
+      ],
+      "exitCode": 0,
+      "expected": "zero"
+    },
+    {
+      "label": "sign",
+      "args": [
+        "sign-blob",
+        "--key",
+        "/tmp/fixture.key",
+        "--signing-config",
+        "/out/signing-config.json",
+        "--oidc-disable-ambient-providers",
+        "--yes",
+        "--bundle",
+        "/out/archive.sigstore.json",
+        "/inputs/archive.tar.gz"
+      ],
+      "exitCode": 0,
+      "expected": "zero"
+    },
+    {
+      "label": "verify",
+      "args": [
+        "verify-blob",
+        "--bundle",
+        "/out/archive.sigstore.json",
+        "--key",
+        "/out/fixture.pub",
+        "--insecure-ignore-tlog",
+        "/inputs/archive.tar.gz"
+      ],
+      "exitCode": 0,
+      "expected": "zero"
+    },
+    {
+      "label": "reject-tampered",
+      "args": [
+        "verify-blob",
+        "--bundle",
+        "/out/archive.sigstore.json",
+        "--key",
+        "/out/fixture.pub",
+        "--insecure-ignore-tlog",
+        "/tmp/tampered.tar.gz"
+      ],
+      "exitCode": 1,
+      "expected": "nonzero"
+    },
+    {
+      "label": "generate-other",
+      "args": [
+        "generate-key-pair",
+        "--output-key-prefix",
+        "/tmp/other"
+      ],
+      "exitCode": 0,
+      "expected": "zero"
+    },
+    {
+      "label": "reject-wrong-key",
+      "args": [
+        "verify-blob",
+        "--bundle",
+        "/out/archive.sigstore.json",
+        "--key",
+        "/out/other.pub",
+        "--insecure-ignore-tlog",
+        "/inputs/archive.tar.gz"
+      ],
+      "exitCode": 1,
+      "expected": "nonzero"
+    },
+    {
+      "label": "reject-missing-bundle",
+      "args": [
+        "verify-blob",
+        "--bundle",
+        "/tmp/missing.json",
+        "--key",
+        "/out/fixture.pub",
+        "--insecure-ignore-tlog",
+        "/inputs/archive.tar.gz"
+      ],
+      "exitCode": 1,
+      "expected": "nonzero"
+    },
+    {
+      "label": "reject-tampered-signature",
+      "args": [
+        "verify-blob",
+        "--bundle",
+        "/out/tampered.sigstore.json",
+        "--key",
+        "/out/fixture.pub",
+        "--insecure-ignore-tlog",
+        "/inputs/archive.tar.gz"
+      ],
+      "exitCode": 1,
+      "expected": "nonzero"
+    },
+    {
+      "label": "attest",
+      "args": [
+        "attest-blob",
+        "--key",
+        "/tmp/fixture.key",
+        "--signing-config",
+        "/out/signing-config.json",
+        "--oidc-disable-ambient-providers",
+        "--yes",
+        "--predicate",
+        "/inputs/provenance.json",
+        "--type",
+        "slsaprovenance1",
+        "--bundle",
+        "/out/provenance.sigstore.json",
+        "/inputs/archive.tar.gz"
+      ],
+      "exitCode": 0,
+      "expected": "zero"
+    },
+    {
+      "label": "verify-attestation",
+      "args": [
+        "verify-blob-attestation",
+        "--key",
+        "/out/fixture.pub",
+        "--bundle",
+        "/out/provenance.sigstore.json",
+        "--type",
+        "slsaprovenance1",
+        "--insecure-ignore-tlog",
+        "/inputs/archive.tar.gz"
+      ],
+      "exitCode": 0,
+      "expected": "zero"
+    },
+    {
+      "label": "reject-wrong-subject",
+      "args": [
+        "verify-blob-attestation",
+        "--key",
+        "/out/fixture.pub",
+        "--bundle",
+        "/out/provenance.sigstore.json",
+        "--type",
+        "slsaprovenance1",
+        "--insecure-ignore-tlog",
+        "/tmp/tampered.tar.gz"
+      ],
+      "exitCode": 1,
+      "expected": "nonzero"
+    },
+    {
+      "label": "reject-wrong-predicate",
+      "args": [
+        "verify-blob-attestation",
+        "--key",
+        "/out/fixture.pub",
+        "--bundle",
+        "/out/provenance.sigstore.json",
+        "--type",
+        "spdxjson",
+        "--insecure-ignore-tlog",
+        "/inputs/archive.tar.gz"
+      ],
+      "exitCode": 1,
+      "expected": "nonzero"
+    }
+  ],
+  "scope": "Offline Cosign3.1.4 synthetic-key verification and SLSA-v1-format local assembly attestation. No organizational identity, public transparency, trusted CI builder, reproducible-build or SLSA level claim. Private keys exist only in disposable container tmpfs.",
+  "publicKeySha256": "6a28cbf4f7b487efd40015ce71e3146b73e5b880607d9f6a0f950654988af233",
+  "finishedAt": "2026-11-17T21:51:09.628Z"
+}

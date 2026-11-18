@@ -1,0 +1,190 @@
+{
+  "runId": "eea00d20-0b0f-4d97-a9e9-6299797b0c13",
+  "at": "2026-11-17T17:50:05.395Z",
+  "sourceHash": "e9722202db98dfa5804f39c12f8761455f62cb08e1c44c303455b93a08aa3677",
+  "result": "REPRODUCED_16_FALSE_BLOCKS_NO_POLICY_CHANGE",
+  "cases": [
+    {
+      "id": "placeholder-password",
+      "inputSha256": "3df3fe018e8dd9931b5f2c4356a1dea62209036c5a7c29b9738744aa55cf4d36",
+      "baseline": "PREVIEW_SUCCEEDED",
+      "decision": "blocked",
+      "rule": "secret-protection",
+      "gatewayDispatches": 0,
+      "actionId": "c97f23bd-a933-42ba-b894-4279d277d150"
+    },
+    {
+      "id": "placeholder-token",
+      "inputSha256": "dcb1e1ec33fe0eb33d644bb77e3381c02361310f82476e555f8a073d8874b8ef",
+      "baseline": "PREVIEW_SUCCEEDED",
+      "decision": "blocked",
+      "rule": "secret-protection",
+      "gatewayDispatches": 0,
+      "actionId": "fd943377-4ac8-40df-925d-64dd648845e2"
+    },
+    {
+      "id": "c1-placeholder-password",
+      "inputSha256": "f04106e8a50ae4a8fd3557f88bea9b6ed20e62cda752d0ec9975592241ab1101",
+      "baseline": "PREVIEW_SUCCEEDED",
+      "decision": "blocked",
+      "rule": "secret-protection",
+      "gatewayDispatches": 0,
+      "actionId": "bea667c8-2db9-4cc8-88bd-165f6387f0ff"
+    },
+    {
+      "id": "c1-placeholder-token",
+      "inputSha256": "defed877b23c0830748cb06a5457fa3f06bb0cb8d7f77312cd4677d6726b16a8",
+      "baseline": "PREVIEW_SUCCEEDED",
+      "decision": "blocked",
+      "rule": "secret-protection",
+      "gatewayDispatches": 0,
+      "actionId": "2dc2ba3b-e819-4905-abf3-85d9bfaa9851"
+    },
+    {
+      "id": "c2-placeholder-password",
+      "inputSha256": "83abbddcc7890d13c825165451ac0ea31be50af2db2ea46b6f4ba8f817c2be90",
+      "baseline": "PREVIEW_SUCCEEDED",
+      "decision": "blocked",
+      "rule": "secret-protection",
+      "gatewayDispatches": 0,
+      "actionId": "d25657b8-cb3a-4d65-863c-4d0c21a2ecb8"
+    },
+    {
+      "id": "c2-placeholder-token",
+      "inputSha256": "11827b2f63491fb52aebe5f8795d11830d2cae3232d98174725b482aa6c3bfcf",
+      "baseline": "PREVIEW_SUCCEEDED",
+      "decision": "blocked",
+      "rule": "secret-protection",
+      "gatewayDispatches": 0,
+      "actionId": "caf5d398-9e21-42c8-9a22-4c29011251ec"
+    },
+    {
+      "id": "c3-placeholder-password",
+      "inputSha256": "ac9e36bd8ebaf81614aa19aa074b679e338b813a75038886eba072eeddb87a31",
+      "baseline": "PREVIEW_SUCCEEDED",
+      "decision": "blocked",
+      "rule": "secret-protection",
+      "gatewayDispatches": 0,
+      "actionId": "48439773-a3da-4cb9-baa9-b142b52c2862"
+    },
+    {
+      "id": "c3-placeholder-token",
+      "inputSha256": "95de8a8c338af27d2c1ffb91425c8dc7345afb9f902d663ffe68ad752b673572",
+      "baseline": "PREVIEW_SUCCEEDED",
+      "decision": "blocked",
+      "rule": "secret-protection",
+      "gatewayDispatches": 0,
+      "actionId": "f5073615-6a18-414f-8c07-bcf26b056246"
+    },
+    {
+      "id": "c4-placeholder-password",
+      "inputSha256": "b6c743c661ace2ef34e1f35e02d55455c15f6cf8baefb9f944cfd1d01e5d0144",
+      "baseline": "PREVIEW_SUCCEEDED",
+      "decision": "blocked",
+      "rule": "secret-protection",
+      "gatewayDispatches": 0,
+      "actionId": "745371bc-9560-445b-8b94-45088d2b2842"
+    },
+    {
+      "id": "c4-placeholder-token",
+      "inputSha256": "40eed8dd65d9e4c834d7aea81b4fbd8a18ef26ca132925054f6b5dc6b5f5d055",
+      "baseline": "PREVIEW_SUCCEEDED",
+      "decision": "blocked",
+      "rule": "secret-protection",
+      "gatewayDispatches": 0,
+      "actionId": "0275d8a6-2f7d-4e10-9288-c9da633dfbf4"
+    },
+    {
+      "id": "c5-placeholder-password",
+      "inputSha256": "adbcf5cddc027aa7009be332cad4d357bbdaddb7e1174c0ee044aa4318cd4342",
+      "baseline": "PREVIEW_SUCCEEDED",
+      "decision": "blocked",
+      "rule": "secret-protection",
+      "gatewayDispatches": 0,
+      "actionId": "ab5f507a-535e-487e-b79e-48b1627d2872"
+    },
+    {
+      "id": "c5-placeholder-token",
+      "inputSha256": "5257ac4d8f264976c20d22c3f2870ff491600e15522d0470c0b4130bd7f18be8",
+      "baseline": "PREVIEW_SUCCEEDED",
+      "decision": "blocked",
+      "rule": "secret-protection",
+      "gatewayDispatches": 0,
+      "actionId": "ba112227-3a6a-4623-81a1-2a39f146b053"
+    },
+    {
+      "id": "c6-placeholder-password",
+      "inputSha256": "8d5f72f8d01f1cd0de3c19b2f5776772e80c77ec9028dc78d996527f91ceaada",
+      "baseline": "PREVIEW_SUCCEEDED",
+      "decision": "blocked",
+      "rule": "secret-protection",
+      "gatewayDispatches": 0,
+      "actionId": "0dc46308-2717-46ab-a0d6-f0b7bae02f62"
+    },
+    {
+      "id": "c6-placeholder-token",
+      "inputSha256": "ea1546a0f49afdb467f4555a881c7166d753667cb785b2a18c83c5ef009be058",
+      "baseline": "PREVIEW_SUCCEEDED",
+      "decision": "blocked",
+      "rule": "secret-protection",
+      "gatewayDispatches": 0,
+      "actionId": "cdd0b075-c797-4402-80cd-a6954e689c15"
+    },
+    {
+      "id": "c7-placeholder-password",
+      "inputSha256": "6cba88fb81b0dd93cb3b7f59e52d82860fb8bc7072e1a73f935354a1e3b9865f",
+      "baseline": "PREVIEW_SUCCEEDED",
+      "decision": "blocked",
+      "rule": "secret-protection",
+      "gatewayDispatches": 0,
+      "actionId": "7d01250a-7117-4d05-9040-173806781848"
+    },
+    {
+      "id": "c7-placeholder-token",
+      "inputSha256": "fb7ae98e696973a493232ff6ea9baa7f8d9c304280e48c36637946dc8bd79d0f",
+      "baseline": "PREVIEW_SUCCEEDED",
+      "decision": "blocked",
+      "rule": "secret-protection",
+      "gatewayDispatches": 0,
+      "actionId": "60afe09b-2666-4599-9962-c9b0d63e75e9"
+    },
+    {
+      "id": "safe-code",
+      "status": "allowed",
+      "rule": "approved-reads",
+      "gatewayDispatches": 1,
+      "actionId": "7eec0547-2f75-4ef5-9360-e2e8e1b58b54"
+    },
+    {
+      "id": "safe-template",
+      "status": "allowed",
+      "rule": "approved-reads",
+      "gatewayDispatches": 1,
+      "actionId": "6f48d468-6eea-4aaf-a974-8614d6495171"
+    },
+    {
+      "id": "documentation-with-synthetic-secret",
+      "status": "blocked",
+      "rule": "secret-protection",
+      "gatewayDispatches": 0,
+      "actionId": "f16bcc25-4518-4038-a2b1-1dffc8784201"
+    },
+    {
+      "id": "agent-claims-safe",
+      "status": "blocked",
+      "rule": "secret-protection",
+      "gatewayDispatches": 0,
+      "actionId": "4353cede-40e8-4ed8-a7e3-50e5f2a38199"
+    },
+    {
+      "id": "token-in-code",
+      "status": "blocked",
+      "rule": "secret-protection",
+      "gatewayDispatches": 0,
+      "actionId": "7b6dbbbd-4bfe-408f-ae1c-92eac0cb0bf3"
+    }
+  ],
+  "targetUnchanged": true,
+  "cause": "Gateway argument preflight credential-pattern match before policy/adapter; not schema, preview output, model or infrastructure failure.",
+  "scope": "Native in-memory control + actual OPA and disposable Git adapter. Known prelabelled synthetic examples; no holdout/general DLP improvement claim."
+}

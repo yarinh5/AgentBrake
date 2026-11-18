@@ -1,0 +1,30 @@
+{
+  "runId": "22517324-7194-47a1-9f80-68d3b4ebd6da",
+  "sourceHash": "0d00cd87460a49e11cfb36a183fd353ad482942ee88becbb4065067017f9aa49",
+  "startedAt": "2026-11-17T16:09:06.933Z",
+  "result": "FAIL",
+  "cases": [],
+  "scope": "Disposable minimal Docker installation; synthetic TLS IdP and audit sink; internal control/agent/enterprise networks with existing dedicated fixed-ingress publication bridge; real customer acceptance excluded.",
+  "failure": {
+    "stage": "bootstrap-start",
+    "message": "Local Docker command failed (2)",
+    "diagnostic": "psql: error: connection to server on socket \"/var/run/postgresql/.s.PGSQL.5432\" failed: No such file or directory\n\tIs the server running locally and accepting connections on that socket?\n"
+  },
+  "cleanup": {
+    "result": "PASS",
+    "containers": 0,
+    "volumes": 0,
+    "networks": 0,
+    "scopedFilesRemoved": true
+  },
+  "finishedAt": "2026-11-17T16:09:26.878Z",
+  "secretScan": {
+    "result": "PASS",
+    "knownValuesChecked": 29,
+    "artifacts": [
+      "enterprise-summary.json",
+      "source-manifest.json",
+      "enterprise-evidence.json.gz"
+    ]
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "schemaVersion": 1,
+  "action": {
+    "id": "64022a67-2852-4939-9c49-a851b915f818",
+    "agentId": "67b557b6-7994-4b35-bea9-b07b27bad5ad",
+    "requestId": "b643d340-2eb8-4cfc-b1a3-e7162148f667",
+    "tool": "github_create_branch",
+    "destination": "036b2fb6793194e59e5a9745f1715aa277cc1238a53ccd1080d2d0207a24e271",
+    "correlationId": "35e67732-79db-4939-b109-8b27caa7dda2",
+    "grantId": "cd885da9-6273-4a38-b2c0-87416be26eed",
+    "grantFingerprint": "dc6ec20a7b2eac094e7c5affba8301e40db49122b48b88ab2c65dd4f279ef89d",
+    "policyRevision": 1,
+    "policyDecisionId": "2f72d8d5-2c95-4030-8acf-2d323134f17d",
+    "policyVersion": "stage2.v1",
+    "policyHash": "9ac719fef979ee7b37c5c5ef3173621453782a0a02d432727391beeff1234d14",
+    "policyEffect": "DENY",
+    "arguments": {},
+    "status": "blocked",
+    "rule": "invalid-arguments",
+    "reason": "Arguments do not match the strict tool schema.",
+    "resource": "restricted",
+    "sandbox": false,
+    "createdAt": "2026-11-17T11:50:35.306Z",
+    "expiresAt": "2026-11-17T12:05:35.306Z",
+    "durationMs": 1.96
+  },
+  "decision": {
+    "id": "2f72d8d5-2c95-4030-8acf-2d323134f17d",
+    "policyHash": "9ac719fef979ee7b37c5c5ef3173621453782a0a02d432727391beeff1234d14",
+    "version": "stage2.v1",
+    "revision": 1,
+    "effect": "DENY",
+    "reason": "Arguments do not match the strict tool schema."
+  },
+  "review": {},
+  "execution": {
+    "status": "blocked",
+    "observation": "not-dispatched",
+    "outcome": "not-dispatched",
+    "resultDisclosure": "unrecorded",
+    "resultRetained": false,
+    "correlationId": "35e67732-79db-4939-b109-8b27caa7dda2"
+  },
+  "audit": {
+    "valid": true,
+    "redacted": true,
+    "entries": [
+      {
+        "seq": 18,
+        "data": {
+          "type": "action.blocked",
+          "details": {
+            "actionId": "64022a67-2852-4939-9c49-a851b915f818",
+            "agentId": "67b557b6-7994-4b35-bea9-b07b27bad5ad",
+            "tool": "github_create_branch",
+            "rule": "invalid-arguments",
+            "correlationId": "35e67732-79db-4939-b109-8b27caa7dda2",
+            "grantId": "cd885da9-6273-4a38-b2c0-87416be26eed",
+            "decisionId": "2f72d8d5-2c95-4030-8acf-2d323134f17d",
+            "policyHash": "9ac719fef979ee7b37c5c5ef3173621453782a0a02d432727391beeff1234d14",
+            "policyRevision": 1,
+            "effect": "DENY"
+          },
+          "at": "2026-11-17T11:50:35.309Z"
+        },
+        "previous_hash": "b70860fa38e65318c13bdd5f6a9cfa23b4e17ff4a5372ae861e56aa1fd43d84a",
+        "hash": "25b453ed67ebe8e9c2ef60d42d18d78bf95448a115f147e460cd5ed284a49983"
+      }
+    ],
+    "verification": "Hash chain checked against stored records before redaction; this filtered redacted export is not an independent full-chain proof."
+  },
+  "coverage": "Local synthetic fixture. Adapter response is not independent target verification. UNKNOWN requires target reconciliation; never retry automatically."
+}

@@ -1,0 +1,21 @@
+{
+  "scope": "Disposable Linux volume, actual pinned scanner identity/capabilities; no source, model, existing volumes or credentials",
+  "volume": "agentbrake-scanner-access-6343b7f7",
+  "scanner": "aquasec/trivy@sha256:8f6bb947dbc528902e11f2f5be52f7b519f6a39d5d148f41166f2040499768fb",
+  "current": {
+    "exitCode": 1,
+    "out": "uid=0(root) gid=0(root) groups=0(root),0(root),1(bin),2(daemon),3(sys),4(adm),6(disk),10(wheel),11(floppy),20(dialout),26(tape),27(video)\n",
+    "err": "cat: can't open '/output/public-db-probe': Permission denied\n"
+  },
+  "operator": {
+    "exitCode": 0,
+    "out": "uid=1100 gid=1100 groups=1100\n",
+    "err": ""
+  },
+  "cleanup": {
+    "exitCode": 0,
+    "out": "agentbrake-scanner-access-6343b7f7\n",
+    "err": ""
+  },
+  "result": "PASS_REPRODUCED_ACCESS_DEFECT"
+}
