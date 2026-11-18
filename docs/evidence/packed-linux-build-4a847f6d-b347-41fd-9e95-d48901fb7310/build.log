@@ -1,4 +1,0 @@
-
-> agentbrake@0.3.0-rc.1 build
-> tsc --noEmit && node scripts/build-ui.mjs
-

@@ -1,9 +1,0 @@
-{
-  "scope": "Only offline Ubuntu OS preflight, no AgentBrake install or networking",
-  "seed": "F:\\project love\\AgentBrake\\.agentbrake-local\\linux-guest-preflight\\seed.iso",
-  "sha256": "6115a8860b240ee46b3f32b5a8ac650688eddff5b45d82975c15d9965988da8e",
-  "readback": "PASS_ALL_THREE_FILES",
-  "secretsIncluded": false,
-  "cloudInitReference": "https://docs.cloud-init.io/en/24.2/reference/datasources/nocloud.html",
-  "builder": "pycdlib1.22.0"
-}

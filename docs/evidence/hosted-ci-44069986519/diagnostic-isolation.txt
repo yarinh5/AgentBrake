@@ -1,2 +1,0 @@
-2026-11-17T10:54:16.2164956Z {"label":"compose-up","codes":[],"locations":[],"categories":[],"protectedFiles":[],"failedTests":0}
-2026-11-17T10:54:16.2816563Z {"label":"container-logs","codes":[],"locations":[],"categories":["permissionDenied"],"protectedFiles":["/run/secrets/auth.json"],"failedTests":0}

@@ -1,8 +1,0 @@
-5/6: 1 unit tests did not pass:
---------------------------------------------------------------------------------
-	✖ agentbrake-request-sql
-	missed lines: [], incorrect lines: [25]
-	test file path: /rules/security.ts
-
-
-No tests for fixes found.

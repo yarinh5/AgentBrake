@@ -1,3 +1,0 @@
- Container agentbrake-a-c05b77b4-verifier-run-c0016df2a8a3 Creating 
- Container agentbrake-a-c05b77b4-verifier-run-c0016df2a8a3 Created 
-{"reviewed":[],"actions":[{"id":"1edaeabf-2209-432c-90ab-329d7fda5c46","status":"allowed","tool":"github_read_file","requestId":"fafe4478-1ebd-4764-ac10-6189aea16673","arguments":{"repo":"agentbrake/sandbox","path":"src/clamp.js"},"correlationId":"24a7cc29-80f0-4fd3-80c1-23850ed68622"}]}

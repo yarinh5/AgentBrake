@@ -1,9 +1,0 @@
-file:///app/tests/milestone-b/codex-agent.mjs:58
-assert.ok(model.models.some((m) => m.name === "qwen3:4b-instruct"));
-                       ^
-
-TypeError: Cannot read properties of undefined (reading 'some')
-    at file:///app/tests/milestone-b/codex-agent.mjs:58:24
-    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
-
-Node.js v22.23.5

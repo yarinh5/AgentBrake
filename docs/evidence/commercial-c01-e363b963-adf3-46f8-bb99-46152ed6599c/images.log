@@ -1,9 +1,0 @@
-
-> agentbrake@0.3.0-rc.1 verify:images
-> node scripts/verify-images.mjs
-
-runtime: 0 findings, 0 high/critical
-dashboard: 0 findings, 0 high/critical
-postgres: 0 findings, 0 high/critical
-opa: 0 findings, 0 high/critical
-{"result":"PASS_IMAGE_SCAN","runId":"c2f98df1-5d1f-4254-91bb-fdb0124d128f"}

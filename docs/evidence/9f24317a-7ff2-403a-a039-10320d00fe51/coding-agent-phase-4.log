@@ -1,1 +1,0 @@
-request returned 500 Internal Server Error for API route and version http://%2F%2F.%2Fpipe%2Fdocker_engine/v1.56/exec/4113e735246a3eee861c609cc7e0a3a3bc8e388eaa568c6a3748ed4f1e7f65f0/json, check if the server supports the requested API version

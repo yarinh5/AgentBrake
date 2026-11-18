@@ -31,6 +31,7 @@
     "build:dashboard": "node scripts/build-dashboard.mjs",
     "verify:release": "node scripts/verify-release.mjs",
     "verify:security": "node scripts/verify-security.mjs",
+    "verify:repository-hygiene": "node scripts/verify-repository-hygiene.mjs",
     "verify:service": "node scripts/verify-service.mjs",
     "verify:candidate": "node scripts/verify-candidate.mjs",
     "verify:production": "node scripts/verify-production.mjs",

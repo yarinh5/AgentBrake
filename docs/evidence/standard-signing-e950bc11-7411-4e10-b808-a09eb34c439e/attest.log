@@ -1,4 +1,0 @@
-Using payload from: /inputs/archive.tar.gz
-Using payload from: /inputs/provenance.json
-Signing artifact...
-Wrote bundle to file /out/provenance.sigstore.json

@@ -1,8 +1,0 @@
-Couldn't find '/tmp/.ollama/id_ed25519'. Generating new private key.
-Your new public key is: 
-
-ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAiu4Q2YQkvQ/ZdZTXT5pvJW4v+F0eogU7SSIQOs5Lme
-
-[GIN] 2026/11/17 - 16:48:08 | 200 | 228.92ms |       127.0.0.1 | GET      "/api/tags"
-[GIN] 2026/11/17 - 16:48:27 | 200 |   18.97s |       127.0.0.1 | POST     "/api/generate"
-[GIN] 2026/11/17 - 16:48:27 | 200 |  275.8µs |       127.0.0.1 | GET      "/api/ps"

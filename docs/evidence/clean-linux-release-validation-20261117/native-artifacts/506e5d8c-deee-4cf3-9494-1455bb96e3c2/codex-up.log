@@ -1,6 +1,0 @@
- Network agentbrake-a-506e5d8c_inference  Creating
- Network agentbrake-a-506e5d8c_inference  Created
- Container agentbrake-a-506e5d8c-local-model-1  Creating
- Container agentbrake-a-506e5d8c-codex-agent-1  Creating
- Container agentbrake-a-506e5d8c-codex-agent-1  Error response from daemon: range of CPUs is from 0.01 to 1.00, as there are only 1 CPUs available
-Error response from daemon: range of CPUs is from 0.01 to 1.00, as there are only 1 CPUs available

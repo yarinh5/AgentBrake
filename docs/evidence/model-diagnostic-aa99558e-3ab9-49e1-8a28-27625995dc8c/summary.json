@@ -1,9 +1,0 @@
-{
-  "id": "aa99558e-3ab9-49e1-8a28-27625995dc8c",
-  "name": "agentbrake-model-diagnostic-aa99558e",
-  "at": "2026-11-17T06:44:11.914Z",
-  "result": "FAIL",
-  "scope": "Standalone network-none local model, read-only cached weights, no task/target credentials",
-  "error": "Local Docker command failed (1)",
-  "cleanup": "PASS"
-}

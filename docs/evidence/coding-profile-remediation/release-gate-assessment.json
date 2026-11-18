@@ -1,7 +1,0 @@
-{
-  "sourceHash": "2d8df354e16dacbdda4802a04dd875d6166f053f63a5a3b897a2bf41d358032e",
-  "result": "FOCUSED_PASS_FULL_PENDING",
-  "cause": "The prior release could pass while the additional useful coding workflow timed out; two reads did not satisfy the current acceptance contract.",
-  "change": "verify:release now invokes actual coding in its baseline; aggregation, source-package assembly and readiness require PASS_SCOPED_LOCAL_CODING. Existing tests prove absent/failed coding evidence cannot pass the new required gate.",
-  "checks": "10 focused tests passed; full release and final archive validation still pending."
-}

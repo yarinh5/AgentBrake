@@ -1,2 +1,0 @@
-{"result":"PASS_NONROOT_LINUX_BUILD","node":"v22.23.5","uid":1000,"files":[{"path":"index.html","bytes":430,"sha256":"11d506db4d430c6839a6be8625662325e3cb5b57ee8416f292735f45365b301d"},{"path":"assets/app.js","bytes":291966,"sha256":"7a951db8362420fb9cdaedbb7968c45a9a9761a56c04a59bb9925ae76044ca38"},{"path":"assets/app.css","bytes":39051,"sha256":"4dc519af58ee735a4a804d7897d3f5bcb90fae10c4d61628ab17abef02b026ba"},{"path":"favicon.svg","bytes":242,"sha256":"4bb4d35591b7a5e69a5a98483b4c73b757203327215e55abca3465cef01c9026"}]}
-
